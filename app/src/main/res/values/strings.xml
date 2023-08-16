@@ -1,0 +1,4 @@
+<resources>
+    <string name = "app_name">Zigsaw Puzzle</string>
+    <string name = "todo">to do</string>
+</resources>
