@@ -36,10 +36,11 @@ public class MainActivity extends Activity {
     TextView tvGo;
     Context mContext;
     ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
-    public int zw,x5, pw;  // real piece size
+    public int zw,x5, pw, nw;  // real piece size
     int zigX, zigY;
     Piece piece;
 
+    int screenX, screenY, puzzleWidth, puzzleHeight;
     public static ZigInfo [][] zigInfo;
 
     Bitmap [][] zigZag;
@@ -82,14 +83,7 @@ public class MainActivity extends Activity {
         Bitmap fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
 
-        int width = fullImage.getWidth();
-        int height = fullImage.getHeight();
-
-        pw = height / 20;
-        x5 = pw*5/14;
-        zw = x5 + x5 + pw;
-        piece = new Piece(zw, x5, pw);
-
+        generatePixels(fullImage);
 
         zigX = 12;
         zigY = 12;
@@ -98,7 +92,7 @@ public class MainActivity extends Activity {
 
         zigZag = new MakeCases().generate(mContext, zw, x5, pw);
 
-        Log.w("size","gWidth="+width+", gHeight="+height+", zw="+zw+", x5="+x5+", pw="+pw+" zig "+zigInfo.length);
+        Log.w("size","gWidth="+puzzleWidth+", gHeight="+puzzleHeight+", zw="+zw+", x5="+x5+", pw="+pw+" zig "+zigInfo.length);
 
         for (int x = 0; x < zigX; x++) {
             for (int y = 0; y < zigY; y++) {
@@ -114,10 +108,9 @@ public class MainActivity extends Activity {
         }
 
         paintView = (PaintView)findViewById(R.id.paintview);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+
         TextView tv = findViewById(R.id.go);
-        paintView.init(metrics, zw, x5, pw, this, tv);
+        paintView.init(screenX, screenY, zw, x5, pw, nw,this, tv);
 
         paintView.load(zigInfo, 4, 7);
 
@@ -153,6 +146,22 @@ public class MainActivity extends Activity {
         zigRecycler.setAdapter(zigAdapter);
     }
 
+    void generatePixels(Bitmap fullImage) {
+
+        puzzleWidth = fullImage.getWidth();
+        puzzleHeight = fullImage.getHeight();
+
+        Log.w("FullImage", puzzleWidth+" x "+ puzzleHeight);
+        pw = puzzleHeight / 20;
+        x5 = pw*5/14;
+        zw = x5 + x5 + pw;
+        piece = new Piece(zw, x5, pw);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+        screenX = metrics.widthPixels;
+        screenY = metrics.heightPixels;
+        nw = Math.round(metrics.densityDpi/2);
+    }
     private Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
         Bitmap tMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tMap);

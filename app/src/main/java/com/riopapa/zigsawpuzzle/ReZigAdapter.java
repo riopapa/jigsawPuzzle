@@ -3,6 +3,7 @@ package com.riopapa.zigsawpuzzle;
 import static com.riopapa.zigsawpuzzle.MainActivity.reZigs;
 import static com.riopapa.zigsawpuzzle.MainActivity.zigInfo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class ReZigAdapter extends RecyclerView.Adapter<ReZigAdapter.ZigHolder>  
 
         ZigHolder(View view) {
             super(view);
-            this.viewLine = itemView.findViewById(R.id.type_layout);
+            this.viewLine = itemView.findViewById(R.id.zig_hori_layout);
             this.ivIcon = itemView.findViewById(R.id.re_zigsaw);
             this.viewLine.setOnClickListener(view1 -> {
 //                typeNumber = getAbsoluteAdapterPosition();

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -16,12 +17,11 @@ public class PaintView extends View {
 
     private static final float TOUCH_TOLERANCE = 6;
     private float mX, mY;
-    private Bitmap mBitmap;
     int gHeight, gWidth;
     int idxX, idxY;
-    int zw, zwh, x5, pw;
+    int zw, zwhf, x5, pw, nw;
     ZigInfo zNow;
-    Bitmap zigMap;
+    Bitmap zigMap, mBitmap;
 
     Activity activity;
     TextView tv;
@@ -35,10 +35,9 @@ public class PaintView extends View {
         super(context, attrs);
     }
 
-    public void init(DisplayMetrics metrics, int zw, int x5, int pw, Activity activity, TextView tv){
-        gHeight = metrics.heightPixels;
-        gWidth = metrics.widthPixels;
-        this.zw = zw; this.zwh = zw/2; this.x5 = x5; this.pw = pw;
+    public void init(int gWidth, int gHeight, int zw, int x5, int pw, int nw, Activity activity, TextView tv){
+        this.gWidth = gWidth; this.gHeight = gHeight;
+        this.zw = zw; this.zwhf = nw/2; this.x5 = x5; this.pw = pw; this.nw = nw;
         this.activity = activity;
         this.tv = tv;
 
@@ -50,12 +49,14 @@ public class PaintView extends View {
         this.idxX = nbrX;
         this.idxY = nbrY;
         zNow = zigInfos[nbrX][nbrY];
-        zigMap = zNow.src;
+        mX = gWidth * 9/10;
+        mY = gHeight * 9/10;
+        zigMap = Bitmap.createScaledBitmap(zNow.src, nw, nw, true);
     }
 
     protected void onDraw(Canvas canvas){
         canvas.save();
-        canvas.drawBitmap(zigMap, mX-zwh, mY-zwh, null);
+        canvas.drawBitmap(zigMap, mX- zwhf, mY- zwhf, null);
         canvas.restore();
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -67,7 +68,7 @@ public class PaintView extends View {
     private void touchDown(float x, float y){
         mX = x;
         mY = y;
-        zigMap = piece.makeBig(zNow.oLine2);
+        zigMap = Bitmap.createScaledBitmap(piece.makeBig(zNow.oLine2), nw, nw, true);
     }
     private boolean touchMove(float x, float y){
         float dx = Math.abs(x - mX);
@@ -81,7 +82,7 @@ public class PaintView extends View {
         return false;
     }
     private void touchUp(){
-        zigMap = zNow.oLine;
+        zigMap = Bitmap.createScaledBitmap(zNow.src, nw, nw, true);
     }
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
