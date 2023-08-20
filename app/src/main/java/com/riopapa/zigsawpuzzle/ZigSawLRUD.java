@@ -11,6 +11,7 @@ public class ZigSawLRUD {
         for (int y = 0; y < zigY; y++) {
             for (int x = 0; x < zigX; x++) {
                 ZigInfo z = new ZigInfo();
+                z.src = null;
                 if (x == 0) {
                     z.lType = 0;
                 } else {

@@ -1,11 +1,31 @@
 package com.riopapa.zigsawpuzzle;
 
+import static com.riopapa.zigsawpuzzle.MainActivity.jPosX;
+import static com.riopapa.zigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigPos;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigX;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigY;
+import static com.riopapa.zigsawpuzzle.MainActivity.nw;
+import static com.riopapa.zigsawpuzzle.MainActivity.paintView;
+import static com.riopapa.zigsawpuzzle.MainActivity.piece;
+import static com.riopapa.zigsawpuzzle.MainActivity.pieceBitmap;
+import static com.riopapa.zigsawpuzzle.MainActivity.puzzleHeight;
+import static com.riopapa.zigsawpuzzle.MainActivity.puzzleWidth;
+import static com.riopapa.zigsawpuzzle.MainActivity.pw;
+import static com.riopapa.zigsawpuzzle.MainActivity.screenX;
+import static com.riopapa.zigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.zigsawpuzzle.MainActivity.x5;
+import static com.riopapa.zigsawpuzzle.MainActivity.zigInfo;
+import static com.riopapa.zigsawpuzzle.MainActivity.zw;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,18 +35,14 @@ import androidx.annotation.Nullable;
 
 public class PaintView extends View {
 
-    private static final float TOUCH_TOLERANCE = 6;
-    private float mX, mY;
-    int gHeight, gWidth;
-    int idxX, idxY;
-    int zw, zwhf, x5, pw, nw;
-    ZigInfo zNow;
-    Bitmap zigMap, mBitmap;
+    private static final float TOUCH_TOLERANCE = 10;
+    int idxX, idxY, zwOff;
+    static ZigInfo zNow;
+    static Bitmap zigMap, mBitmap;
 
     Activity activity;
     TextView tv;
 
-    Piece piece;
     public PaintView(Context context) {
         this(context, null);
     }
@@ -35,48 +51,45 @@ public class PaintView extends View {
         super(context, attrs);
     }
 
-    public void init(int gWidth, int gHeight, int zw, int x5, int pw, int nw, Activity activity, TextView tv){
-        this.gWidth = gWidth; this.gHeight = gHeight;
-        this.zw = zw; this.zwhf = nw/2; this.x5 = x5; this.pw = pw; this.nw = nw;
+    public void init(Activity activity, TextView tv){
+        this.zwOff = nw*2/3;
         this.activity = activity;
         this.tv = tv;
 
-        piece = new Piece(zw, x5, pw);
-        mBitmap = Bitmap.createBitmap(gWidth, gHeight, Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(puzzleWidth, puzzleHeight, Bitmap.Config.ARGB_8888);
 
     }
     public void load(ZigInfo[][] zigInfos, int nbrX, int nbrY) {
         this.idxX = nbrX;
         this.idxY = nbrY;
+        jPosX = screenX * 8f/10f;
+        jPosY = screenY * 8f/10f;
+        if (zigInfos[nbrX][nbrY].src == null)
+            pieceBitmap.make(nbrX, nbrY);
         zNow = zigInfos[nbrX][nbrY];
-        mX = gWidth * 9/10;
-        mY = gHeight * 9/10;
         zigMap = Bitmap.createScaledBitmap(zNow.src, nw, nw, true);
     }
 
     protected void onDraw(Canvas canvas){
-        canvas.save();
-        canvas.drawBitmap(zigMap, mX- zwhf, mY- zwhf, null);
-        canvas.restore();
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tv.setText(mX+" x "+mY);
-            }
-        });
+        if (jPosX != -1) {
+            canvas.save();
+            canvas.drawBitmap(zigMap, jPosX - zwOff, jPosY - zwOff, null);
+            canvas.restore();
+            activity.runOnUiThread(() -> tv.setText(jPosX + " x " + jPosY));
+        }
     }
     private void touchDown(float x, float y){
-        mX = x;
-        mY = y;
+        jPosX = x;
+        jPosY = y;
         zigMap = Bitmap.createScaledBitmap(piece.makeBig(zNow.oLine2), nw, nw, true);
     }
     private boolean touchMove(float x, float y){
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
+        float dx = Math.abs(x - jPosX);
+        float dy = Math.abs(y - jPosY);
 
         if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE){
-            mX = x;
-            mY = y;
+            jPosX = x;
+            jPosY = y;
             return true;
         }
         return false;
@@ -105,4 +118,14 @@ public class PaintView extends View {
 
         return true;
     }
+
+    public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            zNow = zigInfo[jigX][jigY];
+            zigMap = Bitmap.createScaledBitmap(zNow.src, nw, nw, true);
+
+            Log.w("PaintView_"+jigPos," updateting "+jPosX+" x "+jPosY);
+            paintView.invalidate();}
+    };
+
 }

@@ -101,7 +101,6 @@ public class Piece {
         canvas.drawBitmap(inMap, m, null);
         return bigMap;
     }
-
 }
 
 //    public void makeTransparent(Bitmap b, boolean right) {

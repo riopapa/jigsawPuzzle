@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,19 +36,26 @@ public class MainActivity extends Activity {
     TextView tvGo;
     Context mContext;
     ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
-    public int zw,x5, pw, nw;  // real piece size
+    public static int zw, x5, pw, nw;  // real piece size
     int zigX, zigY;
-    Piece piece;
 
-    int screenX, screenY, puzzleWidth, puzzleHeight;
+    // class modules
+    public static Piece piece;
+    public static PieceBitmap pieceBitmap;
+
+    public static Bitmap fullImage;
+    public static int screenX, screenY, puzzleWidth, puzzleHeight, jigImageSize;
     public static ZigInfo [][] zigInfo;
+    public static int jigX, jigY, jigPos;   // array x, y, x*10000+y
+    public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
 
-    Bitmap [][] zigZag;
+    public static RecyclerView zigRecyclerView;
+    public static Bitmap [][] maskMaps;
 
-    public PaintView paintView;
-    public static ArrayList<Integer> reZigs;
+    public static PaintView paintView;
+    public static ArrayList<Integer> recyclerJigs;
     public static Activity mActivity;
-    public static ReZigAdapter zigAdapter;
+    public static RecycleJigAdapter zigAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,42 +87,29 @@ public class MainActivity extends Activity {
         iv8 = findViewById(R.id.image8);
         iv99 = findViewById(R.id.image99);
 
-        Bitmap fullImage =
+        fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
 
-        generatePixels(fullImage);
+        piece = new Piece(zw, x5, pw);
+
+        initiatePixels(fullImage);
 
         zigX = 12;
         zigY = 12;
         zigInfo = new ZigInfo[zigX][zigY];
         new ZigSawLRUD(zigInfo, zigX,zigY);
 
-        zigZag = new MakeCases().generate(mContext, zw, x5, pw);
+        maskMaps = new MakeCases().generate(mContext, zw, x5, pw);
 
-        Log.w("size","gWidth="+puzzleWidth+", gHeight="+puzzleHeight+", zw="+zw+", x5="+x5+", pw="+pw+" zig "+zigInfo.length);
+        Log.w("size","puzzleWidth="+puzzleWidth+", puzzleHeight="+puzzleHeight+", zw="+zw+", x5="+x5+", pw="+pw);
 
-        for (int x = 0; x < zigX; x++) {
-            for (int y = 0; y < zigY; y++) {
-                ZigInfo z = zigInfo[x][y];
-                Bitmap srcMap = Bitmap.createBitmap(fullImage, 480 + x*pw, 330 + y*pw, zw, zw);
-                Bitmap mask = maskMerge(zigZag[0][z.lType], zigZag[1][z.rType],
-                        zigZag[2][z.uType], zigZag[3][z.dType]);
-                z.src = piece.cropZig(srcMap, mask);
-                z.oLine = piece.getOutline(z.src, 0xFF8899AA);
-                z.oLine2 = piece.getOutline(z.oLine,0xFF667788);
-                zigInfo[x][y] = z;
-            }
-        }
-
-        paintView = (PaintView)findViewById(R.id.paintview);
-
-        TextView tv = findViewById(R.id.go);
-        paintView.init(screenX, screenY, zw, x5, pw, nw,this, tv);
-
-        paintView.load(zigInfo, 4, 7);
+        jigPos = -1;
+        paintView = findViewById(R.id.paintview);
+        paintView.init(this, tvGo);
+//        paintView.load(zigInfo, zigX/2, zigY/2);
 
         int mxSize = zigX * zigY;
-        reZigs = new ArrayList<>();
+        recyclerJigs = new ArrayList<>();
         int []wk = new int[mxSize];
         int wkIdx = new Random().nextInt(mxSize/2);
         for (int i = 0; i < mxSize ; i++) {
@@ -133,43 +127,43 @@ public class MainActivity extends Activity {
             int x = tmp / zigX;
             int y = tmp - x * zigX;
 
-            reZigs.add(x*1000+y);
+            recyclerJigs.add(x*10000+y);
             wk[tmp] = 1;
             wkIdx = tmp;
         }
-        RecyclerView zigRecycler = mActivity.findViewById(R.id.piece_recycler);
+
+        zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
+        zigRecyclerView.getLayoutParams().height = nw + 8;
+        zigAdapter = new RecycleJigAdapter();
+        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(zigAdapter, mContext);
+        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
+        zigAdapter.setTouchHelper(mainItemTouchHelper);
+        mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);
+        zigRecyclerView.setAdapter(zigAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
-        zigRecycler.setLayoutManager(mLinearLayoutManager);
-        zigAdapter = new ReZigAdapter(reZigs);
-        zigRecycler.setAdapter(zigAdapter);
+        zigRecyclerView.setLayoutManager(mLinearLayoutManager);
+
     }
 
-    void generatePixels(Bitmap fullImage) {
+    void initiatePixels(Bitmap fullImage) {
 
         puzzleWidth = fullImage.getWidth();
         puzzleHeight = fullImage.getHeight();
-
+        jPosX = -1; // prevent drawing without preload
         Log.w("FullImage", puzzleWidth+" x "+ puzzleHeight);
         pw = puzzleHeight / 20;
         x5 = pw*5/14;
         zw = x5 + x5 + pw;
         piece = new Piece(zw, x5, pw);
+        pieceBitmap = new PieceBitmap();
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
-        nw = Math.round(metrics.densityDpi/2);
-    }
-    private Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
-        Bitmap tMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(tMap);
-        canvas.drawBitmap(maskL, 0,0, null);
-        canvas.drawBitmap(maskR, 0,0, null);
-        canvas.drawBitmap(maskU, 0,0, null);
-        canvas.drawBitmap(maskD, 0,0, null);
-        return tMap;
+        nw = screenX / 10; //Math.round(metrics.densityDpi/2);
+        Log.w("Main","Screen "+screenX+" x "+screenY+ " jigSize="+jigImageSize+" nw ="+nw);
     }
 
 
