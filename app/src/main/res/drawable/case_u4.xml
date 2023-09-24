@@ -6,13 +6,12 @@
 
     <path
         android:strokeColor="#F00"
-        android:strokeWidth=".5"
+        android:strokeWidth=".05"
         android:fillColor="#CCFF33"
         android:pathData="
-            M5,19h14v-14h-14
-            s0,2 0,4
-            -3,-3 -2.5,1
-            1,1 2.5,1
-            z" />
+            M19,5 v14h-14 v-14
+            s5,0 6,0    -1.5,-1.5 1.5,-2.2
+            0,3 2,2.2
+          z" />
 
 </vector>

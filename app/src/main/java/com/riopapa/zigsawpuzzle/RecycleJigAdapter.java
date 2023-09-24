@@ -2,7 +2,7 @@ package com.riopapa.zigsawpuzzle;
 
 import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.zigsawpuzzle.MainActivity.dipSize;
+import static com.riopapa.zigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.zigsawpuzzle.MainActivity.piece;
 import static com.riopapa.zigsawpuzzle.MainActivity.recyclerJigs;
 
@@ -30,11 +30,11 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycle_zigsaw, viewGroup, false);
-        view.getLayoutParams().width = dipSize;
-        view.getLayoutParams().height = dipSize;
+        view.getLayoutParams().width = recySize;
+        view.getLayoutParams().height = recySize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);
-        iv.getLayoutParams().height = dipSize;
-        iv.getLayoutParams().width = dipSize;
+        iv.getLayoutParams().height = recySize;
+        iv.getLayoutParams().width = recySize;
         iv.requestLayout();
         return new JigHolder(view);
     }

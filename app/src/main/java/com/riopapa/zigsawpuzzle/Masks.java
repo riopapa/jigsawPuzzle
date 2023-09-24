@@ -15,17 +15,17 @@ public class Masks {
         
         Bitmap part_up = dMap.make(R.drawable.part_up);
         Bitmap part_le = dMap.make(R.drawable.part_le);
-        Bitmap part_riM = dMap.make(R.drawable.part_ri);
-        Bitmap part_dnM = dMap.make(R.drawable.part_dn);
+        Bitmap part_ri = dMap.make(R.drawable.part_ri_mask);
+        Bitmap part_dn = dMap.make(R.drawable.part_dn_mask);
 
-        Bitmap case_ud1 = dMap.make(R.drawable.case_ud1);
-        Bitmap case_ud2 = dMap.make(R.drawable.case_ud2);
-        Bitmap case_ud3 = dMap.make(R.drawable.case_ud3);
-        Bitmap case_ud4 = dMap.make(R.drawable.case_ud4);
-        Bitmap case_lr1 = dMap.make(R.drawable.case_lr1);
-        Bitmap case_lr2 = dMap.make(R.drawable.case_lr2);
-        Bitmap case_lr3 = dMap.make(R.drawable.case_lr3);
-        Bitmap case_lr4 = dMap.make(R.drawable.case_lr4);
+        Bitmap case_ud1 = dMap.make(R.drawable.case_u1);
+        Bitmap case_ud2 = dMap.make(R.drawable.case_u2);
+        Bitmap case_ud3 = dMap.make(R.drawable.case_u3);
+        Bitmap case_ud4 = dMap.make(R.drawable.case_u4);
+        Bitmap case_lr1 = dMap.make(R.drawable.case_l1);
+        Bitmap case_lr2 = dMap.make(R.drawable.case_l2);
+        Bitmap case_lr3 = dMap.make(R.drawable.case_l3);
+        Bitmap case_lr4 = dMap.make(R.drawable.case_l4);
 
         masks[0][0] = dMap.make(R.drawable.part0_le);
         masks[0][1] = piece.makeLeft(case_lr1, part_le);
@@ -34,10 +34,10 @@ public class Masks {
         masks[0][4] = piece.makeLeft(case_lr4, part_le);
 
         masks[1][0] = dMap.make(R.drawable.part0_ri);
-        masks[1][1] = piece.makeRight(case_lr1, part_riM);
-        masks[1][2] = piece.makeRight(case_lr2, part_riM);
-        masks[1][3] = piece.makeRight(case_lr3, part_riM);
-        masks[1][4] = piece.makeRight(case_lr4, part_riM);
+        masks[1][1] = piece.makeRight(case_lr1, part_ri);
+        masks[1][2] = piece.makeRight(case_lr2, part_ri);
+        masks[1][3] = piece.makeRight(case_lr3, part_ri);
+        masks[1][4] = piece.makeRight(case_lr4, part_ri);
 
         masks[2][0] = dMap.make(R.drawable.part0_up);
         masks[2][1] = piece.makeUpper(case_ud1, part_up);
@@ -46,10 +46,10 @@ public class Masks {
         masks[2][4] = piece.makeUpper(case_ud4, part_up);
 
         masks[3][0] = dMap.make(R.drawable.part0_dn);
-        masks[3][1] = piece.makeDown(case_ud1, part_dnM);
-        masks[3][2] = piece.makeDown(case_ud2, part_dnM);
-        masks[3][3] = piece.makeDown(case_ud3, part_dnM);
-        masks[3][4] = piece.makeDown(case_ud4, part_dnM);
+        masks[3][1] = piece.makeDown(case_ud1, part_dn);
+        masks[3][2] = piece.makeDown(case_ud2, part_dn);
+        masks[3][3] = piece.makeDown(case_ud3, part_dn);
+        masks[3][4] = piece.makeDown(case_ud4, part_dn);
         return masks;
     }
     public Bitmap[][] makeOut(Context cxt, int outerSize) {
@@ -60,17 +60,17 @@ public class Masks {
 
         Bitmap part_up = dMap.make(R.drawable.part_up);
         Bitmap part_le = dMap.make(R.drawable.part_le);
-        Bitmap part_riM = dMap.make(R.drawable.part_ri);
-        Bitmap part_dnM = dMap.make(R.drawable.part_dn);
+        Bitmap part_ri = dMap.make(R.drawable.part_ri_mask);
+        Bitmap part_dn = dMap.make(R.drawable.part_dn_mask);
 
-        Bitmap case_ud1 = dMap.make(R.drawable.case_ud1o);
-        Bitmap case_ud2 = dMap.make(R.drawable.case_ud2o);
-        Bitmap case_ud3 = dMap.make(R.drawable.case_ud3o);
-        Bitmap case_ud4 = dMap.make(R.drawable.case_ud4o);
-        Bitmap case_lr1 = dMap.make(R.drawable.case_lr1o);
-        Bitmap case_lr2 = dMap.make(R.drawable.case_lr2o);
-        Bitmap case_lr3 = dMap.make(R.drawable.case_lr3o);
-        Bitmap case_lr4 = dMap.make(R.drawable.case_lr4o);
+        Bitmap case_ud1 = dMap.make(R.drawable.case_u1o);
+        Bitmap case_ud2 = dMap.make(R.drawable.case_u2o);
+        Bitmap case_ud3 = dMap.make(R.drawable.case_u3o);
+        Bitmap case_ud4 = dMap.make(R.drawable.case_u4o);
+        Bitmap case_lr1 = dMap.make(R.drawable.case_l1o);
+        Bitmap case_lr2 = dMap.make(R.drawable.case_l2o);
+        Bitmap case_lr3 = dMap.make(R.drawable.case_l3o);
+        Bitmap case_lr4 = dMap.make(R.drawable.case_l4o);
 
         masks[0][0] = dMap.make(R.drawable.part0_le);
         masks[0][1] = piece.makeLeft(case_lr1, part_le);
@@ -79,10 +79,10 @@ public class Masks {
         masks[0][4] = piece.makeLeft(case_lr4, part_le);
 
         masks[1][0] = dMap.make(R.drawable.part0_ri);
-        masks[1][1] = piece.makeRight(case_lr1, part_riM);
-        masks[1][2] = piece.makeRight(case_lr2, part_riM);
-        masks[1][3] = piece.makeRight(case_lr3, part_riM);
-        masks[1][4] = piece.makeRight(case_lr4, part_riM);
+        masks[1][1] = piece.makeRight(case_lr1, part_ri);
+        masks[1][2] = piece.makeRight(case_lr2, part_ri);
+        masks[1][3] = piece.makeRight(case_lr3, part_ri);
+        masks[1][4] = piece.makeRight(case_lr4, part_ri);
 
         masks[2][0] = dMap.make(R.drawable.part0_up);
         masks[2][1] = piece.makeUpper(case_ud1, part_up);
@@ -91,10 +91,10 @@ public class Masks {
         masks[2][4] = piece.makeUpper(case_ud4, part_up);
 
         masks[3][0] = dMap.make(R.drawable.part0_dn);
-        masks[3][1] = piece.makeDown(case_ud1, part_dnM);
-        masks[3][2] = piece.makeDown(case_ud2, part_dnM);
-        masks[3][3] = piece.makeDown(case_ud3, part_dnM);
-        masks[3][4] = piece.makeDown(case_ud4, part_dnM);
+        masks[3][1] = piece.makeDown(case_ud1, part_dn);
+        masks[3][2] = piece.makeDown(case_ud2, part_dn);
+        masks[3][3] = piece.makeDown(case_ud3, part_dn);
+        masks[3][4] = piece.makeDown(case_ud4, part_dn);
         return masks;
     }
 }

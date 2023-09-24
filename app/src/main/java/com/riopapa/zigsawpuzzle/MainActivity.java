@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +40,8 @@ public class MainActivity extends Activity {
     TextView tvGo;
     Context mContext;
     ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
-    public static int outerSize, innerSize, x5, dipSize;  // real piece size
+    public static int outerSize, innerSize, x5;  // real piece size
+    public static int recySize, picSize; // recycler size, at Paintview size;
     public static int jigCntX, jigCntY; // jigsaw slide x, y count
     // class modules
     public static Piece piece;
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
     public static JigTable[][] jigTables;
     public static int jigX, jigY, jigX00Y;   // array x, y, x*10000+y
     public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
+    public static float pxVal, dipVal; // absolute x,y position drawing current jigsaw
     public static float fullScale; // fullImage -> screenX
     public static RecyclerView zigRecyclerView;
     public static Bitmap [][] maskMaps, outMaps;
@@ -75,6 +78,7 @@ public class MainActivity extends Activity {
 
         mContext = getApplicationContext();
         mActivity = this;
+        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         tvGo = findViewById(R.id.go);
 
@@ -92,8 +96,8 @@ public class MainActivity extends Activity {
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
         grayedImage = null;
 
-        jigCntX = 10;
-        jigCntY = 10;
+        jigCntX = 15;
+        jigCntY = 15;
         initiatePixels(fullImage, jigCntX, jigCntY);
 
         jigTables = new JigTable[jigCntX][jigCntY];
@@ -113,7 +117,7 @@ public class MainActivity extends Activity {
 
         zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        zigRecyclerView.getLayoutParams().height = dipSize;
+        zigRecyclerView.getLayoutParams().height = recySize;
         jigAdapter = new RecycleJigAdapter();
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(jigAdapter, mContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
@@ -126,7 +130,7 @@ public class MainActivity extends Activity {
         new ImageGray().build();
         new ImageBright().build();
         fullScale = screenX / fullWidth;
-
+        jigX = 4; jigY = 5;
         if (jigTables[jigX][jigY].oLine == null)
             piece.make(jigX, jigY);
         iv99.setImageBitmap(jigTables[jigX][jigY].oLine);
@@ -136,7 +140,7 @@ public class MainActivity extends Activity {
         int mxSize = jigCntX * jigCntY;
         recyclerJigs = new ArrayList<>();
         int []wk = new int[mxSize];
-        int wkIdx = new Random().nextInt(mxSize/2);
+        int wkIdx = new Random(System.currentTimeMillis()).nextInt(mxSize/2);
         for (int i = 0; i < mxSize ; i++) {
             int tmp = wkIdx + new Random().nextInt(mxSize/3);
             if (tmp >= mxSize) {
@@ -173,13 +177,19 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
-//        innerDSize = screenX / 12; //Math.round(metrics.densityDpi/2);
-//        dipSize = innerDSize * (5+5+14)/ 14;
-        dipSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, outerSize,
-                this.getApplicationContext().getResources().getDisplayMetrics()) / 10;
-                        // about 10 in recycler view
         Log.w("Main","Screen "+screenX+" x "+screenY);
-        Log.w("TypeValue","xySize "+ dipSize);
+//        innerDSize = screenX / 12; //Math.round(metrics.densityDpi/2);
+//        recySize = innerDSize * (5+5+14)/ 14;
+        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
+                this.getApplicationContext().getResources().getDisplayMetrics());
+                        // about 10 in recycler view
+        dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1000f,
+                this.getApplicationContext().getResources().getDisplayMetrics());
+        recySize = (int) (pxVal / 5f);
+//        picSize = (int) ((float) recySize * pxVal / dipVal);
+        picSize = recySize;
+        Log.w("TypeValue","pxVal="+ pxVal+", dipVal="+dipVal+" recySize="+ recySize +" picSize="+ picSize);
+
         piece = new Piece(outerSize, x5, innerSize);
     }
 

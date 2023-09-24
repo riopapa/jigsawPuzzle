@@ -1,14 +1,11 @@
 package com.riopapa.zigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.brightImage;
 import static com.riopapa.zigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.zigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigCntY;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigX;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigY;
-import static com.riopapa.zigsawpuzzle.MainActivity.dipSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.outerSize;
+import static com.riopapa.zigsawpuzzle.MainActivity.picSize;
 import static com.riopapa.zigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.zigsawpuzzle.MainActivity.piece;
 import static com.riopapa.zigsawpuzzle.MainActivity.fullHeight;
@@ -53,7 +50,7 @@ public class PaintView extends View {
     }
 
     public void init(Activity activity, TextView tv){
-        this.zwOff = dipSize *2/3;
+        this.zwOff = picSize * 2/3;
         this.activity = activity;
         this.tv = tv;
 
@@ -68,16 +65,25 @@ public class PaintView extends View {
         if (jigTables[nbrX][nbrY].src == null)
             piece.make(nbrX, nbrY);
         zNow = jigTables[nbrX][nbrY];
-        jigMap = Bitmap.createScaledBitmap(zNow.oLine, dipSize, dipSize, true);
+        jigMap = Bitmap.createScaledBitmap(zNow.oLine, picSize, picSize, true);
     }
 
     protected void onDraw(Canvas canvas){
         if (jPosX != -1) {
             canvas.save();
-//            int y = dipSize * jigCntY;
-//            int x = y * fullWidth / fullHeight;
-//            Bitmap bm = Bitmap.createScaledBitmap(brightImage, x, y, false);
-//            canvas.drawBitmap(bm, 0,0, null);
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 3; y++) {
+                    JigTable jt = jigTables[x+2][y+2];
+                    if (jt.oLine == null) {
+                        piece.make(x+2, y+2);
+                        jt = jigTables[x+2][y+2];
+                    }
+                    Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picSize, picSize, true);
+                    canvas.drawBitmap(bm, x*(picSize+10), y*(picSize+10), null);
+
+                }
+            }
+            Log.w("onDraw", " x "+jigTables.length);
             canvas.drawBitmap(jigMap, jPosX - zwOff, jPosY - zwOff, null);
             canvas.restore();
             activity.runOnUiThread(() -> tv.setText(jPosX + " x " + jPosY+" "+ jigX00Y));
@@ -87,7 +93,7 @@ public class PaintView extends View {
     private void touchDown(float x, float y){
         jPosX = x;
         jPosY = y;
-        jigMap = Bitmap.createScaledBitmap(zNow.oLine, outerSize, outerSize, true);
+        jigMap = Bitmap.createScaledBitmap(zNow.oLine, picSize, picSize, true);
     }
     private boolean touchMove(float x, float y){
         float dx = Math.abs(x - jPosX);
@@ -101,7 +107,7 @@ public class PaintView extends View {
         return false;
     }
     private void touchUp(){
-        jigMap = Bitmap.createScaledBitmap(zNow.oLine, outerSize, outerSize, true);
+        jigMap = Bitmap.createScaledBitmap(zNow.oLine, picSize, picSize, true);
     }
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -128,7 +134,7 @@ public class PaintView extends View {
     public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             zNow = jigTables[jigX][jigY];
-            jigMap = Bitmap.createScaledBitmap(zNow.src, dipSize, dipSize, true);
+            jigMap = Bitmap.createScaledBitmap(zNow.src, picSize, picSize, true);
 
             Log.w("PaintView_"+ jigX00Y," updateting "+jPosX+" x "+jPosY);
             paintView.invalidate();}

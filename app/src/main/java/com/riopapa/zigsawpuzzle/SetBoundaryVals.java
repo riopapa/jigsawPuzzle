@@ -1,5 +1,7 @@
 package com.riopapa.zigsawpuzzle;
 
+import android.util.Log;
+
 import com.riopapa.zigsawpuzzle.model.JigTable;
 
 import java.util.Random;
@@ -36,6 +38,14 @@ public class SetBoundaryVals {
                     z.dType = 0;
                 zz[x][y] = z;
             }
+        }
+
+        for (int y = 0; y < yy ; y++) {
+            String s = " "+y+" ";
+            for (int x = 0; x < xx; x++) {
+                s += "("+zz[x][y].uType + "," + zz[x][y].dType+")";
+            }
+            Log.w("y ="+y, s);
         }
     }
 }
