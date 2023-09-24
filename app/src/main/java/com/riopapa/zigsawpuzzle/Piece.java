@@ -1,113 +1,155 @@
 package com.riopapa.zigsawpuzzle;
 
+import static com.riopapa.zigsawpuzzle.MainActivity.fullImage;
+import static com.riopapa.zigsawpuzzle.MainActivity.maskMaps;
+import static com.riopapa.zigsawpuzzle.MainActivity.outMaps;
+import static com.riopapa.zigsawpuzzle.MainActivity.piece;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 
-public class Piece {
-    int zw, x5, pw;
+import com.riopapa.zigsawpuzzle.model.JigTable;
 
-    public Piece(int zw, int x5, int pw) {
-        this.zw = zw;
+public class Piece {
+    int outerSize, x5, innerSize;
+    Paint paintX;
+
+    public Piece(int outerSize, int x5, int innerSize) {
+        this.outerSize = outerSize;
         this.x5 = x5;
-        this.pw = pw;
+        this.innerSize = innerSize;
+        paintX = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintX.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+
     }
 
     public Bitmap makeUpper(Bitmap srcImage, Bitmap mask) {
 
-        Bitmap result = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
+        Bitmap result = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(result);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         tCanvas.drawBitmap(srcImage, 0, 0, null);
-        tCanvas.drawBitmap(mask, 0, 0, paint);
-        paint.setXfermode(null);
+        tCanvas.drawBitmap(mask, 0, 0, paintX);
         return result;
     }
 
     public Bitmap makeLeft(Bitmap srcImage, Bitmap mask) {
 
-        Bitmap maskMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(maskMap);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(srcImage, 0, 0, null);
-        mCanvas.drawBitmap(mask, 0, 0, paint);
-        paint.setXfermode(null);
+        Bitmap maskMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Canvas tCanvas = new Canvas(maskMap);
+        tCanvas.drawBitmap(srcImage, 0, 0, null);
+        tCanvas.drawBitmap(mask, 0, 0, paintX);
         return maskMap;
     }
 
     public Bitmap makeRight(Bitmap srcImage, Bitmap mask) {
 
-        int maskColor = 0xff44ddff;
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        Bitmap maskMap = Bitmap.createBitmap(zw,zw, Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(maskMap);
-        mCanvas.drawColor(maskColor);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-        mCanvas.drawBitmap(srcImage, pw, 0, paint);
-        mCanvas.drawBitmap(mask, 0,0, paint);
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1, 1, outerSize/2, outerSize/2);
+        Bitmap fliped = Bitmap.createBitmap(srcImage, 0, 0, outerSize, outerSize, matrix, true);
+        Bitmap maskMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Canvas tCanvas = new Canvas(maskMap);
+        tCanvas.drawBitmap(fliped, 0, 0, null);
+        tCanvas.drawBitmap(mask, 0, 0, paintX);
         return maskMap;
+
     }
 
 
     public Bitmap makeDown(Bitmap srcImage, Bitmap mask) {
 
-        int maskColor = 0xff44ddff;
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        Bitmap maskMap = Bitmap.createBitmap(zw,zw, Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(maskMap);
-        mCanvas.drawColor(maskColor);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-        mCanvas.drawBitmap(srcImage, 0, pw, paint);
-        mCanvas.drawBitmap(mask, 0,0, paint);
+        Matrix matrix = new Matrix();
+        matrix.postScale(1, -1, outerSize/2, outerSize/2);
+        Bitmap fliped = Bitmap.createBitmap(srcImage, 0, 0, outerSize, outerSize, matrix, true);
+        Bitmap maskMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Canvas tCanvas = new Canvas(maskMap);
+        tCanvas.drawBitmap(fliped, 0, 0, null);
+        tCanvas.drawBitmap(mask, 0, 0, paintX);
         return maskMap;
+
     }
 
-    public Bitmap cropZig(Bitmap srcImage, Bitmap zigSaw) {
-        int zWidth = srcImage.getHeight();
+    public Bitmap cropZig(Bitmap srcImage, Bitmap maskOut) {
 
-        Bitmap cropped = Bitmap.createBitmap(zWidth, zWidth, Bitmap.Config.ARGB_8888);
+        Bitmap cropped = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(cropped);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         tCanvas.drawBitmap(srcImage, 0, 0, null);
-        tCanvas.drawBitmap(zigSaw, 0, 0, paint);
-        paint.setXfermode(null);
+        tCanvas.drawBitmap(maskOut, 0, 0, paintX);
         return cropped;
     }
 
     public Bitmap getOutline(Bitmap inMap, int color) {
-        int outSize = pw/50+2;
-        Bitmap workMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
+        int delta = innerSize /50+2;
+        Bitmap workMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(workMap);
-        float scale = (zw + 2.0f * outSize) / zw;
+        float scale = (outerSize + 2.0f * delta) / outerSize;
         Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale, zw/2,zw/2);
+        matrix.postScale(scale, scale, outerSize /2, outerSize /2);
         canvas.drawBitmap(inMap, matrix, null);
         canvas.drawColor(color, PorterDuff.Mode.SRC_ATOP);
-        canvas.drawBitmap(inMap, outSize/2, outSize/2, null);
+        canvas.drawBitmap(inMap, delta/2, delta/2, null);
+        return workMap;
+    }
+    public Bitmap makeOutline(Bitmap srcMap, Bitmap outMask) {
+
+        Bitmap workMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(workMap);
+        Paint paint = new Paint();
+        paint.setColorFilter(new PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP));
+        canvas.drawBitmap(outMask, 0,0, paint);
+        paint = new Paint();
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        Matrix matrix = new Matrix();
+        canvas.drawBitmap(srcMap, matrix, paint);
         return workMap;
     }
 
     public Bitmap makeBig(Bitmap inMap) {
-        Bitmap bigMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
+        Bitmap bigMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bigMap);
         Matrix m = new Matrix();
-        m.setScale(1.1f, 1.1f, zw/2, zw/2);
+        m.setScale(1.1f, 1.1f, outerSize /2, outerSize /2);
         canvas.drawBitmap(inMap, m, null);
         return bigMap;
     }
+
+    public void make(int x, int y) {
+        JigTable z = jigTables[x][y];
+        Bitmap srcMap = Bitmap.createBitmap(fullImage, x * innerSize, y * innerSize, outerSize, outerSize);
+        Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
+                maskMaps[2][z.uType], maskMaps[3][z.dType], innerSize, outerSize);
+        z.src = piece.cropZig(srcMap, mask);
+//        z.oLine = piece.getOutline(z.src, 0xFF8899AA);
+        mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
+                outMaps[2][z.uType], outMaps[3][z.dType], innerSize, outerSize);
+        z.oLine = piece.makeOutline(z.src, mask);
+        z.oLine2 = piece.getOutline(z.src,0xFF667788);
+        jigTables[x][y] = z;
+    }
+    public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD, int pw, int zw) {
+        Bitmap tMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(tMap);
+        canvas.drawBitmap(maskL, 0,0, null);
+        canvas.drawBitmap(maskR, 0,0, null);
+        canvas.drawBitmap(maskU, 0,0, null);
+        canvas.drawBitmap(maskD, 0,0, null);
+        return tMap;
+    }
+
 }
 
 //    public void makeTransparent(Bitmap b, boolean right) {
 //        xyStack xStack = new xyStack(195200);
 //        xyStack yStack = new xyStack(195200);
-//        int x = (right) ? zw-5: zw/2;
-//        int y = (right) ? zw/2: zw-5;
+//        int x = (right) ? outerSize-5: outerSize/2;
+//        int y = (right) ? outerSize/2: outerSize-5;
 //        int max = b.getWidth() - 1;
 //        int nowColor = b.getPixel(x,y);
 //        while (true) {
@@ -134,18 +176,18 @@ public class Piece {
 //                break;
 //        }
 //        if (right) {
-//            for (x = zw-x5; x < zw; x++) {
+//            for (x = outerSize-x5; x < outerSize; x++) {
 //                b.setPixel(x, x5, 0);
 //                b.setPixel(x, x5+1, 0);
-//                b.setPixel(x, zw-x5, 0);
-//                b.setPixel(x, zw-x5-1, 0);
+//                b.setPixel(x, outerSize-x5, 0);
+//                b.setPixel(x, outerSize-x5-1, 0);
 //            }
 //        } else {
-//            for (y = zw-x5; y < zw; y++) {
+//            for (y = outerSize-x5; y < outerSize; y++) {
 //                b.setPixel(x5, y, 0);
 //                b.setPixel(x5+1, y, 0);
-//                b.setPixel(zw-x5, y, 0);
-//                b.setPixel(zw-x5-1, y, 0);
+//                b.setPixel(outerSize-x5, y, 0);
+//                b.setPixel(outerSize-x5-1, y, 0);
 //            }
 //        }
 //

@@ -1,11 +1,10 @@
 package com.riopapa.zigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.jigImageSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigPos;
-import static com.riopapa.zigsawpuzzle.MainActivity.nw;
-import static com.riopapa.zigsawpuzzle.MainActivity.pieceBitmap;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.zigsawpuzzle.MainActivity.dipSize;
+import static com.riopapa.zigsawpuzzle.MainActivity.piece;
 import static com.riopapa.zigsawpuzzle.MainActivity.recyclerJigs;
-import static com.riopapa.zigsawpuzzle.MainActivity.zigInfo;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -19,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.zigsawpuzzle.model.JigTable;
+
 public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.JigHolder>
         implements ZItemTouchHelperAdapter {
 
@@ -29,11 +30,11 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycle_zigsaw, viewGroup, false);
-        view.getLayoutParams().width = nw + 8;
-        view.getLayoutParams().height = nw + 8;
-        ImageView iv = view.findViewById(R.id.re_zigsaw);
-        iv.getLayoutParams().height = nw;
-        iv.getLayoutParams().width = nw;
+        view.getLayoutParams().width = dipSize;
+        view.getLayoutParams().height = dipSize;
+        ImageView iv = view.findViewById(R.id.recycle_jigsaw);
+        iv.getLayoutParams().height = dipSize;
+        iv.getLayoutParams().width = dipSize;
         iv.requestLayout();
         return new JigHolder(view);
     }
@@ -58,8 +59,8 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         GestureDetector mGestureDetector;
         public JigHolder(View view) {
             super(view);
-            this.viewLine = itemView.findViewById(R.id.zig_hori_layout);
-            this.ivIcon = itemView.findViewById(R.id.re_zigsaw);
+            this.viewLine = itemView.findViewById(R.id.jig_hori_layout);
+            this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);
         }
@@ -72,8 +73,6 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
-            Log.w("adaptor onDown", "Touch Down ");
-
             return false;
         }
         @Override
@@ -117,14 +116,14 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigPos = recyclerJigs.get(position);
-        jigX = jigPos / 10000;
-        jigY = jigPos - jigX * 10000;
-        ZigInfo z = zigInfo[jigX][jigY];
+        jigX00Y = recyclerJigs.get(position);
+        jigX = jigX00Y / 10000;
+        jigY = jigX00Y - jigX * 10000;
+        JigTable z = jigTables[jigX][jigY];
         if (z.src == null)
-            pieceBitmap.make(jigX, jigY);
-        viewHolder.ivIcon.setImageBitmap(zigInfo[jigX][jigY].oLine);
-        viewHolder.ivIcon.setTag(jigPos);
+            piece.make(jigX, jigY);
+        viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
+        viewHolder.ivIcon.setTag(jigX00Y);
 //        viewHolder.ivIcon.setOnClickListener((View.OnClickListener) this);
     }
 

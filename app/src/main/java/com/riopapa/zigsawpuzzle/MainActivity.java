@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.riopapa.zigsawpuzzle.model.JigTable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,26 +39,24 @@ public class MainActivity extends Activity {
     TextView tvGo;
     Context mContext;
     ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
-    public static int zw, x5, pw, nw;  // real piece size
-    int zigX, zigY;
-
+    public static int outerSize, innerSize, x5, dipSize;  // real piece size
+    public static int jigCntX, jigCntY; // jigsaw slide x, y count
     // class modules
     public static Piece piece;
-    public static PieceBitmap pieceBitmap;
-
-    public static Bitmap fullImage;
-    public static int screenX, screenY, puzzleWidth, puzzleHeight, jigImageSize;
-    public static ZigInfo [][] zigInfo;
-    public static int jigX, jigY, jigPos;   // array x, y, x*10000+y
+    public static Bitmap fullImage, grayedImage, brightImage;
+    public static int screenX, screenY, fullWidth, fullHeight;
+    public static JigTable[][] jigTables;
+    public static int jigX, jigY, jigX00Y;   // array x, y, x*10000+y
     public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
-
+    public static float fullScale; // fullImage -> screenX
     public static RecyclerView zigRecyclerView;
-    public static Bitmap [][] maskMaps;
-
+    public static Bitmap [][] maskMaps, outMaps;
+    public static int screenOffsetX, screenOffsetY; // paintView block left top position
+    public static int imageOffsetX, imageOffsetY; // image Offset View left Top
     public static PaintView paintView;
     public static ArrayList<Integer> recyclerJigs;
     public static Activity mActivity;
-    public static RecycleJigAdapter zigAdapter;
+    public static RecycleJigAdapter jigAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,26 +90,50 @@ public class MainActivity extends Activity {
 
         fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
+        grayedImage = null;
 
-        piece = new Piece(zw, x5, pw);
+        jigCntX = 10;
+        jigCntY = 10;
+        initiatePixels(fullImage, jigCntX, jigCntY);
 
-        initiatePixels(fullImage);
+        jigTables = new JigTable[jigCntX][jigCntY];
+        new SetBoundaryVals(jigTables, jigCntX, jigCntY);
 
-        zigX = 12;
-        zigY = 12;
-        zigInfo = new ZigInfo[zigX][zigY];
-        new ZigSawLRUD(zigInfo, zigX,zigY);
+        maskMaps = new Masks().make(mContext, outerSize);
+        outMaps = new Masks().makeOut(mContext, outerSize);
 
-        maskMaps = new MakeCases().generate(mContext, zw, x5, pw);
+        Log.w("sizeCheck","fullWidth="+ fullWidth +", fullHeight="+ fullHeight +", outerSize="+ outerSize +", x5="+x5+", innerSize="+ innerSize);
 
-        Log.w("size","puzzleWidth="+puzzleWidth+", puzzleHeight="+puzzleHeight+", zw="+zw+", x5="+x5+", pw="+pw);
-
-        jigPos = -1;
+        jigX00Y = -1;
         paintView = findViewById(R.id.paintview);
         paintView.init(this, tvGo);
-//        paintView.load(zigInfo, zigX/2, zigY/2);
+        paintView.load(jigTables, jigCntX/2, jigCntY/2);
 
-        int mxSize = zigX * zigY;
+        makeRecycleArrays();
+
+        zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
+        int layoutOrientation = RecyclerView.HORIZONTAL;
+        zigRecyclerView.getLayoutParams().height = dipSize;
+        jigAdapter = new RecycleJigAdapter();
+        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(jigAdapter, mContext);
+        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
+        jigAdapter.setTouchHelper(mainItemTouchHelper);
+        mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);
+        zigRecyclerView.setAdapter(jigAdapter);
+        LinearLayoutManager mLinearLayoutManager
+                = new LinearLayoutManager(mContext, layoutOrientation, false);
+        zigRecyclerView.setLayoutManager(mLinearLayoutManager);
+        new ImageGray().build();
+        new ImageBright().build();
+        fullScale = screenX / fullWidth;
+
+        if (jigTables[jigX][jigY].oLine == null)
+            piece.make(jigX, jigY);
+        iv99.setImageBitmap(jigTables[jigX][jigY].oLine);
+    }
+
+    private static void makeRecycleArrays() {
+        int mxSize = jigCntX * jigCntY;
         recyclerJigs = new ArrayList<>();
         int []wk = new int[mxSize];
         int wkIdx = new Random().nextInt(mxSize/2);
@@ -124,48 +149,39 @@ public class MainActivity extends Activity {
                         tmp = 0;
                 }
             }
-            int x = tmp / zigX;
-            int y = tmp - x * zigX;
+            int x = tmp / jigCntX;
+            int y = tmp - x * jigCntX;
 
             recyclerJigs.add(x*10000+y);
             wk[tmp] = 1;
             wkIdx = tmp;
         }
-
-        zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
-        int layoutOrientation = RecyclerView.HORIZONTAL;
-        zigRecyclerView.getLayoutParams().height = nw + 8;
-        zigAdapter = new RecycleJigAdapter();
-        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(zigAdapter, mContext);
-        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
-        zigAdapter.setTouchHelper(mainItemTouchHelper);
-        mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);
-        zigRecyclerView.setAdapter(zigAdapter);
-        LinearLayoutManager mLinearLayoutManager
-                = new LinearLayoutManager(mContext, layoutOrientation, false);
-        zigRecyclerView.setLayoutManager(mLinearLayoutManager);
-
     }
 
-    void initiatePixels(Bitmap fullImage) {
+    void initiatePixels(Bitmap fullImage, int xMax, int yMax) {
 
-        puzzleWidth = fullImage.getWidth();
-        puzzleHeight = fullImage.getHeight();
+        fullWidth = fullImage.getWidth();
+        fullHeight = fullImage.getHeight();
         jPosX = -1; // prevent drawing without preload
-        Log.w("FullImage", puzzleWidth+" x "+ puzzleHeight);
-        pw = puzzleHeight / 20;
-        x5 = pw*5/14;
-        zw = x5 + x5 + pw;
-        piece = new Piece(zw, x5, pw);
-        pieceBitmap = new PieceBitmap();
+        innerSize = fullHeight / (yMax+1);
+        if (fullWidth / (xMax+1) < innerSize)
+            innerSize = fullWidth / (xMax-1);
+        Log.w("FullImage", fullWidth +" x "+ fullHeight +" innerSize = "+ innerSize);
+        x5 = innerSize *5/14;
+        outerSize = x5 + x5 + innerSize;
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
-        nw = screenX / 10; //Math.round(metrics.densityDpi/2);
-        Log.w("Main","Screen "+screenX+" x "+screenY+ " jigSize="+jigImageSize+" nw ="+nw);
+//        innerDSize = screenX / 12; //Math.round(metrics.densityDpi/2);
+//        dipSize = innerDSize * (5+5+14)/ 14;
+        dipSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, outerSize,
+                this.getApplicationContext().getResources().getDisplayMetrics()) / 10;
+                        // about 10 in recycler view
+        Log.w("Main","Screen "+screenX+" x "+screenY);
+        Log.w("TypeValue","xySize "+ dipSize);
+        piece = new Piece(outerSize, x5, innerSize);
     }
-
 
     void writeFile(File targetFolder, String fileName, String outText) {
         try {
@@ -243,10 +259,10 @@ public class MainActivity extends Activity {
 }
 
 //
-//        for (int y = 0; y < zigY-1; y++) {
+//        for (int y = 0; y < jigCntY-1; y++) {
 //            String s = "";
-//            for (int x = 0; x < zigX - 1; x++) {
-//                s +="  ("+zigInfo[x][y].dType+"."+zigInfo[x][y+1].uType+") ";
+//            for (int x = 0; x < jigCntX - 1; x++) {
+//                s +="  ("+jigInfo[x][y].dType+"."+jigInfo[x][y+1].uType+") ";
 //            }
 //            Log.w("y "+y, s);
 //        }

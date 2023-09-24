@@ -2,17 +2,16 @@ package com.riopapa.zigsawpuzzle;
 
 import static com.riopapa.zigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.zigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigPos;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigX;
 import static com.riopapa.zigsawpuzzle.MainActivity.jigY;
 import static com.riopapa.zigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.zigsawpuzzle.MainActivity.piece;
-import static com.riopapa.zigsawpuzzle.MainActivity.puzzleHeight;
-import static com.riopapa.zigsawpuzzle.MainActivity.pw;
+import static com.riopapa.zigsawpuzzle.MainActivity.innerSize;
 import static com.riopapa.zigsawpuzzle.MainActivity.recyclerJigs;
 import static com.riopapa.zigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.zigsawpuzzle.MainActivity.zigInfo;
-import static com.riopapa.zigsawpuzzle.MainActivity.zw;
+import static com.riopapa.zigsawpuzzle.MainActivity.outerSize;
 import static com.riopapa.zigsawpuzzle.PaintView.updateViewHandler;
 
 import android.content.Context;
@@ -65,13 +64,13 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            jigPos = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
-            jigX = jigPos /10000;
-            jigY = jigPos - jigX * 10000;
-            Bitmap bm = piece.makeBig(zigInfo[jigX][jigY].oLine2);
+            jigX00Y = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
+            jigX = jigX00Y /10000;
+            jigY = jigX00Y - jigX * 10000;
+            Bitmap bm = piece.makeBig(jigTables[jigX][jigY].oLine2);
             Drawable d = new BitmapDrawable(mContext.getResources(), bm);
             viewHolder.itemView.setBackground(d);
-            Log.w("onSelectedChanged", "drawed "+jigPos);
+            Log.w("onSelectedChanged", "drawed "+ jigX00Y);
             //            viewHolder.itemView.setBackground(ContextCompat.getDrawable(mContext, R.drawable.item_selected));
         }
     }
@@ -103,10 +102,10 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         helperDrawTime = nowTime;
 
         View itemView = viewHolder.itemView;
-        jigPos = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
-        jigX = jigPos / 10000;
-        jigY = jigPos - jigX * 10000;
-        c.drawBitmap(piece.makeBig(zigInfo[jigX][jigY].oLine), 0, 0, null);
+        jigX00Y = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
+        jigX = jigX00Y / 10000;
+        jigY = jigX00Y - jigX * 10000;
+        c.drawBitmap(piece.makeBig(jigTables[jigX][jigY].oLine), 0, 0, null);
 
         TextView tv = mActivity.findViewById(R.id.go);
         mActivity.runOnUiThread(() -> tv.setText("recyclex "+dX+" x "+dY));
@@ -129,10 +128,10 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 //        mBackground.draw(c);
         Log.w("Backgond", "Left "+itemView.getLeft()+" Right "+itemView.getRight()+" , delta ");
         Log.w("onChildDrawBack" , " dx="+dX+" dy="+dY+
-                " idx ="+jigPos);
+                " idx ="+ jigX00Y);
         if (dY < -50) {
-            jPosY = screenY - zw;
-            jPosX = itemView.getLeft() + pw/2;
+            jPosY = screenY - outerSize;
+            jPosX = itemView.getLeft() + innerSize /2;
             updateViewHandler.sendEmptyMessage(0);
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

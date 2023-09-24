@@ -1,4 +1,4 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.zigsawpuzzle.model;
 
 import android.util.Log;
 
