@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
         picSize = recySize;
         Log.w("TypeValue","pxVal="+ pxVal+", dipVal="+dipVal+" recySize="+ recySize +" picSize="+ picSize);
 
-        piece = new Piece(outerSize, x5, innerSize);
+        piece = new Piece(mContext, outerSize, x5, innerSize);
     }
 
     void writeFile(File targetFolder, String fileName, String outText) {
