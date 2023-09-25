@@ -1,4 +1,4 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;

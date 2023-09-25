@@ -1,18 +1,18 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.zigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigX;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigY;
-import static com.riopapa.zigsawpuzzle.MainActivity.picSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.paintView;
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
-import static com.riopapa.zigsawpuzzle.MainActivity.fullHeight;
-import static com.riopapa.zigsawpuzzle.MainActivity.fullWidth;
-import static com.riopapa.zigsawpuzzle.MainActivity.screenX;
-import static com.riopapa.zigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigY;
+import static com.riopapa.jigsawpuzzle.MainActivity.picSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
+import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
+import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
+import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PaintView extends View {
 
@@ -71,15 +71,15 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas){
         if (jPosX != -1) {
             canvas.save();
-            for (int x = 0; x < 3; x++) {
-                for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 7; y++) {
                     JigTable jt = jigTables[x+2][y+2];
                     if (jt.oLine == null) {
                         piece.make(x+2, y+2);
                         jt = jigTables[x+2][y+2];
                     }
                     Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picSize, picSize, true);
-                    canvas.drawBitmap(bm, x*(picSize+10), y*(picSize+10), null);
+                    canvas.drawBitmap(bm, x*(picSize), y*(picSize), null);
 
                 }
             }

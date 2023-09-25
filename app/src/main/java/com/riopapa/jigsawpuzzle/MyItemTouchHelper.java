@@ -1,18 +1,18 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.zigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigX;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigY;
-import static com.riopapa.zigsawpuzzle.MainActivity.mActivity;
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
-import static com.riopapa.zigsawpuzzle.MainActivity.innerSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.recyclerJigs;
-import static com.riopapa.zigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.zigsawpuzzle.MainActivity.outerSize;
-import static com.riopapa.zigsawpuzzle.PaintView.updateViewHandler;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigY;
+import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
+import static com.riopapa.jigsawpuzzle.PaintView.updateViewHandler;
 
 import android.content.Context;
 import android.graphics.Bitmap;

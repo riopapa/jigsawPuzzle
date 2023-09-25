@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.riopapa.zigsawpuzzle'
+    namespace 'com.riopapa.jigsawpuzzle'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.riopapa.zigsawpuzzle"
+        applicationId "com.riopapa.jigsawpuzzle"
         minSdk 30
         targetSdk 30
         versionCode 1
@@ -47,7 +47,7 @@ android {
     sourceSets {
         main {
             java {
-                srcDirs 'src\\main\\java', 'src\\main\\java\\zigsawpuzzle'
+                srcDirs 'src\\main\\java', 'src\\main\\java\\jigsawpuzzle'
             }
         }
     }

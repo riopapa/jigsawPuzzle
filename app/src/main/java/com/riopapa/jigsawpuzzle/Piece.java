@@ -1,10 +1,10 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.fullImage;
-import static com.riopapa.zigsawpuzzle.MainActivity.maskMaps;
-import static com.riopapa.zigsawpuzzle.MainActivity.outMaps;
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
+import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
+import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +16,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class Piece {
     int outerSize, x5, innerSize;

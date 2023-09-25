@@ -1,8 +1,8 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
 import android.util.Log;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.Random;
 

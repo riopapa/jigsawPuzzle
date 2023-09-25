@@ -1,4 +1,4 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -130,10 +130,10 @@ public class MainActivity extends Activity {
         new ImageGray().build();
         new ImageBright().build();
         fullScale = screenX / fullWidth;
-        jigX = 4; jigY = 5;
-        if (jigTables[jigX][jigY].oLine == null)
-            piece.make(jigX, jigY);
-        iv99.setImageBitmap(jigTables[jigX][jigY].oLine);
+//        jigX = 4; jigY = 5;
+//        if (jigTables[jigX][jigY].oLine == null)
+//            piece.make(jigX, jigY);
+//        iv99.setImageBitmap(jigTables[jigX][jigY].oLine);
     }
 
     private static void makeRecycleArrays() {

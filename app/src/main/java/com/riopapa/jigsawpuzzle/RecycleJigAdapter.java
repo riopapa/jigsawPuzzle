@@ -1,10 +1,10 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.jigX00Y;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.zigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
-import static com.riopapa.zigsawpuzzle.MainActivity.recyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.JigHolder>
         implements ZItemTouchHelperAdapter {
@@ -29,7 +29,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycle_zigsaw, viewGroup, false);
+                .inflate(R.layout.recycle_jigsaw, viewGroup, false);
         view.getLayoutParams().width = recySize;
         view.getLayoutParams().height = recySize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);

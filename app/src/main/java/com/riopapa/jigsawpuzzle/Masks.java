@@ -1,6 +1,6 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 
 import android.content.Context;
 import android.graphics.Bitmap;

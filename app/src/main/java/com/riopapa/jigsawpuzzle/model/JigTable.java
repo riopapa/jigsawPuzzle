@@ -1,4 +1,4 @@
-package com.riopapa.zigsawpuzzle.model;
+package com.riopapa.jigsawpuzzle.model;
 
 import android.graphics.Bitmap;
 

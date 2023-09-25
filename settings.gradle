@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Zigsaw Puzzle"
+rootProject.name = "jigsaw Puzzle"
 include ':app'

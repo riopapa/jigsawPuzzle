@@ -1,20 +1,20 @@
-package com.riopapa.zigsawpuzzle;
+package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.zigsawpuzzle.MainActivity.fullImage;
-import static com.riopapa.zigsawpuzzle.MainActivity.grayedImage;
-import static com.riopapa.zigsawpuzzle.MainActivity.innerSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigCntX;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigCntY;
-import static com.riopapa.zigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.zigsawpuzzle.MainActivity.maskMaps;
-import static com.riopapa.zigsawpuzzle.MainActivity.outerSize;
-import static com.riopapa.zigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
+import static com.riopapa.jigsawpuzzle.MainActivity.grayedImage;
+import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCntX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCntY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
+import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.riopapa.zigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class ImageGray {
 
