@@ -7,6 +7,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigY;
 import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
+import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
@@ -130,8 +131,8 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         Log.w("onChildDrawBack" , " dx="+dX+" dy="+dY+
                 " idx ="+ jigX00Y);
         if (dY < -50) {
-            jPosY = screenY - outerSize;
-            jPosX = itemView.getLeft() + innerSize /2;
+            jPosY = screenY - picOSize - picOSize;
+            jPosX = itemView.getLeft() + picOSize /2;
             updateViewHandler.sendEmptyMessage(0);
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
