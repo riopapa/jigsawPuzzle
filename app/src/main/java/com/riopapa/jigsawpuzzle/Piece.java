@@ -9,7 +9,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -22,8 +21,10 @@ public class Piece {
     int outerSize, x5, innerSize;
     Paint paintIN, paintOUT;
     int outLineColor;
+    Context context;
 
     public Piece(Context context, int outerSize, int x5, int innerSize) {
+        this.context = context;
         this.outerSize = outerSize;
         this.x5 = x5;
         this.innerSize = innerSize;
@@ -82,12 +83,12 @@ public class Piece {
         Bitmap bigMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bigMap);
         Matrix m = new Matrix();
-        m.setScale(1.1f, 1.1f, outerSize /2, outerSize /2);
+        m.setScale(1.2f, 1.2f, outerSize /2, outerSize /2);
         canvas.drawBitmap(inMap, m, null);
         return bigMap;
     }
 
-    public void make(int x, int y) {
+    public void makeAll(int x, int y) {
         JigTable z = jigTables[x][y];
         Bitmap srcMap = Bitmap.createBitmap(fullImage, x * innerSize, y * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
@@ -97,7 +98,7 @@ public class Piece {
         mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
                 outMaps[2][z.uType], outMaps[3][z.dType], innerSize, outerSize);
         z.oLine = piece.makeOutline(z.src, mask);
-        z.oLine2 = piece.getOutline(z.src,0xFF667788);
+        z.oLine2 = piece.getOutline(z.oLine,context.getColor(R.color.big_outline));
         jigTables[x][y] = z;
     }
     public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD, int pw, int zw) {

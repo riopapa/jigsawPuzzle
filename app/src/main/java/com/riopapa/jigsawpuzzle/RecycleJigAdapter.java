@@ -91,7 +91,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         @Override
         public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
             long nowTime = System.currentTimeMillis();
-            if (nowTime < drawTime + 300)
+            if (nowTime < drawTime + 400)
                 return false;
             drawTime = nowTime;
 
@@ -121,7 +121,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         jigY = jigX00Y - jigX * 10000;
         JigTable z = jigTables[jigX][jigY];
         if (z.src == null)
-            piece.make(jigX, jigY);
+            piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
         viewHolder.ivIcon.setTag(jigX00Y);
 //        viewHolder.ivIcon.setOnClickListener((View.OnClickListener) this);

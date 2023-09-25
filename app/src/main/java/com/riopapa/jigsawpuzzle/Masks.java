@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 public class Masks {
     public Bitmap[][] make(Context cxt, int outerSize) {
 
-        // remember to set SetBoundaryVals() nextInt with this value
+        // remember to set com.riopapa.jigsawpuzzle.SetBoundaryVal() nextInt with this value
         // outerSize means puzzle outer size
         Bitmap [][] masks = new Bitmap[4][5];
         Drawable2bitmap dMap = new Drawable2bitmap(cxt, outerSize);
@@ -45,7 +45,7 @@ public class Masks {
     }
     public Bitmap[][] makeOut(Context cxt, int outerSize) {
 
-        // remember to set SetBoundaryVals() nextInt with this value
+        // remember to set com.riopapa.jigsawpuzzle.SetBoundaryVal() nextInt with this value
         Bitmap [][] masks = new Bitmap[4][5];
         Drawable2bitmap dMap = new Drawable2bitmap(cxt, outerSize);
 

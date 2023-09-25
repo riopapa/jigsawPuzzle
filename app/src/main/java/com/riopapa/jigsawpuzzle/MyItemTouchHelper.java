@@ -105,7 +105,7 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         jigX00Y = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
         jigX = jigX00Y / 10000;
         jigY = jigX00Y - jigX * 10000;
-        c.drawBitmap(piece.makeBig(jigTables[jigX][jigY].oLine), 0, 0, null);
+        c.drawBitmap(piece.makeBig(jigTables[jigX][jigY].oLine2), 0, 0, null);
 
         TextView tv = mActivity.findViewById(R.id.go);
         mActivity.runOnUiThread(() -> tv.setText("recyclex "+dX+" x "+dY));

@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
-
+import com.riopapa.jigsawpuzzle.func.SetBoundaryVal;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     Context mContext;
     ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
     public static int outerSize, innerSize, x5;  // real piece size
-    public static int recySize, picSize; // recycler size, at Paintview size;
+    public static int recySize, picOSize, picISize; // recycler size, at Paintview size;
     public static int jigCntX, jigCntY; // jigsaw slide x, y count
     // class modules
     public static Piece piece;
@@ -101,12 +101,10 @@ public class MainActivity extends Activity {
         initiatePixels(fullImage, jigCntX, jigCntY);
 
         jigTables = new JigTable[jigCntX][jigCntY];
-        new SetBoundaryVals(jigTables, jigCntX, jigCntY);
+        new SetBoundaryVal(jigTables, jigCntX, jigCntY);
 
         maskMaps = new Masks().make(mContext, outerSize);
         outMaps = new Masks().makeOut(mContext, outerSize);
-
-        Log.w("sizeCheck","fullWidth="+ fullWidth +", fullHeight="+ fullHeight +", outerSize="+ outerSize +", x5="+x5+", innerSize="+ innerSize);
 
         jigX00Y = -1;
         paintView = findViewById(R.id.paintview);
@@ -162,33 +160,40 @@ public class MainActivity extends Activity {
         }
     }
 
-    void initiatePixels(Bitmap fullImage, int xMax, int yMax) {
+    void initiatePixels(Bitmap fullImage, int xCount, int yCount) {
 
-        fullWidth = fullImage.getWidth();
-        fullHeight = fullImage.getHeight();
-        jPosX = -1; // prevent drawing without preload
-        innerSize = fullHeight / (yMax+1);
-        if (fullWidth / (xMax+1) < innerSize)
-            innerSize = fullWidth / (xMax-1);
-        Log.w("FullImage", fullWidth +" x "+ fullHeight +" innerSize = "+ innerSize);
-        x5 = innerSize *5/14;
-        outerSize = x5 + x5 + innerSize;
+        // pxVal, dipVal is physical screen dependent factor
+        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
+                this.getApplicationContext().getResources().getDisplayMetrics());
+        // about 10 in recycler view
+        dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1000f,
+                this.getApplicationContext().getResources().getDisplayMetrics());
+        float mmVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1000f,
+                this.getApplicationContext().getResources().getDisplayMetrics());
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
-        Log.w("Main","Screen "+screenX+" x "+screenY);
-//        innerDSize = screenX / 12; //Math.round(metrics.densityDpi/2);
-//        recySize = innerDSize * (5+5+14)/ 14;
-        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
-                this.getApplicationContext().getResources().getDisplayMetrics());
-                        // about 10 in recycler view
-        dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1000f,
-                this.getApplicationContext().getResources().getDisplayMetrics());
-        recySize = (int) (pxVal / 5f);
-//        picSize = (int) ((float) recySize * pxVal / dipVal);
-        picSize = recySize;
-        Log.w("TypeValue","pxVal="+ pxVal+", dipVal="+dipVal+" recySize="+ recySize +" picSize="+ picSize);
+        Log.w("Main","screenXY "+screenX+" x "+screenY);
+        recySize = (int) ((float) screenX / 10f * dipVal / 2000f);
+        picOSize = recySize * 11 / 10;
+        picISize = picOSize * 14 / (14+5+5);
+
+        // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 ScreenX 1080 x 2316
+        // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 ScreenX 1600 x 2560
+
+        Log.w(Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
+
+        fullWidth = fullImage.getWidth();
+        fullHeight = fullImage.getHeight();
+        jPosX = -1; // prevent drawing without preload
+        innerSize = fullHeight / (yCount+1);
+        if (fullWidth / (xCount+1) < innerSize)
+            innerSize = fullWidth / (xCount-1);
+        x5 = innerSize *5/14;
+        outerSize = x5 + x5 + innerSize;
+        Log.w("sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", x5="+x5+", innerSize="+ innerSize);
+        Log.w("sizeCheck","picOSize="+ picOSize +", picISize="+ picISize);
 
         piece = new Piece(mContext, outerSize, x5, innerSize);
     }

@@ -47,7 +47,7 @@ android {
     sourceSets {
         main {
             java {
-                srcDirs 'src\\main\\java', 'src\\main\\java\\jigsawpuzzle'
+                srcDirs 'src\\main\\java', 'src\\main\\java\\jigsawpuzzle', 'src\\main\\java\\com\\riopapa\\jigsawpuzzle\\sub'
             }
         }
     }

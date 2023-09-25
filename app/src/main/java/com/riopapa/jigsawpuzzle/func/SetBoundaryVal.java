@@ -1,15 +1,14 @@
-package com.riopapa.jigsawpuzzle;
-
-import android.util.Log;
+package com.riopapa.jigsawpuzzle.func;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.Random;
 
-public class SetBoundaryVals {
+public class SetBoundaryVal {
 
-    public SetBoundaryVals(JigTable[][] zz, int xx, int yy) {
+    public SetBoundaryVal(JigTable[][] zz, int xx, int yy) {
 
+        //
         Random rnd = new Random(System.currentTimeMillis());
 
         for (int y = 0; y < yy; y++) {
@@ -38,14 +37,6 @@ public class SetBoundaryVals {
                     z.dType = 0;
                 zz[x][y] = z;
             }
-        }
-
-        for (int y = 0; y < yy ; y++) {
-            String s = " "+y+" ";
-            for (int x = 0; x < xx; x++) {
-                s += "("+zz[x][y].uType + "," + zz[x][y].dType+")";
-            }
-            Log.w("y ="+y, s);
         }
     }
 }
