@@ -22,12 +22,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.SetBoundaryVal;
+import com.riopapa.jigsawpuzzle.func.SetVarValues;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,24 +39,25 @@ import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    TextView tvGo;
+    TextView tvLeft, tvRight;
     Context mContext;
-    ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv99;
-    public static int outerSize, innerSize, x5;  // real piece size
-    public static int recySize, picOSize, picISize; // recycler size, at Paintview size;
-    public static int jigCntX, jigCntY; // jigsaw slide x, y count
+    public static ImageView iv1, imageAnswer;
+    public static int outerSize, innerSize, pieceGap;  // real piece size
+    public static int recySize, picOSize, picISize, picGap; // recycler size, at Paintview size;
+    public static int jigCntX, jigCntY, jigRecyclePos; // jigsaw slide x, y count
     // class modules
     public static Piece piece;
     public static Bitmap fullImage, grayedImage, brightImage;
-    public static int screenX, screenY, fullWidth, fullHeight;
     public static JigTable[][] jigTables;
     public static int jigX, jigY, jigX00Y;   // array x, y, x*10000+y
     public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
-    public static float pxVal, dipVal; // absolute x,y position drawing current jigsaw
+    public static int screenX, screenY; // physical screen size
+    public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
+    public static float pxVal, dipVal; // to calculate physical screen dependency
     public static float fullScale; // fullImage -> screenX
     public static RecyclerView zigRecyclerView;
     public static Bitmap [][] maskMaps, outMaps;
-    public static int screenOffsetX, screenOffsetY; // paintView block left top position
+    public static int baseX, baseY; // puzzle view x, y offset
     public static int imageOffsetX, imageOffsetY; // image Offset View left Top
     public static PaintView paintView;
     public static ArrayList<Integer> recyclerJigs;
@@ -80,17 +83,11 @@ public class MainActivity extends Activity {
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        tvGo = findViewById(R.id.go);
+        tvLeft = findViewById(R.id.debug_left);
+        tvRight = findViewById(R.id.debug_right);
 
         iv1 = findViewById(R.id.image1);
-        iv2 = findViewById(R.id.image2);
-        iv3 = findViewById(R.id.image3);
-        iv4 = findViewById(R.id.image4);
-        iv5 = findViewById(R.id.image5);
-        iv6 = findViewById(R.id.image6);
-        iv7 = findViewById(R.id.image7);
-        iv8 = findViewById(R.id.image8);
-        iv99 = findViewById(R.id.image99);
+        imageAnswer = findViewById(R.id.image_answer);
 
         fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
@@ -98,7 +95,10 @@ public class MainActivity extends Activity {
 
         jigCntX = 15;
         jigCntY = 15;
-        initiatePixels(fullImage, jigCntX, jigCntY);
+
+        new SetVarValues(this, this);
+
+//        initiatePixels(fullImage, jigCntX, jigCntY);
 
         jigTables = new JigTable[jigCntX][jigCntY];
         new SetBoundaryVal(jigTables, jigCntX, jigCntY);
@@ -108,7 +108,7 @@ public class MainActivity extends Activity {
 
         jigX00Y = -1;
         paintView = findViewById(R.id.paintview);
-        paintView.init(this, tvGo);
+        paintView.init(this, tvLeft, tvRight);
         paintView.load(jigTables, jigCntX/2, jigCntY/2);
 
         makeRecycleArrays();
@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
         int layoutOrientation = RecyclerView.HORIZONTAL;
         zigRecyclerView.getLayoutParams().height = recySize;
         jigAdapter = new RecycleJigAdapter();
-        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(jigAdapter, mContext);
+        ItemTouchHelper.Callback mainCallback = new RecycleTouchHelper(jigAdapter, mContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         jigAdapter.setTouchHelper(mainItemTouchHelper);
         mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);
@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
 //        jigX = 4; jigY = 5;
 //        if (jigTables[jigX][jigY].oLine == null)
 //            piece.make(jigX, jigY);
-//        iv99.setImageBitmap(jigTables[jigX][jigY].oLine);
+//        imageAnswer.setImageBitmap(jigTables[jigX][jigY].oLine);
     }
 
     private static void makeRecycleArrays() {
@@ -178,6 +178,7 @@ public class MainActivity extends Activity {
         recySize = (int) ((float) screenX / 10f * dipVal / 2000f);
         picOSize = recySize * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
+        picGap = picOSize * 5 / (14+5+5);
 
         // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 ScreenX 1080 x 2316
         // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 ScreenX 1600 x 2560
@@ -190,12 +191,26 @@ public class MainActivity extends Activity {
         innerSize = fullHeight / (yCount+1);
         if (fullWidth / (xCount+1) < innerSize)
             innerSize = fullWidth / (xCount-1);
-        x5 = innerSize *5/14;
-        outerSize = x5 + x5 + innerSize;
-        Log.w("sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", x5="+x5+", innerSize="+ innerSize);
+        pieceGap = innerSize *5/14;
+        outerSize = pieceGap + pieceGap + innerSize;
+        Log.w("sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
         Log.w("sizeCheck","picOSize="+ picOSize +", picISize="+ picISize);
 
-        piece = new Piece(mContext, outerSize, x5, innerSize);
+        piece = new Piece(mContext, outerSize, pieceGap, innerSize);
+
+        int margin = 16;
+
+        imageAnswer.getLayoutParams().width =
+        imageAnswer.getLayoutParams().height = screenX - margin - margin;
+
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(margin, margin, margin, margin);
+        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.width = screenX - margin - margin;
+        layoutParams.height = screenX - margin - margin;
+        imageAnswer.setLayoutParams(layoutParams);
+
     }
 
     void writeFile(File targetFolder, String fileName, String outText) {

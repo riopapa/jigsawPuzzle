@@ -40,7 +40,7 @@ public class PaintView extends View {
     static Bitmap jigMap, mBitmap;
 
     Activity activity;
-    TextView tv;
+    TextView tvL, tvR;
 
     public PaintView(Context context) {
         this(context, null);
@@ -50,10 +50,11 @@ public class PaintView extends View {
         super(context, attrs);
     }
 
-    public void init(Activity activity, TextView tv){
-        this.zwOff = picOSize * 2/3;
+    public void init(Activity activity, TextView tvLeft, TextView tvRit){
+        this.zwOff = picOSize - picISize;
         this.activity = activity;
-        this.tv = tv;
+        this.tvL = tvLeft;
+        this.tvR = tvRit;
 
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
 
@@ -70,8 +71,9 @@ public class PaintView extends View {
     }
 
     protected void onDraw(Canvas canvas){
-        if (jPosX != -1) {
-            canvas.save();
+        Log.w("paintview","on Draw jPos "+jPosX+" x "+jPosY);
+        canvas.save();
+        if (jPosX == -123) {
             for (int x = 0; x < 6; x++) {
                 for (int y = 0; y < 7; y++) {
                     JigTable jt = jigTables[x+2][y+2];
@@ -83,16 +85,18 @@ public class PaintView extends View {
                     canvas.drawBitmap(bm, x*(picISize), y*(picISize), null);
                 }
             }
-            canvas.drawBitmap(jigMap, jPosX - zwOff, jPosY - zwOff, null);
-            canvas.restore();
-            activity.runOnUiThread(() -> tv.setText(jPosX + " x " + jPosY+" "+ jigX00Y));
         }
+        canvas.drawBitmap(jigMap, jPosX, jPosY, null);
+//        canvas.drawBitmap(jigMap, baseX, baseY, null);
+        canvas.restore();
+        activity.runOnUiThread(() -> tvR.setText("onDraw "+jPosX + " x " + jPosY+"\n " + jigX00Y));
 
     }
     private void touchDown(float x, float y){
         jPosX = x;
         jPosY = y;
         jigMap = Bitmap.createScaledBitmap(zNow.oLine, picOSize, picOSize, true);
+        Log.w("paint view", "touchDown x y "+jPosX+" x "+jPosY);
     }
     private boolean touchMove(float x, float y){
         float dx = Math.abs(x - jPosX);

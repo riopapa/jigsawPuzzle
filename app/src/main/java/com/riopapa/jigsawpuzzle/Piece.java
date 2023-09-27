@@ -18,15 +18,15 @@ import android.graphics.PorterDuffXfermode;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class Piece {
-    int outerSize, x5, innerSize;
+    int outerSize, pieceGap, innerSize;
     Paint paintIN, paintOUT;
     int outLineColor;
     Context context;
 
-    public Piece(Context context, int outerSize, int x5, int innerSize) {
+    public Piece(Context context, int outerSize, int pieceGap, int innerSize) {
         this.context = context;
         this.outerSize = outerSize;
-        this.x5 = x5;
+        this.pieceGap = pieceGap;
         this.innerSize = innerSize;
         paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
         outLineColor = context.getColor(R.color.out_line);
@@ -144,18 +144,18 @@ public class Piece {
 //                break;
 //        }
 //        if (right) {
-//            for (x = outerSize-x5; x < outerSize; x++) {
-//                b.setPixel(x, x5, 0);
-//                b.setPixel(x, x5+1, 0);
-//                b.setPixel(x, outerSize-x5, 0);
-//                b.setPixel(x, outerSize-x5-1, 0);
+//            for (x = outerSize-pieceGap; x < outerSize; x++) {
+//                b.setPixel(x, pieceGap, 0);
+//                b.setPixel(x, pieceGap+1, 0);
+//                b.setPixel(x, outerSize-pieceGap, 0);
+//                b.setPixel(x, outerSize-pieceGap-1, 0);
 //            }
 //        } else {
-//            for (y = outerSize-x5; y < outerSize; y++) {
-//                b.setPixel(x5, y, 0);
-//                b.setPixel(x5+1, y, 0);
-//                b.setPixel(outerSize-x5, y, 0);
-//                b.setPixel(outerSize-x5-1, y, 0);
+//            for (y = outerSize-pieceGap; y < outerSize; y++) {
+//                b.setPixel(pieceGap, y, 0);
+//                b.setPixel(pieceGap+1, y, 0);
+//                b.setPixel(outerSize-pieceGap, y, 0);
+//                b.setPixel(outerSize-pieceGap-1, y, 0);
 //            }
 //        }
 //

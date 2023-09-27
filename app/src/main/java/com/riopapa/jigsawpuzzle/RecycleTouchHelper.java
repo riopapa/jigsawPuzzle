@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigX00Y;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigX;
@@ -9,10 +10,9 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigY;
 import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
-import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
 import static com.riopapa.jigsawpuzzle.PaintView.updateViewHandler;
 
 import android.content.Context;
@@ -30,7 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyItemTouchHelper extends ItemTouchHelper.Callback {
+public class RecycleTouchHelper extends ItemTouchHelper.Callback {
 
     private final ZItemTouchHelperAdapter mAdapter;
     private final Context mContext;
@@ -38,10 +38,10 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     Paint mClearPaint;
     ColorDrawable mBackground;
     int backgroundColor;
-    public MyItemTouchHelper(ZItemTouchHelperAdapter adapter, Context context) {
+    public RecycleTouchHelper(ZItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
         mContext = context;
-        Log.w("MyItemTouchHelper", "got mAdapter");
+        Log.w("RecycleTouchHelper", "got mAdapter");
     }
 
     @Override
@@ -65,7 +65,8 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            jigX00Y = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
+            jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
+            jigX00Y = recyclerJigs.get(jigRecyclePos);
             jigX = jigX00Y /10000;
             jigY = jigX00Y - jigX * 10000;
             Bitmap bm = piece.makeBig(jigTables[jigX][jigY].oLine2);
@@ -106,10 +107,10 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         jigX00Y = recyclerJigs.get(viewHolder.getAbsoluteAdapterPosition());
         jigX = jigX00Y / 10000;
         jigY = jigX00Y - jigX * 10000;
-        c.drawBitmap(piece.makeBig(jigTables[jigX][jigY].oLine2), 0, 0, null);
+        c.drawBitmap(piece.makeBig(jigTables[jigX][jigY].oLine), 0, 0, null);
 
-        TextView tv = mActivity.findViewById(R.id.go);
-        mActivity.runOnUiThread(() -> tv.setText("recyclex "+dX+" x "+dY));
+        TextView tvLeft = mActivity.findViewById(R.id.debug_left);
+        mActivity.runOnUiThread(() -> tvLeft.setText("recyclex "+dX+" x "+dY));
 
 //        mBackground = new ColorDrawable();
 //        backgroundColor = Color.parseColor("#b80f0a");
@@ -131,7 +132,7 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         Log.w("onChildDrawBack" , " dx="+dX+" dy="+dY+
                 " idx ="+ jigX00Y);
         if (dY < -50) {
-            jPosY = screenY - picOSize - picOSize;
+            jPosY = screenY - recySize - picOSize;
             jPosX = itemView.getLeft() + picOSize /2;
             updateViewHandler.sendEmptyMessage(0);
         }
