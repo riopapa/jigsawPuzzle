@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.jigC00R;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
@@ -78,13 +78,15 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
             Log.w("r22 adaptor onShowPress", "Touch onShowPress ");
+            mTouchHelper.startDrag(this);
 
         }
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
+            mTouchHelper.startDrag(this);
             Log.w("r15 onSingleTapUp", "onSingleTapUp UP");
-            return false;
+            return true;
         }
 
         long drawTime;
@@ -101,10 +103,9 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
-            mTouchHelper.startDrag(this);
-            Log.w("r16 adaptor onLong", "getAction  "+e.getAction()
-                    +" toString "+e.toString()
-                    + " X "+e.getX()+" Y "+e.getY());
+            // e.getAction() = ACTION_DOWN
+//            mTouchHelper.startDrag(this);
+//            Log.w("r16 adaptor onLong"," X "+e.getX()+" Y "+e.getY());
             /* e.getX(), e.getY() means relative position within this item */
         }
 
@@ -117,14 +118,14 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigC00R = recyclerJigs.get(position);
-        jigX = jigC00R / 10000;
-        jigY = jigC00R - jigX * 10000;
+        jigCR = recyclerJigs.get(position);
+        jigX = jigCR / 10000;
+        jigY = jigCR - jigX * 10000;
         JigTable z = jigTables[jigX][jigY];
         if (z.src == null)
             piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
-        viewHolder.ivIcon.setTag(jigC00R);
+        viewHolder.ivIcon.setTag(jigCR);
 //        viewHolder.ivIcon.setOnClickListener((View.OnClickListener) this);
     }
 

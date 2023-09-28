@@ -4,12 +4,14 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigC00R;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigC;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigR;
 import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
+import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
+import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
@@ -65,18 +67,21 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
     }
 
     long helperDrawTime;
+
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-            jigC00R = recyclerJigs.get(jigRecyclePos);
-            jigC = jigC00R /10000;
-            jigR = jigC00R - jigC * 10000;
+            jigCR = recyclerJigs.get(jigRecyclePos);
+            jigC = jigCR /10000;
+            jigR = jigCR - jigC * 10000;
             Bitmap bm = piece.makeBig(jigTables[jigC][jigR].oLine);
             Drawable d = new BitmapDrawable(mContext.getResources(), bm);
-            viewHolder.itemView.setBackground(d);
-            Log.w("x12 onSelectedChanged", "drawed "+ jigC00R);
+//            viewHolder.itemView.setBackground(d);
+//            viewHolder.itemView.setScaleX(1.2f);
+//            viewHolder.itemView.setScaleX(1.2f);
+//            Log.w("x12 onSelectedChanged", "drawed "+ jigCR);
             //            viewHolder.itemView.setBackground(ContextCompat.getDrawable(mContext, R.drawable.item_selected));
         }
     }
@@ -101,18 +106,20 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        // -- canvas width = screenX, height = recycler height
         long nowTime = System.currentTimeMillis();
-        if (nowTime < helperDrawTime + 400)
+        if (nowTime < helperDrawTime + 1000)
             return;
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         helperDrawTime = nowTime;
+        View pieceView = viewHolder.itemView;
+        Log.w("onChildDraw","pieceView w="+pieceView.getWidth()+" h="+pieceView.getHeight());
 
-        View itemView = viewHolder.itemView;
+        jigCR = recyclerJigs.get(jigRecyclePos);
+        jigC = jigCR / 10000;
+        jigR = jigCR - jigC * 10000;
 
-        jigC00R = recyclerJigs.get(jigRecyclePos);
-        jigC = jigC00R / 10000;
-        jigR = jigC00R - jigC * 10000;
-        c.drawBitmap(piece.makeBig(jigTables[jigC][jigR].oLine), 0, 0, null);
+        c.drawBitmap(jigTables[jigC][jigR].oLine2, 0, 0, null);
 
         TextView tvLeft = mActivity.findViewById(R.id.debug_left);
         mActivity.runOnUiThread(() -> tvLeft.setText("recyclex "+dX+" x "+dY));
@@ -125,34 +132,35 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
         boolean isCancelled = dX == 0 && !isCurrentlyActive;
 
         if (isCancelled) {
-            clearCanvas(c, itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            clearCanvas(c, pieceView.getRight() + dX, (float) pieceView.getTop(), (float) pieceView.getRight(), (float) pieceView.getBottom());
+//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             return;
         }
 
 //        mBackground.setColor(mContext.getColor(R.color.purple_500));
 //        mBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
 //        mBackground.draw(c);
-        Log.w("r18 Backgond", "Left "+itemView.getLeft()+" Right "+itemView.getRight()+" , delta ");
+        Log.w("r18 Backgond", "Left "+pieceView.getLeft()+" Right "+pieceView.getRight());
         Log.w("r20 onChildDrawBack" , " dx="+dX+" dy="+dY+
-                " idx ="+ jigC00R);
-        if (dY < - picISize/2) {    // if moves up into main plate
-            move2PaintView(dY, itemView);
+                " idx ="+ jigCR);
+        if (dY < - picISize/4) {    // if moves up into main plate
+            move2PaintView(dY, pieceView);
 
         }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
     private static void move2PaintView(float dY, View itemView) {
-        Log.w("r22 remove", "jig removing "+ jigC00R);
+        Log.w("r22 remove", "jig removing "+ jigC+"x"+jigR);
         jPosY = screenY - recySize + dY - picISize;
         jPosX = itemView.getLeft() + picISize / 2;
 
         jigTables[jigC][jigR].outRecycle = true;
+        jigTables[jigC][jigR].posX = (int) jPosX - picHSize;
+        jigTables[jigC][jigR].posY = (int) jPosY - picOSize;
+
         inViewC.add(jigC); inViewR.add(jigR);
 
-        jigTables[jigC][jigR].posX = (int) jPosX;
-        jigTables[jigC][jigR].posY = (int) jPosY;
         recyclerJigs.remove(jigRecyclePos);
         jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
         updateViewHandler.sendEmptyMessage(0);
@@ -160,6 +168,6 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
 
     private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
 //        c.drawRect(left, top, right, bottom, mClearPaint);
-
+        Log.w("recycleTouchHelper","clearCanvas L"+left+" R"+right+" T"+top+" B"+bottom);
     }
 }

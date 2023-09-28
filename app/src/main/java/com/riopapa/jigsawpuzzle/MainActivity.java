@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
     public static Bitmap fullImage, grayedImage, brightImage;
     public static JigTable[][] jigTables;
     public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
-    public static int jigC, jigR, jigC00R;   // fullImage piece array column, row , x*10000+y
+    public static int jigC, jigR, jigCR;   // fullImage piece array column, row , x*10000+y
     public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
     public static int screenX, screenY; // physical screen size
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
         maskMaps = new Masks().make(mContext, outerSize);
         outMaps = new Masks().makeOut(mContext, outerSize);
 
-        jigC00R = -1;
+        jigCR = -1;
         paintView = findViewById(R.id.paintview);
         paintView.init(this, tvLeft, tvRight);
         paintView.load(jigTables, jigCOLUMNs /2, jigROWs /2);
