@@ -4,8 +4,8 @@ import static com.riopapa.jigsawpuzzle.MainActivity.brightImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.grayedImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCntX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCntY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
@@ -46,8 +46,8 @@ public class ImageBright {
                 Paint paintBright = new Paint();
                 paintBright.setColorFilter(new ColorMatrixColorFilter(cm));
                 canvasBright.drawBitmap(fullImage, 0, 0, paintBright);
-                for (int x = 0; x < jigCntX; x++) {
-                    for (int y = 0; y < jigCntY; y++) {
+                for (int x = 0; x < jigCOLUMNs; x++) {
+                    for (int y = 0; y < jigROWs; y++) {
                         JigTable z = jigTables[x][y];
                         Bitmap mask = piece.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                                 maskMaps[2][z.uType], maskMaps[3][z.dType], innerSize, outerSize);

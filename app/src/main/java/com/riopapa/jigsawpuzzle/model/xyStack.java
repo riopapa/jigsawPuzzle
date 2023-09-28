@@ -23,7 +23,7 @@ public class xyStack {
             }
         }
         else
-            Log.w("Stack", "full");
+            Log.w("x5 Stack", "full");
     }
 
     public int pop() {

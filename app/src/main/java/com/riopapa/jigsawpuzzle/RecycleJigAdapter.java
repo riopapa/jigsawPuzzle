@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.jigX00Y;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigC00R;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
@@ -47,7 +47,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public void onItemSwiped(int position) {
 
-        Log.w("Recycler onItemSwiped", "position = "+position);
+        Log.w("r13 Recycler onItemSwiped", "position = "+position);
 
     }
 
@@ -77,13 +77,13 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         }
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
-            Log.w("adaptor onShowPress", "Touch onShowPress ");
+            Log.w("r22 adaptor onShowPress", "Touch onShowPress ");
 
         }
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
-            Log.w("onSingleTapUp", "onSingleTapUp UP");
+            Log.w("r15 onSingleTapUp", "onSingleTapUp UP");
             return false;
         }
 
@@ -95,16 +95,17 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
                 return false;
             drawTime = nowTime;
 
-            Log.w("adapter onScroll","distX="+distanceX+", distY="+distanceY+ "e1 X="+e1.getX()+" e1Y="+e1.getY());
+            Log.w("r14 adapter onScroll","distX="+distanceX+", distY="+distanceY+ "e1 X="+e1.getX()+" e1Y="+e1.getY());
             return false;
         }
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
             mTouchHelper.startDrag(this);
-            Log.w("adaptor onLong", "pressed getActionIndex "+e.getActionIndex()
-                    + " X "+e.getX()+" Y "+e.getY()
-            );
+            Log.w("r16 adaptor onLong", "getAction  "+e.getAction()
+                    +" toString "+e.toString()
+                    + " X "+e.getX()+" Y "+e.getY());
+            /* e.getX(), e.getY() means relative position within this item */
         }
 
         @Override
@@ -116,14 +117,14 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigX00Y = recyclerJigs.get(position);
-        jigX = jigX00Y / 10000;
-        jigY = jigX00Y - jigX * 10000;
+        jigC00R = recyclerJigs.get(position);
+        jigX = jigC00R / 10000;
+        jigY = jigC00R - jigX * 10000;
         JigTable z = jigTables[jigX][jigY];
         if (z.src == null)
             piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
-        viewHolder.ivIcon.setTag(jigX00Y);
+        viewHolder.ivIcon.setTag(jigC00R);
 //        viewHolder.ivIcon.setOnClickListener((View.OnClickListener) this);
     }
 

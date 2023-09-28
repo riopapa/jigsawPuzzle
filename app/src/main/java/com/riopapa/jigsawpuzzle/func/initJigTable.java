@@ -4,38 +4,39 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.Random;
 
-public class SetBoundaryVal {
+public class initJigTable {
 
-    public SetBoundaryVal(JigTable[][] zz, int xx, int yy) {
+    public initJigTable(JigTable[][] zz, int colSize, int rowSize) {
 
         //
         Random rnd = new Random(System.currentTimeMillis());
 
-        for (int y = 0; y < yy; y++) {
-            for (int x = 0; x < xx; x++) {
+        for (int row = 0; row < rowSize; row++) {
+            for (int col = 0; col < colSize; col++) {
                 JigTable z = new JigTable();
                 z.src = null;
-                if (x == 0) {
+                if (col == 0) {
                     z.lType = 0;
                 } else {
-                    z.lType = zz[x-1][y].rType;
+                    z.lType = zz[col-1][row].rType;
                 }
-                if (x < xx-1) {
+                if (col < colSize-1) {
                     z.rType = 1 + rnd.nextInt(4);   // rType counts
                 } else {
                     z.rType = 0;
                 }
 
-                if (y == 0) {
+                if (row == 0) {
                     z.uType = 0;
                 } else {
-                    z.uType = zz[x][y-1].dType;
+                    z.uType = zz[col][row-1].dType;
                 }
-                if (y < yy-1)
+                if (row < rowSize-1)
                     z.dType = 1 + rnd.nextInt(4);
                 else
                     z.dType = 0;
-                zz[x][y] = z;
+                zz[col][row] = z;
+                zz[col][row].outRecycle = false;
             }
         }
     }
