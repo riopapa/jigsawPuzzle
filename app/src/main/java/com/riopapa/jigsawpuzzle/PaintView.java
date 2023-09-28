@@ -79,6 +79,16 @@ public class PaintView extends View {
         Log.w("p4 paintview","on Draw jPos "+jPosX+" x "+jPosY);
         canvas.save();
         if (inViewR.size() > 0) {
+            for (int c = 0; c < 8; c++) {
+                for (int r = 0; r < 8; r++) {
+                    if (jigTables[c][r].oLine == null)
+                        piece.makeAll(c,r);
+                    JigTable jt = jigTables[c][r];
+                    Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picOSize, picOSize, true);
+                    canvas.drawBitmap(bm, 100 + c*picISize, 600+r*picISize, null);
+
+                }
+            }
             for (int cnt = 0; cnt < inViewR.size(); cnt++) {
                 JigTable jt = jigTables[inViewC.get(cnt)][inViewR.get(cnt)];
                 Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picOSize, picOSize, true);
