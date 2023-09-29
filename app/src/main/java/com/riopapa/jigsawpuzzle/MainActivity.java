@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.renderscript.ScriptGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,8 +49,8 @@ public class MainActivity extends Activity {
     public static Bitmap fullImage, grayedImage, brightImage;
     public static JigTable[][] jigTables;
     public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
-    public static int jigC, jigR, jigCR;   // fullImage piece array column, row , x*10000+y
-    public static float jPosX, jPosY; // absolute x,y position drawing current jigsaw
+    public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
+    public static int jPosX, jPosY; // absolute x,y position drawing current jigsaw
     public static int screenX, screenY; // physical screen size
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
     public static float fullScale; // fullImage -> screenX
@@ -132,10 +131,10 @@ public class MainActivity extends Activity {
         new ImageGray().build();
         new ImageBright().build();
         fullScale = screenX / fullWidth;
-//        jigC = 4; jigR = 5;
-//        if (jigTables[jigC][jigR].oLine == null)
-//            piece.make(jigC, jigR);
-//        imageAnswer.setImageBitmap(jigTables[jigC][jigR].oLine);
+//        nowC = 4; nowR = 5;
+//        if (jigTables[nowC][nowR].oLine == null)
+//            piece.make(nowC, nowR);
+//        imageAnswer.setImageBitmap(jigTables[nowC][nowR].oLine);
     }
 
     private static void makeRecycleArrays() {

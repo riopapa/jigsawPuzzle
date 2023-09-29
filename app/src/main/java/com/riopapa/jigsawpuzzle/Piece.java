@@ -10,6 +10,8 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -21,7 +23,7 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 public class Piece {
     int outerSize, pieceGap, innerSize, deltaGap;
     float out2Scale = 1.05f, bigScale = 1.1f;
-    Paint paintIN, paintOUT;
+    Paint paintIN, paintOUT, paintBright;
     int outLineColor, out2LineColor;
     Matrix matrixOutLine, matrixBig;
 
@@ -47,17 +49,30 @@ public class Piece {
         paintIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         paintOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintOUT.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+
+        final int contrast  = 1;
+        final int brightness = 140;
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        contrast, 0, 0, 0, brightness,
+                        0, contrast, 0, 0, brightness,
+                        0, 0, contrast, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+        paintBright = new Paint();
+        paintBright.setColorFilter(new ColorMatrixColorFilter(cm));
+
     }
 
     public void makeAll(int col, int row) {
         JigTable z = jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(fullImage, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
-                maskMaps[2][z.uType], maskMaps[3][z.dType], innerSize, outerSize);
+                maskMaps[2][z.uType], maskMaps[3][z.dType]);
         z.src = cropSrc(orgPiece, mask);
         z.pic = Bitmap.createScaledBitmap(z.src, picOSize, picOSize, true);
         mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
-                outMaps[2][z.uType], outMaps[3][z.dType], innerSize, outerSize);
+                outMaps[2][z.uType], outMaps[3][z.dType]);
         z.oLine = makeOutline(z.src, mask);
         z.oLine2 = makeOut2Line(z.oLine);
         jigTables[col][row] = z;
@@ -81,8 +96,12 @@ public class Piece {
         return cropped;
     }
 
-    //   create picOSized outline bitmap from jig.src (outerSize)
-
+    /**
+     * create picOSized outline bitmap from jig.src (outerSize)
+     * @param srcMap input bitmap with outerSize
+     * @param outMask outline Mask
+     * @return outlined bitmawp with picOSize
+     */
     public Bitmap makeOutline(Bitmap srcMap, Bitmap outMask) {
 
         Bitmap outMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
@@ -98,6 +117,11 @@ public class Piece {
 
     }
 
+    /**
+     * create picOSized double outlined bitmap from jig.oline
+     * @param inMap input outlined with outerSize
+     * @return double outlined bitmawp with picOSize
+     */
     public Bitmap makeOut2Line(Bitmap inMap) {
         Bitmap outMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
@@ -107,7 +131,11 @@ public class Piece {
         return Bitmap.createScaledBitmap(outMap, picOSize, picOSize, true);
     }
 
-    // make outline a litter bigger
+    /**
+     * create picOSized outline bitmap from jig.oline
+     * @param inMap input outlined with outerSize
+     * @return bigger bitmap with picOSize
+     */
     public Bitmap makeBigger(Bitmap inMap) {
         Bitmap bigMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bigMap);
@@ -115,14 +143,33 @@ public class Piece {
         return bigMap;
     }
 
-    public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD, int pw, int zw) {
-        Bitmap tMap = Bitmap.createBitmap(zw, zw, Bitmap.Config.ARGB_8888);
+    /**
+     * create masked Map using L,R,U,D masks
+     * @param maskL, maskR, maskU, maskD predefined with outerSize
+     * @return merged bitmawp with outerSize
+     */
+
+    public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
+        Bitmap tMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tMap);
         canvas.drawBitmap(maskL, 0,0, null);
         canvas.drawBitmap(maskR, 0,0, null);
         canvas.drawBitmap(maskU, 0,0, null);
         canvas.drawBitmap(maskD, 0,0, null);
         return tMap;
+    }
+
+    /**
+     * create white Map for temperary bright map
+     * @param inMap positioned picMap
+     * @return merged bitmawp with outerSize
+     */
+
+    public Bitmap makeBright(Bitmap inMap) {
+        Bitmap bMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
+        Canvas canvasBright = new Canvas(bMap);
+        canvasBright.drawBitmap(inMap, 0, 0, paintBright);
+        return bMap;
     }
 
 }

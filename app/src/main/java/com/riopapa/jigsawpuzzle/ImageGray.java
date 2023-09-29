@@ -31,7 +31,7 @@ public class ImageGray {
                     for (int y = 0; y < jigROWs; y++) {
                         JigTable z = jigTables[x][y];
                         Bitmap mask = piece.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
-                                maskMaps[2][z.uType], maskMaps[3][z.dType], innerSize, outerSize);
+                                maskMaps[2][z.uType], maskMaps[3][z.dType]);
                         Bitmap bm = Bitmap.createBitmap(grayedImage, x*innerSize, y*innerSize, outerSize, outerSize);
                         canvasGray.drawBitmap(piece.makeOut2Line(piece.cropSrc(bm, mask)), x*innerSize, y*innerSize, null);
                     }
