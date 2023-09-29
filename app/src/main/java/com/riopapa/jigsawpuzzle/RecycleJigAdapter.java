@@ -88,7 +88,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
 //            mTouchHelper.startDrag(this);
-            Log.w("r22 adaptor onShowPress", "Touch onShowPress ");
+//            Log.w("r22 adaptor onShowPress", "Touch onShowPress ");
 
         }
 

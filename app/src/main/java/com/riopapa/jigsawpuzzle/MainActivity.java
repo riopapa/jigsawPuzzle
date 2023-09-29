@@ -64,6 +64,8 @@ public class MainActivity extends Activity {
     public static Context mContext;
     public static RecycleJigAdapter jigRecycleAdapter;
 
+    public static int pieceMax;   // how many pieces can be in columns / rows
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActivityMainBinding binding;
@@ -111,7 +113,7 @@ public class MainActivity extends Activity {
         jigCR = -1;
         paintView = findViewById(R.id.paintview);
         paintView.init(this, tvLeft, tvRight);
-        paintView.load(jigTables, jigCOLUMNs /2, jigROWs /2);
+//        paintView.load(jigTables, jigCOLUMNs /2, jigROWs /2);
 
         makeRecycleArrays();
 

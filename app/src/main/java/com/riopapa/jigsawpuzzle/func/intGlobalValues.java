@@ -19,6 +19,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.pieceGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceMax;
 
 import android.app.Activity;
 import android.content.Context;
@@ -62,7 +63,6 @@ public class intGlobalValues {
         if (fullWidth / (jigCOLUMNs +1) < innerSize)
             innerSize = fullWidth / (jigCOLUMNs -1);
         pieceGap = innerSize *5/14;
-
         outerSize = pieceGap + pieceGap + innerSize;
         int margin = 32;
 
@@ -79,8 +79,9 @@ public class intGlobalValues {
         baseY = (screenY - screenX - recySize)/2;
         Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
         Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
-                "base XY ="+baseX+" x "+ baseY);
+                ", base XY ="+baseX+" x "+ baseY);
 
+        pieceMax = (screenX - margin - margin) / picISize;
         piece = new Piece(context, outerSize, pieceGap, innerSize);
 
     }
