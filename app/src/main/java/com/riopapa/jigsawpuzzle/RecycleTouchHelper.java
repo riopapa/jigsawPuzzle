@@ -2,13 +2,13 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
@@ -16,9 +16,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.PaintView.inViewC;
-import static com.riopapa.jigsawpuzzle.PaintView.inViewMap;
-import static com.riopapa.jigsawpuzzle.PaintView.inViewR;
+import static com.riopapa.jigsawpuzzle.PaintView.fPs;
 import static com.riopapa.jigsawpuzzle.PaintView.updateViewHandler;
 
 import android.content.Context;
@@ -35,6 +33,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.Collections;
 
@@ -160,10 +160,11 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
         jigTables[nowC][nowR].posX = jPosX;
         jigTables[nowC][nowR].posY = jPosY;
 
-        inViewC.add(nowC); inViewR.add(nowR);
-        inViewMap.add(jigTables[nowC][nowR].oLine);
-//        inViewMap.add(Bitmap.createScaledBitmap(jigTables[nowC][nowR].oLine, picOSize, picOSize, true));
-
+        FloatPiece fp = new FloatPiece();
+        fp.C = nowC; fp.R = nowR;
+        fp.bitmap = jigTables[nowC][nowR].oLine;
+        fp.bigMap = piece.makeBigger(fp.bitmap);
+        fPs.add(fp);
         recyclerJigs.remove(jigRecyclePos);
         jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
         updateViewHandler.sendEmptyMessage(0);

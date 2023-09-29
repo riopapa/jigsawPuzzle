@@ -11,6 +11,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
@@ -50,6 +51,7 @@ public class intGlobalValues {
         picOSize = recySize * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
         picHSize = picOSize / 2;
+        picGap = picISize * 5 / 24;
 
         // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 ScreenX 1080 x 2316
         // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 ScreenX 1600 x 2560

@@ -6,6 +6,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -43,14 +45,12 @@ public class PaintView extends View {
     static JigTable nowJig;
     public int nowIdx;
     static Bitmap mBitmap;
-    public static ArrayList<Integer> inViewC, inViewR;
-    public static ArrayList<Bitmap> inViewMap;
+    public static ArrayList<FloatPiece> fPs;
     public static int offsetC, offsetR, calcC, calcR;
 
-    private static boolean dragging, selected;
+    private static boolean selected, dragging;
     Activity activity;
     TextView tvL, tvR;
-    long positionedTime;
 
     public PaintView(Context context) {
         this(context, null);
@@ -64,13 +64,10 @@ public class PaintView extends View {
         this.activity = activity;
         this.tvL = tvLeft;
         this.tvR = tvRit;
-        inViewC = new ArrayList<>();
-        inViewR = new ArrayList<>();
-        inViewMap = new ArrayList<>();
+        fPs = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
         offsetC = 0; offsetR = 0;
-
 
     }
 
@@ -81,54 +78,57 @@ public class PaintView extends View {
 
     protected void onDraw(Canvas canvas){
         canvas.save();
-//        if (inViewR.size() == 0) {
             for (int c = 0; c < pieceMax; c++) {
                 for (int r = 0; r < pieceMax; r++) {
                     if (jigTables[c][r].locked) {
                         if (jigTables[c][r].oLine == null)
                             piece.makeAll(c, r);
-
-                    canvas.drawBitmap(jigTables[c][r].oLine,
-                            baseX+c*picISize, baseY+r*picISize, null);
-//                        canvas.drawBitmap(piece.makeBright(jigTables[c][r].oLine),
-//                                baseX + c * picISize, baseY + r * picISize, null);
+                        canvas.drawBitmap(jigTables[c][r].oLine,
+                                baseX + c * picISize, baseY + r * picISize, null);
                     }
                 }
             }
-//      }
 
-        for (int cnt = 0; cnt < inViewR.size(); cnt++) {
-            int c = inViewC.get(cnt);
-            int r = inViewR.get(cnt);
+        for (int cnt = 0; cnt < fPs.size(); cnt++) {
+            FloatPiece fP = fPs.get(cnt);
+            int c = fP.C;
+            int r = fP.R;
             JigTable jt = jigTables[c][r];
-            if (nowC == c && nowR == r && jt.locked && System.currentTimeMillis() < positionedTime) {
-                canvas.drawBitmap(piece.makeBright(inViewMap.get(cnt)), jt.posX, jt.posY, null);
-
-            } else if (dragging && selected && c == nowC && r == nowR) {
-                canvas.drawBitmap(piece.makeBigger(inViewMap.get(cnt)), jt.posX, jt.posY, null);
-            } else
-                canvas.drawBitmap(inViewMap.get(cnt), jt.posX, jt.posY, null);
+            if (fP.time == 0) { // time == 0 means normal piece
+                if (dragging && selected && c == nowC && r == nowR) {
+                    canvas.drawBitmap(fP.bigMap, jt.posX, jt.posY, null);
+                } else
+                    canvas.drawBitmap(fP.bitmap, jt.posX, jt.posY, null);
+            } else {    // timer active to show bright puzzle
+                if (System.currentTimeMillis() < fP.time) {
+                    canvas.drawBitmap(fP.brightMap, jt.posX, jt.posY, null);
+                } else {
+                    canvas.drawBitmap(fP.bitmap, jt.posX, jt.posY, null);
+                    fPs.remove(cnt);
+                    invalidate();
+                }
+            }
         }
 
         canvas.restore();
-        activity.runOnUiThread(() -> tvR.setText("onDraw "+jPosX + " x " + jPosY+"\n c" + nowC +" r"+ nowR +" array="+inViewR.size()));
+        activity.runOnUiThread(() -> tvR.setText("onDraw "+jPosX + " x " + jPosY+"\n c" + nowC +" r"+ nowR));
 
     }
     private void touchDown(float fX, float fY){
 
-        int x = (int) fX;
-        int y = (int) fY;
+        int iX = (int) fX;
+        int iY = (int) fY;
         dragging = true;
         selected = false;
-        for (int i = 0; i < inViewR.size(); i++) {
-            int r = inViewR.get(i);
-            int c = inViewC.get(i);
+        for (int i = 0; i < fPs.size(); i++) {
+            int c = fPs.get(i).C;
+            int r = fPs.get(i).R;
             JigTable jt = jigTables[c][r];
-            if (isPieceSelected(jt, x, y)) {
+            if (isPieceSelected(jt, iX, iY)) {
                 nowR = r; nowC = c;
                 nowIdx = i;
                 nowJig = jigTables[c][r];
-                jPosX = x; jPosY = y;
+                jPosX = iX; jPosY = iY;
                 selected = true;
                 Log.w("x8 paint view c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
                 break;
@@ -137,10 +137,8 @@ public class PaintView extends View {
     }
 
     private boolean isPieceSelected(JigTable jt, int x, int y) {
-        if (jt.posX < x && x < (jt.posX + picOSize) &&
-                jt.posY < y && y < (jt.posY + picOSize))
-            return true;
-        return false;
+        return jt.posX < x && x < (jt.posX + picOSize) &&
+                jt.posY < y && y < (jt.posY + picOSize);
     }
     private boolean touchMove(float fX, float fY){
         if (!selected)
@@ -153,22 +151,23 @@ public class PaintView extends View {
             jPosY = (int) fY;
             jigTables[nowC][nowR].posX = (int) jPosX - picHSize;
             jigTables[nowC][nowR].posY = (int) jPosY - picHSize;
-            String txt;
+
             if (checkIfPositioned() && !jigTables[nowC][nowR].locked) {
                 jigTables[nowC][nowR].locked = true;
-                inViewC.remove(nowIdx); inViewR.remove(nowIdx);
-                inViewMap.remove(nowIdx);
-                positionedTime = System.currentTimeMillis() + 1000;
-                 txt = "Positioned " + jPosX + " x " + jPosY + "\n c" + nowC + " r" + nowR;
+                FloatPiece fp = fPs.get(nowIdx);
+                fp.brightMap = piece.makeBright(fp.bitmap);
+                fp.time = System.currentTimeMillis() + 500;
                 new Timer().schedule(new TimerTask() {
                     public void run() {
-                        positionedTime = System.currentTimeMillis() - 500;
-                        paintView.invalidate();
+                        invalidate();
                     }
-                }, 400);
-            } else
-                txt = "table c " + calcC +" r "+ calcR + "\nnow c" + nowC +" r"+ nowR;
-            activity.runOnUiThread(() -> tvL.setText(txt));
+                }, 600);
+                new Timer().schedule(new TimerTask() {
+                    public void run() {
+                        invalidate();
+                    }
+                }, 900);
+            }
             return true;
         }
         return false;
@@ -179,14 +178,27 @@ public class PaintView extends View {
 
         calcC = (jPosX - baseX - picHSize) / picISize + offsetC;
         calcR = (jPosY - baseY - picHSize) / picISize + offsetR;
-        if (calcC == nowC && calcR == nowR) {
-            return true;
-        }
-        return false;
+        int xR = baseX + calcC * picISize + picISize;
+        int xL = xR - picGap;
+        int yB = baseY + calcR * picISize + picISize;
+        int yT = yB - picGap;
+//        String txt = " jx=" + jPosX + " jy=" + jPosY + "\n calc " + xL + " vs " + xR +
+//                "\n R " + yT + " vs " + yB;
+//        activity.runOnUiThread(() -> tvL.setText(txt));
+        if (calcC != nowC || calcR != nowR)
+            return false;
+        if (jPosX < xL || jPosX > xR)
+            return false;
+        if (jPosY < yT || jPosY > yB)
+            return false;
+//        int x = jPosX % picISize; jPosX = jPosX - x * picISize;
+//        int y = jPosY % picISize; jPosY = jPosX - y * picISize;
+        return true;
     }
     private void touchUp(){
         dragging = false;
     }
+
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
