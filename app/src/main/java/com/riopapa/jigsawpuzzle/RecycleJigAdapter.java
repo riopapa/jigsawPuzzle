@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
+import java.util.Collections;
+
 public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.JigHolder>
         implements ZItemTouchHelperAdapter {
 
@@ -40,17 +42,25 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     }
 
     @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-
-    }
-
-    @Override
     public void onItemSwiped(int position) {
 
         Log.w("r13 Recycler onItemSwiped", "position = "+position);
 
     }
-
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(recyclerJigs, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(recyclerJigs, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
     public class JigHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
@@ -77,14 +87,14 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         }
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
+//            mTouchHelper.startDrag(this);
             Log.w("r22 adaptor onShowPress", "Touch onShowPress ");
-            mTouchHelper.startDrag(this);
 
         }
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
-            mTouchHelper.startDrag(this);
+//            mTouchHelper.startDrag(this);
             Log.w("r15 onSingleTapUp", "onSingleTapUp UP");
             return true;
         }

@@ -52,7 +52,7 @@ public class ImageBright {
                         Bitmap mask = piece.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                                 maskMaps[2][z.uType], maskMaps[3][z.dType], innerSize, outerSize);
                         Bitmap bm = Bitmap.createBitmap(grayedImage, x*innerSize, y*innerSize, outerSize, outerSize);
-                        canvasBright.drawBitmap(piece.getOutline(piece.cropZig(bm, mask), 0x00000000), x*innerSize, y*innerSize, null);
+                        canvasBright.drawBitmap(piece.makeOut2Line(piece.cropSrc(bm, mask)), x*innerSize, y*innerSize, null);
                     }
                 }
             }

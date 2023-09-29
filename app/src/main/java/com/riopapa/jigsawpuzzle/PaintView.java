@@ -40,8 +40,11 @@ public class PaintView extends View {
     private static final float TOUCH_TOLERANCE = 5;
     int idxX, idxY, zwOff;
     static JigTable jigNow;
-    static Bitmap mapNow, mBitmap;
+    static Bitmap mapNow, mBitmap, mapBig;
     public static ArrayList<Integer> inViewC, inViewR;
+    public static ArrayList<Bitmap> inViewMap;
+
+    private boolean dragging;
     Activity activity;
     TextView tvL, tvR;
 
@@ -60,7 +63,8 @@ public class PaintView extends View {
         this.tvR = tvRit;
         inViewC = new ArrayList<>();
         inViewR = new ArrayList<>();
-
+        inViewMap = new ArrayList<>();
+        dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
 
     }
@@ -78,29 +82,36 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas){
         Log.w("p4 paintview","on Draw jPos "+jPosX+" x "+jPosY);
         canvas.save();
-        if (inViewR.size() > 0) {
-            for (int c = 0; c < 8; c++) {
-                for (int r = 0; r < 8; r++) {
-                    if (jigTables[c][r].oLine == null)
-                        piece.makeAll(c,r);
-                    JigTable jt = jigTables[c][r];
-                    Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picOSize, picOSize, true);
-                    canvas.drawBitmap(bm, 100 + c*picISize, 600+r*picISize, null);
+//        if (inViewR.size() > 0) {
+//            for (int c = 0; c < 5; c++) {
+//                for (int r = 0; r < 5; r++) {
+//                    if (jigTables[c][r].oLine == null)
+//                        piece.makeAll(c,r);
+//                    JigTable jt = jigTables[c][r];
+//                    Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picOSize, picOSize, true);
+//                    canvas.drawBitmap(bm, 100 + c*picISize, 600+r*picISize, null);
+//
+//                }
+//            }
+//      }
 
-                }
-            }
-            for (int cnt = 0; cnt < inViewR.size(); cnt++) {
-                JigTable jt = jigTables[inViewC.get(cnt)][inViewR.get(cnt)];
-                Bitmap bm = Bitmap.createScaledBitmap(jt.oLine, picOSize, picOSize, true);
-                canvas.drawBitmap(bm, jt.posX, jt.posY, null);
-            }
+        for (int cnt = 0; cnt < inViewR.size(); cnt++) {
+            int c = inViewC.get(cnt);
+            int r = inViewR.get(cnt);
+            JigTable jt = jigTables[c][r];
+            if (dragging && c == jigC && r == jigR) {
+                canvas.drawBitmap(piece.makeBig(inViewMap.get(cnt)), jt.posX, jt.posY, null);
+            } else
+                canvas.drawBitmap(inViewMap.get(cnt), jt.posX, jt.posY, null);
         }
+
         canvas.restore();
         activity.runOnUiThread(() -> tvR.setText("onDraw "+jPosX + " x " + jPosY+"\n c" + jigC+" r"+jigR +" array="+inViewR.size()));
 
     }
     private void touchDown(float x, float y){
 
+        dragging = true;
         Log.w("Puzzle","touchDown at = "+x+" x "+y);
         jPosX = -999;
         for (int i = 0; i < inViewR.size(); i++) {
@@ -111,8 +122,8 @@ public class PaintView extends View {
 //                Log.w("Puzzle","touchDown found c="+c+" r="+r);
                 jigR = r; jigC = c;
                 jigNow = jigTables[c][r];
-                mapNow = Bitmap.createScaledBitmap(jigNow.oLine, picOSize, picOSize, true);
                 jPosX = x; jPosY = y;
+//                mapBig = piece.makeBig(mapNow);
                 break;
             }
         }
@@ -136,11 +147,13 @@ public class PaintView extends View {
             jPosY = y;
             jigTables[jigC][jigR].posX = (int) jPosX - picHSize;
             jigTables[jigC][jigR].posY = (int) jPosY - picHSize;
+
             return true;
         }
         return false;
     }
     private void touchUp(){
+        dragging = false;
         // todo : check if right position
         //        mapNow = Bitmap.createScaledBitmap(jigNow.src, picOSize, picOSize, true);
     }
@@ -171,7 +184,7 @@ public class PaintView extends View {
             jigNow = jigTables[jigC][jigR];
             mapNow = Bitmap.createScaledBitmap(jigNow.src, picOSize, picOSize, true);
 
-            Log.w("p1x"+ jigCR," call by recycler drawing updateting "+jPosX+" x "+jPosY);
+            Log.w("p1x "+ jigCR," call by recycler drawing updateting "+jPosX+" x "+jPosY);
             paintView.invalidate();}
     };
 

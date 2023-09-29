@@ -9,6 +9,6 @@
     <color name = "white">#FFFFFFFF</color>
 
     <color name = "out_line">#233011</color>
-    <color name = "big_outline" >#30111A</color>
+    <color name = "out2_line" >#FFFFFF</color>
     <color name = "recycler_background" >#33FFAAFF</color>
 </resources>
