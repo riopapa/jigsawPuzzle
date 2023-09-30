@@ -14,13 +14,16 @@ import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceMax;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -46,11 +49,12 @@ public class PaintView extends View {
     public int nowIdx;
     static Bitmap mBitmap;
     public static ArrayList<FloatPiece> fPs;
-    public static int offsetC, offsetR, calcC, calcR;
-
+    public static int calcC, calcR;
     private static boolean selected, dragging;
     Activity activity;
     TextView tvL, tvR;
+    Paint pGrayed = new Paint();
+
 
     public PaintView(Context context) {
         this(context, null);
@@ -67,7 +71,7 @@ public class PaintView extends View {
         fPs = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
-        offsetC = 0; offsetR = 0;
+        pGrayed.setAlpha(40);
 
     }
 
@@ -78,14 +82,17 @@ public class PaintView extends View {
 
     protected void onDraw(Canvas canvas){
         canvas.save();
-            for (int c = 0; c < pieceMax; c++) {
-                for (int r = 0; r < pieceMax; r++) {
-                    if (jigTables[c][r].locked) {
+            for (int c = 0; c < showMax; c++) {
+                for (int r = 0; r < showMax; r++) {
                         if (jigTables[c][r].oLine == null)
                             piece.makeAll(c, r);
+                    if (jigTables[c][r].locked)
                         canvas.drawBitmap(jigTables[c][r].oLine,
                                 baseX + c * picISize, baseY + r * picISize, null);
-                    }
+                        else
+                        canvas.drawBitmap(jigTables[c][r].oLine,
+                                baseX + c * picISize, baseY + r * picISize, pGrayed);
+
                 }
             }
 
@@ -130,7 +137,7 @@ public class PaintView extends View {
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
                 selected = true;
-                Log.w("x8 paint view c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
+                Log.w("x8 pGrayed view c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
                 break;
             }
         }

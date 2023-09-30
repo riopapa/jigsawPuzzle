@@ -95,7 +95,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
 //            mTouchHelper.startDrag(this);
-            Log.w("r15 onSingleTapUp", "onSingleTapUp UP");
+            Log.w("r15 onSingleTapUp", "UP e"+e);
             return true;
         }
 

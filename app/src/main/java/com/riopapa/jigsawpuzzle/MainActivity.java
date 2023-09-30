@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.model.JigTable;
+import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -50,8 +52,11 @@ public class MainActivity extends Activity {
     public static JigTable[][] jigTables;
     public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
     public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
+    public static int countRC, leftC, rightC, topR, bottomR; // on screen drawable
+    public static int offsetC, offsetR; // show offset Column, Row;
+
     public static int jPosX, jPosY; // absolute x,y position drawing current jigsaw
-    public static int screenX, screenY; // physical screen size
+    public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
     public static float fullScale; // fullImage -> screenX
     public static RecyclerView zigRecyclerView;
@@ -63,7 +68,7 @@ public class MainActivity extends Activity {
     public static Context mContext;
     public static RecycleJigAdapter jigRecycleAdapter;
 
-    public static int pieceMax;   // how many pieces can be in columns / rows
+    public static int showMax;   // how many pieces can be in columns / rows
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +101,16 @@ public class MainActivity extends Activity {
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
         grayedImage = null;
 
-        jigCOLUMNs = 15;
-        jigROWs = 15;
+        jigCOLUMNs = 10;
+        jigROWs = 10;
 
-        new com.riopapa.jigsawpuzzle.func.intGlobalValues(this, this);
+        View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = decorView.getSystemUiVisibility();
+        uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
-//        initiatePixels(fullImage, jigCOLUMNs, jigROWs);
+        new intGlobalValues(this, this);
 
         jigTables = new JigTable[jigCOLUMNs][jigROWs];
         new com.riopapa.jigsawpuzzle.func.initJigTable(jigTables, jigCOLUMNs, jigROWs);

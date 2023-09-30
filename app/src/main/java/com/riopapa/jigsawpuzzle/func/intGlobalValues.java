@@ -17,10 +17,18 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.pieceGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.puzzleSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
+import static com.riopapa.jigsawpuzzle.MainActivity.leftC;
+import static com.riopapa.jigsawpuzzle.MainActivity.leftC;
+import static com.riopapa.jigsawpuzzle.MainActivity.rightC;
+import static com.riopapa.jigsawpuzzle.MainActivity.topR;
+import static com.riopapa.jigsawpuzzle.MainActivity.bottomR;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,19 +43,17 @@ import com.riopapa.jigsawpuzzle.Piece;
 public class intGlobalValues {
     public intGlobalValues(Context context, Activity activity) {
 
-        float pxVal, dipVal, dipRatio;
-        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
-                context.getResources().getDisplayMetrics());
-        dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1000f,
-                context.getResources().getDisplayMetrics());
-//        float mmVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1000f,
+//        float pxVal, dipVal, dipRatio;
+//        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
 //                context.getResources().getDisplayMetrics());
+        float dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                1000f, context.getResources().getDisplayMetrics());
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
         Log.w("r23 Main","screenXY "+screenX+" x "+screenY);
-        recySize = (int) ((float) screenX / 10f * dipVal / 2000f);
+        recySize = (int) ((float) screenX / 12f * dipVal / 2000f);
         picOSize = recySize * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
         picHSize = picOSize / 2;
@@ -66,24 +72,34 @@ public class intGlobalValues {
             innerSize = fullWidth / (jigCOLUMNs -1);
         pieceGap = innerSize *5/14;
         outerSize = pieceGap + pieceGap + innerSize;
+
         int margin = 32;
+        int w = (screenX -margin - margin) % picISize;
+        showMax = (screenX -margin - margin - w) / picISize;
+        if (showMax > jigCOLUMNs) {
+            showMax = jigCOLUMNs;
+        }
+        puzzleSize = showMax * picISize;
+        baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
+        baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
 
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
-//        layoutParams.setMargins(margin, margin, margin, margin);
+        layoutParams.setMargins(margin, margin, margin, margin);
         layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.width = screenX - margin - margin;
-        layoutParams.height = screenX - margin - margin;
+        layoutParams.width = puzzleSize;
+        layoutParams.height = puzzleSize;
         imageAnswer.setLayoutParams(layoutParams);
-        baseX = margin ;
-        baseY = (screenY - screenX - recySize)/2;
         Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
         Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
                 ", base XY ="+baseX+" x "+ baseY);
 
-        pieceMax = (screenX - margin - margin) / picISize;
+        offsetC = 0; offsetR = 0;
+        leftC = 0; rightC = showMax;
+        topR = 0; bottomR = showMax;
+
         piece = new Piece(context, outerSize, pieceGap, innerSize);
 
     }
