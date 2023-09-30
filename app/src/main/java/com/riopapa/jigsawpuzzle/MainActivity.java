@@ -37,8 +37,11 @@ import java.util.Random;
 public class MainActivity extends Activity {
 
     TextView tvLeft, tvRight;
+
     public static ImageView iv1, imageAnswer;
+
     public static int outerSize, innerSize, pieceGap;  // real piece size
+
     public static int recySize, picOSize, picISize, picGap, picHSize;
         // recycler size, at Paintview size;
         // picOSize : picture outer size
@@ -46,36 +49,55 @@ public class MainActivity extends Activity {
         // picGap   : gap between picISize and picOSize
         // picHSize : half of picOSize;
     // class modules
+
     public static Piece piece;
+
     public static int jigRecyclePos; // jigsaw slide x, y count
+
     public static Bitmap fullImage, grayedImage, brightImage;
+
     public static JigTable[][] jigTables;
+
     public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
+
     public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
+
     public static int countRC, leftC, rightC, topR, bottomR; // on screen drawable
+
     public static int offsetC, offsetR; // show offset Column, Row;
 
     public static int jPosX, jPosY; // absolute x,y position drawing current jigsaw
+
     public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
+
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
-    public static float fullScale; // fullImage -> screenX
+
     public static RecyclerView zigRecyclerView;
+
     public static Bitmap [][] maskMaps, outMaps;
+
     public static int baseX, baseY; // puzzle view x, y offset
+
     public static PaintView paintView;
+
     public static ArrayList<Integer> recyclerJigs;
+
     public static Activity mActivity;
+
     public static Context mContext;
+
     public static RecycleJigAdapter jigRecycleAdapter;
 
     public static int showMax;   // how many pieces can be in columns / rows
+    public static int showShift;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ActivityMainBinding binding;
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()){
@@ -86,7 +108,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
 //        }
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -97,12 +118,41 @@ public class MainActivity extends Activity {
         iv1 = findViewById(R.id.image1);
         imageAnswer = findViewById(R.id.image_answer);
 
+        TextView leftBtn = findViewById(R.id.move_left);
+        leftBtn.setOnClickListener(v -> {
+            offsetC -= showShift;
+            if (offsetC < 0)
+                offsetC = 0;
+            paintView.invalidate();
+        });
+        TextView rightBtn = findViewById(R.id.move_right);
+        rightBtn.setOnClickListener(v -> {
+            offsetC += showShift;
+            if (offsetC >= jigCOLUMNs - showMax)
+                offsetC = jigCOLUMNs - showMax;
+            paintView.invalidate();
+        });
+        TextView upBtn = findViewById(R.id.move_up);
+        upBtn.setOnClickListener(v -> {
+            offsetR -= showShift;
+            if (offsetR < 0)
+                offsetR = 0;
+            paintView.invalidate();
+        });
+        TextView downBtn = findViewById(R.id.move_down);
+        downBtn.setOnClickListener(v -> {
+            offsetR += showShift;
+            if (offsetR >= jigROWs - showMax)
+                offsetR = jigROWs - showMax;
+            paintView.invalidate();
+        });
+
         fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
         grayedImage = null;
 
-        jigCOLUMNs = 10;
-        jigROWs = 10;
+        jigCOLUMNs = 20;
+        jigROWs = 20;
 
         View decorView = getWindow().getDecorView();
 // Hide the status bar.
@@ -121,7 +171,6 @@ public class MainActivity extends Activity {
         jigCR = -1;
         paintView = findViewById(R.id.paintview);
         paintView.init(this, tvLeft, tvRight);
-//        paintView.load(jigTables, jigCOLUMNs /2, jigROWs /2);
 
         makeRecycleArrays();
 
@@ -139,11 +188,9 @@ public class MainActivity extends Activity {
         zigRecyclerView.setLayoutManager(mLinearLayoutManager);
         new ImageGray().build();
         new ImageBright().build();
-        fullScale = screenX / fullWidth;
-//        nowC = 4; nowR = 5;
-//        if (jigTables[nowC][nowR].oLine == null)
-//            piece.make(nowC, nowR);
-//        imageAnswer.setImageBitmap(jigTables[nowC][nowR].oLine);
+
+
+
     }
 
     private static void makeRecycleArrays() {

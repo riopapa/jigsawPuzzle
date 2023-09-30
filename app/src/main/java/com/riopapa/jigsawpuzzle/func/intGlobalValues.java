@@ -25,10 +25,10 @@ import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.leftC;
-import static com.riopapa.jigsawpuzzle.MainActivity.leftC;
 import static com.riopapa.jigsawpuzzle.MainActivity.rightC;
 import static com.riopapa.jigsawpuzzle.MainActivity.topR;
 import static com.riopapa.jigsawpuzzle.MainActivity.bottomR;
+import static com.riopapa.jigsawpuzzle.MainActivity.showShift;
 
 import android.app.Activity;
 import android.content.Context;
@@ -79,6 +79,7 @@ public class intGlobalValues {
         if (showMax > jigCOLUMNs) {
             showMax = jigCOLUMNs;
         }
+        showShift = showMax - 4;
         puzzleSize = showMax * picISize;
         baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
         baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;

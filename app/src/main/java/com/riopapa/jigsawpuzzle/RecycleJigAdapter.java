@@ -136,7 +136,6 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
             piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
         viewHolder.ivIcon.setTag(jigCR);
-//        viewHolder.ivIcon.setOnClickListener((View.OnClickListener) this);
     }
 
     @Override

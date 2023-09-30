@@ -142,18 +142,21 @@ public class RecycleTouchHelper extends ItemTouchHelper.Callback {
             clearCanvas(c, pieceView.getRight() + dX, (float) pieceView.getTop(), (float) pieceView.getRight(), (float) pieceView.getBottom());
             return;
         }
-//        Log.w("r18 Backgond", "Left "+pieceView.getLeft()+" Right "+pieceView.getRight());
-//        Log.w("r20 onChildDrawBack" , " dx="+dX+" dy="+dY+
-//                " idx ="+ jigCR);
+
         if (dY < - picISize/3) {    // if moves up into main plate
             move2PaintView((int) dY, pieceView);
+//            for (int i = 0; i < 16; i+=2) {
+//                jigCR = recyclerJigs.get(i);
+//                nowC = jigCR / 10000;
+//                nowR = jigCR - nowC * 10000;
+//                move2PaintView((int) dY - nowC* 10 - nowR * 10 -i * i*60, pieceView);
+//            }
         }
-//        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
     private static void move2PaintView(int dY, View itemView) {
         Log.w("r22 remove", "jig removing "+ nowC +"x"+ nowR);
-        jPosY = screenY - recySize + dY - picOSize - picHSize;
+        jPosY = screenY - recySize + dY - picOSize - picISize;
         jPosX = itemView.getLeft();
 
         jigTables[nowC][nowR].outRecycle = true;

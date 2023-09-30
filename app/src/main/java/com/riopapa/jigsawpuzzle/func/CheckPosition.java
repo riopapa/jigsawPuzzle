@@ -1,0 +1,46 @@
+package com.riopapa.jigsawpuzzle.func;
+
+import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
+import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
+import static com.riopapa.jigsawpuzzle.PaintView.calcC;
+import static com.riopapa.jigsawpuzzle.PaintView.calcR;
+import static com.riopapa.jigsawpuzzle.PaintView.tvL;
+
+import android.app.Activity;
+
+public class CheckPosition {
+    public boolean isHere(Activity activity) {
+        // todo : check if right position
+
+
+        calcC = (jPosX - baseX - picHSize) / picISize + offsetC;
+        calcR = (jPosY - baseY - picHSize) / picISize + offsetR;
+        int xR = baseX +(nowC - offsetC) * picISize + picISize + picGap;
+        int xL = xR - picGap - picGap;
+        int yB = baseY + (nowR - offsetR) * picISize + picISize + picGap;
+        int yT = yB - picGap - picGap;
+        String txt = "x "+xL+" <"+jPosX+">"+ " " + xR +
+                "\n"+ yT+" <"+jPosY+"> " + yB  +
+                "\nnow "+nowC+"x"+nowR;
+        activity.runOnUiThread(() -> tvL.setText(txt));
+        if (calcC != nowC || calcR != nowR)
+            return false;
+        if (jPosX < xL || jPosX > xR)
+            return false;
+        if (jPosY < yT || jPosY > yB)
+            return false;
+//        int x = jPosX % picISize; jPosX = jPosX - x * picISize;
+//        int y = jPosY % picISize; jPosY = jPosX - y * picISize;
+        return true;
+    }
+
+}

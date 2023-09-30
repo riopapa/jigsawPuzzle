@@ -23,7 +23,8 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 public class Piece {
     int outerSize, pieceGap, innerSize, deltaGap;
     float out2Scale = 1.05f, bigScale = 1.1f;
-    Paint paintIN, paintOUT, paintBright;
+    Paint paintIN, paintOUT, paintBright, paintOutATop, paintOutOver;
+
     int outLineColor, out2LineColor;
     Matrix matrixOutLine, matrixBig;
 
@@ -47,11 +48,18 @@ public class Piece {
         outLineColor = context.getColor(R.color.out_line);
         out2LineColor = context.getColor(R.color.out2_line);
         paintIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+
         paintOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintOUT.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
 
+        paintOutATop = new Paint();
+        paintOutATop.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
+
+        paintOutOver = new Paint();
+        paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+
         final int contrast  = 1;
-        final int brightness = 140;
+        final int brightness = 120;
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
                         contrast, 0, 0, 0, brightness,
@@ -106,13 +114,9 @@ public class Piece {
 
         Bitmap outMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        Paint paint = new Paint();
-        paint.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(outMask, 0,0, paint);
-        paint = new Paint();
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        canvas.drawBitmap(outMask, 0,0, paintOutATop);
         Matrix matrix = new Matrix();
-        canvas.drawBitmap(srcMap, matrix, paint);
+        canvas.drawBitmap(srcMap, matrix, paintOutOver);
         return Bitmap.createScaledBitmap(outMap, picOSize, picOSize, true);
 
     }
@@ -174,50 +178,3 @@ public class Piece {
 
 }
 
-//    public void makeTransparent(Bitmap b, boolean right) {
-//        xyStack xStack = new xyStack(195200);
-//        xyStack yStack = new xyStack(195200);
-//        int x = (right) ? outerSize-5: outerSize/2;
-//        int y = (right) ? outerSize/2: outerSize-5;
-//        int max = b.getWidth() - 1;
-//        int nowColor = b.getPixel(x,y);
-//        while (true) {
-//            b.setPixel(x, y, 0);
-//            if (x > 0 && b.getPixel(x - 1, y) == nowColor) {
-//                xStack.push(x - 1);
-//                yStack.push(y);
-//            }
-//            if (x < max && b.getPixel(x + 1, y) == nowColor) {
-//                xStack.push(x + 1);
-//                yStack.push(y);
-//            }
-//            if (y > 0 && b.getPixel(x, y - 1) == nowColor) {
-//                xStack.push(x);
-//                yStack.push(y - 1);
-//            }
-//            if (y < max && b.getPixel(x, y + 1) == nowColor) {
-//                xStack.push(x);
-//                yStack.push(y + 1);
-//            }
-//            x = xStack.pop();
-//            y = yStack.pop();
-//            if (x == 0)
-//                break;
-//        }
-//        if (right) {
-//            for (x = outerSize-pieceGap; x < outerSize; x++) {
-//                b.setPixel(x, pieceGap, 0);
-//                b.setPixel(x, pieceGap+1, 0);
-//                b.setPixel(x, outerSize-pieceGap, 0);
-//                b.setPixel(x, outerSize-pieceGap-1, 0);
-//            }
-//        } else {
-//            for (y = outerSize-pieceGap; y < outerSize; y++) {
-//                b.setPixel(pieceGap, y, 0);
-//                b.setPixel(pieceGap+1, y, 0);
-//                b.setPixel(outerSize-pieceGap, y, 0);
-//                b.setPixel(outerSize-pieceGap-1, y, 0);
-//            }
-//        }
-//
-//    }
