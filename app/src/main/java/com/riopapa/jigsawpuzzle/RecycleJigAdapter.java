@@ -2,10 +2,15 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.mContext;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -83,6 +88,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
+            Log.w("adaptor","down "+e);
             return false;
         }
         @Override
@@ -95,7 +101,6 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
 //            mTouchHelper.startDrag(this);
-            Log.w("r15 onSingleTapUp", "UP e"+e);
             return true;
         }
 
@@ -131,8 +136,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
         jigCR = recyclerJigs.get(position);
         jigX = jigCR / 10000;
         jigY = jigCR - jigX * 10000;
-        JigTable z = jigTables[jigX][jigY];
-        if (z.src == null)
+        if (jigTables[jigX][jigY].src == null)
             piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
         viewHolder.ivIcon.setTag(jigCR);

@@ -165,7 +165,7 @@ public class PaintView extends View {
             if (checkPosition.isHere(activity) && !jigTables[nowC][nowR].locked) {
                 jigTables[nowC][nowR].locked = true;
                 FloatPiece fp = fPs.get(nowIdx);
-                fp.brightMap = piece.makeBright(fp.bitmap);
+                fp.brightMap = jigTables[nowC][nowR].picSel;
                 fp.time = System.currentTimeMillis() + 500;
                 new Timer().schedule(new TimerTask() {
                     public void run() {

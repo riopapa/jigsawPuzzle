@@ -8,6 +8,9 @@ public class JigTable {
     public Bitmap src;      // crop from fullImage  sized by outerSize
 
     public Bitmap pic;      // resized to fit screen sized by picOSize;
+
+    public Bitmap picSel;      // show while selected whited from pic
+
     public Bitmap oLine;    // outlined image   by picOSize
     public Bitmap oLine2;   // outlined outlined image   by picOSize
     public int lType, rType, uType, dType;  // side type

@@ -118,29 +118,25 @@ public class MainActivity extends Activity {
         iv1 = findViewById(R.id.image1);
         imageAnswer = findViewById(R.id.image_answer);
 
-        TextView leftBtn = findViewById(R.id.move_left);
-        leftBtn.setOnClickListener(v -> {
+        binding.moveLeft.setOnClickListener(v -> {
             offsetC -= showShift;
             if (offsetC < 0)
                 offsetC = 0;
             paintView.invalidate();
         });
-        TextView rightBtn = findViewById(R.id.move_right);
-        rightBtn.setOnClickListener(v -> {
+        binding.moveRight.setOnClickListener(v -> {
             offsetC += showShift;
             if (offsetC >= jigCOLUMNs - showMax)
                 offsetC = jigCOLUMNs - showMax;
             paintView.invalidate();
         });
-        TextView upBtn = findViewById(R.id.move_up);
-        upBtn.setOnClickListener(v -> {
+        binding.moveUp.setOnClickListener(v -> {
             offsetR -= showShift;
             if (offsetR < 0)
                 offsetR = 0;
             paintView.invalidate();
         });
-        TextView downBtn = findViewById(R.id.move_down);
-        downBtn.setOnClickListener(v -> {
+        binding.moveDown.setOnClickListener(v -> {
             offsetR += showShift;
             if (offsetR >= jigROWs - showMax)
                 offsetR = jigROWs - showMax;
@@ -149,6 +145,9 @@ public class MainActivity extends Activity {
 
         fullImage =
                 BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
+
+        binding.directions.setImageBitmap(Bitmap.createScaledBitmap(fullImage, 300, 300, true));
+
         grayedImage = null;
 
         jigCOLUMNs = 20;
@@ -186,8 +185,8 @@ public class MainActivity extends Activity {
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         zigRecyclerView.setLayoutManager(mLinearLayoutManager);
-        new ImageGray().build();
-        new ImageBright().build();
+//        new ImageGray().build();
+//        new ImageBright().build();
 
 
 

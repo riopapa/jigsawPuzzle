@@ -58,9 +58,9 @@ public class Piece {
         paintOutOver = new Paint();
         paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
-        final int contrast  = 1;
-        final int brightness = 120;
-        ColorMatrix cm = new ColorMatrix(new float[]
+        final int contrast  = 2;
+        final int brightness = 60;
+        ColorMatrix colorMatrix = new ColorMatrix(new float[]
                 {
                         contrast, 0, 0, 0, brightness,
                         0, contrast, 0, 0, brightness,
@@ -68,7 +68,7 @@ public class Piece {
                         0, 0, 0, 1, 0
                 });
         paintBright = new Paint();
-        paintBright.setColorFilter(new ColorMatrixColorFilter(cm));
+        paintBright.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 
     }
 
@@ -164,7 +164,7 @@ public class Piece {
     }
 
     /**
-     * create white Map for temperary bright map
+     * create white Map for brighter map using ColorMatrix
      * @param inMap positioned picMap
      * @return merged bitmawp with outerSize
      */
