@@ -33,6 +33,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 
@@ -122,25 +124,25 @@ public class MainActivity extends Activity {
             offsetC -= showShift;
             if (offsetC < 0)
                 offsetC = 0;
-            paintView.invalidate();
+//            paintView.invalidate();
         });
         binding.moveRight.setOnClickListener(v -> {
             offsetC += showShift;
             if (offsetC >= jigCOLUMNs - showMax)
                 offsetC = jigCOLUMNs - showMax;
-            paintView.invalidate();
+//            paintView.invalidate();
         });
         binding.moveUp.setOnClickListener(v -> {
             offsetR -= showShift;
             if (offsetR < 0)
                 offsetR = 0;
-            paintView.invalidate();
+//            paintView.invalidate();
         });
         binding.moveDown.setOnClickListener(v -> {
             offsetR += showShift;
             if (offsetR >= jigROWs - showMax)
                 offsetR = jigROWs - showMax;
-            paintView.invalidate();
+//            paintView.invalidate();
         });
 
         fullImage =
@@ -188,8 +190,18 @@ public class MainActivity extends Activity {
 //        new ImageGray().build();
 //        new ImageBright().build();
 
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (paintView != null) {
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    paintView.invalidate();
+                }
+            }, 200, 200);
+        }
     }
 
     private static void makeRecycleArrays() {

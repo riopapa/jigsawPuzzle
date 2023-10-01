@@ -115,7 +115,7 @@ public class PaintView extends View {
                 } else {
                     canvas.drawBitmap(fP.bitmap, jt.posX, jt.posY, null);
                     fPs.remove(cnt);
-                    invalidate();
+//                    invalidate();
                 }
             }
         }
@@ -169,12 +169,7 @@ public class PaintView extends View {
                 fp.time = System.currentTimeMillis() + 500;
                 new Timer().schedule(new TimerTask() {
                     public void run() {
-                        invalidate();
-                    }
-                }, 600);
-                new Timer().schedule(new TimerTask() {
-                    public void run() {
-                        invalidate();
+//                        invalidate();
                     }
                 }, 900);
             }
@@ -194,15 +189,15 @@ public class PaintView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 touchDown(x, y);
-                invalidate();
+//                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (touchMove(x, y))
-                    invalidate();
+//                    invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 touchUp();
-                invalidate();
+//                invalidate();
                 break;
         }
 
