@@ -2,20 +2,21 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
+import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
+import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
+import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
+import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
+import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
+import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.tvRight;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +30,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -38,8 +38,6 @@ import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PaintView extends View {
 
@@ -52,7 +50,6 @@ public class PaintView extends View {
     private static boolean selected;
     public static boolean dragging;
     Activity activity;
-    public static TextView tvL, tvR;
     Paint pGrayed = new Paint();
     CheckPosition checkPosition = new CheckPosition();
 
@@ -66,10 +63,8 @@ public class PaintView extends View {
         super(context, attrs);
     }
 
-    public void init(Activity activity, TextView tvLeft, TextView tvRit){
+    public void init(Activity activity){
         this.activity = activity;
-        this.tvL = tvLeft;
-        this.tvR = tvRit;
         fPs = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
@@ -89,12 +84,19 @@ public class PaintView extends View {
                     final int cc = c+offsetC; final int rr = r+offsetR;
                         if (jigTables[cc][rr].oLine == null)
                             piece.makeAll(c+offsetC, r+offsetR);
-                    if (jigTables[cc][rr].locked)
-                        canvas.drawBitmap(jigTables[cc][rr].oLine,
+                    if (jigTables[cc][rr].locked) {
+                        if (jigTables[cc][rr].lockedTime == 0)
+                            canvas.drawBitmap(jigTables[cc][rr].oLine,
                                 baseX + c * picISize, baseY + r * picISize, null);
-                        else
+                        else if (jigTables[cc][rr].lockedTime > System.currentTimeMillis())
+                            canvas.drawBitmap(jigTables[cc][rr].picSel,
+                                    baseX + c * picISize, baseY + r * picISize, null);
+                        else {
+                            jigTables[cc][rr].lockedTime = 0;
+                        }
+                    } else
                         canvas.drawBitmap(jigTables[cc][rr].oLine,
-                                baseX + c * picISize, baseY + r * picISize, pGrayed);
+                            baseX + c * picISize, baseY + r * picISize, pGrayed);
                 }
             }
 
@@ -107,12 +109,12 @@ public class PaintView extends View {
                 if (dragging && selected && c == nowC && r == nowR) {
                     canvas.drawBitmap(fP.bigMap, jt.posX, jt.posY, null);
                 } else
-                    canvas.drawBitmap(fP.bitmap, jt.posX, jt.posY, null);
+                    canvas.drawBitmap(fP.oLine, jt.posX, jt.posY, null);
             } else {    // timer active to show bright puzzle
                 if (System.currentTimeMillis() < fP.time) {
                     canvas.drawBitmap(fP.brightMap, jt.posX, jt.posY, null);
                 } else {
-                    canvas.drawBitmap(fP.bitmap, jt.posX, jt.posY, null);
+                    canvas.drawBitmap(fP.oLine, jt.posX, jt.posY, null);
                     fPs.remove(cnt);
 //                    invalidate();
                 }
@@ -120,7 +122,8 @@ public class PaintView extends View {
         }
 
         canvas.restore();
-        activity.runOnUiThread(() -> tvR.setText("onD c" + nowC +" r"+ nowR + "\noffCR "+offsetC + " x " + offsetR+"\n calc " + calcC +" x "+ calcR));
+        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+offsetC + " x " + offsetR+"\n calc " + calcC +" x "+ calcR+"\n fPs "+fPs.size();
+        activity.runOnUiThread(() -> tvRight.setText(txt));
 
     }
     private void paintToucnDown(float fX, float fY){
@@ -163,14 +166,7 @@ public class PaintView extends View {
 
             if (checkPosition.isHere(activity) && !jigTables[nowC][nowR].locked) {
                 jigTables[nowC][nowR].locked = true;
-                FloatPiece fp = fPs.get(nowIdx);
-                fp.brightMap = jigTables[nowC][nowR].picSel;
-                fp.time = System.currentTimeMillis() + 500;
-                new Timer().schedule(new TimerTask() {
-                    public void run() {
-//                        invalidate();
-                    }
-                }, 900);
+                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1000;
             }
             return true;
         }

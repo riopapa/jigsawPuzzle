@@ -2,20 +2,15 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.shouldBeMoved;
 import static com.riopapa.jigsawpuzzle.PaintView.fPs;
 
 import android.util.Log;
@@ -27,18 +22,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.Collections;
 
-public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.JigHolder>
-        implements ZItemTouchHelperAdapter {
+public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.JigHolder>
+        implements ZItemTouchHelperListener {
 
-    int jigX, jigY;
-    private ItemTouchHelper mTouchHelper;
+
     @NonNull
     @Override
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -100,7 +93,7 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
 //            if (oneItemSelected)
 //                return true;
 //            oneItemSelected = true;
-            Log.w("r65 on down","oneItemSelected "+oneItemSelected);
+//            Log.w("r65 on down","oneItemSelected "+oneItemSelected);
             return false;   // true or false?
         }
         @Override
@@ -129,17 +122,13 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
             return false;
         }
 
-
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
 
-            Log.w("rlp ", "on long pressed");
+            Log.w("r2a ", "on long pressed");
             oneItemSelected = true;
             add2FloatingQue();
-            // e.getAction() = ACTION_DOWN
-//            mTouchHelper.startDrag(this);
-//            Log.w("r16 adaptor onLong"," X "+e.getX()+" Y "+e.getY());
-            /* e.getX(), e.getY() means relative position within this item */
+            Log.w("r2m moved "+jigRecyclePos,"item moved to paint "+nowC+"x"+nowR);
         }
 
         private void add2FloatingQue() {
@@ -149,18 +138,10 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
 
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
-            fp.bitmap = jigTables[nowC][nowR].oLine;
-            fp.bigMap = piece.makeBigger(fp.bitmap);
-            fp.justMoved = true;
+            fp.oLine = jigTables[nowC][nowR].oLine;
+            fp.bigMap = piece.makeBigger(fp.oLine);
             fPs.add(fp);
-//            recyclerJigs.remove(jigRecyclePos);
-//            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-
-            Log.w("p22 moved "+jigRecyclePos,"item moved to paint "+nowC+"x"+nowR);
-            shouldBeMoved = false;
-            //        updateViewHandler.sendEmptyMessage(0);
         }
-
 
 
         @Override
@@ -173,8 +154,8 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
         jigCR = recyclerJigs.get(position);
-        jigX = jigCR / 10000;
-        jigY = jigCR - jigX * 10000;
+        int jigX = jigCR / 10000;
+        int jigY = jigCR - jigX * 10000;
         if (jigTables[jigX][jigY].src == null)
             piece.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
@@ -184,10 +165,6 @@ public class RecycleJigAdapter extends RecyclerView.Adapter<RecycleJigAdapter.Ji
     @Override
     public int getItemCount() {
         return (recyclerJigs.size());
-    }
-
-    public void setTouchHelper(ItemTouchHelper tHelper){
-        this.mTouchHelper = tHelper;
     }
 
 }

@@ -105,8 +105,8 @@ public class Piece {
     }
 
     /**
-     * create picOSized outline bitmap from jig.src (outerSize)
-     * @param srcMap input bitmap with outerSize
+     * create picOSized outline oLine from jig.src (outerSize)
+     * @param srcMap input oLine with outerSize
      * @param outMask outline Mask
      * @return outlined bitmawp with picOSize
      */
@@ -122,7 +122,7 @@ public class Piece {
     }
 
     /**
-     * create picOSized double outlined bitmap from jig.oline
+     * create picOSized double outlined oLine from jig.oline
      * @param inMap input outlined with outerSize
      * @return double outlined bitmawp with picOSize
      */
@@ -136,9 +136,9 @@ public class Piece {
     }
 
     /**
-     * create picOSized outline bitmap from jig.oline
+     * create picOSized outline oLine from jig.oline
      * @param inMap input outlined with outerSize
-     * @return bigger bitmap with picOSize
+     * @return bigger oLine with picOSize
      */
     public Bitmap makeBigger(Bitmap inMap) {
         Bitmap bigMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);

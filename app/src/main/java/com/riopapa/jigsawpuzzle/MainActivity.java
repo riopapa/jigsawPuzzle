@@ -38,7 +38,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 
-    TextView tvLeft, tvRight;
+    public static TextView tvLeft, tvRight;
 
     public static ImageView iv1, imageAnswer;
 
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
 
     public static Context mContext;
 
-    public static RecycleJigAdapter jigRecycleAdapter;
+    public static RecycleJigListener jigRecycleAdapter;
 
     public static int showMax;   // how many pieces can be in columns / rows
     public static int showShift;
@@ -180,11 +180,14 @@ public class MainActivity extends Activity {
         zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         zigRecyclerView.getLayoutParams().height = recySize;
-        jigRecycleAdapter = new RecycleJigAdapter();
-        ItemTouchHelper.Callback mainCallback = new PaintViewTouchHelper(jigRecycleAdapter, mContext);
-        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
-        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
-        mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);
+        jigRecycleAdapter = new RecycleJigListener();
+//        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(jigRecycleAdapter, mContext);
+//        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
+//        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
+        ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));;
+//        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
+
+        helper.attachToRecyclerView(zigRecyclerView);
         zigRecyclerView.setAdapter(jigRecycleAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);

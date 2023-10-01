@@ -11,9 +11,9 @@ import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
+import static com.riopapa.jigsawpuzzle.MainActivity.tvLeft;
 import static com.riopapa.jigsawpuzzle.PaintView.calcC;
 import static com.riopapa.jigsawpuzzle.PaintView.calcR;
-import static com.riopapa.jigsawpuzzle.PaintView.tvL;
 
 import android.app.Activity;
 
@@ -31,7 +31,7 @@ public class CheckPosition {
         String txt = "x "+xL+" <"+jPosX+">"+ " " + xR +
                 "\n"+ yT+" <"+jPosY+"> " + yB  +
                 "\nnow "+nowC+"x"+nowR;
-        activity.runOnUiThread(() -> tvL.setText(txt));
+        activity.runOnUiThread(() -> tvLeft.setText(txt));
         if (calcC != nowC || calcR != nowR)
             return false;
         if (jPosX < xL || jPosX > xR)

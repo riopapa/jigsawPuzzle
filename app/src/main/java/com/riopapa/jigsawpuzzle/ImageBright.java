@@ -27,10 +27,10 @@ public class ImageBright {
             public void run() {
                 /**
                  *
-                 * @param bmp input bitmap
+                 * @param bmp input oLine
                  * @param contrast 0..10 1 is default
                  * @param brightness -255..255 0 is default
-                 * @return new bitmap
+                 * @return new oLine
                  */
                 brightImage = Bitmap.createBitmap(fullImage.getWidth(), fullImage.getHeight(), Bitmap.Config.ARGB_8888);
                 final int contrast  = 1;

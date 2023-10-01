@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-public interface ZItemTouchHelperAdapter {
+public interface ZItemTouchHelperListener {
 
     abstract boolean onItemMove(int fromPosition, int toPosition);
 

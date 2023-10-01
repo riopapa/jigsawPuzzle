@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat;
 
 public class Drawable2bitmap {
 
-    // this module converts drawable resources into bitmap;
+    // this module converts drawable resources into oLine;
     // param xySize means required size : puzzle outer size
 
     Context context;
