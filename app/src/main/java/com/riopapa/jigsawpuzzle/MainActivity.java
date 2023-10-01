@@ -54,6 +54,8 @@ public class MainActivity extends Activity {
 
     public static Piece piece;
 
+    public static boolean oneItemSelected = false;    // whether piece is selected
+    public static boolean shouldBeMoved = false; // must be moved soon
     public static int jigRecyclePos; // jigsaw slide x, y count
 
     public static Bitmap fullImage, grayedImage, brightImage;
@@ -179,7 +181,7 @@ public class MainActivity extends Activity {
         int layoutOrientation = RecyclerView.HORIZONTAL;
         zigRecyclerView.getLayoutParams().height = recySize;
         jigRecycleAdapter = new RecycleJigAdapter();
-        ItemTouchHelper.Callback mainCallback = new RecycleTouchHelper(jigRecycleAdapter, mContext);
+        ItemTouchHelper.Callback mainCallback = new PaintViewTouchHelper(jigRecycleAdapter, mContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
         mainItemTouchHelper.attachToRecyclerView(zigRecyclerView);

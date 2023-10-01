@@ -6,8 +6,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
@@ -51,7 +49,8 @@ public class PaintView extends View {
     static Bitmap mBitmap;
     public static ArrayList<FloatPiece> fPs;
     public static int calcC, calcR;
-    private static boolean selected, dragging;
+    private static boolean selected;
+    public static boolean dragging;
     Activity activity;
     public static TextView tvL, tvR;
     Paint pGrayed = new Paint();
@@ -124,7 +123,7 @@ public class PaintView extends View {
         activity.runOnUiThread(() -> tvR.setText("onD c" + nowC +" r"+ nowR + "\noffCR "+offsetC + " x " + offsetR+"\n calc " + calcC +" x "+ calcR));
 
     }
-    private void touchDown(float fX, float fY){
+    private void paintToucnDown(float fX, float fY){
 
         int iX = (int) fX;
         int iY = (int) fY;
@@ -150,7 +149,7 @@ public class PaintView extends View {
         return jt.posX < x && x < (jt.posX + picOSize) &&
                 jt.posY < y && y < (jt.posY + picOSize);
     }
-    private boolean touchMove(float fX, float fY){
+    private boolean paintTouchMove(float fX, float fY){
         if (!selected)
             return false;
         float dx = Math.abs(fX - jPosX);
@@ -178,8 +177,9 @@ public class PaintView extends View {
         return false;
     }
 
-    private void touchUp(){
+    private void paintTouchUp(){
         dragging = false;
+        Log.w("p93"," touchUp");
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -188,16 +188,13 @@ public class PaintView extends View {
 
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                touchDown(x, y);
-//                invalidate();
+                paintToucnDown(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (touchMove(x, y))
-//                    invalidate();
+                paintTouchMove(x, y);
                 break;
             case MotionEvent.ACTION_UP:
-                touchUp();
-//                invalidate();
+                paintTouchUp();
                 break;
         }
 
