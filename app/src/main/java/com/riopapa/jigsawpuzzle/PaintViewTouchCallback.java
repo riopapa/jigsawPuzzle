@@ -1,6 +1,5 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.iv1;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
@@ -10,19 +9,19 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.jigsawpuzzle.RecycleJigListener.removeHandler;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Paint;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,12 +33,11 @@ import java.util.Collections;
 public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
     private final ZItemTouchHelperListener listener;
-    private final Context mContext;
     private RecyclerView.ViewHolder vHolder;
+    private final Paint nullPaint = new Paint();
 
     public PaintViewTouchCallback(ZItemTouchHelperListener listener, Context context) {
         this.listener = listener;
-        mContext = context;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //        int c = cr /10000;
 //        int r = cr - c * 10000;
 
-        viewHolder.itemView.setBackgroundColor(0x000FFFF);
+//        viewHolder.itemView.setBackgroundColor(0x000FFFF);
     }
 
     long helperDrawTime;
@@ -80,18 +78,13 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //            Drawable d = new BitmapDrawable(mContext.getResources(),
 //                    jigTables[nowC][nowR].picSel);
 //            viewHolder.itemView.setBackground(d);
-            iv1.setImageBitmap(jigTables[nowC][nowR].picSel);
+//            iv1.setImageBitmap(jigTables[nowC][nowR].picSel);
             jPosY = screenY - recySize;
             jPosX = viewHolder.itemView.getLeft();
             Log.w("p9 onSelected "+jigRecyclePos,jigCR+" selected");
         }
         else if (jPosY < screenY - recySize - picOSize) {
-            Log.w("p2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
-            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            jigTables[nowC][nowR].outRecycle = true;
-            recyclerJigs.remove(jigRecyclePos);
-            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-
+            removeHandler.sendEmptyMessage(0);
         }
 
     }
@@ -99,7 +92,6 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     @Override
     public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
         super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
-        Log.w("p29 recycle", "Moved "+viewHolder.itemView.getTag());
     }
 
     @Override
@@ -133,17 +125,21 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
         // -- canvas width = screenX, height = recycler height
-        long nowTime = System.currentTimeMillis();
-        if (nowTime < helperDrawTime + 50)
-            return;
-        helperDrawTime = nowTime;
+//        long nowTime = System.currentTimeMillis();
+//        if (nowTime < helperDrawTime + 50)
+//            return;
+//
+//        helperDrawTime = nowTime;
         vHolder = viewHolder;
+        View pieceView = viewHolder.itemView;
 
         jigCR = recyclerJigs.get(jigRecyclePos);
         nowC = jigCR / 10000;
         nowR = jigCR - nowC * 10000;
-        jPosX = viewHolder.itemView.getLeft() + (int) dX;
+        jPosX = pieceView.getLeft() + (int) dX;
         jPosY = screenY - recySize - picISize + (int) dY;
         jigTables[nowC][nowR].posX = jPosX;
         jigTables[nowC][nowR].posY = jPosY;
@@ -154,7 +150,8 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         mActivity.runOnUiThread(() -> tvLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //
-//        if (isCancelled) {
+
+//        if (!isCurrentlyActive) {
 //            clearCanvas(c, pieceView.getRight() + dX, (float) pieceView.getTop(), (float) pieceView.getRight(), (float) pieceView.getBottom());
 //            return;
 //        }
@@ -170,15 +167,12 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //                move2PaintView((int) dY - nowC* 10 - nowR * 10 -i * i*60, pieceView);
 //            }
 //        }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
     }
 
 
-
-
-//    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
-////        c.drawRect(left, top, right, bottom, mClearPaint);
-//        Log.w("p recycleTouchHelper","clearCanvas L"+left+" R"+right+" T"+top+" B"+bottom);
-//    }
+    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
+        c.drawRect(left, top, right, bottom, nullPaint);
+        Log.w("p recycleTouchHelper","clearCanvas L"+left+" R"+right+" T"+top+" B"+bottom);
+    }
 }

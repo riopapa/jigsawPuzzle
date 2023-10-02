@@ -4,7 +4,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 
 import android.content.Context;
@@ -17,12 +16,14 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
+import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class Piece {
-    int outerSize, pieceGap, innerSize, deltaGap;
-    float out2Scale = 1.05f, bigScale = 1.1f;
+    int outerSize, pieceGap, innerSize;
+
+    float out2Scale = 1.05f, bigScale = 1.1f, deltaGap;
     Paint paintIN, paintOUT, paintBright, paintOutATop, paintOutOver;
 
     int outLineColor, out2LineColor;
@@ -35,8 +36,8 @@ public class Piece {
         this.outerSize = outerSize;
         this.pieceGap = pieceGap;
         this.innerSize = innerSize;
-        this.deltaGap = (int) ((float) picISize * (out2Scale - 1f));
-
+        this.deltaGap = picOSize * (out2Scale - 1f) / 2f;
+        Log.w("c1 Piece","deltaGap ="+deltaGap);
         matrixOutLine = new Matrix();
         matrixOutLine.setScale(out2Scale, out2Scale);
 
@@ -82,9 +83,13 @@ public class Piece {
         mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
                 outMaps[2][z.uType], outMaps[3][z.dType]);
         z.oLine = makeOutline(z.src, mask);
-        z.oLine2 = makeOut2Line(z.oLine);
         jigTables[col][row] = z;
     }
+
+    public void makeOline2(int col, int row) {
+        jigTables[col][row].oLine2 = makeOut2Line((jigTables[col][row].oLine));
+    }
+
 
     public Bitmap maskSrcMap(Bitmap srcImage, Bitmap mask) {
 
@@ -127,12 +132,13 @@ public class Piece {
      * @return double outlined bitmawp with picOSize
      */
     public Bitmap makeOut2Line(Bitmap inMap) {
-        Bitmap outMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Bitmap outMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(inMap, matrixOutLine, null);
         canvas.drawColor(out2LineColor, PorterDuff.Mode.SRC_ATOP); //Color.WHITE is stroke color
         canvas.drawBitmap(inMap, deltaGap, deltaGap, null);
-        return Bitmap.createScaledBitmap(outMap, picOSize, picOSize, true);
+        return outMap;
+//        return Bitmap.createScaledBitmap(outMap, picOSize, picOSize, true);
     }
 
     /**

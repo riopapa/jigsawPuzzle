@@ -175,13 +175,18 @@ public class PaintView extends View {
 
     private void paintTouchUp(){
         dragging = false;
-        Log.w("p93"," touchUp");
+        Log.w("p83"," touchUp");
     }
 
+    long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-
+        tempTime = System.currentTimeMillis() + 200;
+        if (touchTime < tempTime)
+            return true;
+        touchTime = tempTime;
+        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 paintToucnDown(x, y);

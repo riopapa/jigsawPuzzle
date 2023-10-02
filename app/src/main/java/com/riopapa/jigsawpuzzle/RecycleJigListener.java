@@ -2,17 +2,22 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
 import static com.riopapa.jigsawpuzzle.PaintView.fPs;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -68,7 +73,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
-    public class JigHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
+    public static class JigHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
         ImageView ivIcon;
@@ -85,6 +90,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
+//            Log.w("rq on touch "+event.getAction(), "e "+event.getX()+";"+event.getY()+" t="+event.getEventTime());
             return true;
         }
 
@@ -134,15 +140,15 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         private void add2FloatingQue() {
 
             jigTables[nowC][nowR].posX = jPosX;
-            jigTables[nowC][nowR].posY = jPosY;
-
+            jigTables[nowC][nowR].posY = jPosY - picGap;
+            if (jigTables[nowC][nowR].oLine2 == null)
+                piece.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
-            fp.oLine = jigTables[nowC][nowR].oLine;
-            fp.bigMap = piece.makeBigger(fp.oLine);
+            fp.oLine = jigTables[nowC][nowR].oLine2;
+            fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine2);
             fPs.add(fp);
         }
-
 
         @Override
         public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
@@ -158,7 +164,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         int jigY = jigCR - jigX * 10000;
         if (jigTables[jigX][jigY].src == null)
             piece.makeAll(jigX, jigY);
-        viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].oLine);
+        viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].src);
         viewHolder.ivIcon.setTag(jigCR);
     }
 
@@ -167,4 +173,13 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         return (recyclerJigs.size());
     }
 
+    public final static Handler removeHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
+//            vHolder.itemView.setBackgroundColor(0x000FFFF);
+            jigTables[nowC][nowR].outRecycle = true;
+            recyclerJigs.remove(jigRecyclePos);
+            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+        }
+    };
 }

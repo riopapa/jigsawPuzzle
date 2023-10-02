@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
 
         jigCR = -1;
         paintView = findViewById(R.id.paintview);
-        paintView.init(this, tvLeft, tvRight);
+        paintView.init(this);
 
         makeRecycleArrays();
 
