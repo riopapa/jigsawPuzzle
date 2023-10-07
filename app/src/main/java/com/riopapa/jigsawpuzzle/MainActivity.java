@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -32,7 +35,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,7 +60,6 @@ public class MainActivity extends Activity {
 
     public static Piece piece;
 
-    public static boolean oneItemSelected = false;    // whether piece is selected
     public static int jigRecyclePos; // jigsaw slide x, y count
 
     public static Bitmap fullImage, grayedImage, brightImage;
@@ -75,7 +79,9 @@ public class MainActivity extends Activity {
     public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
 
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
+    public static boolean oneItemSelected; // now on dragging ..
 
+    public static boolean hangOn; // wait while one action completed
     public static RecyclerView zigRecyclerView;
 
     public static Bitmap [][] maskMaps, outMaps;
@@ -97,6 +103,8 @@ public class MainActivity extends Activity {
 
     public static int showMax;   // how many pieces can be in columns / rows
     public static int showShift;
+
+    public static Timer invalidateTimer;
 
 
     @Override
@@ -129,25 +137,25 @@ public class MainActivity extends Activity {
             offsetC -= showShift;
             if (offsetC < 0)
                 offsetC = 0;
-//            paintView.invalidate();
+            copy2RecyclerPieces();
         });
         binding.moveRight.setOnClickListener(v -> {
             offsetC += showShift;
             if (offsetC >= jigCOLUMNs - showMax)
                 offsetC = jigCOLUMNs - showMax;
-//            paintView.invalidate();
+            copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
             offsetR -= showShift;
             if (offsetR < 0)
                 offsetR = 0;
-//            paintView.invalidate();
+            copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
             offsetR += showShift;
             if (offsetR >= jigROWs - showMax)
                 offsetR = jigROWs - showMax;
-//            paintView.invalidate();
+            copy2RecyclerPieces();
         });
 
         fullImage =
@@ -156,9 +164,8 @@ public class MainActivity extends Activity {
         binding.directions.setImageBitmap(Bitmap.createScaledBitmap(fullImage, 300, 300, true));
 
         grayedImage = null;
-
-        jigCOLUMNs = 12;
-        jigROWs = 12;
+        jigCOLUMNs = 10;
+        jigROWs = 10;
 
         View decorView = getWindow().getDecorView();
 // Hide the status bar.
@@ -197,8 +204,6 @@ public class MainActivity extends Activity {
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         zigRecyclerView.setLayoutManager(mLinearLayoutManager);
-//        new ImageGray().build();
-//        new ImageBright().build();
 
     }
 
@@ -206,12 +211,22 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (paintView != null) {
-            new Timer().schedule(new TimerTask() {
+            TimerTask tt = new TimerTask() {
+                @Override
                 public void run() {
                     paintView.invalidate();
                 }
-            }, 150, 150);
+            };
+            invalidateTimer = new Timer();
+            invalidateTimer.schedule(tt, 300, 200);
         }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        invalidateTimer.cancel();
     }
 
     // make recycler list with random jigsaws
@@ -245,6 +260,7 @@ public class MainActivity extends Activity {
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public static void copy2RecyclerPieces() {
         activeRecyclerJigs = new ArrayList<>();
+        Log.w("Check", "allPossible size="+allPossibleJigs.size());
         for (int i = 0; i < allPossibleJigs.size(); i++) {
             int cr = allPossibleJigs.get(i);
             int c = cr / 10000;
@@ -253,6 +269,7 @@ public class MainActivity extends Activity {
                 activeRecyclerJigs.add(cr);
             }
         }
+        Log.w("active","active recy sze="+activeRecyclerJigs.size());
     }
 
 

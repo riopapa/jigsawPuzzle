@@ -9,7 +9,7 @@ public class JigTable {
 
     public Bitmap pic;      // resized to fit screen sized by picOSize;
 
-    public Bitmap picSel;      // show while selected whited from pic
+    public Bitmap picSel;      // show while oneItemSelected whited from pic
 
     public Bitmap oLine;    // outlined image   by picOSize
     public Bitmap oLine2;   // outlined outlined image   by picOSize

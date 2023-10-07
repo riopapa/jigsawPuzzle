@@ -5,6 +5,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
+import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
@@ -13,12 +14,14 @@ import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
+import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
+import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
 import static com.riopapa.jigsawpuzzle.MainActivity.tvRight;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
@@ -53,7 +56,6 @@ public class PaintView extends View {
     static Bitmap mBitmap;
     public int fPIdx;
     public static int calcC, calcR;
-    private static boolean selected;
     public static boolean dragging;
     Activity activity;
     Paint pGrayed = new Paint();
@@ -120,7 +122,7 @@ public class PaintView extends View {
             int r = fP.R;
             JigTable jt = jigTables[c][r];
             if (fP.time == 0) { // time == 0 means normal piece
-                if (dragging && selected && c == nowC && r == nowR) {
+                if (dragging && oneItemSelected && c == nowC && r == nowR) {
                     canvas.drawBitmap(fP.bigMap, jt.posX, jt.posY, null);
                 } else
                     canvas.drawBitmap(fP.oLine, jt.posX, jt.posY, null);
@@ -142,10 +144,12 @@ public class PaintView extends View {
     }
     private void paintTouchDown(float fX, float fY){
 
+        if (hangOn)
+            return;
         int iX = (int) fX;
         int iY = (int) fY;
         dragging = true;
-        selected = false;
+        oneItemSelected = false;
         for (int i = 0; i < fPs.size(); i++) {
             int c = fPs.get(i).C;
             int r = fPs.get(i).R;
@@ -155,10 +159,12 @@ public class PaintView extends View {
                 fPIdx = i;
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
-                selected = true;
-                if (fPIdx != fPs.size()-1)  // move current puzzle to top
-                    Collections.swap(activeRecyclerJigs, fPIdx, fPs.size()-1);
-                Log.w("pSel selected c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
+                oneItemSelected = true;
+                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR+ " x y "+jPosX+" x "+jPosY+" fpsize="+fPs.size());
+                if (fPIdx != fPs.size()-1) { // move current puzzle to top
+                    Collections.swap(fPs, fPIdx, fPs.size() - 1);
+                    fPIdx = fPs.size() - 1;
+                }
                 break;
             }
         }
@@ -169,7 +175,9 @@ public class PaintView extends View {
                 jt.posY < y && y < (jt.posY + picOSize);
     }
     private void paintTouchMove(float fX, float fY){
-        if (!selected)
+        if (hangOn)
+            return;
+        if (!oneItemSelected)
             return;
 
         if (fX < jPosX - TOUCH_TOLERANCE || fX > jPosX + TOUCH_TOLERANCE ||
@@ -182,30 +190,41 @@ public class PaintView extends View {
 
             // if piece moved to right rightPosition then lock thi piece
             if (!jigTables[nowC][nowR].locked && rightPosition.isHere()  && nearBy.isLockable()) {
+                hangOn = true;
+                oneItemSelected = false;
                 jigTables[nowC][nowR].locked = true;
-                jigTables[nowC][nowR].count = 5;
-                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1500;
+                jigTables[nowC][nowR].count = 2;
+                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1001;
                 fPs.remove(fPIdx);
-            } else if (jPosY > screenY - recySize - picOSize) {
+                hangOn = false;
+            } else if (jPosY > screenY - recySize - picHSize && fPs.size() > 0) {
+                hangOn = true;
+                Log.w("pchk Check", "fps size="+fPs.size()+" fPIdx="+fPIdx+" now CR "+nowC+"x"+nowR);
+                fPs.remove(fPIdx);
                 insert2Recycle.sendEmptyMessage(0);
+                oneItemSelected = false;
+                hangOn = false;
             }
         }
     }
 
     private void paintTouchUp(){
         dragging = false;
-        Log.w("p83"," touchUp");
+        oneItemSelected = false;
+//        Log.w("p83"," touchUp");
     }
 
     long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
+        if (hangOn)
+            return true;
         float x = event.getX();
         float y = event.getY();
         tempTime = System.currentTimeMillis() + 200;
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
-        Log.w("px on TouchEvent", "time="+touchTime);
+//        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 paintTouchDown(x, y);

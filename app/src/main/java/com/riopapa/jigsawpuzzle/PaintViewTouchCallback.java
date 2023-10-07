@@ -10,13 +10,11 @@ import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.MainActivity.tvLeft;
-import static com.riopapa.jigsawpuzzle.RecycleJigListener.removeFrmRecycle;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -46,8 +44,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean isItemViewSwipeEnabled() {
-        return true; }
+    public boolean isItemViewSwipeEnabled() {return true; }
 
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -55,7 +52,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         int pos = viewHolder.getAbsoluteAdapterPosition();
         if (pos < 0)
             return;
-        Log.w("pc clearView","pos "+pos);
+//        Log.w("pc clearView","pos "+pos);
 //        int cr = activeRecyclerJigs.get(pos);
 //        int c = cr /10000;
 //        int r = cr - c * 10000;
@@ -70,6 +67,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
+            Log.w("sta", "size=" + activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
             jigCR = activeRecyclerJigs.get(jigRecyclePos);
             nowC = jigCR /10000;
             nowR = jigCR - nowC * 10000;
@@ -81,10 +79,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //            iv1.setImageBitmap(jigTables[nowC][nowR].picSel);
             jPosY = screenY - recySize;
             jPosX = viewHolder.itemView.getLeft();
-            Log.w("p9 onSelected "+jigRecyclePos,jigCR+" selected");
-        }
-        else if (jPosY < screenY - recySize - picOSize) {
-            removeFrmRecycle.sendEmptyMessage(0);
+            Log.w("p9 "+jigRecyclePos,jigCR+" oneItemSelected");
         }
 
     }
@@ -133,9 +128,17 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //            return;
 //
 //        helperDrawTime = nowTime;
+
+        if (activeRecyclerJigs.size() == 0)
+            return;
         vHolder = viewHolder;
         View pieceView = viewHolder.itemView;
-
+        if (jigRecyclePos == activeRecyclerJigs.size()) {
+            Log.e("r tag","activeSize="+activeRecyclerJigs.size()+" jigRecyclePos="+jigRecyclePos);
+            for (int i = 0; i < activeRecyclerJigs.size(); i++)
+                Log.w("active "+i, "pos "+activeRecyclerJigs.get(i));
+            return;
+        }
         jigCR = activeRecyclerJigs.get(jigRecyclePos);
         nowC = jigCR / 10000;
         nowR = jigCR - nowC * 10000;
@@ -155,18 +158,6 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //        if (!isCurrentlyActive) {
 //            clearCanvas(c, pieceView.getRight() + dX, (float) pieceView.getTop(), (float) pieceView.getRight(), (float) pieceView.getBottom());
 //            return;
-//        }
-
-//        if (dY < - picISize/2) {    // if moves up into main plate
-//            Log.w("p dY UP", shouldBeMoved +" dy="+dY+" oneItemSelected="+ oneItemSelected);
-//            if (!shouldBeMoved && !dragging)
-//                move2PaintView((int) dY, pieceView);
-//            for (int i = 0; i < 16; i+=2) {
-//                jigCR = activeRecyclerJigs.get(i);
-//                nowC = jigCR / 10000;
-//                nowR = jigCR - nowC * 10000;
-//                move2PaintView((int) dY - nowC* 10 - nowR * 10 -i * i*60, pieceView);
-//            }
 //        }
 
     }

@@ -57,7 +57,7 @@ public class intGlobalValues {
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
         Log.w("r23 Main","screenXY "+screenX+" x "+screenY);
-        recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
+        recySize = (int) ((float) screenX * dipVal / 2000f / 6f);   // 8f is puzzle size dependency
         picOSize = recySize; //  * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
         picHSize = picOSize / 2;
