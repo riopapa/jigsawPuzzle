@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
@@ -12,8 +13,8 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
-import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
-import static com.riopapa.jigsawpuzzle.PaintView.fPs;
+import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.zigRecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
@@ -35,7 +37,6 @@ import java.util.Collections;
 
 public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.JigHolder>
         implements ZItemTouchHelperListener {
-
 
     @NonNull
     @Override
@@ -54,7 +55,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     @Override
     public void onItemSwiped(int position) {
 
-        Log.w("r13 Recycler onItemSwiped", "position = "+position);
+        Log.w("r13 Recycler onItemSwiped", "rightPosition = "+position);
 
     }
     @Override
@@ -63,11 +64,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         Log.w("r33 Recycler on item move", "from = "+fromPosition);
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(recyclerJigs, i, i + 1);
+                Collections.swap(activeRecyclerJigs, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(recyclerJigs, i, i - 1);
+                Collections.swap(activeRecyclerJigs, i, i - 1);
             }
         }
         notifyItemMoved(fromPosition, toPosition);
@@ -81,7 +82,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         GestureDetector mGestureDetector;
         public JigHolder(View view) {
             super(view);
-            this.viewLine = itemView.findViewById(R.id.jig_hori_layout);
+            this.viewLine = itemView.findViewById(R.id.piece_layout);
             this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);
@@ -118,10 +119,10 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         long drawTime;
         @Override
         public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-            long nowTime = System.currentTimeMillis();
-            if (nowTime < drawTime + 400)
-                return false;
-            drawTime = nowTime;
+//            long nowTime = System.currentTimeMillis();
+//            if (nowTime < drawTime + 400)
+//                return false;
+//            drawTime = nowTime;
 
 //            Log.w("r14 adapter onScroll","distX="+distanceX+", distY="+distanceY+ "e1 X="+e1.getX()+" e1Y="+e1.getY());
             Log.w("r14", " onScroll");
@@ -133,11 +134,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
             Log.w("r2a ", "on long pressed");
             oneItemSelected = true;
-            add2FloatingQue();
+            add2FloatingPiece();
             Log.w("r2m moved "+jigRecyclePos,"item moved to paint "+nowC+"x"+nowR);
         }
 
-        private void add2FloatingQue() {
+        private void add2FloatingPiece() {
 
             jigTables[nowC][nowR].posX = jPosX;
             jigTables[nowC][nowR].posY = jPosY - picGap;
@@ -145,8 +146,9 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
                 piece.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
-            fp.oLine = jigTables[nowC][nowR].oLine2;
-            fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine2);
+            fp.oLine = jigTables[nowC][nowR].oLine;
+            fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine);
+            fp.fpJig = jigTables[nowC][nowR];
             fPs.add(fp);
         }
 
@@ -159,7 +161,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigCR = recyclerJigs.get(position);
+        jigCR = activeRecyclerJigs.get(position);
         int jigX = jigCR / 10000;
         int jigY = jigCR - jigX * 10000;
         if (jigTables[jigX][jigY].src == null)
@@ -170,16 +172,30 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
     @Override
     public int getItemCount() {
-        return (recyclerJigs.size());
+        return (activeRecyclerJigs.size());
     }
 
-    public final static Handler removeHandler = new Handler(Looper.getMainLooper()) {
+    public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
             jigTables[nowC][nowR].outRecycle = true;
-            recyclerJigs.remove(jigRecyclePos);
+            activeRecyclerJigs.remove(jigRecyclePos);
             jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+        }
+    };
+    public final static Handler insert2Recycle = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            // todo: calculate jigRecyclePos
+            LinearLayoutManager layoutManager = (LinearLayoutManager) zigRecyclerView.getLayoutManager();
+
+            int i = layoutManager.findFirstVisibleItemPosition();
+            jigRecyclePos = i + jPosX/ recySize;
+            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
+
+            jigTables[nowC][nowR].outRecycle = false;
+            activeRecyclerJigs.add(jigRecyclePos, nowC*10000+nowR);
+            jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
         }
     };
 }

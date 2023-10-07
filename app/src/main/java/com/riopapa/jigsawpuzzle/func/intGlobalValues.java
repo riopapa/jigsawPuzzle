@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
+import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
@@ -32,6 +33,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.showShift;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -39,6 +41,8 @@ import android.util.TypedValue;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.riopapa.jigsawpuzzle.Piece;
+
+import java.util.ArrayList;
 
 public class intGlobalValues {
     public intGlobalValues(Context context, Activity activity) {
@@ -81,8 +85,6 @@ public class intGlobalValues {
         }
         showShift = showMax - 4;
         puzzleSize = showMax * picISize;
-        baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
-        baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
 
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(margin, margin, margin, margin);
@@ -93,15 +95,26 @@ public class intGlobalValues {
         layoutParams.width = puzzleSize;
         layoutParams.height = puzzleSize;
         imageAnswer.setLayoutParams(layoutParams);
-        Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
-        Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
-                ", base XY ="+baseX+" x "+ baseY);
+
 
         offsetC = 0; offsetR = 0;
         leftC = 0; rightC = showMax;
         topR = 0; bottomR = showMax;
 
+        fPs = new ArrayList<>();
+
         piece = new Piece(context, outerSize, pieceGap, innerSize);
+        new Handler().postDelayed(() -> {
+//            baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
+//            baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
+            baseX = imageAnswer.getLeft() - picGap;
+            baseY = imageAnswer.getTop() - picGap;
+            Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
+            Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
+                    ", base XY ="+baseX+" x "+ baseY);
+
+        }, 10);
+
 
     }
 }

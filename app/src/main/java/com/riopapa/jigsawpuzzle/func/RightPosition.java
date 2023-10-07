@@ -17,10 +17,13 @@ import static com.riopapa.jigsawpuzzle.PaintView.calcR;
 
 import android.app.Activity;
 
-public class CheckPosition {
-    public boolean isHere(Activity activity) {
-        // todo : check if right position
+public class RightPosition {
 
+    Activity activity;
+    public RightPosition(Activity activity) {
+        this.activity = activity;
+    }
+    public boolean isHere() {
 
         calcC = (jPosX - baseX - picHSize) / picISize + offsetC;
         calcR = (jPosY - baseY - picHSize) / picISize + offsetR;
@@ -38,8 +41,6 @@ public class CheckPosition {
             return false;
         if (jPosY < yT || jPosY > yB)
             return false;
-//        int x = jPosX % picISize; jPosX = jPosX - x * picISize;
-//        int y = jPosY % picISize; jPosY = jPosX - y * picISize;
         return true;
     }
 

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
@@ -55,7 +56,6 @@ public class MainActivity extends Activity {
     public static Piece piece;
 
     public static boolean oneItemSelected = false;    // whether piece is selected
-    public static boolean shouldBeMoved = false; // must be moved soon
     public static int jigRecyclePos; // jigsaw slide x, y count
 
     public static Bitmap fullImage, grayedImage, brightImage;
@@ -66,11 +66,11 @@ public class MainActivity extends Activity {
 
     public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
 
-    public static int countRC, leftC, rightC, topR, bottomR; // on screen drawable
+    public static int leftC, rightC, topR, bottomR; // on screen drawable
 
     public static int offsetC, offsetR; // show offset Column, Row;
 
-    public static int jPosX, jPosY; // absolute x,y position drawing current jigsaw
+    public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
     public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
 
@@ -84,8 +84,11 @@ public class MainActivity extends Activity {
 
     public static PaintView paintView;
 
-    public static ArrayList<Integer> recyclerJigs;
+    public static ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
+    // allRandomJigs contains jigsaws id which is not moved to floatingPiece
+    // activeRecyclerJigs contains available jigsaws currently
 
+    public static ArrayList<FloatPiece> fPs;    // floating jigsaws
     public static Activity mActivity;
 
     public static Context mContext;
@@ -154,8 +157,8 @@ public class MainActivity extends Activity {
 
         grayedImage = null;
 
-        jigCOLUMNs = 20;
-        jigROWs = 20;
+        jigCOLUMNs = 12;
+        jigROWs = 12;
 
         View decorView = getWindow().getDecorView();
 // Hide the status bar.
@@ -175,7 +178,9 @@ public class MainActivity extends Activity {
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
 
-        makeRecycleArrays();
+        makeAllPossiblePieces();
+
+        copy2RecyclerPieces();
 
         zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -205,22 +210,24 @@ public class MainActivity extends Activity {
                 public void run() {
                     paintView.invalidate();
                 }
-            }, 200, 200);
+            }, 150, 150);
         }
     }
 
-    private static void makeRecycleArrays() {
+    // make recycler list with random jigsaws
+
+    private static void makeAllPossiblePieces() {
         int mxSize = jigCOLUMNs * jigROWs;
-        recyclerJigs = new ArrayList<>();
-        int []wk = new int[mxSize];
+        allPossibleJigs = new ArrayList<>();
+        int []temp = new int[mxSize];
         int wkIdx = new Random(System.currentTimeMillis()).nextInt(mxSize/2);
         for (int i = 0; i < mxSize ; i++) {
             int tmp = wkIdx + new Random().nextInt(mxSize/3);
             if (tmp >= mxSize) {
                 tmp -= mxSize;
             }
-            if (wk[tmp] != 0) {
-                while (wk[tmp] == 1) {
+            if (temp[tmp] != 0) {
+                while (temp[tmp] == 1) {
                     tmp++;
                     if (tmp >= mxSize)
                         tmp = 0;
@@ -229,11 +236,25 @@ public class MainActivity extends Activity {
             int x = tmp / jigCOLUMNs;
             int y = tmp - x * jigCOLUMNs;
 
-            recyclerJigs.add(x*10000+y);
-            wk[tmp] = 1;
+            allPossibleJigs.add(x*10000+y);
+            temp[tmp] = 1;
             wkIdx = tmp;
         }
     }
+
+    // build recycler from all pieces within in leftC, rightC, topR, bottomR
+    public static void copy2RecyclerPieces() {
+        activeRecyclerJigs = new ArrayList<>();
+        for (int i = 0; i < allPossibleJigs.size(); i++) {
+            int cr = allPossibleJigs.get(i);
+            int c = cr / 10000;
+            int r = cr - c * 10000;
+            if (c >= leftC && c < rightC && r >= topR && r < bottomR) {
+                activeRecyclerJigs.add(cr);
+            }
+        }
+    }
+
 
     void writeFile(File targetFolder, String fileName, String outText) {
         try {

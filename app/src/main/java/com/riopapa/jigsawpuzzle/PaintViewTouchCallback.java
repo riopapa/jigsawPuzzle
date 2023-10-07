@@ -13,16 +13,16 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.recyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.RecycleJigListener.removeHandler;
+import static com.riopapa.jigsawpuzzle.MainActivity.tvLeft;
+import static com.riopapa.jigsawpuzzle.RecycleJigListener.removeFrmRecycle;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -56,7 +56,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         if (pos < 0)
             return;
         Log.w("pc clearView","pos "+pos);
-//        int cr = recyclerJigs.get(pos);
+//        int cr = activeRecyclerJigs.get(pos);
 //        int c = cr /10000;
 //        int r = cr - c * 10000;
 
@@ -70,7 +70,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-            jigCR = recyclerJigs.get(jigRecyclePos);
+            jigCR = activeRecyclerJigs.get(jigRecyclePos);
             nowC = jigCR /10000;
             nowR = jigCR - nowC * 10000;
             if (jigTables[nowC][nowR].picSel == null)
@@ -84,7 +84,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             Log.w("p9 onSelected "+jigRecyclePos,jigCR+" selected");
         }
         else if (jPosY < screenY - recySize - picOSize) {
-            removeHandler.sendEmptyMessage(0);
+            removeFrmRecycle.sendEmptyMessage(0);
         }
 
     }
@@ -107,7 +107,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.w("p28 onSwiped", "Swiped position "+viewHolder.getBindingAdapterPosition());
+        Log.w("p28 onSwiped", "Swiped rightPosition "+viewHolder.getBindingAdapterPosition());
         listener.onItemSwiped(viewHolder.getBindingAdapterPosition());
     }
 
@@ -117,7 +117,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         int holderIdx = viewHolder.getAbsoluteAdapterPosition();
         int tgtIdx = target.getAbsoluteAdapterPosition();
         Log.w("p27 onMove","from "+holderIdx+" to "+tgtIdx);
-        Collections.swap(recyclerJigs, holderIdx, tgtIdx);
+        Collections.swap(activeRecyclerJigs, holderIdx, tgtIdx);
         jigRecycleAdapter.notifyItemMoved(holderIdx, tgtIdx);
 //        listener.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
         return true;
@@ -136,17 +136,18 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         vHolder = viewHolder;
         View pieceView = viewHolder.itemView;
 
-        jigCR = recyclerJigs.get(jigRecyclePos);
+        jigCR = activeRecyclerJigs.get(jigRecyclePos);
         nowC = jigCR / 10000;
         nowR = jigCR - nowC * 10000;
-        jPosX = pieceView.getLeft() + (int) dX;
-        jPosY = screenY - recySize - picISize + (int) dY;
-        jigTables[nowC][nowR].posX = jPosX;
-        jigTables[nowC][nowR].posY = jPosY;
+        if (dX != 0 && dY != 0) {
+            jPosX = pieceView.getLeft() + (int) dX;
+            jPosY = screenY - recySize - picISize + (int) dY;
+            jigTables[nowC][nowR].posX = jPosX;
+            jigTables[nowC][nowR].posY = jPosY;
+        }
 
-        TextView tvLeft = mActivity.findViewById(R.id.debug_left);
         String txt = "dxDy "+dX+" x "+dY
-                + " jPos "+jPosX+" x "+jPosY;
+                + "\n jPos "+jPosX+" x "+jPosY;
         mActivity.runOnUiThread(() -> tvLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //
@@ -161,7 +162,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //            if (!shouldBeMoved && !dragging)
 //                move2PaintView((int) dY, pieceView);
 //            for (int i = 0; i < 16; i+=2) {
-//                jigCR = recyclerJigs.get(i);
+//                jigCR = activeRecyclerJigs.get(i);
 //                nowC = jigCR / 10000;
 //                nowR = jigCR - nowC * 10000;
 //                move2PaintView((int) dY - nowC* 10 - nowR * 10 -i * i*60, pieceView);

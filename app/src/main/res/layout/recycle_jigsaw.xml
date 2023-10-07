@@ -4,7 +4,7 @@
               android:layout_height="80dp"
               android:background="#00ffffff"
               android:layout_margin="0dp"
-              android:id="@+id/jig_hori_layout"
+              android:id="@+id/piece_layout"
               android:orientation="vertical">
 
     <ImageView
@@ -13,8 +13,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="#00FFFFFF"
+        android:layout_margin="0dp"
         android:scaleType="fitXY"
         android:contentDescription="@string/todo"
-        android:layout_margin="4dp" />
+        />
 
 </LinearLayout>

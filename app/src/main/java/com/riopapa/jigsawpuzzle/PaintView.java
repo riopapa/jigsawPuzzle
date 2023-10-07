@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
+import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
@@ -15,8 +16,12 @@ import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
+import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
 import static com.riopapa.jigsawpuzzle.MainActivity.tvRight;
+import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,25 +38,27 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.riopapa.jigsawpuzzle.func.CheckPosition;
+import com.riopapa.jigsawpuzzle.func.NearBy;
+import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PaintView extends View {
 
     private static final float TOUCH_TOLERANCE = 20;
     static JigTable nowJig;
-    public int nowIdx;
     static Bitmap mBitmap;
-    public static ArrayList<FloatPiece> fPs;
+    public int fPIdx;
     public static int calcC, calcR;
     private static boolean selected;
     public static boolean dragging;
     Activity activity;
     Paint pGrayed = new Paint();
-    CheckPosition checkPosition = new CheckPosition();
+    RightPosition rightPosition;
+    NearBy nearBy;
 
 
 
@@ -69,6 +76,8 @@ public class PaintView extends View {
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
         pGrayed.setAlpha(40);
+        rightPosition = new RightPosition(activity);
+        nearBy = new NearBy(activity);
 
     }
 
@@ -88,11 +97,16 @@ public class PaintView extends View {
                         if (jigTables[cc][rr].lockedTime == 0)
                             canvas.drawBitmap(jigTables[cc][rr].oLine,
                                 baseX + c * picISize, baseY + r * picISize, null);
-                        else if (jigTables[cc][rr].lockedTime > System.currentTimeMillis())
-                            canvas.drawBitmap(jigTables[cc][rr].picSel,
-                                    baseX + c * picISize, baseY + r * picISize, null);
                         else {
-                            jigTables[cc][rr].lockedTime = 0;
+                            if (jigTables[cc][rr].lockedTime > System.currentTimeMillis()) {
+                                jigTables[cc][rr].count--;
+                                canvas.drawBitmap((jigTables[cc][rr].count % 2 == 0) ?
+                                                jigTables[cc][rr].picSel: jigTables[cc][rr].pic,
+                                        baseX + c * picISize, baseY + r * picISize, null);
+                            } else {
+                                jigTables[cc][rr].lockedTime = 0;
+                                jigTables[cc][rr].picSel = null;
+                            }
                         }
                     } else
                         canvas.drawBitmap(jigTables[cc][rr].oLine,
@@ -126,7 +140,7 @@ public class PaintView extends View {
         activity.runOnUiThread(() -> tvRight.setText(txt));
 
     }
-    private void paintToucnDown(float fX, float fY){
+    private void paintTouchDown(float fX, float fY){
 
         int iX = (int) fX;
         int iY = (int) fY;
@@ -138,11 +152,13 @@ public class PaintView extends View {
             JigTable jt = jigTables[c][r];
             if (isPieceSelected(jt, iX, iY)) {
                 nowR = r; nowC = c;
-                nowIdx = i;
+                fPIdx = i;
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
                 selected = true;
-                Log.w("x8 view c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
+                if (fPIdx != fPs.size()-1)  // move current puzzle to top
+                    Collections.swap(activeRecyclerJigs, fPIdx, fPs.size()-1);
+                Log.w("pSel selected c="+ nowC +" r="+ nowR, " x y "+jPosX+" x "+jPosY);
                 break;
             }
         }
@@ -152,25 +168,28 @@ public class PaintView extends View {
         return jt.posX < x && x < (jt.posX + picOSize) &&
                 jt.posY < y && y < (jt.posY + picOSize);
     }
-    private boolean paintTouchMove(float fX, float fY){
+    private void paintTouchMove(float fX, float fY){
         if (!selected)
-            return false;
-        float dx = Math.abs(fX - jPosX);
-        float dy = Math.abs(fY - jPosY);
+            return;
 
-        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE){
+        if (fX < jPosX - TOUCH_TOLERANCE || fX > jPosX + TOUCH_TOLERANCE ||
+           fY < jPosY - TOUCH_TOLERANCE || fY > jPosY + TOUCH_TOLERANCE) {
+
             jPosX = (int) fX;
             jPosY = (int) fY;
             jigTables[nowC][nowR].posX = jPosX - picISize;
             jigTables[nowC][nowR].posY = jPosY - picISize;
 
-            if (checkPosition.isHere(activity) && !jigTables[nowC][nowR].locked) {
+            // if piece moved to right rightPosition then lock thi piece
+            if (!jigTables[nowC][nowR].locked && rightPosition.isHere()  && nearBy.isLockable()) {
                 jigTables[nowC][nowR].locked = true;
-                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1000;
+                jigTables[nowC][nowR].count = 5;
+                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1500;
+                fPs.remove(fPIdx);
+            } else if (jPosY > screenY - recySize - picOSize) {
+                insert2Recycle.sendEmptyMessage(0);
             }
-            return true;
         }
-        return false;
     }
 
     private void paintTouchUp(){
@@ -183,13 +202,13 @@ public class PaintView extends View {
         float x = event.getX();
         float y = event.getY();
         tempTime = System.currentTimeMillis() + 200;
-        if (touchTime < tempTime)
+        if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
         Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                paintToucnDown(x, y);
+                paintTouchDown(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
                 paintTouchMove(x, y);
