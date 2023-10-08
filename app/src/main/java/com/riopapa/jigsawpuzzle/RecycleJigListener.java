@@ -116,7 +116,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
-            Log.w("r28 on single tab up", "Touch ");
+//            Log.w("r28 on single tab up", "Touch ");
             return true;
         }
 

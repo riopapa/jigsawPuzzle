@@ -27,13 +27,13 @@ public class ImageGray {
                 paintGray.setAlpha(30);
                 Canvas canvasGray = new Canvas(grayedImage);
                 canvasGray.drawBitmap(fullImage, 0, 0, paintGray);
-                for (int x = 0; x < jigCOLUMNs; x++) {
-                    for (int y = 0; y < jigROWs; y++) {
-                        JigTable z = jigTables[x][y];
+                for (int c = 0; c < jigCOLUMNs; c++) {
+                    for (int r = 0; r < jigROWs; r++) {
+                        JigTable z = jigTables[c][r];
                         Bitmap mask = piece.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                                 maskMaps[2][z.uType], maskMaps[3][z.dType]);
-                        Bitmap bm = Bitmap.createBitmap(grayedImage, x*innerSize, y*innerSize, outerSize, outerSize);
-                        canvasGray.drawBitmap(piece.makeOut2Line(piece.cropSrc(bm, mask)), x*innerSize, y*innerSize, null);
+                        Bitmap bm = Bitmap.createBitmap(grayedImage, c*innerSize, r*innerSize, outerSize, outerSize);
+                        canvasGray.drawBitmap(piece.makeOut2Line(piece.cropSrc(bm, mask, c, r)), c*innerSize, r*innerSize, null);
                     }
                 }
             }

@@ -4,11 +4,14 @@ import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
@@ -78,7 +81,7 @@ public class Piece {
         Bitmap orgPiece = Bitmap.createBitmap(fullImage, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                 maskMaps[2][z.uType], maskMaps[3][z.dType]);
-        z.src = cropSrc(orgPiece, mask);
+        z.src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
         z.pic = Bitmap.createScaledBitmap(z.src, picOSize, picOSize, true);
         mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
                 outMaps[2][z.uType], outMaps[3][z.dType]);
@@ -100,12 +103,17 @@ public class Piece {
         return maskMap;
     }
 
-    public Bitmap cropSrc(Bitmap srcImage, Bitmap maskOut) {
+    public Bitmap cropSrc(Bitmap srcImage, Bitmap maskOut, int c, int r) {
 
         Bitmap cropped = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(cropped);
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
+        Paint p = new Paint();
+        p.setColor(Color.RED);
+        p.setTextSize(pieceGap);
+        
+        tCanvas.drawText(c+"x"+r, outerSize/3, outerSize/2, p);
         return cropped;
     }
 

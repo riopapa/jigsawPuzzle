@@ -13,15 +13,14 @@ import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
+import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
 import static com.riopapa.jigsawpuzzle.MainActivity.tvRight;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
@@ -146,6 +145,8 @@ public class PaintView extends View {
 
         if (hangOn)
             return;
+        if (dragging)
+            return;
         int iX = (int) fX;
         int iY = (int) fY;
         dragging = true;
@@ -194,7 +195,7 @@ public class PaintView extends View {
                 oneItemSelected = false;
                 jigTables[nowC][nowR].locked = true;
                 jigTables[nowC][nowR].count = 2;
-                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 1001;
+                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 953;
                 fPs.remove(fPIdx);
                 hangOn = false;
             } else if (jPosY > screenY - recySize - picHSize && fPs.size() > 0) {

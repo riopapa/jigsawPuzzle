@@ -9,13 +9,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -27,17 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import com.riopapa.jigsawpuzzle.func.AdjustThumbNail;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,7 +38,7 @@ public class MainActivity extends Activity {
 
     public static TextView tvLeft, tvRight;
 
-    public static ImageView iv1, imageAnswer;
+    public static ImageView iv1, imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
 
     public static int outerSize, innerSize, pieceGap;  // real piece size
 
@@ -70,7 +62,6 @@ public class MainActivity extends Activity {
 
     public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
 
-    public static int leftC, rightC, topR, bottomR; // on screen drawable
 
     public static int offsetC, offsetR; // show offset Column, Row;
 
@@ -79,6 +70,7 @@ public class MainActivity extends Activity {
     public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
 
     public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
+    public static float fullRatio;  // 0.7f something
     public static boolean oneItemSelected; // now on dragging ..
 
     public static boolean hangOn; // wait while one action completed
@@ -132,6 +124,12 @@ public class MainActivity extends Activity {
 
         iv1 = findViewById(R.id.image1);
         imageAnswer = findViewById(R.id.image_answer);
+        thumbNail = findViewById(R.id.thumbnail);
+
+        moveL = findViewById(R.id.move_left);
+        moveR = findViewById(R.id.move_right);
+        moveU = findViewById(R.id.move_up);
+        moveD = findViewById(R.id.move_down);
 
         binding.moveLeft.setOnClickListener(v -> {
             offsetC -= showShift;
@@ -158,22 +156,26 @@ public class MainActivity extends Activity {
             copy2RecyclerPieces();
         });
 
-        fullImage =
-                BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.scenary, null);
+        fullImage = BitmapFactory.decodeResource
+                (mContext.getResources(), R.mipmap.scenary, null);
 
-        binding.directions.setImageBitmap(Bitmap.createScaledBitmap(fullImage, 300, 300, true));
+        int height = 300;
+        int width = height * fullImage.getWidth() / fullImage.getHeight();
+        binding.thumbnail.setImageBitmap(
+                Bitmap.createScaledBitmap(fullImage, width, height, true));
 
         grayedImage = null;
         jigCOLUMNs = 10;
         jigROWs = 10;
 
-        View decorView = getWindow().getDecorView();
 // Hide the status bar.
+        View decorView = getWindow().getDecorView();
         int uiOptions = decorView.getSystemUiVisibility();
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         new intGlobalValues(this, this);
+        new AdjustThumbNail();
 
         jigTables = new JigTable[jigCOLUMNs][jigROWs];
         new com.riopapa.jigsawpuzzle.func.initJigTable(jigTables, jigCOLUMNs, jigROWs);
@@ -186,8 +188,6 @@ public class MainActivity extends Activity {
         paintView.init(this);
 
         makeAllPossiblePieces();
-
-        copy2RecyclerPieces();
 
         zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -204,6 +204,8 @@ public class MainActivity extends Activity {
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         zigRecyclerView.setLayoutManager(mLinearLayoutManager);
+        copy2RecyclerPieces();
+
 
     }
 
@@ -236,8 +238,9 @@ public class MainActivity extends Activity {
         allPossibleJigs = new ArrayList<>();
         int []temp = new int[mxSize];
         int wkIdx = new Random(System.currentTimeMillis()).nextInt(mxSize/2);
+        Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < mxSize ; i++) {
-            int tmp = wkIdx + new Random().nextInt(mxSize/3);
+            int tmp = wkIdx + random.nextInt(mxSize/3);
             if (tmp >= mxSize) {
                 tmp -= mxSize;
             }
@@ -260,32 +263,18 @@ public class MainActivity extends Activity {
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public static void copy2RecyclerPieces() {
         activeRecyclerJigs = new ArrayList<>();
-        Log.w("Check", "allPossible size="+allPossibleJigs.size());
         for (int i = 0; i < allPossibleJigs.size(); i++) {
             int cr = allPossibleJigs.get(i);
             int c = cr / 10000;
             int r = cr - c * 10000;
-            if (c >= leftC && c < rightC && r >= topR && r < bottomR) {
+            if (!jigTables[c][r].locked && !jigTables[c][r].outRecycle &&
+                    c >= offsetC && c < offsetC + showMax && r >= offsetR && r < offsetR + showMax) {
                 activeRecyclerJigs.add(cr);
             }
         }
-        Log.w("active","active recy sze="+activeRecyclerJigs.size());
+        jigRecycleAdapter.notifyDataSetChanged();
     }
 
-
-    void writeFile(File targetFolder, String fileName, String outText) {
-        try {
-            File targetFile = new File(targetFolder, fileName);
-            FileWriter fileWriter = new FileWriter(targetFile, false);
-
-            // Always wrap FileWriter in BufferedWriter.
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(outText);
-            bufferedWriter.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓
     ArrayList<String> permissions = new ArrayList<>();

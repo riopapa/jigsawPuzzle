@@ -5,12 +5,14 @@ import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
+import static com.riopapa.jigsawpuzzle.MainActivity.fullRatio;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
-import static com.riopapa.jigsawpuzzle.MainActivity.imageAnswer;
 import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
+import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
@@ -23,22 +25,13 @@ import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.leftC;
-import static com.riopapa.jigsawpuzzle.MainActivity.rightC;
-import static com.riopapa.jigsawpuzzle.MainActivity.topR;
-import static com.riopapa.jigsawpuzzle.MainActivity.bottomR;
 import static com.riopapa.jigsawpuzzle.MainActivity.showShift;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.riopapa.jigsawpuzzle.Piece;
 
@@ -70,6 +63,7 @@ public class intGlobalValues {
 
         fullWidth = fullImage.getWidth();
         fullHeight = fullImage.getHeight();
+        fullRatio = fullHeight / fullWidth;     // usually under 1.0
         jPosX = -1; // prevent drawing without preload
         innerSize = fullHeight / (jigROWs +1);
         if (fullWidth / (jigCOLUMNs +1) < innerSize)
@@ -77,44 +71,30 @@ public class intGlobalValues {
         pieceGap = innerSize *5/14;
         outerSize = pieceGap + pieceGap + innerSize;
 
-        int margin = 32;
-        int w = (screenX -margin - margin) % picISize;
-        showMax = (screenX -margin - margin - w) / picISize;
+        showMax = screenX / picISize - 1;
         if (showMax > jigCOLUMNs) {
             showMax = jigCOLUMNs;
         }
         showShift = showMax - 4;
+
         puzzleSize = showMax * picISize;
 
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(margin, margin, margin, margin);
-        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.width = puzzleSize;
-        layoutParams.height = puzzleSize;
-        imageAnswer.setLayoutParams(layoutParams);
-
-
         offsetC = 0; offsetR = 0;
-        leftC = 0; rightC = showMax;
-        topR = 0; bottomR = showMax;
 
         fPs = new ArrayList<>();
 
         piece = new Piece(context, outerSize, pieceGap, innerSize);
-        new Handler().postDelayed(() -> {
-//            baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
-//            baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
-            baseX = imageAnswer.getLeft() - picGap;
-            baseY = imageAnswer.getTop() - picGap;
+//        new Handler().postDelayed(() -> {
+            baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
+            baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
+//            baseX = imageAnswer.getLeft() - picGap;
+//            baseY = imageAnswer.getTop() - picGap;
             Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
             Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
                     ", base XY ="+baseX+" x "+ baseY);
 
-        }, 10);
-
+//        }, 10);
 
     }
+
 }
