@@ -76,14 +76,14 @@ public class PaintView extends View {
         fPs = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
-        pGrayed.setAlpha(40);
+        pGrayed.setAlpha(100);
         rightPosition = new RightPosition(activity);
         nearBy = new NearBy(activity);
 
     }
 
     //  screenXY 1080 x 2316
-    //  image 11232 x 7488, outerSize=802, pieceGap=167, innerSize=468
+    //  image 11232 x 7488, outerSize=802, gapSize=167, innerSize=468
     // picOSize=178, picISize=103 base XY =32 x 537
     // left top corner 121 x 624 ( 85 x  92)
 
@@ -151,7 +151,7 @@ public class PaintView extends View {
         int iY = (int) fY;
         dragging = true;
         oneItemSelected = false;
-        for (int i = 0; i < fPs.size(); i++) {
+        for (int i = fPs.size() - 1; i >= 0; i--) {
             int c = fPs.get(i).C;
             int r = fPs.get(i).R;
             JigTable jt = jigTables[c][r];
@@ -161,7 +161,7 @@ public class PaintView extends View {
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
                 oneItemSelected = true;
-                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR+ " x y "+jPosX+" x "+jPosY+" fpsize="+fPs.size());
+//                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR+ " x y "+jPosX+" x "+jPosY+" fpsize="+fPs.size());
                 if (fPIdx != fPs.size()-1) { // move current puzzle to top
                     Collections.swap(fPs, fPIdx, fPs.size() - 1);
                     fPIdx = fPs.size() - 1;

@@ -25,12 +25,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustThumbNail;
+import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 
     public static ImageView iv1, imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
 
-    public static int outerSize, innerSize, pieceGap;  // real piece size
+    public static int outerSize, innerSize, gapSize;  // real piece size
 
     public static int recySize, picOSize, picISize, picGap, picHSize;
         // recycler size, at Paintview size;
@@ -48,7 +48,8 @@ public class MainActivity extends Activity {
         // picISize : picture inner size
         // picGap   : gap between picISize and picOSize
         // picHSize : half of picOSize;
-    // class modules
+        // pieceISize: one PieceSize for slicing images
+        // pieceOSize: one Outer for slicing images
 
     public static Piece piece;
 
@@ -158,15 +159,15 @@ public class MainActivity extends Activity {
 
         fullImage = BitmapFactory.decodeResource
                 (mContext.getResources(), R.mipmap.scenary, null);
+        fullWidth = fullImage.getWidth();
+        fullHeight = fullImage.getHeight();
+        fullRatio = fullHeight / fullWidth;     // usually under 1.0 if landscape
 
-        int height = 300;
-        int width = height * fullImage.getWidth() / fullImage.getHeight();
-        binding.thumbnail.setImageBitmap(
-                Bitmap.createScaledBitmap(fullImage, width, height, true));
+        binding.thumbnail.setImageBitmap(buildThumbNail());
 
         grayedImage = null;
         jigCOLUMNs = 10;
-        jigROWs = 10;
+        jigROWs = jigCOLUMNs * fullHeight / fullWidth;  // to avoid over y size
 
 // Hide the status bar.
         View decorView = getWindow().getDecorView();
@@ -183,11 +184,10 @@ public class MainActivity extends Activity {
         maskMaps = new Masks().make(mContext, outerSize);
         outMaps = new Masks().makeOut(mContext, outerSize);
 
-        jigCR = -1;
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
 
-        makeAllPossiblePieces();
+        new FullRecyclePiece();
 
         zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -207,6 +207,18 @@ public class MainActivity extends Activity {
         copy2RecyclerPieces();
 
 
+    }
+
+    Bitmap buildThumbNail() {
+        int h, w;
+        if (fullHeight > fullWidth) {
+            h = 500;
+            w = h * fullWidth / fullHeight;
+        } else {
+            w = 500;
+            h = w * fullHeight / fullWidth;
+        }
+        return Bitmap.createScaledBitmap(fullImage, w, h, true);
     }
 
     @Override
@@ -233,32 +245,6 @@ public class MainActivity extends Activity {
 
     // make recycler list with random jigsaws
 
-    private static void makeAllPossiblePieces() {
-        int mxSize = jigCOLUMNs * jigROWs;
-        allPossibleJigs = new ArrayList<>();
-        int []temp = new int[mxSize];
-        int wkIdx = new Random(System.currentTimeMillis()).nextInt(mxSize/2);
-        Random random = new Random(System.currentTimeMillis());
-        for (int i = 0; i < mxSize ; i++) {
-            int tmp = wkIdx + random.nextInt(mxSize/3);
-            if (tmp >= mxSize) {
-                tmp -= mxSize;
-            }
-            if (temp[tmp] != 0) {
-                while (temp[tmp] == 1) {
-                    tmp++;
-                    if (tmp >= mxSize)
-                        tmp = 0;
-                }
-            }
-            int x = tmp / jigCOLUMNs;
-            int y = tmp - x * jigCOLUMNs;
-
-            allPossibleJigs.add(x*10000+y);
-            temp[tmp] = 1;
-            wkIdx = tmp;
-        }
-    }
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public static void copy2RecyclerPieces() {

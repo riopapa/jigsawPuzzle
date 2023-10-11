@@ -4,8 +4,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 
 import android.content.Context;

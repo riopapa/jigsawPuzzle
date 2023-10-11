@@ -49,8 +49,8 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         view.getLayoutParams().width = recySize;
         view.getLayoutParams().height = recySize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);
-        iv.getLayoutParams().height = recySize;
-        iv.getLayoutParams().width = recySize;
+        iv.getLayoutParams().height = picOSize;
+        iv.getLayoutParams().width = picOSize;
         iv.requestLayout();
         return new JigHolder(view);
     }
@@ -193,8 +193,13 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
 
             jigTables[nowC][nowR].outRecycle = false;
-            activeRecyclerJigs.add(jigRecyclePos, nowC*10000+nowR);
-            jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+            if (jigRecyclePos < activeRecyclerJigs.size()-1) {
+                activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
+                jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+            } else {
+                activeRecyclerJigs.add(nowC * 10000 + nowR);
+                jigRecycleAdapter.notifyItemInserted(activeRecyclerJigs.size()-1);
+            }
         }
     };
 }

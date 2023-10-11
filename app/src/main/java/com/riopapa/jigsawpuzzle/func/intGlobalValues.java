@@ -4,8 +4,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
-import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.fullRatio;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
@@ -19,7 +17,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.gapSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.puzzleSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
@@ -50,7 +48,19 @@ public class intGlobalValues {
         screenX = metrics.widthPixels;
         screenY = metrics.heightPixels;
         Log.w("r23 Main","screenXY "+screenX+" x "+screenY);
-        recySize = (int) ((float) screenX * dipVal / 2000f / 6f);   // 8f is puzzle size dependency
+
+        int szW = fullWidth / (jigCOLUMNs+1);
+        int szH = fullHeight / (jigROWs+1);
+        innerSize = (szW > szH) ? szH:szW;
+        outerSize = innerSize * (14+5+5) / 14;
+        gapSize = innerSize *5/14;
+
+        recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
+        if (recySize > fullWidth / (jigCOLUMNs+2))
+            recySize = fullWidth / (jigCOLUMNs+2);
+        if (recySize > fullHeight / (jigROWs+2))
+            recySize = fullHeight / (jigROWs+2);
+
         picOSize = recySize; //  * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
         picHSize = picOSize / 2;
@@ -61,21 +71,16 @@ public class intGlobalValues {
 
 //        Log.w("r25 "+Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
 
-        fullWidth = fullImage.getWidth();
-        fullHeight = fullImage.getHeight();
-        fullRatio = fullHeight / fullWidth;     // usually under 1.0
         jPosX = -1; // prevent drawing without preload
-        innerSize = fullHeight / (jigROWs +1);
-        if (fullWidth / (jigCOLUMNs +1) < innerSize)
-            innerSize = fullWidth / (jigCOLUMNs -1);
-        pieceGap = innerSize *5/14;
-        outerSize = pieceGap + pieceGap + innerSize;
 
         showMax = screenX / picISize - 1;
-        if (showMax > jigCOLUMNs) {
+        if (showMax > jigCOLUMNs)
             showMax = jigCOLUMNs;
-        }
-        showShift = showMax - 4;
+
+        if (showMax > jigROWs)
+            showMax = jigROWs;
+
+        showShift = showMax / 2;
 
         puzzleSize = showMax * picISize;
 
@@ -83,13 +88,13 @@ public class intGlobalValues {
 
         fPs = new ArrayList<>();
 
-        piece = new Piece(context, outerSize, pieceGap, innerSize);
+        piece = new Piece(context, outerSize, gapSize, innerSize);
 //        new Handler().postDelayed(() -> {
             baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
             baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;
 //            baseX = imageAnswer.getLeft() - picGap;
 //            baseY = imageAnswer.getTop() - picGap;
-            Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", pieceGap="+ pieceGap +", innerSize="+ innerSize);
+            Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", gapSize="+ gapSize +", innerSize="+ innerSize);
             Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
                     ", base XY ="+baseX+" x "+ baseY);
 

@@ -31,7 +31,6 @@ import java.util.Collections;
 public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
     private final ZItemTouchHelperListener listener;
-    private RecyclerView.ViewHolder vHolder;
     private final Paint nullPaint = new Paint();
 
     public PaintViewTouchCallback(ZItemTouchHelperListener listener, Context context) {
@@ -49,9 +48,9 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        int pos = viewHolder.getAbsoluteAdapterPosition();
-        if (pos < 0)
-            return;
+//        int pos = viewHolder.getAbsoluteAdapterPosition();
+//        if (pos < 0)
+//            return;
 //        Log.w("pc clearView","pos "+pos);
 //        int cr = activeRecyclerJigs.get(pos);
 //        int c = cr /10000;
@@ -60,14 +59,12 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //        viewHolder.itemView.setBackgroundColor(0x000FFFF);
     }
 
-    long helperDrawTime;
-
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-            Log.w("sta", "size=" + activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
+            Log.w("onS sta", "size=" + activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
             jigCR = activeRecyclerJigs.get(jigRecyclePos);
             nowC = jigCR /10000;
             nowR = jigCR - nowC * 10000;
@@ -131,14 +128,13 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
         if (activeRecyclerJigs.size() == 0)
             return;
-        vHolder = viewHolder;
-        View pieceView = viewHolder.itemView;
         if (jigRecyclePos == activeRecyclerJigs.size()) {
-            Log.e("r tag","activeSize="+activeRecyclerJigs.size()+" jigRecyclePos="+jigRecyclePos);
-            for (int i = 0; i < activeRecyclerJigs.size(); i++)
-                Log.w("active "+i, "pos "+activeRecyclerJigs.get(i));
+//            Log.e("r tag","activeSize="+activeRecyclerJigs.size()+" jigRecyclePos="+jigRecyclePos);
+//            for (int i = 0; i < activeRecyclerJigs.size(); i++)
+//                Log.w("active "+i, "pos "+activeRecyclerJigs.get(i));
             return;
         }
+        View pieceView = viewHolder.itemView;
         jigCR = activeRecyclerJigs.get(jigRecyclePos);
         nowC = jigCR / 10000;
         nowR = jigCR - nowC * 10000;
