@@ -7,5 +7,6 @@ public class FloatPiece {
     public Bitmap oLine, bigMap, brightMap;
     public boolean justMoved;
     public long time;
+    public int count;
     public JigTable fpJig;
 }

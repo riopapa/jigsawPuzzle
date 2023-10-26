@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -75,7 +78,7 @@ public class MainActivity extends Activity {
     public static boolean oneItemSelected; // now on dragging ..
 
     public static boolean hangOn; // wait while one action completed
-    public static RecyclerView zigRecyclerView;
+    public static RecyclerView jigRecyclerView;
 
     public static Bitmap [][] maskMaps, outMaps;
 
@@ -99,10 +102,11 @@ public class MainActivity extends Activity {
 
     public static Timer invalidateTimer;
 
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
@@ -158,15 +162,13 @@ public class MainActivity extends Activity {
         });
 
         fullImage = BitmapFactory.decodeResource
-                (mContext.getResources(), R.mipmap.scenary, null);
+                (mContext.getResources(), R.mipmap.zigsaw01, null);
         fullWidth = fullImage.getWidth();
         fullHeight = fullImage.getHeight();
         fullRatio = fullHeight / fullWidth;     // usually under 1.0 if landscape
 
-        binding.thumbnail.setImageBitmap(buildThumbNail());
-
         grayedImage = null;
-        jigCOLUMNs = 10;
+        jigCOLUMNs = 8;
         jigROWs = jigCOLUMNs * fullHeight / fullWidth;  // to avoid over y size
 
 // Hide the status bar.
@@ -189,9 +191,9 @@ public class MainActivity extends Activity {
 
         new FullRecyclePiece();
 
-        zigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
+        jigRecyclerView = mActivity.findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        zigRecyclerView.getLayoutParams().height = recySize;
+        jigRecyclerView.getLayoutParams().height = recySize;
         jigRecycleAdapter = new RecycleJigListener();
 //        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(jigRecycleAdapter, mContext);
 //        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
@@ -199,26 +201,47 @@ public class MainActivity extends Activity {
         ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));;
 //        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
 
-        helper.attachToRecyclerView(zigRecyclerView);
-        zigRecyclerView.setAdapter(jigRecycleAdapter);
+        helper.attachToRecyclerView(jigRecyclerView);
+        jigRecyclerView.setAdapter(jigRecycleAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
-        zigRecyclerView.setLayoutManager(mLinearLayoutManager);
+        jigRecyclerView.setLayoutManager(mLinearLayoutManager);
         copy2RecyclerPieces();
-
 
     }
 
-    Bitmap buildThumbNail() {
-        int h, w;
+    void showThumbNail() {
+        int h, w, rectSize, xOff, yOff;
         if (fullHeight > fullWidth) {
             h = 500;
             w = h * fullWidth / fullHeight;
+            rectSize = 500 * (showMax) / jigROWs;    // 24 to show line boundary
+            xOff = offsetC * 500  / jigROWs;
+            yOff = offsetR * 500 / jigROWs;
         } else {
             w = 500;
             h = w * fullHeight / fullWidth;
+            rectSize = 500 * (showMax) / jigCOLUMNs;
+            xOff = offsetC * 500  / jigCOLUMNs;
+            yOff = offsetR * 500 / jigCOLUMNs;
         }
-        return Bitmap.createScaledBitmap(fullImage, w, h, true);
+        if (xOff + rectSize >= w)
+            xOff = w - rectSize;
+        if (yOff + rectSize >= h)
+            yOff = h - rectSize;
+
+        Bitmap thumb = Bitmap.createScaledBitmap(fullImage, w, h, true);
+        Canvas canvas = new Canvas(thumb);
+        Paint paint = new Paint();
+        paint.setColor(0x6fff0000);
+        paint.setStrokeWidth(10f);
+        canvas.drawLine(xOff, yOff, xOff+rectSize, yOff, paint);
+        canvas.drawLine(xOff, yOff, xOff, yOff+rectSize, paint);
+        canvas.drawLine(xOff+rectSize, yOff, xOff+rectSize, yOff+rectSize, paint);
+        canvas.drawLine(xOff, yOff+rectSize, xOff+rectSize, yOff+rectSize, paint);
+
+        binding.thumbnail.setImageBitmap(thumb);
+
     }
 
     @Override
@@ -232,8 +255,10 @@ public class MainActivity extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 300, 200);
+            invalidateTimer.schedule(tt, 200, 150);
         }
+        showThumbNail();
+
     }
 
 
@@ -247,7 +272,7 @@ public class MainActivity extends Activity {
 
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
-    public static void copy2RecyclerPieces() {
+    public void copy2RecyclerPieces() {
         activeRecyclerJigs = new ArrayList<>();
         for (int i = 0; i < allPossibleJigs.size(); i++) {
             int cr = allPossibleJigs.get(i);
@@ -259,6 +284,9 @@ public class MainActivity extends Activity {
             }
         }
         jigRecycleAdapter.notifyDataSetChanged();
+        Log.w("jigRecycleAdapter", "size="+activeRecyclerJigs.size());
+        showThumbNail();
+
     }
 
 

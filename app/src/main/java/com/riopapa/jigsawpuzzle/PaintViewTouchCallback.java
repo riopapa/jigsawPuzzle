@@ -68,8 +68,8 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             jigCR = activeRecyclerJigs.get(jigRecyclePos);
             nowC = jigCR /10000;
             nowR = jigCR - nowC * 10000;
-            if (jigTables[nowC][nowR].picSel == null)
-                jigTables[nowC][nowR].picSel = piece.makeBright(jigTables[nowC][nowR].pic);
+            if (jigTables[nowC][nowR].picBright == null)
+                jigTables[nowC][nowR].picBright = piece.makeBright(jigTables[nowC][nowR].pic);
 //            Drawable d = new BitmapDrawable(mContext.getResources(),
 //                    jigTables[nowC][nowR].picSel);
 //            viewHolder.itemView.setBackground(d);

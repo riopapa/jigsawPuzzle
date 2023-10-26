@@ -1,7 +1,5 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
-import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
@@ -11,25 +9,19 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
-import static com.riopapa.jigsawpuzzle.MainActivity.tvRight;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -42,7 +34,6 @@ import androidx.annotation.Nullable;
 
 import com.riopapa.jigsawpuzzle.func.NearBy;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
-import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -56,11 +47,10 @@ public class PaintView extends View {
     public int fPIdx;
     public static int calcC, calcR;
     public static boolean dragging;
-    Activity activity;
-    Paint pGrayed = new Paint();
+    public Activity paintActivity;
     RightPosition rightPosition;
     NearBy nearBy;
-
+    PieceDraw pieceDraw;
 
 
     public PaintView(Context context) {
@@ -72,13 +62,13 @@ public class PaintView extends View {
     }
 
     public void init(Activity activity){
-        this.activity = activity;
+        this.paintActivity = activity;
         fPs = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
-        pGrayed.setAlpha(100);
         rightPosition = new RightPosition(activity);
         nearBy = new NearBy(activity);
+        pieceDraw = new PieceDraw();
 
     }
 
@@ -88,58 +78,7 @@ public class PaintView extends View {
     // left top corner 121 x 624 ( 85 x  92)
 
     protected void onDraw(Canvas canvas){
-        canvas.save();
-            for (int c = 0; c < showMax; c++) {
-                for (int r = 0; r < showMax; r++) {
-                    final int cc = c+offsetC; final int rr = r+offsetR;
-                        if (jigTables[cc][rr].oLine == null)
-                            piece.makeAll(c+offsetC, r+offsetR);
-                    if (jigTables[cc][rr].locked) {
-                        if (jigTables[cc][rr].lockedTime == 0)
-                            canvas.drawBitmap(jigTables[cc][rr].oLine,
-                                baseX + c * picISize, baseY + r * picISize, null);
-                        else {
-                            if (jigTables[cc][rr].lockedTime > System.currentTimeMillis()) {
-                                jigTables[cc][rr].count--;
-                                canvas.drawBitmap((jigTables[cc][rr].count % 2 == 0) ?
-                                                jigTables[cc][rr].picSel: jigTables[cc][rr].pic,
-                                        baseX + c * picISize, baseY + r * picISize, null);
-                            } else {
-                                jigTables[cc][rr].lockedTime = 0;
-                                jigTables[cc][rr].picSel = null;
-                            }
-                        }
-                    } else
-                        canvas.drawBitmap(jigTables[cc][rr].oLine,
-                            baseX + c * picISize, baseY + r * picISize, pGrayed);
-                }
-            }
-
-        for (int cnt = 0; cnt < fPs.size(); cnt++) {
-            FloatPiece fP = fPs.get(cnt);
-            int c = fP.C;
-            int r = fP.R;
-            JigTable jt = jigTables[c][r];
-            if (fP.time == 0) { // time == 0 means normal piece
-                if (dragging && oneItemSelected && c == nowC && r == nowR) {
-                    canvas.drawBitmap(fP.bigMap, jt.posX, jt.posY, null);
-                } else
-                    canvas.drawBitmap(fP.oLine, jt.posX, jt.posY, null);
-            } else {    // timer active to show bright puzzle
-                if (System.currentTimeMillis() < fP.time) {
-                    canvas.drawBitmap(fP.brightMap, jt.posX, jt.posY, null);
-                } else {
-                    canvas.drawBitmap(fP.oLine, jt.posX, jt.posY, null);
-                    fPs.remove(cnt);
-//                    invalidate();
-                }
-            }
-        }
-
-        canvas.restore();
-        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+offsetC + " x " + offsetR+"\n calc " + calcC +" x "+ calcR+"\n fPs "+fPs.size();
-        activity.runOnUiThread(() -> tvRight.setText(txt));
-
+        pieceDraw.draw(canvas);
     }
     private void paintTouchDown(float fX, float fY){
 
@@ -161,7 +100,8 @@ public class PaintView extends View {
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
                 oneItemSelected = true;
-//                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR+ " x y "+jPosX+" x "+jPosY+" fpsize="+fPs.size());
+//                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR
+//                + " x y "+jPosX+" x "+jPosY+" fpSize="+fPs.size());
                 if (fPIdx != fPs.size()-1) { // move current puzzle to top
                     Collections.swap(fPs, fPIdx, fPs.size() - 1);
                     fPIdx = fPs.size() - 1;

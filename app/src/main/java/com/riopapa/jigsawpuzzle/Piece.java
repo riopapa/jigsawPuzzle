@@ -61,7 +61,7 @@ public class Piece {
         paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
         final int contrast  = 2;
-        final int brightness = 60;
+        final int brightness = 100;
         ColorMatrix colorMatrix = new ColorMatrix(new float[]
                 {
                         contrast, 0, 0, 0, brightness,

@@ -10,14 +10,12 @@ import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
-import static com.riopapa.jigsawpuzzle.MainActivity.zigRecyclerView;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -133,14 +131,14 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             hangOn = true;
             removeFrmRecycle.sendEmptyMessage(0);
             add2FloatingPiece();
-            Log.w("r2m moved "+jigRecyclePos,"item moved to paint "+nowC+"x"+nowR);
             hangOn = false;
         }
 
         private void add2FloatingPiece() {
 
             jigTables[nowC][nowR].posX = jPosX;
-            jigTables[nowC][nowR].posY = jPosY - picISize - picOSize;
+            jigTables[nowC][nowR].posY = jPosY - picISize;
+
             if (jigTables[nowC][nowR].oLine2 == null)
                 piece.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
@@ -148,6 +146,8 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             fp.oLine = jigTables[nowC][nowR].oLine;
             fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine);
             fp.fpJig = jigTables[nowC][nowR];
+            fp.count = 3;
+            fp.time = 987;
             fPs.add(fp);
         }
 
@@ -186,7 +186,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     public final static Handler insert2Recycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             // todo: calculate jigRecyclePos
-            LinearLayoutManager layoutManager = (LinearLayoutManager) zigRecyclerView.getLayoutManager();
+            LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 
             int i = layoutManager.findFirstVisibleItemPosition();
             jigRecyclePos = i + (jPosX+picISize)/ recySize;

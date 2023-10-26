@@ -56,10 +56,6 @@ public class intGlobalValues {
         gapSize = innerSize *5/14;
 
         recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
-        if (recySize > fullWidth / (jigCOLUMNs+2))
-            recySize = fullWidth / (jigCOLUMNs+2);
-        if (recySize > fullHeight / (jigROWs+2))
-            recySize = fullHeight / (jigROWs+2);
 
         picOSize = recySize; //  * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
