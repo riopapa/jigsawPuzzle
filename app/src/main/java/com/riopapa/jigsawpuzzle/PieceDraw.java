@@ -25,7 +25,6 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 import java.util.Random;
 
 public class PieceDraw {
-    boolean allLocked;
     Paint pGrayed;
     public PieceDraw() {
         pGrayed = new Paint();
@@ -34,7 +33,7 @@ public class PieceDraw {
 
     public void draw(Canvas canvas){
         canvas.save();
-        allLocked = true;
+        // draw locked pieces first with .pic
         for (int c = 0; c < showMax; c++) {
             for (int r = 0; r < showMax; r++) {
                 final int cc = c+offsetC; final int rr = r+offsetR;
@@ -55,10 +54,16 @@ public class PieceDraw {
                             jigTables[cc][rr].picBright = null;
                         }
                     }
-                } else {
+                }
+            }
+        }
+        // then empty pieces with .oline
+        for (int c = 0; c < showMax; c++) {
+            for (int r = 0; r < showMax; r++) {
+                final int cc = c+offsetC; final int rr = r+offsetR;
+                if (!jigTables[cc][rr].locked) {
                     canvas.drawBitmap(jigTables[cc][rr].oLine,
                             baseX + c * picISize, baseY + r * picISize, pGrayed);
-                    allLocked = false; // if any piece is unlocked then allLocked = false;
                 }
             }
         }
@@ -83,16 +88,8 @@ public class PieceDraw {
                         fp.time = 0;
                     canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
                 }
-//                if (System.currentTimeMillis() < fp.time) {
-//                    canvas.drawBitmap(fp.brightMap, jt.posX, jt.posY, null);
-//                } else {
-//                    canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
-//                    fPs.remove(cnt);
-////                    invalidate();
-//                }
             }
         }
-
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+offsetC + " x " + offsetR+"\n calc " + calcC +" x "+ calcR+"\n fPs "+fPs.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));

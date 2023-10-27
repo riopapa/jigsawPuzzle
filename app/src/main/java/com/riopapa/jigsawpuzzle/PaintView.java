@@ -1,11 +1,15 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
@@ -34,6 +38,7 @@ import androidx.annotation.Nullable;
 
 import com.riopapa.jigsawpuzzle.func.NearBy;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
+import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -52,6 +57,7 @@ public class PaintView extends View {
     NearBy nearBy;
     PieceDraw pieceDraw;
 
+    FloatPiece fpNow;
 
     public PaintView(Context context) {
         this(context, null);
@@ -106,6 +112,7 @@ public class PaintView extends View {
                     Collections.swap(fPs, fPIdx, fPs.size() - 1);
                     fPIdx = fPs.size() - 1;
                 }
+                fpNow = fPs.get(fPIdx);
                 break;
             }
         }
@@ -146,15 +153,39 @@ public class PaintView extends View {
                 oneItemSelected = false;
                 hangOn = false;
             }
+            // check whether can be anchored to near by piece
+            for (int i = 0; i < fPs.size(); i++) {
+                if (i != fPIdx) {
+                    FloatPiece fpI = fPs.get(i);
+                    if (Math.abs(fpI.C - fpNow.C) < 2 && Math.abs(fpI.R - fpNow.R) < 2) {
+                        // TODO check
+                    }
+                }
+            }
+
+
+
         }
     }
 
     private void paintTouchUp(){
         dragging = false;
         oneItemSelected = false;
+        allLocked = isPiecesAllLocked();
 //        Log.w("p83"," touchUp");
     }
 
+    boolean isPiecesAllLocked() {
+        if (activeRecyclerJigs.size() > 0 || fPs.size() > 0)
+            return false;
+        for (int c = 0; c < jigCOLUMNs; c++) {
+            for (int r = 0; r < jigROWs; r++) {
+                if (!jigTables[c][r].locked)
+                    return false;
+            }
+        }
+        return true;
+    }
     long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
         if (hangOn)

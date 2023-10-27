@@ -1,10 +1,12 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
 import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
+import static com.riopapa.jigsawpuzzle.MainActivity.gapSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.innerSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
@@ -17,7 +19,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
-import static com.riopapa.jigsawpuzzle.MainActivity.gapSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.puzzleSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
@@ -51,7 +52,7 @@ public class intGlobalValues {
 
         int szW = fullWidth / (jigCOLUMNs+1);
         int szH = fullHeight / (jigROWs+1);
-        innerSize = (szW > szH) ? szH:szW;
+        innerSize = Math.min(szW, szH);
         outerSize = innerSize * (14+5+5) / 14;
         gapSize = innerSize *5/14;
 
@@ -84,6 +85,7 @@ public class intGlobalValues {
 
         fPs = new ArrayList<>();
 
+        allLocked = false;
         piece = new Piece(context, outerSize, gapSize, innerSize);
 //        new Handler().postDelayed(() -> {
             baseX = (screenX - puzzleSize) / 2 - picGap - picGap;

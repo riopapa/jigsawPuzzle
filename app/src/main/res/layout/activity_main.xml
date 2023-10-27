@@ -98,7 +98,7 @@
             app:layout_constraintLeft_toRightOf="@id/move_left"
             app:layout_constraintBottom_toTopOf="@id/move_down"
             android:background="@drawable/round_thumbnail"
-            android:src="@mipmap/scenary"
+            android:src="@mipmap/scenary_two_kids"
             android:clipToOutline="true"
             android:scaleType="fitCenter"
             />

@@ -56,6 +56,8 @@ public class MainActivity extends Activity {
 
     public static Piece piece;
 
+    public static boolean allLocked = false;
+
     public static int jigRecyclePos; // jigsaw slide x, y count
 
     public static Bitmap fullImage, grayedImage, brightImage;
@@ -162,7 +164,7 @@ public class MainActivity extends Activity {
         });
 
         fullImage = BitmapFactory.decodeResource
-                (mContext.getResources(), R.mipmap.zigsaw01, null);
+                (mContext.getResources(), R.mipmap.old_castle, null);
         fullWidth = fullImage.getWidth();
         fullHeight = fullImage.getHeight();
         fullRatio = fullHeight / fullWidth;     // usually under 1.0 if landscape
@@ -255,7 +257,7 @@ public class MainActivity extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 200, 150);
+            invalidateTimer.schedule(tt, 200, 100);
         }
         showThumbNail();
 

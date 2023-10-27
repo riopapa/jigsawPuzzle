@@ -145,9 +145,10 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             fp.C = nowC; fp.R = nowR;
             fp.oLine = jigTables[nowC][nowR].oLine;
             fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine);
-            fp.fpJig = jigTables[nowC][nowR];
+            fp.jig = jigTables[nowC][nowR];
             fp.count = 3;
             fp.time = 987;
+            fp.uId = System.currentTimeMillis();
             fPs.add(fp);
         }
 
