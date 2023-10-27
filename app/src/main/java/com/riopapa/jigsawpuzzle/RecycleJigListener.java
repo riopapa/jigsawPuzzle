@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
@@ -149,7 +149,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             fp.count = 3;
             fp.time = 987;
             fp.uId = System.currentTimeMillis();
-            fPs.add(fp);
+            fps.add(fp);
         }
 
         @Override

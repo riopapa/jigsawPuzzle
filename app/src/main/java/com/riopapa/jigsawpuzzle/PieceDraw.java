@@ -2,14 +2,13 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
@@ -68,9 +67,8 @@ public class PieceDraw {
             }
         }
 
-
-        for (int cnt = 0; cnt < fPs.size(); cnt++) {
-            FloatPiece fp = fPs.get(cnt);
+        for (int cnt = 0; cnt < fps.size(); cnt++) {
+            FloatPiece fp = fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
             JigTable jt = jigTables[c][r];
@@ -79,6 +77,16 @@ public class PieceDraw {
                     canvas.drawBitmap(fp.bigMap, jt.posX, jt.posY, null);
                 } else
                     canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
+            } else if (fp.anchorId != 0 && fp.count > 0) {
+                fp.count--;
+                canvas.drawBitmap((fp.count % 2 == 0) ?
+                                jigTables[c][r].picBright : jigTables[c][r].pic,
+                        jigTables[c][r].posX, jigTables[c][r].posY, null);
+
+                if (fp.count == 0) {
+                    fp.time = 0;
+                }
+                fps.set(cnt, fp);
 
             } else {    // timer to move recycler piece to PieceDraw
                 if (fp.count > 0) {

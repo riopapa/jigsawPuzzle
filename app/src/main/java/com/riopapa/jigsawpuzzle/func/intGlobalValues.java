@@ -3,7 +3,7 @@ package com.riopapa.jigsawpuzzle.func;
 import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.gapSize;
@@ -83,7 +83,7 @@ public class intGlobalValues {
 
         offsetC = 0; offsetR = 0;
 
-        fPs = new ArrayList<>();
+        fps = new ArrayList<>();
 
         allLocked = false;
         piece = new Piece(context, outerSize, gapSize, innerSize);

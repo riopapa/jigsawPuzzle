@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
     // allRandomJigs contains jigsaws id which is not moved to floatingPiece
     // activeRecyclerJigs contains available jigsaws currently
 
-    public static ArrayList<FloatPiece> fPs;    // floating jigsaws
+    public static ArrayList<FloatPiece> fps;    // floating jigsaws
     public static Activity mActivity;
 
     public static Context mContext;

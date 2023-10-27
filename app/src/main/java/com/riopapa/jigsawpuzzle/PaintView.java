@@ -2,7 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPs;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.fullWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
@@ -37,6 +37,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.riopapa.jigsawpuzzle.func.NearBy;
+import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -49,12 +50,13 @@ public class PaintView extends View {
     private static final float TOUCH_TOLERANCE = 20;
     static JigTable nowJig;
     static Bitmap mBitmap;
-    public int fPIdx;
+    public int nowIdx;
     public static int calcC, calcR;
     public static boolean dragging;
     public Activity paintActivity;
     RightPosition rightPosition;
     NearBy nearBy;
+    NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
 
     FloatPiece fpNow;
@@ -69,12 +71,13 @@ public class PaintView extends View {
 
     public void init(Activity activity){
         this.paintActivity = activity;
-        fPs = new ArrayList<>();
+        fps = new ArrayList<>();
         dragging = false;
         mBitmap = Bitmap.createBitmap(fullWidth, fullHeight, Bitmap.Config.ARGB_8888);
         rightPosition = new RightPosition(activity);
         nearBy = new NearBy(activity);
         pieceDraw = new PieceDraw();
+        nearByFloatPiece = new NearByFloatPiece();
 
     }
 
@@ -96,23 +99,23 @@ public class PaintView extends View {
         int iY = (int) fY;
         dragging = true;
         oneItemSelected = false;
-        for (int i = fPs.size() - 1; i >= 0; i--) {
-            int c = fPs.get(i).C;
-            int r = fPs.get(i).R;
+        for (int i = fps.size() - 1; i >= 0; i--) {
+            int c = fps.get(i).C;
+            int r = fps.get(i).R;
             JigTable jt = jigTables[c][r];
             if (isPieceSelected(jt, iX, iY)) {
                 nowR = r; nowC = c;
-                fPIdx = i;
+                nowIdx = i;
                 nowJig = jigTables[c][r];
                 jPosX = iX; jPosY = iY;
                 oneItemSelected = true;
 //                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR
 //                + " x y "+jPosX+" x "+jPosY+" fpSize="+fPs.size());
-                if (fPIdx != fPs.size()-1) { // move current puzzle to top
-                    Collections.swap(fPs, fPIdx, fPs.size() - 1);
-                    fPIdx = fPs.size() - 1;
+                if (nowIdx != fps.size()-1) { // move current puzzle to top
+                    Collections.swap(fps, nowIdx, fps.size() - 1);
+                    nowIdx = fps.size() - 1;
                 }
-                fpNow = fPs.get(fPIdx);
+                fpNow = fps.get(nowIdx);
                 break;
             }
         }
@@ -136,6 +139,19 @@ public class PaintView extends View {
             jigTables[nowC][nowR].posX = jPosX - picISize;
             jigTables[nowC][nowR].posY = jPosY - picISize;
 
+            if (fpNow.anchorId != 0) {  // anchored with others
+                for (int i = 0; i < fps.size(); i++) {
+                    FloatPiece fpT = fps.get(i);
+                    if (fpT.anchorId == fpNow.anchorId) {
+                        jigTables[fpT.C][fpT.R].posX =
+                                jigTables[nowC][nowR].posX - (nowC - fpT.C) * picISize;
+                        jigTables[fpT.C][fpT.R].posY =
+                                jigTables[nowC][nowR].posY - (nowR - fpT.R) * picISize;
+                    }
+                }
+            }
+
+
             // if piece moved to right rightPosition then lock thi piece
             if (!jigTables[nowC][nowR].locked && rightPosition.isHere()  && nearBy.isLockable()) {
                 hangOn = true;
@@ -143,28 +159,38 @@ public class PaintView extends View {
                 jigTables[nowC][nowR].locked = true;
                 jigTables[nowC][nowR].count = 2;
                 jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 953;
-                fPs.remove(fPIdx);
+                fps.remove(nowIdx);
                 hangOn = false;
-            } else if (jPosY > screenY - recySize - picHSize && fPs.size() > 0) {
+            } else if (jPosY > screenY - recySize - picHSize && fps.size() > 0) {
                 hangOn = true;
-                Log.w("pchk Check", "fps size="+fPs.size()+" fPIdx="+fPIdx+" now CR "+nowC+"x"+nowR);
-                fPs.remove(fPIdx);
+                Log.w("pchk Check", "fps size="+ fps.size()+" fPIdx="+ nowIdx +" now CR "+nowC+"x"+nowR);
+                fps.remove(nowIdx);
                 insert2Recycle.sendEmptyMessage(0);
                 oneItemSelected = false;
                 hangOn = false;
             }
             // check whether can be anchored to near by piece
-            for (int i = 0; i < fPs.size(); i++) {
-                if (i != fPIdx) {
-                    FloatPiece fpI = fPs.get(i);
-                    if (Math.abs(fpI.C - fpNow.C) < 2 && Math.abs(fpI.R - fpNow.R) < 2) {
-                        // TODO check
+            int ancIdx = nearByFloatPiece.anchor(nowIdx, fpNow);
+            if (ancIdx != -1) {
+                FloatPiece fpAnc = fps.get(ancIdx);
+                if (fpAnc.anchorId == 0)
+                    fpAnc.anchorId = System.currentTimeMillis();
+                if (fpNow.anchorId != fpAnc.anchorId) {
+                    fpNow.anchorId = fpAnc.anchorId;
+                    jigTables[nowC][nowR].posX =
+                            jigTables[fpAnc.C][fpAnc.R].posX + (nowC - fpAnc.C) * picISize;
+                    jigTables[nowC][nowR].posY =
+                            jigTables[fpAnc.C][fpAnc.R].posY + (nowR - fpAnc.R) * picISize;
+                    for (int i = 0; i < fps.size(); i++) {
+                        FloatPiece fpT = fps.get(i);
+                        if (fpT.anchorId == fpNow.anchorId) {
+                            fpT.time = 123; // make it not zero
+                            fpT.count = 3;
+                            fps.set(i, fpT);
+                        }
                     }
                 }
             }
-
-
-
         }
     }
 
@@ -176,7 +202,7 @@ public class PaintView extends View {
     }
 
     boolean isPiecesAllLocked() {
-        if (activeRecyclerJigs.size() > 0 || fPs.size() > 0)
+        if (activeRecyclerJigs.size() > 0 || fps.size() > 0)
             return false;
         for (int c = 0; c < jigCOLUMNs; c++) {
             for (int r = 0; r < jigROWs; r++) {

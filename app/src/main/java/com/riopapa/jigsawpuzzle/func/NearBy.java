@@ -16,7 +16,6 @@ public class NearBy {
     }
     public boolean isLockable() {
 
-        boolean lockable = false;
         boolean left = false, right = false, up = false, down = false;
         if (nowC == 0 && nowR == 0 || (nowC == jigCOLUMNs - 1 && nowR == 0) ||
             (nowC == 0 && nowR == jigROWs -1) || (nowC == jigCOLUMNs -1 && nowR == jigROWs -1))
