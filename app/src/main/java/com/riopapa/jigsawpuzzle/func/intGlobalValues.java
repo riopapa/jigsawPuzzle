@@ -94,7 +94,7 @@ public class intGlobalValues {
 //            baseY = imageAnswer.getTop() - picGap;
             Log.w("r21 sizeCheck","image "+ fullWidth +" x "+ fullHeight +", outerSize="+ outerSize +", gapSize="+ gapSize +", innerSize="+ innerSize);
             Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
-                    ", base XY ="+baseX+" x "+ baseY);
+                    ", base XY ="+baseX+" x "+ baseY + " picGap="+picGap);
 
 //        }, 10);
 

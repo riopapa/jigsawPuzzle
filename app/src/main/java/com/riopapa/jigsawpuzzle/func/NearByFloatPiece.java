@@ -21,17 +21,12 @@ public class NearByFloatPiece {
                 int rDelta = fpNow.R - fpI.R;
                 if (Math.abs(cDelta) > 1 || Math.abs(rDelta) > 1)
                     continue;
-                int posX = jigTables[fpI.C][fpI.R].posX;
-                int posY = jigTables[fpI.C][fpI.R].posY;
-                int delX = jPosX - picISize - posX - cDelta*picISize;
-                int delY = jPosY - picISize - posY - rDelta*picISize;
-//                Log.w("picI "+picISize,"now "+posX+" x "+posY+" jig "+jPosX+" x "+jPosY);
-//                Log.w("delta "+picGap, "x=" + delX +
-//                        " y="+ delY);
-                if (Math.abs(delX) > picGap ||
-                        Math.abs(delY) > picGap)
-                    continue;
-//                fpNow.anchorId = fpI.uId;   // assign ancherId
+                int delX = Math.abs(fpNow.posX - jigTables[fpI.C][fpI.R].posX - cDelta*picISize);
+                if (delX > picGap)
+                    continue;;
+                int delY = Math.abs(fpNow.posY - jigTables[fpI.C][fpI.R].posY - rDelta*picISize);
+                if (delY > picGap)
+                    continue;;
                 return i;   // anchored with i's floatPiece
             }
         }

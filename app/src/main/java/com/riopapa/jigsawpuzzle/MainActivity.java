@@ -106,6 +106,11 @@ public class MainActivity extends Activity {
 
     ActivityMainBinding binding;
 
+    public static final int aniTO_PAINT = 123;
+    public static final int aniTO_RECYCLE = 120;
+    public static final int aniANCHOR = 423;
+    public static final int fpMode_TO_XPAINT = 123;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -257,7 +262,7 @@ public class MainActivity extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 200, 100);
+            invalidateTimer.schedule(tt, 100, 50);
         }
         showThumbNail();
 

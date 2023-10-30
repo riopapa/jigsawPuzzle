@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.aniTO_PAINT;
 import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
@@ -139,16 +140,15 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             jigTables[nowC][nowR].posX = jPosX;
             jigTables[nowC][nowR].posY = jPosY - picISize;
 
-            if (jigTables[nowC][nowR].oLine2 == null)
-                piece.makeOline2(nowC, nowR);
+//            if (jigTables[nowC][nowR].oLine2 == null)
+//                piece.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
             fp.oLine = jigTables[nowC][nowR].oLine;
-            fp.bigMap = piece.makeBigger(jigTables[nowC][nowR].oLine);
-            fp.jig = jigTables[nowC][nowR];
-            fp.count = 3;
-            fp.time = 987;
-            fp.uId = System.currentTimeMillis();
+            fp.count = 5;
+            fp.mode = aniTO_PAINT;
+            fp.uId = System.currentTimeMillis();    // set Unique uId
+            fp.anchorId = 0;       // let anchorId to itself
             fps.add(fp);
         }
 

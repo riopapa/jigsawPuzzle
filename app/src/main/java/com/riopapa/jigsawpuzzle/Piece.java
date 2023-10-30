@@ -60,20 +60,27 @@ public class Piece {
         paintOutOver = new Paint();
         paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
-        final int contrast  = 2;
-        final int brightness = 100;
+        final float contrast  = 1;
+        final int brightness = 50;  // positive is bright
         ColorMatrix colorMatrix = new ColorMatrix(new float[]
                 {
-                        contrast, 0, 0, 0, brightness,
-                        0, contrast, 0, 0, brightness,
-                        0, 0, contrast, 0, brightness,
-                        0, 0, 0, 1, 0
+                        contrast, 0, 0, 0, brightness,  // Red
+                        0, contrast, 0, 0, brightness,  // Green
+                        0, 0, contrast, 0, brightness,  // Blue
+                        0, 0, 0, 1, 0                   // Alpha
                 });
         paintBright = new Paint();
         paintBright.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 
     }
 
+    /**
+     * if bitmap image in JigTable is null,
+     *    get .src from original image with outerSize
+     *    make scaled .pic from .src
+     *    make .oLine from .pic
+     * @return jigTables[col][row] .src, .pic, .oLine
+     */
     public void makeAll(int col, int row) {
         JigTable z = jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(fullImage, col * innerSize, row * innerSize, outerSize, outerSize);

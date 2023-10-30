@@ -2,26 +2,23 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
 import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
+import static com.riopapa.jigsawpuzzle.MainActivity.aniANCHOR;
+import static com.riopapa.jigsawpuzzle.MainActivity.aniTO_PAINT;
 import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.piece;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
-import static com.riopapa.jigsawpuzzle.PaintView.dragging;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
-
-import java.util.Random;
 
 public class PieceDraw {
     Paint pGrayed;
@@ -67,35 +64,36 @@ public class PieceDraw {
             }
         }
 
+        // drawing floating pieces
         for (int cnt = 0; cnt < fps.size(); cnt++) {
             FloatPiece fp = fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
             JigTable jt = jigTables[c][r];
-            if (fp.time == 0) { // time == 0 means normal piece
-                if (dragging && oneItemSelected && c == nowC && r == nowR) {
-                    canvas.drawBitmap(fp.bigMap, jt.posX, jt.posY, null);
-                } else
-                    canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
-            } else if (fp.anchorId != 0 && fp.count > 0) {
+            if (fp.count == 0) { // normal piece
+                canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
+
+            } else if (fp.count > 0 && fp.mode == aniANCHOR) {  // animate from recycle to paintView
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 jigTables[c][r].picBright : jigTables[c][r].pic,
                         jigTables[c][r].posX, jigTables[c][r].posY, null);
-
                 if (fp.count == 0) {
-                    fp.time = 0;
+                    fp.mode = 0;
                 }
                 fps.set(cnt, fp);
 
-            } else {    // timer to move recycler piece to PieceDraw
-                if (fp.count > 0) {
-                    fp.count--;
-                    jigTables[c][r].posY -= picHSize + new Random().nextInt(5);
-                    if (fp.count == 0)
-                        fp.time = 0;
-                    canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
+            } else if (fp.count > 0 && fp.mode == aniTO_PAINT) {  // animate from recycle to paintView
+                Log.w("aniTO_PAINT "+fp.count,jigTables[c][r].posX+" x "+jigTables[c][r].posY);
+                fp.count--;
+                canvas.drawBitmap((fp.count % 2 == 0) ?
+                                jigTables[c][r].picBright : jigTables[c][r].pic,
+                        jigTables[c][r].posX, jigTables[c][r].posY, null);
+                jigTables[c][r].posY -= picHSize / 2;
+                if (fp.count == 0) {
+                    fp.mode = 0;
                 }
+                fps.set(cnt, fp);
             }
         }
         canvas.restore();

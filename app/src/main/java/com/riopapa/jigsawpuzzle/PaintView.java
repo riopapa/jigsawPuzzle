@@ -18,9 +18,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.paintView;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -47,19 +44,18 @@ import java.util.Collections;
 
 public class PaintView extends View {
 
-    private static final float TOUCH_TOLERANCE = 20;
-    static JigTable nowJig;
     static Bitmap mBitmap;
-    public int nowIdx;
+    public static int nowIdx;
     public static int calcC, calcR;
     public static boolean dragging;
     public Activity paintActivity;
-    RightPosition rightPosition;
-    NearBy nearBy;
-    NearByFloatPiece nearByFloatPiece;
+    public static RightPosition rightPosition;
+    public static NearBy nearBy;
+    public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
+    PieceTouch pieceTouch;
 
-    FloatPiece fpNow;
+    public static FloatPiece fpNow;
 
     public PaintView(Context context) {
         this(context, null);
@@ -77,6 +73,7 @@ public class PaintView extends View {
         rightPosition = new RightPosition(activity);
         nearBy = new NearBy(activity);
         pieceDraw = new PieceDraw();
+        pieceTouch = new PieceTouch();
         nearByFloatPiece = new NearByFloatPiece();
 
     }
@@ -95,104 +92,33 @@ public class PaintView extends View {
             return;
         if (dragging)
             return;
-        int iX = (int) fX;
-        int iY = (int) fY;
+        int iX = (int) fX - picHSize;
+        int iY = (int) fY - picHSize;
         dragging = true;
         oneItemSelected = false;
         for (int i = fps.size() - 1; i >= 0; i--) {
             int c = fps.get(i).C;
             int r = fps.get(i).R;
             JigTable jt = jigTables[c][r];
-            if (isPieceSelected(jt, iX, iY)) {
+
+            Log.w("positions "+i, "i = "+iX+"x"+iY+" jt = "+jt.posX+" x "+jt.posY);
+            if (Math.abs(jt.posX - iX) < picHSize && Math.abs(jt.posY - iY) < picHSize) {
                 nowR = r; nowC = c;
                 nowIdx = i;
-                nowJig = jigTables[c][r];
-                jPosX = iX; jPosY = iY;
-                oneItemSelected = true;
-//                Log.w("pfp ","selected fpidx="+fPIdx+" c="+ nowC +" r="+ nowR
-//                + " x y "+jPosX+" x "+jPosY+" fpSize="+fPs.size());
                 if (nowIdx != fps.size()-1) { // move current puzzle to top
                     Collections.swap(fps, nowIdx, fps.size() - 1);
                     nowIdx = fps.size() - 1;
                 }
+                oneItemSelected = true;
                 fpNow = fps.get(nowIdx);
+                fpNow.posX = jt.posX;
+                fpNow.posY = jt.posY;
+                jPosX = jt.posX; jPosY = jt.posY;
                 break;
             }
         }
     }
 
-    private boolean isPieceSelected(JigTable jt, int x, int y) {
-        return jt.posX < x && x < (jt.posX + picOSize) &&
-                jt.posY < y && y < (jt.posY + picOSize);
-    }
-    private void paintTouchMove(float fX, float fY){
-        if (hangOn)
-            return;
-        if (!oneItemSelected)
-            return;
-
-        if (fX < jPosX - TOUCH_TOLERANCE || fX > jPosX + TOUCH_TOLERANCE ||
-           fY < jPosY - TOUCH_TOLERANCE || fY > jPosY + TOUCH_TOLERANCE) {
-
-            jPosX = (int) fX;
-            jPosY = (int) fY;
-            jigTables[nowC][nowR].posX = jPosX - picISize;
-            jigTables[nowC][nowR].posY = jPosY - picISize;
-
-            if (fpNow.anchorId != 0) {  // anchored with others
-                for (int i = 0; i < fps.size(); i++) {
-                    FloatPiece fpT = fps.get(i);
-                    if (fpT.anchorId == fpNow.anchorId) {
-                        jigTables[fpT.C][fpT.R].posX =
-                                jigTables[nowC][nowR].posX - (nowC - fpT.C) * picISize;
-                        jigTables[fpT.C][fpT.R].posY =
-                                jigTables[nowC][nowR].posY - (nowR - fpT.R) * picISize;
-                    }
-                }
-            }
-
-
-            // if piece moved to right rightPosition then lock thi piece
-            if (!jigTables[nowC][nowR].locked && rightPosition.isHere()  && nearBy.isLockable()) {
-                hangOn = true;
-                oneItemSelected = false;
-                jigTables[nowC][nowR].locked = true;
-                jigTables[nowC][nowR].count = 2;
-                jigTables[nowC][nowR].lockedTime = System.currentTimeMillis() + 953;
-                fps.remove(nowIdx);
-                hangOn = false;
-            } else if (jPosY > screenY - recySize - picHSize && fps.size() > 0) {
-                hangOn = true;
-                Log.w("pchk Check", "fps size="+ fps.size()+" fPIdx="+ nowIdx +" now CR "+nowC+"x"+nowR);
-                fps.remove(nowIdx);
-                insert2Recycle.sendEmptyMessage(0);
-                oneItemSelected = false;
-                hangOn = false;
-            }
-            // check whether can be anchored to near by piece
-            int ancIdx = nearByFloatPiece.anchor(nowIdx, fpNow);
-            if (ancIdx != -1) {
-                FloatPiece fpAnc = fps.get(ancIdx);
-                if (fpAnc.anchorId == 0)
-                    fpAnc.anchorId = System.currentTimeMillis();
-                if (fpNow.anchorId != fpAnc.anchorId) {
-                    fpNow.anchorId = fpAnc.anchorId;
-                    jigTables[nowC][nowR].posX =
-                            jigTables[fpAnc.C][fpAnc.R].posX + (nowC - fpAnc.C) * picISize;
-                    jigTables[nowC][nowR].posY =
-                            jigTables[fpAnc.C][fpAnc.R].posY + (nowR - fpAnc.R) * picISize;
-                    for (int i = 0; i < fps.size(); i++) {
-                        FloatPiece fpT = fps.get(i);
-                        if (fpT.anchorId == fpNow.anchorId) {
-                            fpT.time = 123; // make it not zero
-                            fpT.count = 3;
-                            fps.set(i, fpT);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private void paintTouchUp(){
         dragging = false;
@@ -222,13 +148,19 @@ public class PaintView extends View {
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
+
+
 //        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 paintTouchDown(x, y);
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                paintTouchMove(x, y);
+
+                final float TOUCH_TOLERANCE = 20;
+                if (Math.abs(x - jPosX) > TOUCH_TOLERANCE || Math.abs(y - jPosY) > TOUCH_TOLERANCE)
+                    pieceTouch.move(x, y);
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();
