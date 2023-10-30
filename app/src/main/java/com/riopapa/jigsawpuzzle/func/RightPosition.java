@@ -7,8 +7,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.PaintView.calcC;
-import static com.riopapa.jigsawpuzzle.PaintView.calcR;
 
 import android.app.Activity;
 import android.util.Log;
@@ -17,6 +15,8 @@ import android.util.Log;
 public class RightPosition {
 
     Activity activity;
+    int calcC, calcR;
+
     public RightPosition(Activity activity) {
         this.activity = activity;
     }
@@ -29,7 +29,7 @@ public class RightPosition {
 //        activity.runOnUiThread(() -> tvLeft.setText(txt));
 //        if (calcC != cc || calcR != rr)
 //            return false;
-        Log.w("Gap", Math.abs(posX - x)+" x "+ Math.abs(posY - y));
+//        Log.w("Gap", Math.abs(posX - x)+" x "+ Math.abs(posY - y));
         if (Math.abs(posX - x) > picGap || Math.abs(posY - y) > picGap)
             return false;
         return true;

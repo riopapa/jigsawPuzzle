@@ -46,7 +46,6 @@ public class PaintView extends View {
 
     static Bitmap mBitmap;
     public static int nowIdx;
-    public static int calcC, calcR;
     public static boolean dragging;
     public Activity paintActivity;
     public static RightPosition rightPosition;
@@ -144,7 +143,7 @@ public class PaintView extends View {
             return true;
         float x = event.getX();
         float y = event.getY();
-        tempTime = System.currentTimeMillis() + 200;
+        tempTime = System.currentTimeMillis() + 100;
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
@@ -170,13 +169,13 @@ public class PaintView extends View {
         return true;
     }
 
-    public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(Message msg) {
+//    public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
+//        public void handleMessage(Message msg) {
 //            nowJig = jigTables[nowC][nowR];
 //            mapNow = Bitmap.createScaledBitmap(nowJig.src, picOSize, picOSize, true);
 //            dragging = true;
 //            Log.w("p1x "+ jigCR," call by recycler drawing updateting "+jPosX+" x "+jPosY);
-            paintView.invalidate();}
-    };
+//            paintView.invalidate();}
+//    };
 
 }

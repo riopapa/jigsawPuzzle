@@ -56,9 +56,8 @@ public class PieceTouch {
 
         for (int i = 0; i < fps.size(); i++) {
             FloatPiece fpT = fps.get(i);
-            if (rightPosition.isHere(fpT.C, fpT.R,
-                    jigTables[fpT.C][fpT.R].posX, jigTables[fpT.C][fpT.R].posY)
-                    && nearBy.isLockable(fpT.C, fpT.R)) {
+            if (nearBy.isLockable(fpT.C, fpT.R) && rightPosition.isHere(fpT.C, fpT.R,
+                            jigTables[fpT.C][fpT.R].posX, jigTables[fpT.C][fpT.R].posY)) {
                 if (fpT.anchorId == 0) {
                     fpT.anchorId = -1;
                     fps.set(i, fpT);
@@ -92,27 +91,34 @@ public class PieceTouch {
         }
 
         // check whether can be anchored to near by piece
-        if (fpNow.anchorId == 0) {  // this is separated piece
-            int ancIdx = nearByFloatPiece.anchor(nowIdx, fpNow);
-            if (ancIdx != -1) {
-                FloatPiece fpAnc = fps.get(ancIdx);
-                if (fpAnc.anchorId == 0)
-                    fpAnc.anchorId = fpAnc.uId;
-                fpNow.anchorId = fpAnc.anchorId;
+        int ancIdx = nearByFloatPiece.anchor(nowIdx, fpNow);
+        if (ancIdx != -1) {
+            hangOn = true;
+            if (fpNow.anchorId == 0) {
+                fpNow.anchorId = fpNow.uId;
                 fps.set(nowIdx, fpNow);
-                jigTables[nowC][nowR].posX =
-                        jigTables[fpAnc.C][fpAnc.R].posX + (nowC - fpAnc.C) * picISize;
-                jigTables[nowC][nowR].posY =
-                        jigTables[fpAnc.C][fpAnc.R].posY + (nowR - fpAnc.R) * picISize;
-                for (int i = 0; i < fps.size(); i++) {
-                    FloatPiece fpT = fps.get(i);
-                    if (fpT.anchorId == fpNow.anchorId) {
-                        fpT.mode = aniANCHOR; // make it not zero
-                        fpT.count = 3;
-                        fps.set(i, fpT);
-                    }
+            }
+            long nowId = fpNow.anchorId;
+            FloatPiece fpJoin = fps.get(ancIdx);
+            if (fpJoin.anchorId == 0) {
+                fpJoin.anchorId = nowId;
+                fps.set(ancIdx, fpJoin);
+            }
+            long ancId = fpJoin.anchorId;
+            jigTables[nowC][nowR].posX =
+                    jigTables[fpJoin.C][fpJoin.R].posX + (nowC - fpJoin.C) * picISize;
+            jigTables[nowC][nowR].posY =
+                    jigTables[fpJoin.C][fpJoin.R].posY + (nowR - fpJoin.R) * picISize;
+            for (int i = 0; i < fps.size(); i++) {
+                FloatPiece fpT = fps.get(i);
+                if (fpT.anchorId == nowId) {
+                    fpT.anchorId = ancId;
+                    fpT.mode = aniANCHOR; // make it not zero
+                    fpT.count = 3;
+                    fps.set(i, fpT);
                 }
             }
+            hangOn = false;
         }
     }
 

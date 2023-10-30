@@ -115,9 +115,14 @@ public class Piece {
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
         Paint p = new Paint();
-        p.setColor(Color.RED);
+        p.setColor(Color.BLACK);
         p.setTextSize(pieceGap);
-        
+        p.setStrokeWidth(4);
+        p.setStyle(Paint.Style.STROKE);
+        tCanvas.drawText(c+"x"+r, outerSize/3, outerSize/2, p);
+        p.setStrokeWidth(0);
+        p.setColor(Color.RED);
+        p.setStyle(Paint.Style.FILL_AND_STROKE);
         tCanvas.drawText(c+"x"+r, outerSize/3, outerSize/2, p);
         return cropped;
     }

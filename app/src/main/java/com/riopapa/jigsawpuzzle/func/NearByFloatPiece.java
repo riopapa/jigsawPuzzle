@@ -17,6 +17,8 @@ public class NearByFloatPiece {
         for (int i = 0; i < fps.size(); i++) {
             if (i != fPIdx) {
                 FloatPiece fpI = fps.get(i);
+                if (fpNow.anchorId > 0 && fpNow.anchorId == fpI.anchorId) // pass if already anchored group
+                    continue;
                 int cDelta = fpNow.C - fpI.C;
                 int rDelta = fpNow.R - fpI.R;
                 if (Math.abs(cDelta) > 1 || Math.abs(rDelta) > 1)
