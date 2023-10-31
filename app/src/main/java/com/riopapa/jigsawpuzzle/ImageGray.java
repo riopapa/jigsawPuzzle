@@ -8,7 +8,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outerSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,10 +30,10 @@ public class ImageGray {
                 for (int c = 0; c < jigCOLUMNs; c++) {
                     for (int r = 0; r < jigROWs; r++) {
                         JigTable z = jigTables[c][r];
-                        Bitmap mask = piece.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
+                        Bitmap mask = pieceImage.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                                 maskMaps[2][z.uType], maskMaps[3][z.dType]);
                         Bitmap bm = Bitmap.createBitmap(grayedImage, c*innerSize, r*innerSize, outerSize, outerSize);
-                        canvasGray.drawBitmap(piece.makeOut2Line(piece.cropSrc(bm, mask, c, r)), c*innerSize, r*innerSize, null);
+                        canvasGray.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c*innerSize, r*innerSize, null);
                     }
                 }
             }

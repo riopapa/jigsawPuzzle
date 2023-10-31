@@ -18,7 +18,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.puzzleSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
@@ -32,7 +32,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.riopapa.jigsawpuzzle.Piece;
+import com.riopapa.jigsawpuzzle.PieceImage;
 
 import java.util.ArrayList;
 
@@ -56,7 +56,8 @@ public class intGlobalValues {
         outerSize = innerSize * (14+5+5) / 14;
         gapSize = innerSize *5/14;
 
-        recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
+//        recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
+        recySize = (int) ((float) screenX  / 6f);   // 8f is puzzle size dependency
 
         picOSize = recySize; //  * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
@@ -86,7 +87,7 @@ public class intGlobalValues {
         fps = new ArrayList<>();
 
         allLocked = false;
-        piece = new Piece(context, outerSize, gapSize, innerSize);
+        pieceImage = new PieceImage(context, outerSize, gapSize, innerSize);
 //        new Handler().postDelayed(() -> {
             baseX = (screenX - puzzleSize) / 2 - picGap - picGap;
             baseY = (screenY - puzzleSize) / 2 - picOSize + picGap;

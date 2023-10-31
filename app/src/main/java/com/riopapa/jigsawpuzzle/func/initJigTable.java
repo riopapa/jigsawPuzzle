@@ -1,5 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.rnd;
+
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.Random;
@@ -9,7 +11,6 @@ public class initJigTable {
     public initJigTable(JigTable[][] zz, int colSize, int rowSize) {
 
         //
-        Random rnd = new Random(System.currentTimeMillis());
 
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {

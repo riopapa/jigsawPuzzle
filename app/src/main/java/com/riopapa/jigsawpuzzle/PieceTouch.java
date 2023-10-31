@@ -21,7 +21,10 @@ import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.util.Log;
 
+import com.riopapa.jigsawpuzzle.func.RearrangePieces;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
+
+import java.util.Collections;
 
 public class PieceTouch {
 
@@ -49,6 +52,7 @@ public class PieceTouch {
                 }
             }
         }
+        new RearrangePieces(fpNow, nowIdx);
 
         // check whether each pieces are in lockable position
         boolean lockable = false;
@@ -68,7 +72,7 @@ public class PieceTouch {
             }
         }
 
-        // if piece moved to right rightPosition then lock thi piece
+        // if pieceImage moved to right rightPosition then lock thi pieceImage
         if (lockable) {
             oneItemSelected = false;
             for (int i = 0; i < fps.size(); ) {
@@ -90,7 +94,7 @@ public class PieceTouch {
             hangOn = false;
         }
 
-        // check whether can be anchored to near by piece
+        // check whether can be anchored to near by pieceImage
         int ancIdx = nearByFloatPiece.anchor(nowIdx, fpNow);
         if (ancIdx != -1) {
             hangOn = true;
@@ -99,27 +103,30 @@ public class PieceTouch {
                 fps.set(nowIdx, fpNow);
             }
             long nowId = fpNow.anchorId;
-            FloatPiece fpJoin = fps.get(ancIdx);
-            if (fpJoin.anchorId == 0) {
-                fpJoin.anchorId = nowId;
-                fps.set(ancIdx, fpJoin);
+            FloatPiece fpAnchor = fps.get(ancIdx);
+            if (fpAnchor.anchorId == 0) {
+                fpAnchor.anchorId = nowId;
+                fps.set(ancIdx, fpAnchor);
             }
-            long ancId = fpJoin.anchorId;
+            long ancId = fpAnchor.anchorId;
             jigTables[nowC][nowR].posX =
-                    jigTables[fpJoin.C][fpJoin.R].posX + (nowC - fpJoin.C) * picISize;
+                    jigTables[fpAnchor.C][fpAnchor.R].posX + (nowC - fpAnchor.C) * picISize;
             jigTables[nowC][nowR].posY =
-                    jigTables[fpJoin.C][fpJoin.R].posY + (nowR - fpJoin.R) * picISize;
+                    jigTables[fpAnchor.C][fpAnchor.R].posY + (nowR - fpAnchor.R) * picISize;
             for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpT = fps.get(i);
                 if (fpT.anchorId == nowId) {
                     fpT.anchorId = ancId;
                     fpT.mode = aniANCHOR; // make it not zero
-                    fpT.count = 3;
+                    fpT.count = 5;
                     fps.set(i, fpT);
+//                    Collections.swap(fps, i, fps.size() - 1);
                 }
             }
+
             hangOn = false;
         }
     }
+
 
 }

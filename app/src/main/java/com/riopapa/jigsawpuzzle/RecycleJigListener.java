@@ -14,7 +14,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclerView;
 
@@ -141,7 +141,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             jigTables[nowC][nowR].posY = jPosY - picISize;
 
 //            if (jigTables[nowC][nowR].oLine2 == null)
-//                piece.makeOline2(nowC, nowR);
+//                pieceImage.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
             fp.oLine = jigTables[nowC][nowR].oLine;
@@ -165,7 +165,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         int jigX = jigCR / 10000;
         int jigY = jigCR - jigX * 10000;
         if (jigTables[jigX][jigY].src == null)
-            piece.makeAll(jigX, jigY);
+            pieceImage.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].src);
         viewHolder.ivIcon.setTag(jigCR);
     }
@@ -177,11 +177,13 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
+            hangOn = true;
             Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
             jigTables[nowC][nowR].outRecycle = true;
             activeRecyclerJigs.remove(jigRecyclePos);
             jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            hangOn = false;
         }
     };
     public final static Handler insert2Recycle = new Handler(Looper.getMainLooper()) {

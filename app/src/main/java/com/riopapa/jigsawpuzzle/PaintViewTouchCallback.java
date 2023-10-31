@@ -10,7 +10,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
@@ -69,7 +69,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             nowC = jigCR /10000;
             nowR = jigCR - nowC * 10000;
             if (jigTables[nowC][nowR].picBright == null)
-                jigTables[nowC][nowR].picBright = piece.makeBright(jigTables[nowC][nowR].pic);
+                jigTables[nowC][nowR].picBright = pieceImage.makeBright(jigTables[nowC][nowR].pic);
 //            Drawable d = new BitmapDrawable(mContext.getResources(),
 //                    jigTables[nowC][nowR].picSel);
 //            viewHolder.itemView.setBackground(d);

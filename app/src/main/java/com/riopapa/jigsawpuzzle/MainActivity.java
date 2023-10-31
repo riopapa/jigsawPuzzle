@@ -34,6 +34,7 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,10 +44,10 @@ public class MainActivity extends Activity {
 
     public static ImageView iv1, imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
 
-    public static int outerSize, innerSize, gapSize;  // real piece size
+    public static int outerSize, innerSize, gapSize;  // real pieceImage size
 
     public static int recySize, picOSize, picISize, picGap, picHSize;
-        // recycler size, at Paintview size;
+        // recycler size, at PaintView size;
         // picOSize : picture outer size
         // picISize : picture inner size
         // picGap   : gap between picISize and picOSize
@@ -54,7 +55,7 @@ public class MainActivity extends Activity {
         // pieceISize: one PieceSize for slicing images
         // pieceOSize: one Outer for slicing images
 
-    public static Piece piece;
+    public static PieceImage pieceImage;
 
     public static boolean allLocked = false;
 
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
 
     public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
 
-    public static int nowC, nowR, jigCR;   // fullImage piece array column, row , x*10000+y
+    public static int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
 
 
     public static int offsetC, offsetR; // show offset Column, Row;
@@ -107,9 +108,16 @@ public class MainActivity extends Activity {
     ActivityMainBinding binding;
 
     public static final int aniTO_PAINT = 123;
+    public static final int aniANCHOR = 321;
     public static final int aniTO_RECYCLE = 120;
-    public static final int aniANCHOR = 423;
     public static final int fpMode_TO_XPAINT = 123;
+
+    public static Random rnd;
+
+    int[] images = {R.mipmap.old_castle, R.mipmap.family_at_seashore, R.mipmap.bridge_53769,
+          R.mipmap.cafe_3537801, R.mipmap.forest_way, R.mipmap.hintersee_3601004,
+        R.mipmap.seashells_1337565, R.mipmap.scenary_two_kids
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +144,9 @@ public class MainActivity extends Activity {
 
         iv1 = findViewById(R.id.image1);
         imageAnswer = findViewById(R.id.image_answer);
-        thumbNail = findViewById(R.id.thumbnail);
+        rnd = new Random(System.currentTimeMillis() & 0xfffff);
 
+        thumbNail = findViewById(R.id.thumbnail);
         moveL = findViewById(R.id.move_left);
         moveR = findViewById(R.id.move_right);
         moveU = findViewById(R.id.move_up);
@@ -168,14 +177,15 @@ public class MainActivity extends Activity {
             copy2RecyclerPieces();
         });
 
+
         fullImage = BitmapFactory.decodeResource
-                (mContext.getResources(), R.mipmap.old_castle, null);
+                (mContext.getResources(), images[rnd.nextInt(images.length-1)], null);
         fullWidth = fullImage.getWidth();
         fullHeight = fullImage.getHeight();
         fullRatio = fullHeight / fullWidth;     // usually under 1.0 if landscape
 
         grayedImage = null;
-        jigCOLUMNs = 8;
+        jigCOLUMNs = 16;
         jigROWs = jigCOLUMNs * fullHeight / fullWidth;  // to avoid over y size
 
 // Hide the status bar.
@@ -213,10 +223,49 @@ public class MainActivity extends Activity {
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        adjustMovingSize();
         copy2RecyclerPieces();
 
     }
 
+    void adjustMovingSize() {
+        int sizeLong = recySize * 3/ 4;
+        int sizeShort = sizeLong / 4;
+        moveR.getLayoutParams().width = sizeShort;
+        moveR.getLayoutParams().height = sizeLong;
+        moveL.getLayoutParams().width = sizeShort;
+        moveL.getLayoutParams().height = sizeLong;
+        moveU.getLayoutParams().width = sizeLong;
+        moveU.getLayoutParams().height = sizeShort;
+        moveD.getLayoutParams().width = sizeLong;
+        moveD.getLayoutParams().height = sizeShort;
+        binding.thumbnail.getLayoutParams().width = sizeLong;
+        binding.thumbnail.getLayoutParams().height = sizeLong;
+        binding.moveThumbnail.getLayoutParams().width = sizeLong * 120/80;
+        binding.moveThumbnail.getLayoutParams().height = sizeLong * 120/80;
+
+//        ConstraintLayout constraintLayout = findViewById(R.id.move_thumbnail);
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(constraintLayout);
+//        constraintSet.connect(R.id.move_up,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.RIGHT,0);
+//        constraintSet.connect(R.id.move_up,ConstraintSet.LEFT,R.id.thumbnail,ConstraintSet.LEFT,0);
+//        constraintSet.connect(R.id.move_down,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.RIGHT,0);
+//        constraintSet.connect(R.id.move_down,ConstraintSet.LEFT,R.id.thumbnail,ConstraintSet.LEFT,0);
+//
+//        constraintSet.connect(R.id.move_left,ConstraintSet.TOP,R.id.thumbnail,ConstraintSet.TOP,0);
+//        constraintSet.connect(R.id.move_left,ConstraintSet.BOTTOM,R.id.thumbnail,ConstraintSet.BOTTOM,0);
+//        constraintSet.connect(R.id.move_left,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.LEFT,0);
+//
+//        constraintSet.connect(R.id.move_right,ConstraintSet.TOP,R.id.thumbnail,ConstraintSet.TOP,0);
+//        constraintSet.connect(R.id.move_right,ConstraintSet.BOTTOM,R.id.thumbnail,ConstraintSet.BOTTOM,0);
+
+//        constraintSet.applyTo(constraintLayout);
+
+
+
+
+    }
     void showThumbNail() {
         int h, w, rectSize, xOff, yOff;
         if (fullHeight > fullWidth) {

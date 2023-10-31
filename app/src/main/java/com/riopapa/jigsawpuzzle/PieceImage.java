@@ -21,7 +21,7 @@ import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
-public class Piece {
+public class PieceImage {
     int outerSize, pieceGap, innerSize;
 
     float out2Scale = 1.05f, bigScale = 1.1f, deltaGap;
@@ -32,13 +32,13 @@ public class Piece {
 
     Context context;
 
-    public Piece(Context context, int outerSize, int pieceGap, int innerSize) {
+    public PieceImage(Context context, int outerSize, int pieceGap, int innerSize) {
         this.context = context;
         this.outerSize = outerSize;
         this.pieceGap = pieceGap;
         this.innerSize = innerSize;
         this.deltaGap = picOSize * (out2Scale - 1f) / 2f;
-        Log.w("c1 Piece","deltaGap ="+deltaGap);
+        Log.w("c1 PieceImage","deltaGap ="+deltaGap);
         matrixOutLine = new Matrix();
         matrixOutLine.setScale(out2Scale, out2Scale);
 
@@ -117,13 +117,13 @@ public class Piece {
         Paint p = new Paint();
         p.setColor(Color.BLACK);
         p.setTextSize(pieceGap);
-        p.setStrokeWidth(4);
+        p.setStrokeWidth(7);
         p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"x"+r, outerSize/3, outerSize/2, p);
+        tCanvas.drawText(c+"."+r, outerSize/3, outerSize*3/5, p);
         p.setStrokeWidth(0);
-        p.setColor(Color.RED);
+        p.setColor(Color.WHITE);
         p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"x"+r, outerSize/3, outerSize/2, p);
+        tCanvas.drawText(c+"."+r, outerSize/3, outerSize*3/5, p);
         return cropped;
     }
 

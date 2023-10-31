@@ -10,7 +10,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.piece;
+import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
 
 import android.graphics.Canvas;
@@ -34,7 +34,7 @@ public class PieceDraw {
             for (int r = 0; r < showMax; r++) {
                 final int cc = c+offsetC; final int rr = r+offsetR;
                 if (jigTables[cc][rr].oLine == null)
-                    piece.makeAll(c+offsetC, r+offsetR);
+                    pieceImage.makeAll(c+offsetC, r+offsetR);
                 if (jigTables[cc][rr].locked) {
                     if (jigTables[cc][rr].lockedTime == 0)
                         canvas.drawBitmap(jigTables[cc][rr].pic,
@@ -70,7 +70,7 @@ public class PieceDraw {
             int c = fp.C;
             int r = fp.R;
             JigTable jt = jigTables[c][r];
-            if (fp.count == 0) { // normal piece
+            if (fp.count == 0) { // normal pieceImage
                 canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
 
             } else if (fp.count > 0 && fp.mode == aniANCHOR) {  // animate from recycle to paintView
@@ -84,7 +84,6 @@ public class PieceDraw {
                 fps.set(cnt, fp);
 
             } else if (fp.count > 0 && fp.mode == aniTO_PAINT) {  // animate from recycle to paintView
-                Log.w("aniTO_PAINT "+fp.count,jigTables[c][r].posX+" x "+jigTables[c][r].posY);
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 jigTables[c][r].picBright : jigTables[c][r].pic,

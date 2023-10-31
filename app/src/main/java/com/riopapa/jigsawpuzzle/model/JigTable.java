@@ -15,7 +15,7 @@ public class JigTable {
     public Bitmap oLine2;   // outlined outlined image   by picOSize
     public int lType, rType, uType, dType;  // side type
     public boolean outRecycle;  // moved to PaintView from RecycleView
-    public boolean locked;  // piece is on right position
+    public boolean locked;  // pieceImage is on right position
     public long lockedTime;
 
     public int count;   // for animation

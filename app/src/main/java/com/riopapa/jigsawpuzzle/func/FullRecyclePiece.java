@@ -1,11 +1,11 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.allPossibleJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.allPossibleJigs;
+import static com.riopapa.jigsawpuzzle.MainActivity.rnd;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class FullRecyclePiece {
 
@@ -17,7 +17,6 @@ public class FullRecyclePiece {
         int mxSize = jigCOLUMNs * jigROWs;
         allPossibleJigs = new ArrayList<>();
         int []temp = new int[mxSize];
-        Random rnd = new Random(System.currentTimeMillis());
         int wkIdx = rnd.nextInt(mxSize/2);
         int r,c;
         for (int i = 0; i < mxSize ; i++) {
