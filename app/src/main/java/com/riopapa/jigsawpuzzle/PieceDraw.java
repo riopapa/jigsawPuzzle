@@ -11,11 +11,11 @@ import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMax;
+import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
+import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -30,8 +30,8 @@ public class PieceDraw {
     public void draw(Canvas canvas){
         canvas.save();
         // draw locked pieces first with .pic
-        for (int c = 0; c < showMax; c++) {
-            for (int r = 0; r < showMax; r++) {
+        for (int c = 0; c < showMaxX; c++) {
+            for (int r = 0; r < showMaxY; r++) {
                 final int cc = c+offsetC; final int rr = r+offsetR;
                 if (jigTables[cc][rr].oLine == null)
                     pieceImage.makeAll(c+offsetC, r+offsetR);
@@ -54,8 +54,8 @@ public class PieceDraw {
             }
         }
         // then empty pieces with .oline
-        for (int c = 0; c < showMax; c++) {
-            for (int r = 0; r < showMax; r++) {
+        for (int c = 0; c < showMaxX; c++) {
+            for (int r = 0; r < showMaxY; r++) {
                 final int cc = c+offsetC; final int rr = r+offsetR;
                 if (!jigTables[cc][rr].locked) {
                     canvas.drawBitmap(jigTables[cc][rr].oLine,

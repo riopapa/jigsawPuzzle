@@ -1,6 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.fullImage;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.selectedImage;
 import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
@@ -22,7 +23,7 @@ import android.util.Log;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
-    int outerSize, pieceGap, innerSize;
+    int outerSize, innerSize;
 
     float out2Scale = 1.05f, bigScale = 1.1f, deltaGap;
     Paint paintIN, paintOUT, paintBright, paintOutATop, paintOutOver;
@@ -32,10 +33,9 @@ public class PieceImage {
 
     Context context;
 
-    public PieceImage(Context context, int outerSize, int pieceGap, int innerSize) {
+    public PieceImage(Context context, int outerSize, int innerSize) {
         this.context = context;
         this.outerSize = outerSize;
-        this.pieceGap = pieceGap;
         this.innerSize = innerSize;
         this.deltaGap = picOSize * (out2Scale - 1f) / 2f;
         Log.w("c1 PieceImage","deltaGap ="+deltaGap);
@@ -83,7 +83,7 @@ public class PieceImage {
      */
     public void makeAll(int col, int row) {
         JigTable z = jigTables[col][row];
-        Bitmap orgPiece = Bitmap.createBitmap(fullImage, col * innerSize, row * innerSize, outerSize, outerSize);
+        Bitmap orgPiece = Bitmap.createBitmap(selectedImage, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
                 maskMaps[2][z.uType], maskMaps[3][z.dType]);
         z.src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
@@ -116,14 +116,14 @@ public class PieceImage {
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
         Paint p = new Paint();
         p.setColor(Color.BLACK);
-        p.setTextSize(pieceGap);
-        p.setStrokeWidth(7);
+        p.setTextSize(outerSize*4/13);
+        p.setStrokeWidth(outerSize/14);
         p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/3, outerSize*3/5, p);
+        tCanvas.drawText(c+"."+r, outerSize/4, outerSize*3/6, p);
         p.setStrokeWidth(0);
         p.setColor(Color.WHITE);
         p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/3, outerSize*3/5, p);
+        tCanvas.drawText(c+"."+r, outerSize/4, outerSize*3/6, p);
         return cropped;
     }
 

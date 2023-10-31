@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,8 +27,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
-import com.riopapa.jigsawpuzzle.func.AdjustThumbNail;
+import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
+import com.riopapa.jigsawpuzzle.func.TargetImage;
+import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
+import com.riopapa.jigsawpuzzle.func.initJigTable;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
@@ -44,7 +47,7 @@ public class MainActivity extends Activity {
 
     public static ImageView iv1, imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
 
-    public static int outerSize, innerSize, gapSize;  // real pieceImage size
+    public static int jigOuterSize, jigInnerSize, jigGapSize;  // real pieceImage size
 
     public static int recySize, picOSize, picISize, picGap, picHSize;
         // recycler size, at PaintView size;
@@ -61,7 +64,7 @@ public class MainActivity extends Activity {
 
     public static int jigRecyclePos; // jigsaw slide x, y count
 
-    public static Bitmap fullImage, grayedImage, brightImage;
+    public static Bitmap selectedImage, grayedImage, brightImage;
 
     public static JigTable[][] jigTables;
 
@@ -74,10 +77,11 @@ public class MainActivity extends Activity {
 
     public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
-    public static int screenX, screenY, puzzleSize; // physical screen size, center puzzleBox
+    public static int screenX, screenY; // physical screen size, center puzzleBox
 
-    public static int fullWidth, fullHeight; // puzzle photo size (in dpi)
-    public static float fullRatio;  // 0.7f something
+    public static float fPhoneSizeX, fPhoneSizeY;
+    public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
+    public static float fSelectedRatio;  // 0.7f something
     public static boolean oneItemSelected; // now on dragging ..
 
     public static boolean hangOn; // wait while one action completed
@@ -100,8 +104,8 @@ public class MainActivity extends Activity {
 
     public static RecycleJigListener jigRecycleAdapter;
 
-    public static int showMax;   // how many pieces can be in columns / rows
-    public static int showShift;
+    public static int showMaxX, showMaxY;   // how many pieces can be in columns / rows
+    public static int showShiftX, showShiftY;
 
     public static Timer invalidateTimer;
 
@@ -114,10 +118,6 @@ public class MainActivity extends Activity {
 
     public static Random rnd;
 
-    int[] images = {R.mipmap.old_castle, R.mipmap.family_at_seashore, R.mipmap.bridge_53769,
-          R.mipmap.cafe_3537801, R.mipmap.forest_way, R.mipmap.hintersee_3601004,
-        R.mipmap.seashells_1337565, R.mipmap.scenary_two_kids
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,40 +153,30 @@ public class MainActivity extends Activity {
         moveD = findViewById(R.id.move_down);
 
         binding.moveLeft.setOnClickListener(v -> {
-            offsetC -= showShift;
+            offsetC -= showShiftX;
             if (offsetC < 0)
                 offsetC = 0;
             copy2RecyclerPieces();
         });
         binding.moveRight.setOnClickListener(v -> {
-            offsetC += showShift;
-            if (offsetC >= jigCOLUMNs - showMax)
-                offsetC = jigCOLUMNs - showMax;
+            offsetC += showShiftX;
+            if (offsetC >= jigCOLUMNs - showMaxX)
+                offsetC = jigCOLUMNs - showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
-            offsetR -= showShift;
+            offsetR -= showShiftY;
             if (offsetR < 0)
                 offsetR = 0;
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
-            offsetR += showShift;
-            if (offsetR >= jigROWs - showMax)
-                offsetR = jigROWs - showMax;
+            offsetR += showShiftY;
+            if (offsetR >= jigROWs - showMaxY)
+                offsetR = jigROWs - showMaxY;
             copy2RecyclerPieces();
         });
 
-
-        fullImage = BitmapFactory.decodeResource
-                (mContext.getResources(), images[rnd.nextInt(images.length-1)], null);
-        fullWidth = fullImage.getWidth();
-        fullHeight = fullImage.getHeight();
-        fullRatio = fullHeight / fullWidth;     // usually under 1.0 if landscape
-
-        grayedImage = null;
-        jigCOLUMNs = 16;
-        jigROWs = jigCOLUMNs * fullHeight / fullWidth;  // to avoid over y size
 
 // Hide the status bar.
         View decorView = getWindow().getDecorView();
@@ -194,14 +184,49 @@ public class MainActivity extends Activity {
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        new intGlobalValues(this, this);
-        new AdjustThumbNail();
+        // get physical values depend on Phone
+        new PhoneMetrics(this);
+
+        // define picXSizes (picOSize, picISize, ...
+
+
+
+        // from now on, initialize pieces,..
+        selectedImage = new TargetImage().get();
+        selectedWidth = selectedImage.getWidth();
+        selectedHeight = selectedImage.getHeight();
+        fSelectedRatio = selectedHeight / selectedWidth;     // usually under 1.0 if landscape
+
+        grayedImage = null;
+        jigCOLUMNs = 16;
+        jigROWs = jigCOLUMNs * selectedHeight / selectedWidth;  // to avoid over y size
+
+        int szW = selectedWidth / (jigCOLUMNs+1);
+        int szH = selectedHeight / (jigROWs+1);
+        jigInnerSize = Math.min(szW, szH);
+        jigOuterSize = jigInnerSize * (14+5+5) / 14;
+        jigGapSize = jigInnerSize *5/14;
+        Log.w("main jig Size","image "+ selectedWidth +" x "+ selectedHeight +", outerSize="+ jigOuterSize +", gapSize="+ jigGapSize +", innerSize="+ jigInnerSize);
+
+        new intGlobalValues();
+
+        // decide jigsaw pieces numbers
+
+
+        pieceImage = new PieceImage(this, jigOuterSize, jigInnerSize);
+
+
+
+
+
+
+//        new AdjustThumbNail();
 
         jigTables = new JigTable[jigCOLUMNs][jigROWs];
-        new com.riopapa.jigsawpuzzle.func.initJigTable(jigTables, jigCOLUMNs, jigROWs);
+        new initJigTable(jigTables, jigCOLUMNs, jigROWs);
 
-        maskMaps = new Masks().make(mContext, outerSize);
-        outMaps = new Masks().makeOut(mContext, outerSize);
+        maskMaps = new Masks().make(mContext, jigOuterSize);
+        outMaps = new Masks().makeOut(mContext, jigOuterSize);
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
@@ -224,73 +249,39 @@ public class MainActivity extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        adjustMovingSize();
+        new AdjustControl(binding, recySize * 5 / 4);
         copy2RecyclerPieces();
 
     }
 
-    void adjustMovingSize() {
-        int sizeLong = recySize * 3/ 4;
-        int sizeShort = sizeLong / 4;
-        moveR.getLayoutParams().width = sizeShort;
-        moveR.getLayoutParams().height = sizeLong;
-        moveL.getLayoutParams().width = sizeShort;
-        moveL.getLayoutParams().height = sizeLong;
-        moveU.getLayoutParams().width = sizeLong;
-        moveU.getLayoutParams().height = sizeShort;
-        moveD.getLayoutParams().width = sizeLong;
-        moveD.getLayoutParams().height = sizeShort;
-        binding.thumbnail.getLayoutParams().width = sizeLong;
-        binding.thumbnail.getLayoutParams().height = sizeLong;
-        binding.moveThumbnail.getLayoutParams().width = sizeLong * 120/80;
-        binding.moveThumbnail.getLayoutParams().height = sizeLong * 120/80;
-
-//        ConstraintLayout constraintLayout = findViewById(R.id.move_thumbnail);
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(constraintLayout);
-//        constraintSet.connect(R.id.move_up,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.RIGHT,0);
-//        constraintSet.connect(R.id.move_up,ConstraintSet.LEFT,R.id.thumbnail,ConstraintSet.LEFT,0);
-//        constraintSet.connect(R.id.move_down,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.RIGHT,0);
-//        constraintSet.connect(R.id.move_down,ConstraintSet.LEFT,R.id.thumbnail,ConstraintSet.LEFT,0);
-//
-//        constraintSet.connect(R.id.move_left,ConstraintSet.TOP,R.id.thumbnail,ConstraintSet.TOP,0);
-//        constraintSet.connect(R.id.move_left,ConstraintSet.BOTTOM,R.id.thumbnail,ConstraintSet.BOTTOM,0);
-//        constraintSet.connect(R.id.move_left,ConstraintSet.RIGHT,R.id.thumbnail,ConstraintSet.LEFT,0);
-//
-//        constraintSet.connect(R.id.move_right,ConstraintSet.TOP,R.id.thumbnail,ConstraintSet.TOP,0);
-//        constraintSet.connect(R.id.move_right,ConstraintSet.BOTTOM,R.id.thumbnail,ConstraintSet.BOTTOM,0);
-
-//        constraintSet.applyTo(constraintLayout);
-
-
-
-
-    }
     void showThumbNail() {
         int h, w, rectSize, xOff, yOff;
-        if (fullHeight > fullWidth) {
-            h = 500;
-            w = h * fullWidth / fullHeight;
-            rectSize = 500 * (showMax) / jigROWs;    // 24 to show line boundary
-            xOff = offsetC * 500  / jigROWs;
-            yOff = offsetR * 500 / jigROWs;
+        if (selectedHeight > selectedWidth) {
+            h = 1000;
+            w = h * selectedWidth / selectedHeight;
+            rectSize = 1000 * (showMaxY) / jigROWs;    // 24 to show line boundary
+            xOff = offsetC * 1000  / jigROWs;
+            yOff = offsetR * 1000 / jigROWs;
         } else {
-            w = 500;
-            h = w * fullHeight / fullWidth;
-            rectSize = 500 * (showMax) / jigCOLUMNs;
-            xOff = offsetC * 500  / jigCOLUMNs;
-            yOff = offsetR * 500 / jigCOLUMNs;
+            w = 1000;
+            h = w * selectedHeight / selectedWidth;
+            rectSize = 1000 * (showMaxX) / jigCOLUMNs;
+            xOff = offsetC * 1000  / jigCOLUMNs;
+            yOff = offsetR * 1000 / jigCOLUMNs;
         }
         if (xOff + rectSize >= w)
             xOff = w - rectSize;
         if (yOff + rectSize >= h)
             yOff = h - rectSize;
 
-        Bitmap thumb = Bitmap.createScaledBitmap(fullImage, w, h, true);
+        Bitmap thumb = Bitmap.createScaledBitmap(selectedImage, w, h, true);
         Canvas canvas = new Canvas(thumb);
         Paint paint = new Paint();
-        paint.setColor(0x6fff0000);
-        paint.setStrokeWidth(10f);
+        paint.setColor(0xffff0000);
+        paint.setStrokeWidth(20f);
+        paint.setPathEffect(new DashPathEffect(new float[] {20, 20}, 0));
+
+
         canvas.drawLine(xOff, yOff, xOff+rectSize, yOff, paint);
         canvas.drawLine(xOff, yOff, xOff, yOff+rectSize, paint);
         canvas.drawLine(xOff+rectSize, yOff, xOff+rectSize, yOff+rectSize, paint);
@@ -335,7 +326,7 @@ public class MainActivity extends Activity {
             int c = cr / 10000;
             int r = cr - c * 10000;
             if (!jigTables[c][r].locked && !jigTables[c][r].outRecycle &&
-                    c >= offsetC && c < offsetC + showMax && r >= offsetR && r < offsetR + showMax) {
+                    c >= offsetC && c < offsetC + showMaxX && r >= offsetR && r < offsetR + showMaxY) {
                 activeRecyclerJigs.add(cr);
             }
         }
