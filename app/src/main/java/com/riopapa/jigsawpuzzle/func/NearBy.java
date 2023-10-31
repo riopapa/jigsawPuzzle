@@ -15,8 +15,10 @@ public class NearBy {
     public boolean isLockable(int cc, int rr) {
 
         boolean left = false, right = false, up = false, down = false;
-        if (cc == 0 && rr == 0 || (cc == jigCOLUMNs - 1 && rr == 0) ||
-            (cc == 0 && rr == jigROWs -1) || (cc == jigCOLUMNs -1 && rr == jigROWs -1))
+//        if (cc == 0 && rr == 0 || (cc == jigCOLUMNs - 1 && rr == 0) ||
+//            (cc == 0 && rr == jigROWs -1) || (cc == jigCOLUMNs -1 && rr == jigROWs -1))
+//            return true;
+        if (cc == 0 || rr == 0 || cc == jigCOLUMNs - 1 || rr == jigROWs - 1)
             return true;
         if (cc != 0)
             left = jigTables[cc-1][rr].locked;

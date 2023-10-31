@@ -8,9 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,12 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
-import com.riopapa.jigsawpuzzle.func.TargetImage;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
+import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
+import com.riopapa.jigsawpuzzle.func.TargetImage;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
+import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
-import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -254,42 +252,6 @@ public class MainActivity extends Activity {
 
     }
 
-    void showThumbNail() {
-        int h, w, rectSize, xOff, yOff;
-        if (selectedHeight > selectedWidth) {
-            h = 1000;
-            w = h * selectedWidth / selectedHeight;
-            rectSize = 1000 * (showMaxY) / jigROWs;    // 24 to show line boundary
-            xOff = offsetC * 1000  / jigROWs;
-            yOff = offsetR * 1000 / jigROWs;
-        } else {
-            w = 1000;
-            h = w * selectedHeight / selectedWidth;
-            rectSize = 1000 * (showMaxX) / jigCOLUMNs;
-            xOff = offsetC * 1000  / jigCOLUMNs;
-            yOff = offsetR * 1000 / jigCOLUMNs;
-        }
-        if (xOff + rectSize >= w)
-            xOff = w - rectSize;
-        if (yOff + rectSize >= h)
-            yOff = h - rectSize;
-
-        Bitmap thumb = Bitmap.createScaledBitmap(selectedImage, w, h, true);
-        Canvas canvas = new Canvas(thumb);
-        Paint paint = new Paint();
-        paint.setColor(0xffff0000);
-        paint.setStrokeWidth(20f);
-        paint.setPathEffect(new DashPathEffect(new float[] {20, 20}, 0));
-
-
-        canvas.drawLine(xOff, yOff, xOff+rectSize, yOff, paint);
-        canvas.drawLine(xOff, yOff, xOff, yOff+rectSize, paint);
-        canvas.drawLine(xOff+rectSize, yOff, xOff+rectSize, yOff+rectSize, paint);
-        canvas.drawLine(xOff, yOff+rectSize, xOff+rectSize, yOff+rectSize, paint);
-
-        binding.thumbnail.setImageBitmap(thumb);
-
-    }
 
     @Override
     protected void onResume() {
@@ -304,7 +266,8 @@ public class MainActivity extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
-        showThumbNail();
+
+        new ShowThumbnail(binding);
 
     }
 
@@ -332,7 +295,7 @@ public class MainActivity extends Activity {
         }
         jigRecycleAdapter.notifyDataSetChanged();
         Log.w("jigRecycleAdapter", "size="+activeRecyclerJigs.size());
-        showThumbNail();
+        new ShowThumbnail(binding);
 
     }
 
