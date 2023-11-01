@@ -12,21 +12,23 @@ import com.riopapa.jigsawpuzzle.model.FloatPiece;
 public class NearByFloatPiece {
 
     public NearByFloatPiece() {}
-    public int anchor(int fPIdx, FloatPiece fpNow) {
+    public int anchor(int nowIdx, FloatPiece fpNow) {
 
         for (int i = 0; i < fps.size(); i++) {
-            if (i != fPIdx) {
-                FloatPiece fpI = fps.get(i);
-                if (fpNow.anchorId > 0 && fpNow.anchorId == fpI.anchorId) // pass if already anchored group
+            if (i != nowIdx) {
+                FloatPiece fpTemp = fps.get(i);
+                if (fpNow.anchorId > 0 && fpNow.anchorId == fpTemp.anchorId) // pass if already anchored group
                     continue;
-                int cDelta = fpNow.C - fpI.C;
-                int rDelta = fpNow.R - fpI.R;
+                int cDelta = fpNow.C - fpTemp.C;
+                int rDelta = fpNow.R - fpTemp.R;
                 if (Math.abs(cDelta) > 1 || Math.abs(rDelta) > 1)
                     continue;
-                int delX = Math.abs(fpNow.posX - jigTables[fpI.C][fpI.R].posX - cDelta*picISize);
+                if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)
+                    continue;
+                int delX = Math.abs(fpNow.posX - jigTables[fpTemp.C][fpTemp.R].posX - cDelta*picISize);
                 if (delX > picGap)
                     continue;;
-                int delY = Math.abs(fpNow.posY - jigTables[fpI.C][fpI.R].posY - rDelta*picISize);
+                int delY = Math.abs(fpNow.posY - jigTables[fpTemp.C][fpTemp.R].posY - rDelta*picISize);
                 if (delY > picGap)
                     continue;;
                 return i;   // anchored with i's floatPiece

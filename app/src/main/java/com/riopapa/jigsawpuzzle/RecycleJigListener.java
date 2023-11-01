@@ -132,7 +132,6 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             hangOn = true;
             removeFrmRecycle.sendEmptyMessage(0);
             add2FloatingPiece();
-            hangOn = false;
         }
 
         private void add2FloatingPiece() {
@@ -150,6 +149,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             fp.uId = System.currentTimeMillis();    // set Unique uId
             fp.anchorId = 0;       // let anchorId to itself
             fps.add(fp);
+            hangOn = false;
         }
 
         @Override
@@ -176,18 +176,18 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     }
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(Message msg) {
-            hangOn = true;
+        public void handleMessage(@NonNull Message msg) {
+//            hangOn = true;
             Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
             jigTables[nowC][nowR].outRecycle = true;
             activeRecyclerJigs.remove(jigRecyclePos);
             jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-            hangOn = false;
+//            hangOn = false;
         }
     };
     public final static Handler insert2Recycle = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
             // todo: calculate jigRecyclePos
             LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 

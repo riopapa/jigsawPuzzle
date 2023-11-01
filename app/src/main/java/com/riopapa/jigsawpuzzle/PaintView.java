@@ -167,7 +167,7 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float TOUCH_TOLERANCE = 20;
+                final float TOUCH_TOLERANCE = 10;
                 if (Math.abs(x - jPosX) > TOUCH_TOLERANCE || Math.abs(y - jPosY) > TOUCH_TOLERANCE)
                     pieceTouch.move(x, y);
                 break;
