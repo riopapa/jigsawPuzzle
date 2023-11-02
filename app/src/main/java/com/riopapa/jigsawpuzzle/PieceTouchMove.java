@@ -23,10 +23,10 @@ import android.util.Log;
 import com.riopapa.jigsawpuzzle.func.RearrangePieces;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
-public class PieceTouch {
+public class PieceTouchMove {
 
 
-    public void move(float fMovedX, float fMovedY){
+    void start(float fMovedX, float fMovedY){
         if (doNotUpdate)
             return;
         if (!oneItemSelected)
