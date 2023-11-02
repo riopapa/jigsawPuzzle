@@ -22,6 +22,8 @@ public class RightPosition {
     }
     public boolean isHere(int cc, int rr, int posX, int posY) {
 
+        // return true if this piece is on right position
+
         calcC = (posX - baseX - picHSize) / picISize + offsetC;
         calcR = (posY - baseY - picHSize) / picISize + offsetR;
         int x = baseX +(cc - offsetC) * picISize ;

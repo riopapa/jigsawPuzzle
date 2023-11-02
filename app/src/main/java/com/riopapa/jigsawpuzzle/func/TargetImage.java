@@ -13,7 +13,7 @@ public class TargetImage {
             R.mipmap.cafe, R.mipmap.forest_way, R.mipmap.hintersee,
             R.mipmap.seashells, R.mipmap.scenary_two_kids, R.mipmap.boat,
             R.mipmap.kingfisher, R.mipmap.medieval, R.mipmap.tiger,
-            R.mipmap.tucan
+            R.mipmap.tucan, R.mipmap.golf_yard
     };
 
     public Bitmap get() {

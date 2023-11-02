@@ -12,6 +12,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
+import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
@@ -193,7 +194,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 
             int i = layoutManager.findFirstVisibleItemPosition();
-            jigRecyclePos = i + (jPosX+picISize)/ recySize;
+            jigRecyclePos = i + (jPosX+picISize+ picHSize)/ recySize;
 //            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
 
             jigTables[nowC][nowR].outRecycle = false;

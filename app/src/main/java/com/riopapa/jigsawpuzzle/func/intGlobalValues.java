@@ -12,6 +12,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
 import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
 import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
+import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
@@ -72,7 +73,7 @@ public class intGlobalValues {
 //            baseX = imageAnswer.getLeft() - picGap;
 //            baseY = imageAnswer.getTop() - picGap;
             Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
-                    ", base XY ="+baseX+" x "+ baseY + " picGap="+picGap);
+                    ", picHSize ="+picHSize+ " picGap="+picGap);
 
 //        }, 10);
 

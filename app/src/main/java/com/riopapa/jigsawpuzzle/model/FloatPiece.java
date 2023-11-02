@@ -8,7 +8,6 @@ public class FloatPiece {
     public int count;
     public int mode;
 
-    public int posX, posY;
     public long uId;
     public long anchorId;    // 0 : alone, -1 : just rightPos, timeStamp: anchored
 }

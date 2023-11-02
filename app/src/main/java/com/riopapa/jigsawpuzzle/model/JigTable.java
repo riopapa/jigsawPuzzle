@@ -16,7 +16,6 @@ public class JigTable {
     public int lType, rType, uType, dType;  // side type
     public boolean outRecycle;  // moved to PaintView from RecycleView
     public boolean locked;  // pieceImage is on right position
-    public long lockedTime;
 
     public int count;   // for animation
     public JigTable() {}

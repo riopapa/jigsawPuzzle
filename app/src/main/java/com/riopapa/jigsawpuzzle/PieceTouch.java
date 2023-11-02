@@ -1,7 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.aniANCHOR;
-import static com.riopapa.jigsawpuzzle.MainActivity.aniTO_PAINT;
 import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
@@ -13,7 +12,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
-import static com.riopapa.jigsawpuzzle.PaintView.nearBy;
+import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
@@ -36,8 +35,18 @@ public class PieceTouch {
         int moveX = (int) fMovedX - picHSize;
         int moveY = (int) fMovedY - picHSize;
 
-        if (moveY > (screenY - recySize * 3) && fpNow.anchorId > 0)
+        // check whether go back to recycler
+        if (moveY > (screenY - recySize * 3)) {
+            // if sole piece then can go back to recycler
+            if (fpNow.anchorId == 0) {
+                doNotUpdate = true;
+                Log.w("pchk Check", "fps size=" + fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
+                fps.remove(nowIdx);
+                insert2Recycle.sendEmptyMessage(0);
+            }
+            // if anchored can not go back to recycle;
             return;
+        }
 
         jigTables[nowC][nowR].posX = moveX;
         jigTables[nowC][nowR].posY = moveY;
@@ -55,20 +64,24 @@ public class PieceTouch {
             }
         }
         new RearrangePieces(fpNow, nowIdx);
+        nowIdx = fps.size() - 1;
 
         // check whether each pieces are in lockable position
         boolean lockable = false;
-        long anchorId = -1;
+        long anchorId = fpNow.anchorId;
 
         for (int i = 0; i < fps.size(); i++) {
-            FloatPiece fpT = fps.get(i);
-            if (nearBy.isLockable(fpT.C, fpT.R) && rightPosition.isHere(fpT.C, fpT.R,
-                            jigTables[fpT.C][fpT.R].posX, jigTables[fpT.C][fpT.R].posY)) {
-                if (fpT.anchorId == 0) {
-                    fpT.anchorId = -1;
-                    fps.set(i, fpT);
+            FloatPiece fpTo = fps.get(i);
+            // if already locked together
+            if (anchorId != 0 && fpTo.anchorId == anchorId)
+                continue;
+            if (nearByPieces.lockable(fpTo.C, fpTo.R) && rightPosition.isHere(fpTo.C, fpTo.R,
+                            jigTables[fpTo.C][fpTo.R].posX, jigTables[fpTo.C][fpTo.R].posY)) {
+                if (fpTo.anchorId == 0) {
+                    fpTo.anchorId = -1;
+                    fps.set(i, fpTo);
                 }
-                anchorId = fpT.anchorId;
+                anchorId = fpTo.anchorId;
                 lockable = true;
                 break;
             }
@@ -81,8 +94,7 @@ public class PieceTouch {
                 FloatPiece fpT = fps.get(i);
                 if (fpT.anchorId == anchorId) {
                     jigTables[fpT.C][fpT.R].locked = true;
-                    jigTables[fpT.C][fpT.R].count = 3;
-                    jigTables[fpT.C][fpT.R].lockedTime = System.currentTimeMillis() + aniTO_PAINT;
+                    jigTables[fpT.C][fpT.R].count = 5;
                     fps.remove(i);
                 } else
                     i++;
@@ -90,77 +102,63 @@ public class PieceTouch {
             return;
         }
 
-        // check whether go back to recycler
-        if (moveY > (screenY - recySize * 3)) {
-            if (fpNow.anchorId == 0) {
-                doNotUpdate = true;
-                Log.w("pchk Check", "fps size=" + fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
-                fps.remove(nowIdx);
-                insert2Recycle.sendEmptyMessage(0);
-                return;
-            }
-            // if anchored can not go back to recycle;
-            return;
-        }
 
 
         // check whether can be anchored to near by pieceImage
 
-        int ancTo = -1;
-        int ancFrom = -1;
+        int ancBase = -1;
+        int ancThis = -1;
 
+        FloatPiece fpThis = null, fpBase = null;
 
         for (int iA = fps.size()-1; iA >= 0;  iA--) {
-            FloatPiece fpA = fps.get(iA);
-//            for (int j = 0; j < fps.size(); j++) {
-                ancTo = nearByFloatPiece.anchor(iA, fpA);
-                if (ancTo != -1) {
-                    ancFrom = iA;
-                    break;
-                }
-//            }
-            if (ancTo != -1)
+            fpThis = fps.get(iA);
+            ancBase = nearByFloatPiece.isAnchorable(iA, fpThis);
+            if (ancBase != -1) {
+                ancThis = iA;
+                fpBase = fps.get(ancBase);
                 break;
+            }
         }
 
 
-        if (ancTo != -1) {
+        if (ancBase != -1) {
             doNotUpdate = true;
 
-//            if (fpNow.anchorId == 0) {
-//                ancFrom = nowIdx;
-//            }
+//            Log.w( fpNow.C+"x"+fpNow.R+" now "+nowIdx, "now "+fpNow.XposX +"x"+fpNow.YposY);
+//            Log.w(fpBase.C+"x"+fpBase.R+" base "+ancBase,"base "+fpBase.XposX +"x"+fpBase.YposY);
+//            Log.w(fpThis.C+"x"+fpThis.R+" this "+ancThis,"this "+fpThis.XposX +"x"+fpThis.YposY);
 
-
-
-
-            FloatPiece fpTo = fps.get(ancTo);
-            if (fpTo.anchorId == 0) {
-                fpTo.anchorId = fpTo.uId;
-                fps.set(ancTo, fpTo);
+//            Log.w("gap", "fm - to X ="+(fpBase.posX- fpThis.posX));
+//            Log.w("gap", "fm - to Y ="+(fpBase.posY- fpThis.posY));
+//            Log.w("gap", "now - to X ="+(fpBase.posX- fpNow.posX));
+//            Log.w("gap", "wno - to Y ="+(fpBase.posY- fpNow.posY));
+            if (fpBase.anchorId == 0) {
+                fpBase.anchorId = fpBase.uId;
+                fps.set(ancBase, fpBase);
             }
-            long anchorIdNow = fpTo.anchorId;
-            FloatPiece fpFm = fps.get(ancFrom);
-            if (fpFm.anchorId == 0) {
-                fpFm.anchorId = anchorIdNow;
-                fps.set(ancFrom, fpFm);
+            long anchorBase = fpBase.anchorId;
+
+            if (fpThis.anchorId == 0) {
+                fpThis.anchorId = fpThis.uId;
+                fps.set(ancThis, fpThis);
             }
-            long ancId = fpTo.anchorId;
+            long anchorThis = fpThis.anchorId;
 
             for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpW = fps.get(i);
-                if (fpW.anchorId == anchorIdNow) {
-                    jigTables[fpW.C][fpW.R].posX =
-                            jigTables[fpW.C][fpW.R].posX + (fpW.C - fpTo.C) * picISize;
-                    jigTables[fpW.C][fpW.R].posY =
-                            jigTables[fpW.C][fpW.R].posY + (fpW.R - fpTo.R) * picISize;
-                    fpW.anchorId = ancId;
+                if (fpW.anchorId == anchorThis) {
+                    jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * picISize;
+                    jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * picISize;
+                    fpW.anchorId = anchorBase;
                     fpW.mode = aniANCHOR; // make it not zero
                     fpW.count = 5;
                     fps.set(i, fpW);
-//                    Collections.swap(fps, i, fps.size() - 1);
+                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
+                            jigTables[fpW.C][fpW.R].posX +"x"+jigTables[fpW.C][fpW.R].posY);
                 }
             }
+
             doNotUpdate = false;
         }
     }

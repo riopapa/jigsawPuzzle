@@ -29,6 +29,7 @@ public class PieceDraw {
 
     public void draw(Canvas canvas){
         canvas.save();
+
         // draw locked pieces first with .pic
         for (int c = 0; c < showMaxX; c++) {
             for (int r = 0; r < showMaxY; r++) {
@@ -36,17 +37,15 @@ public class PieceDraw {
                 if (jigTables[cc][rr].oLine == null)
                     pieceImage.makeAll(c+offsetC, r+offsetR);
                 if (jigTables[cc][rr].locked) {
-                    if (jigTables[cc][rr].lockedTime == 0)
+                    if (jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigTables[cc][rr].pic,
                                 baseX + c * picISize, baseY + r * picISize, null);
                     else {
-                        if (jigTables[cc][rr].lockedTime > System.currentTimeMillis()) {
-                            jigTables[cc][rr].count--;
-                            canvas.drawBitmap((jigTables[cc][rr].count % 2 == 0) ?
-                                            jigTables[cc][rr].picBright : jigTables[cc][rr].pic,
-                                    baseX + c * picISize, baseY + r * picISize, null);
-                        } else {
-                            jigTables[cc][rr].lockedTime = 0;
+                        jigTables[cc][rr].count--;
+                        canvas.drawBitmap((jigTables[cc][rr].count % 2 == 0) ?
+                                        jigTables[cc][rr].picBright : jigTables[cc][rr].pic,
+                                baseX + c * picISize, baseY + r * picISize, null);
+                        if (jigTables[cc][rr].count == 0) {
                             jigTables[cc][rr].picBright = null;
                         }
                     }

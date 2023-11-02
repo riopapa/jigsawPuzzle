@@ -14,10 +14,10 @@ public class RearrangePieces {
     ArrayList<FloatPiece> fp2;
 
     // function to re-arrange pieces so touched pieces go to top layer
-    public RearrangePieces (FloatPiece fp, int nowIdx) {
+    public RearrangePieces (FloatPiece fpNow, int nowIdx) {
 
         int fpSize = fps.size() - 1;
-        long ancId = fp.anchorId;
+        long ancId = fpNow.anchorId;
         if (ancId == 0) {
             Collections.swap(fps, nowIdx, fpSize);
             return;
@@ -36,7 +36,7 @@ public class RearrangePieces {
         }
         for (int i = 0; i < fp2.size(); i++)
             fps.add(fp2.get(i));
-        fps.add(fp);
+        fps.add(fpNow);
         fp2 = null;
 
     }

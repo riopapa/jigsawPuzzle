@@ -26,7 +26,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.riopapa.jigsawpuzzle.func.NearBy;
+import com.riopapa.jigsawpuzzle.func.NearByPieces;
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
@@ -42,7 +42,7 @@ public class PaintView extends View {
     public static boolean dragging;
     public Activity paintActivity;
     public static RightPosition rightPosition;
-    public static NearBy nearBy;
+    public static NearByPieces nearByPieces;
     public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
     PieceTouch pieceTouch;
@@ -63,7 +63,7 @@ public class PaintView extends View {
         dragging = false;
         mBitmap = Bitmap.createBitmap(selectedWidth, selectedHeight, Bitmap.Config.ARGB_8888);
         rightPosition = new RightPosition(activity);
-        nearBy = new NearBy(activity);
+        nearByPieces = new NearByPieces(activity);
         pieceDraw = new PieceDraw();
         pieceTouch = new PieceTouch();
         nearByFloatPiece = new NearByFloatPiece();
@@ -102,8 +102,8 @@ public class PaintView extends View {
                 }
                 oneItemSelected = true;
                 fpNow = fps.get(nowIdx);
-                fpNow.posX = jt.posX;
-                fpNow.posY = jt.posY;
+//                fpNow.XposX = jt.posX;
+//                fpNow.YposY = jt.posY;
                 jPosX = jt.posX; jPosY = jt.posY;
 
                 // move current pieces with anchored to Top position
@@ -167,7 +167,7 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float TOUCH_TOLERANCE = 10;
+                final float TOUCH_TOLERANCE = 30;
                 if (Math.abs(x - jPosX) > TOUCH_TOLERANCE || Math.abs(y - jPosY) > TOUCH_TOLERANCE)
                     pieceTouch.move(x, y);
                 break;

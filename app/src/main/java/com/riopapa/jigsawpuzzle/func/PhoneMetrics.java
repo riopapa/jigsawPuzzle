@@ -27,14 +27,13 @@ public class PhoneMetrics {
 
         recySize =  (int) (screenX / fPhoneSizeX / ((fPhoneSizeX > 3f)? 1.5f:2f));
 
+        recySize = recySize * 10 / 7;   // while testing only
+
         picOSize = recySize; //  * 11 / 10;
         picISize = picOSize * 14 / (14+5+5);
         picHSize = picOSize / 2;
         picGap = picISize * 5 / 24;
 
-
-//      float dipVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-//             1000f, context.getResources().getDisplayMetrics());
 
     }
 }
