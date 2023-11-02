@@ -1,24 +1,23 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.aniTO_PAINT;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclerView;
+import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclerView;
+import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -101,10 +100,6 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
-//            if (oneItemSelected)
-//                return true;
-//            oneItemSelected = true;
-//            Log.w("r65 on down","oneItemSelected "+oneItemSelected);
             return false;   // true or false?
         }
         @Override
@@ -204,7 +199,6 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
                 jigRecycleAdapter.notifyItemInserted(activeRecyclerJigs.size()-1);
             }
             doNotUpdate = false;
-            oneItemSelected = false;
         }
     };
 }

@@ -7,7 +7,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
@@ -22,12 +21,10 @@ public class PieceTouchDown {
 
         if (doNotUpdate)
             return;
-//        if (dragging)
-//            return;
+
         int iX = (int) fX - picHSize;
         int iY = (int) fY - picHSize;
-//        dragging = true;
-        oneItemSelected = false;
+
         for (int i = fps.size() - 1; i >= 0; i--) {
             int c = fps.get(i).C;
             int r = fps.get(i).R;
@@ -40,10 +37,7 @@ public class PieceTouchDown {
                     Collections.swap(fps, nowIdx, fps.size() - 1);
                     nowIdx = fps.size() - 1;
                 }
-                oneItemSelected = true;
                 fpNow = fps.get(nowIdx);
-//                fpNow.XposX = jt.posX;
-//                fpNow.YposY = jt.posY;
                 jPosX = jt.posX; jPosY = jt.posY;
 
                 // move current pieces with anchored to Top position

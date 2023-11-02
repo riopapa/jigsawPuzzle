@@ -2,16 +2,15 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedHeight;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedWidth;
 import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
+import static com.riopapa.jigsawpuzzle.MainActivity.selectedHeight;
+import static com.riopapa.jigsawpuzzle.MainActivity.selectedWidth;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,8 +22,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.riopapa.jigsawpuzzle.func.NearByPieces;
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
+import com.riopapa.jigsawpuzzle.func.NearByPieces;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -34,6 +33,7 @@ public class PaintView extends View {
 
     static Bitmap mBitmap;
     public static int nowIdx;
+    public static boolean wait4Up;
 //    public static boolean dragging;
     public Activity paintActivity;
     public static RightPosition rightPosition;
@@ -64,6 +64,7 @@ public class PaintView extends View {
         pieceTouchMove = new PieceTouchMove();
         nearByFloatPiece = new NearByFloatPiece();
         pieceTouchDown = new PieceTouchDown();
+        wait4Up = false;
 
     }
 
@@ -78,10 +79,7 @@ public class PaintView extends View {
 
 
     private void paintTouchUp(){
-//        dragging = false;
-        oneItemSelected = false;
         allLocked = isPiecesAllLocked();
-//        Log.w("p83"," touchUp");
     }
 
     boolean isPiecesAllLocked() {
@@ -121,6 +119,7 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();
+                wait4Up = false;
                 break;
         }
 

@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
+import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 
@@ -35,10 +36,10 @@ public class NearByFloatPiece {
                 if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)
                     continue;
                 int delX = Math.abs(jigTables[cc][rr].posX - jigTables[fpWork.C][fpWork.R].posX - cDelta*picISize);
-                if (delX > picHSize)    // around near
+                if (delX > picGap)    // around near
                     continue;;
                 int delY = Math.abs(jigTables[cc][rr].posY - jigTables[fpWork.C][fpWork.R].posY - rDelta*picISize);
-                if (delY > picHSize)
+                if (delY > picGap)
                     continue;;
                 return i;   // anchored with i's floatPiece
             }

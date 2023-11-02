@@ -80,7 +80,6 @@ public class MainActivity extends Activity {
     public static float fPhoneSizeX, fPhoneSizeY;
     public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
     public static float fSelectedRatio;  // 0.7f something
-    public static boolean oneItemSelected; // now on dragging ..
 
     public static boolean doNotUpdate; // wait while one action completed
     public static RecyclerView jigRecyclerView;

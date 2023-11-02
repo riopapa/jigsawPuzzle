@@ -70,13 +70,9 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             nowR = jigCR - nowC * 10000;
             if (jigTables[nowC][nowR].picBright == null)
                 jigTables[nowC][nowR].picBright = pieceImage.makeBright(jigTables[nowC][nowR].pic);
-//            Drawable d = new BitmapDrawable(mContext.getResources(),
-//                    jigTables[nowC][nowR].picSel);
-//            viewHolder.itemView.setBackground(d);
-//            iv1.setImageBitmap(jigTables[nowC][nowR].picSel);
+
             jPosY = screenY - recySize;
             jPosX = viewHolder.itemView.getLeft();
-            Log.w("p9 "+jigRecyclePos,jigCR+" oneItemSelected");
         }
 
     }

@@ -1,21 +1,21 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.MainActivity.aniANCHOR;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
 import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
 import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
-import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
+import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
+import static com.riopapa.jigsawpuzzle.PaintView.wait4Up;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.util.Log;
@@ -28,8 +28,6 @@ public class PieceTouchMove {
 
     void start(float fMovedX, float fMovedY){
         if (doNotUpdate)
-            return;
-        if (!oneItemSelected)
             return;
 
         int moveX = (int) fMovedX - picHSize;
@@ -52,7 +50,7 @@ public class PieceTouchMove {
         jigTables[nowC][nowR].posY = moveY;
 
         // move anchored pieces too
-        if (fpNow.anchorId > 0) {
+        if (fpNow.anchorId > 0 && wait4Up == false) {
             for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpT = fps.get(i);
                 if (fpT.anchorId == fpNow.anchorId) {
@@ -63,8 +61,10 @@ public class PieceTouchMove {
                 }
             }
         }
-        new RearrangePieces(fpNow, nowIdx);
-        nowIdx = fps.size() - 1;
+        if (nowIdx < fps.size()) {
+            new RearrangePieces(fpNow, nowIdx);
+            nowIdx = fps.size() - 1;
+        }
 
         // check whether each pieces are in lockable position
         boolean lockable = false;
@@ -89,12 +89,11 @@ public class PieceTouchMove {
 
         // if pieceImage moved to right rightPosition then lock thi pieceImage
         if (lockable) {
-            oneItemSelected = false;
             for (int i = 0; i < fps.size(); ) {
                 FloatPiece fpT = fps.get(i);
                 if (fpT.anchorId == anchorId) {
                     jigTables[fpT.C][fpT.R].locked = true;
-                    jigTables[fpT.C][fpT.R].count = 5;
+                    jigTables[fpT.C][fpT.R].count = 7;
                     fps.remove(i);
                 } else
                     i++;
@@ -157,15 +156,19 @@ public class PieceTouchMove {
                     fpW.mode = aniANCHOR; // make it not zero
                     fpW.count = 5;
                     fps.set(i, fpW);
-                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
-                            jigTables[fpW.C][fpW.R].posX +"x"+jigTables[fpW.C][fpW.R].posY);
+//                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
+//                            jigTables[fpW.C][fpW.R].posX +"x"+jigTables[fpW.C][fpW.R].posY);
+                } else if (fpW.anchorId == anchorBase) {
+                    fpW.mode = aniANCHOR; // make it not zero
+                    fpW.count = 5;
+                    fps.set(i, fpW);
                 }
             }
 
             for (int i = 0; i < fps.size(); i++) {
                 Log.w(fps.get(i).C+"x"+fps.get(i).R+" after "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
             }
-
+            wait4Up = true; // wait while retouched
             doNotUpdate = false;
         }
     }
