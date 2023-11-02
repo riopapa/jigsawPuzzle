@@ -9,7 +9,6 @@ import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
 import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
 import static com.riopapa.jigsawpuzzle.MainActivity.oneItemSelected;
 import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.PaintView.dragging;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
@@ -23,11 +22,11 @@ public class PieceTouchDown {
 
         if (doNotUpdate)
             return;
-        if (dragging)
-            return;
+//        if (dragging)
+//            return;
         int iX = (int) fX - picHSize;
         int iY = (int) fY - picHSize;
-        dragging = true;
+//        dragging = true;
         oneItemSelected = false;
         for (int i = fps.size() - 1; i >= 0; i--) {
             int c = fps.get(i).C;

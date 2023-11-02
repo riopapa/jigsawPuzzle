@@ -34,7 +34,7 @@ public class PaintView extends View {
 
     static Bitmap mBitmap;
     public static int nowIdx;
-    public static boolean dragging;
+//    public static boolean dragging;
     public Activity paintActivity;
     public static RightPosition rightPosition;
     public static NearByPieces nearByPieces;
@@ -56,7 +56,7 @@ public class PaintView extends View {
     public void init(Activity activity){
         this.paintActivity = activity;
         fps = new ArrayList<>();
-        dragging = false;
+//        dragging = false;
         mBitmap = Bitmap.createBitmap(selectedWidth, selectedHeight, Bitmap.Config.ARGB_8888);
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
@@ -78,7 +78,7 @@ public class PaintView extends View {
 
 
     private void paintTouchUp(){
-        dragging = false;
+//        dragging = false;
         oneItemSelected = false;
         allLocked = isPiecesAllLocked();
 //        Log.w("p83"," touchUp");
