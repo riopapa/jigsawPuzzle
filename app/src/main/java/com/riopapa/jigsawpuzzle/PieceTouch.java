@@ -36,7 +36,7 @@ public class PieceTouch {
         int moveY = (int) fMovedY - picHSize;
 
         // check whether go back to recycler
-        if (moveY > (screenY - recySize * 3)) {
+        if (moveY > (screenY - recySize * 2)) {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0) {
                 doNotUpdate = true;
@@ -125,14 +125,13 @@ public class PieceTouch {
         if (ancBase != -1) {
             doNotUpdate = true;
 
-//            Log.w( fpNow.C+"x"+fpNow.R+" now "+nowIdx, "now "+fpNow.XposX +"x"+fpNow.YposY);
-//            Log.w(fpBase.C+"x"+fpBase.R+" base "+ancBase,"base "+fpBase.XposX +"x"+fpBase.YposY);
-//            Log.w(fpThis.C+"x"+fpThis.R+" this "+ancThis,"this "+fpThis.XposX +"x"+fpThis.YposY);
+//            Log.w( fpNow.C+"x"+fpNow.R+" fpNow ", "fpNow "+
+//                    jigTables[fpNow.C][fpNow.R].posX +"x"+jigTables[fpNow.C][fpNow.R].posY);
+//            Log.w( fpBase.C+"x"+fpBase.R+" fpBase ", "fpBase "+
+//                    jigTables[fpBase.C][fpBase.R].posX +"x"+jigTables[fpBase.C][fpBase.R].posY);
+//            Log.w( fpThis.C+"x"+fpThis.R+" fpThis ", "fpThis "+
+//                    jigTables[fpThis.C][fpThis.R].posX +"x"+jigTables[fpThis.C][fpThis.R].posY);
 
-//            Log.w("gap", "fm - to X ="+(fpBase.posX- fpThis.posX));
-//            Log.w("gap", "fm - to Y ="+(fpBase.posY- fpThis.posY));
-//            Log.w("gap", "now - to X ="+(fpBase.posX- fpNow.posX));
-//            Log.w("gap", "wno - to Y ="+(fpBase.posY- fpNow.posY));
             if (fpBase.anchorId == 0) {
                 fpBase.anchorId = fpBase.uId;
                 fps.set(ancBase, fpBase);
@@ -146,6 +145,10 @@ public class PieceTouch {
             long anchorThis = fpThis.anchorId;
 
             for (int i = 0; i < fps.size(); i++) {
+                Log.w(fps.get(i).C+"x"+fps.get(i).R+" before "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
+            }
+
+            for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpW = fps.get(i);
                 if (fpW.anchorId == anchorThis) {
                     jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * picISize;
@@ -157,6 +160,10 @@ public class PieceTouch {
                     Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
                             jigTables[fpW.C][fpW.R].posX +"x"+jigTables[fpW.C][fpW.R].posY);
                 }
+            }
+
+            for (int i = 0; i < fps.size(); i++) {
+                Log.w(fps.get(i).C+"x"+fps.get(i).R+" after "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
             }
 
             doNotUpdate = false;

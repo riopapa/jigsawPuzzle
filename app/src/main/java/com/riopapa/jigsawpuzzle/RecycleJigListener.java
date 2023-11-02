@@ -141,8 +141,6 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             jigTables[nowC][nowR].posX = jPosX;
             jigTables[nowC][nowR].posY = jPosY - picOSize;
 
-//            if (jigTables[nowC][nowR].oLine2 == null)
-//                pieceImage.makeOline2(nowC, nowR);
             FloatPiece fp = new FloatPiece();
             fp.C = nowC; fp.R = nowR;
             fp.oLine = jigTables[nowC][nowR].oLine;
