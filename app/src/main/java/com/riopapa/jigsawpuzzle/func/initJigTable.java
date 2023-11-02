@@ -10,7 +10,7 @@ public class initJigTable {
 
     public initJigTable(JigTable[][] zz, int colSize, int rowSize) {
 
-        //
+        // genereate random types of each piece L, R, U, D
 
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {

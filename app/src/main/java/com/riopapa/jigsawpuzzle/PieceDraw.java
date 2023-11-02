@@ -91,7 +91,7 @@ public class PieceDraw {
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 jigTables[c][r].picBright : jigTables[c][r].pic,
                         jigTables[c][r].posX, jigTables[c][r].posY, null);
-                jigTables[c][r].posY -= picHSize / 2;
+                jigTables[c][r].posY -= picISize / 4;
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }

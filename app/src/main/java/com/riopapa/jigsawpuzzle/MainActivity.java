@@ -79,8 +79,6 @@ public class MainActivity extends Activity {
 
     public static float fPhoneSizeX, fPhoneSizeY;
     public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
-    public static float fSelectedRatio;  // 0.7f something
-
     public static boolean doNotUpdate; // wait while one action completed
     public static RecyclerView jigRecyclerView;
 
@@ -110,8 +108,6 @@ public class MainActivity extends Activity {
 
     public static final int aniTO_PAINT = 123;
     public static final int aniANCHOR = 321;
-    public static final int aniTO_RECYCLE = 120;
-    public static final int fpMode_TO_XPAINT = 123;
 
     public static Random rnd;
 
@@ -192,7 +188,6 @@ public class MainActivity extends Activity {
         selectedImage = new TargetImage().get();
         selectedWidth = selectedImage.getWidth();
         selectedHeight = selectedImage.getHeight();
-        fSelectedRatio = selectedHeight / selectedWidth;     // usually under 1.0 if landscape
 
         grayedImage = null;
         jigCOLUMNs = 16;

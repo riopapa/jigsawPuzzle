@@ -51,13 +51,13 @@ public class intGlobalValues {
 
         showMaxY = (int) (screenX * fPhoneSizeY / fPhoneSizeX / picISize - 2);
 
-        if (showMaxY >  screenY/ picISize - 10)
-            showMaxY =  screenY / picISize - 10;
+        if (showMaxY >  screenY/ picISize - 8)
+            showMaxY =  screenY / picISize - 8;
         if (showMaxY > jigROWs)
             showMaxY = jigROWs;
 
-        showShiftX = showMaxX * 2 / 3;
-        showShiftY = showMaxY * 2 / 3;
+        showShiftX = showMaxX * 3 / 4;
+        showShiftY = showMaxY * 3 / 4;
 
         Log.w("show Info", "Jig Cnt="+jigCOLUMNs+" x "+ jigROWs+", showShift "+showShiftX+"x"+showShiftY +
                 ", showMax "+showMaxX+"x"+showMaxY);
