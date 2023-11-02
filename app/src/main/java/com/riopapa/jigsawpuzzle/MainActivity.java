@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
     public static float fSelectedRatio;  // 0.7f something
     public static boolean oneItemSelected; // now on dragging ..
 
-    public static boolean hangOn; // wait while one action completed
+    public static boolean doNotUpdate; // wait while one action completed
     public static RecyclerView jigRecyclerView;
 
     public static Bitmap [][] maskMaps, outMaps;

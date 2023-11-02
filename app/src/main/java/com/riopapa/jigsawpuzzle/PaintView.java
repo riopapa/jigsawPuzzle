@@ -5,7 +5,7 @@ import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
 import static com.riopapa.jigsawpuzzle.MainActivity.fps;
 import static com.riopapa.jigsawpuzzle.MainActivity.selectedHeight;
 import static com.riopapa.jigsawpuzzle.MainActivity.selectedWidth;
-import static com.riopapa.jigsawpuzzle.MainActivity.hangOn;
+import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
 import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
 import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
@@ -80,7 +80,7 @@ public class PaintView extends View {
     }
     private void paintTouchDown(float fX, float fY){
 
-        if (hangOn)
+        if (doNotUpdate)
             return;
         if (dragging)
             return;
@@ -149,7 +149,7 @@ public class PaintView extends View {
     }
     long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
-        if (hangOn)
+        if (doNotUpdate)
             return true;
         float x = event.getX();
         float y = event.getY();

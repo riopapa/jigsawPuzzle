@@ -72,8 +72,10 @@ public class PieceDraw {
             JigTable jt = jigTables[c][r];
             if (fp.count == 0) { // normal pieceImage
                 canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
-
-            } else if (fp.count > 0 && fp.mode == aniANCHOR) {  // animate from recycle to paintView
+                continue;
+            }
+            // animate just anchored
+            if (fp.count > 0 && fp.mode == aniANCHOR) {
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 jigTables[c][r].picBright : jigTables[c][r].pic,
@@ -82,13 +84,15 @@ public class PieceDraw {
                     fp.mode = 0;
                 }
                 fps.set(cnt, fp);
-
-            } else if (fp.count > 0 && fp.mode == aniTO_PAINT) {  // animate from recycle to paintView
+                continue;
+            }
+            // animate recycler to paint
+            if (fp.count > 0 && fp.mode == aniTO_PAINT) {  // animate from recycle to paintView
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 jigTables[c][r].picBright : jigTables[c][r].pic,
                         jigTables[c][r].posX, jigTables[c][r].posY, null);
-                jigTables[c][r].posY -= picISize / 2;
+                jigTables[c][r].posY -= picHSize / 2;
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
