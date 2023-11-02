@@ -72,9 +72,6 @@ public class PieceTouchMove {
 
         for (int i = 0; i < fps.size(); i++) {
             FloatPiece fpTo = fps.get(i);
-            // if already locked together
-            if (anchorId != 0 && fpTo.anchorId == anchorId)
-                continue;
             if (nearByPieces.lockable(fpTo.C, fpTo.R) && rightPosition.isHere(fpTo.C, fpTo.R,
                             jigTables[fpTo.C][fpTo.R].posX, jigTables[fpTo.C][fpTo.R].posY)) {
                 if (fpTo.anchorId == 0) {
