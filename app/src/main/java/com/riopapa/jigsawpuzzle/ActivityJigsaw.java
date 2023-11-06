@@ -1,7 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
 import static com.riopapa.jigsawpuzzle.Vars.allPossibleJigs;
 import static com.riopapa.jigsawpuzzle.Vars.difficulties;
@@ -16,11 +16,9 @@ import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
 import static com.riopapa.jigsawpuzzle.Vars.offsetC;
 import static com.riopapa.jigsawpuzzle.Vars.offsetR;
 import static com.riopapa.jigsawpuzzle.Vars.outMaps;
-import static com.riopapa.jigsawpuzzle.Vars.possibleImageCount;
 import static com.riopapa.jigsawpuzzle.Vars.recySize;
 import static com.riopapa.jigsawpuzzle.Vars.selectedHeight;
 import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
-import static com.riopapa.jigsawpuzzle.Vars.selectedImageNbr;
 import static com.riopapa.jigsawpuzzle.Vars.selectedWidth;
 import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
 import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
@@ -31,7 +29,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,9 +40,8 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.CalcColRowSize;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
-import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
-import com.riopapa.jigsawpuzzle.func.TargetImage;
+import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
 import com.riopapa.jigsawpuzzle.func.intGlobalValues;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -60,7 +56,7 @@ public class ActivityJigsaw extends Activity {
     ActivityJigsawBinding binding;
     public static TextView tvLeft, tvRight;
 
-    public static ImageView iv1, imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
+    public static ImageView imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
 
 
     public static PieceImage pieceImage;
@@ -90,7 +86,6 @@ public class ActivityJigsaw extends Activity {
         tvLeft = findViewById(R.id.debug_left);
         tvRight = findViewById(R.id.debug_right);
 
-        iv1 = findViewById(R.id.image1);
         imageAnswer = findViewById(R.id.image_answer);
         rnd = new Random(System.currentTimeMillis() & 0xfffff);
 
@@ -229,5 +224,6 @@ public class ActivityJigsaw extends Activity {
     protected void onPause() {
         super.onPause();
         invalidateTimer.cancel();
+        new VarsGetPut().put(vars, this);
     }
 }

@@ -67,7 +67,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Bitmap oMap = new TargetImage().get(position);
-        Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/5, oMap.getHeight()/5, true);
+        Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/3, oMap.getHeight()/3, true);
 
         holder.iVImage.setImageBitmap(bitmap);
         holder.tVInfo.setText(" "+position);

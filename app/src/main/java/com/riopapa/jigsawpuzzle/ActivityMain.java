@@ -13,19 +13,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
-import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.TargetImage;
+import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -43,6 +40,8 @@ public class ActivityMain extends Activity {
 
     RecyclerView imageRecyclers;
     ImageSelAdapter imageSelAdapter;
+
+    public static Vars vars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +62,7 @@ public class ActivityMain extends Activity {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
         possibleImageCount = new TargetImage().count();
 
