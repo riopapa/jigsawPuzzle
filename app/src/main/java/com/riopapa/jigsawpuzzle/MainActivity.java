@@ -103,7 +103,8 @@ public class MainActivity extends Activity {
     public static int showShiftX, showShiftY;
 
     public static Timer invalidateTimer;
-
+    public static  int difficulty;
+    final static String[] difficulties= {"Easy", "Normal", "Hard", "Expert"};
     ActivityMainBinding binding;
 
     public static final int aniTO_PAINT = 123;
@@ -179,26 +180,31 @@ public class MainActivity extends Activity {
 
         // get physical values depend on Phone
         new PhoneMetrics(this);
+        // calcuate showMaxX, showMaxY temperaty to determine piece sizes;
 
-        // define picXSizes (picOSize, picISize, ...
-
-
-
-        // from now on, initialize pieces,..
         selectedImage = new TargetImage().get();
         selectedWidth = selectedImage.getWidth();
         selectedHeight = selectedImage.getHeight();
 
         grayedImage = null;
-        jigCOLUMNs = 16;
-        jigROWs = jigCOLUMNs * selectedHeight / selectedWidth;  // to avoid over y size
 
-        int szW = selectedWidth / (jigCOLUMNs+1);
-        int szH = selectedHeight / (jigROWs+1);
-        jigInnerSize = Math.min(szW, szH);
-        jigOuterSize = jigInnerSize * (14+5+5) / 14;
-        jigGapSize = jigInnerSize *5/14;
-        Log.w("main jig Size","image "+ selectedWidth +" x "+ selectedHeight +", outerSize="+ jigOuterSize +", gapSize="+ jigGapSize +", innerSize="+ jigInnerSize);
+        difficulty = 0;     // 0: easy
+
+        for (int i = 0; i < 4; i++) {
+            calcDifficulties(i);
+        }
+        difficulty = rnd.nextInt(4);
+        Log.w("difficulty"," elvel "+difficulty);
+        calcDifficulties(difficulty);
+        selectDificulty();
+        String ss = "Level = "+ difficulty + ", Size = "+selectedWidth + "x"+selectedHeight+ "CR="+jigCOLUMNs+"x"+jigROWs;
+        Toast.makeText(mContext, ss, Toast.LENGTH_LONG).show();
+
+        selectedImage = Bitmap.createBitmap(selectedImage, 0, 0,
+                jigInnerSize * jigCOLUMNs + jigGapSize + jigGapSize,
+                jigInnerSize * jigROWs  + jigGapSize + jigGapSize);
+        selectedWidth = selectedImage.getWidth();
+        selectedHeight = selectedImage.getHeight();
 
         new intGlobalValues();
 
@@ -207,12 +213,6 @@ public class MainActivity extends Activity {
 
         pieceImage = new PieceImage(this, jigOuterSize, jigInnerSize);
 
-
-
-
-
-
-//        new AdjustThumbNail();
 
         jigTables = new JigTable[jigCOLUMNs][jigROWs];
         new initJigTable(jigTables, jigCOLUMNs, jigROWs);
@@ -241,9 +241,47 @@ public class MainActivity extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding, recySize * 5 / 4);
+        new AdjustControl(binding, recySize * 3 / 4);
         copy2RecyclerPieces();
 
+    }
+
+    private static void calcDifficulties(int level) {
+        if (selectedWidth> selectedHeight) {
+            if (level == 0) {
+                jigROWs = showMaxY;
+            } else if (level == 1) {
+                jigROWs = showMaxY * 14/ 10;
+            } else if (level == 2) {
+                jigROWs = showMaxY * 18/ 10;
+            } else {
+                jigROWs = showMaxY * 24/ 10;
+            }
+            jigCOLUMNs = jigROWs * selectedWidth / selectedHeight;  // to avoid over y size
+        } else {
+            if (level == 0) {
+                jigCOLUMNs = showMaxX;
+            } else if (level == 1) {
+                jigCOLUMNs = showMaxX * 14/ 10;
+            } else if (level == 2) {
+                jigCOLUMNs = showMaxX * 18 / 10;
+            } else {
+                jigCOLUMNs = showMaxX * 24 / 10;
+            }
+            jigROWs = jigCOLUMNs * selectedHeight / selectedWidth;  // to avoid over y size
+        }
+
+    }
+    private static void selectDificulty() {
+
+
+        int szW = selectedWidth / (jigCOLUMNs+1);
+        int szH = selectedHeight / (jigROWs+1);
+        jigInnerSize = Math.min(szW, szH);
+        jigOuterSize = jigInnerSize * (14+5+5) / 14;
+        jigGapSize = jigInnerSize *5/14;
+        Log.w("imageInfo", selectedWidth + "x"+selectedHeight+ "CR="+jigCOLUMNs+"x"+jigROWs);
+        Log.w("main jig Size"," outerSize="+ jigOuterSize +", gapSize="+ jigGapSize +", innerSize="+ jigInnerSize);
     }
 
 
@@ -288,7 +326,6 @@ public class MainActivity extends Activity {
             }
         }
         jigRecycleAdapter.notifyDataSetChanged();
-        Log.w("jigRecycleAdapter", "size="+activeRecyclerJigs.size());
         new ShowThumbnail(binding);
 
     }

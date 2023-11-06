@@ -17,6 +17,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -33,8 +34,6 @@ public class PaintView extends View {
 
     static Bitmap mBitmap;
     public static int nowIdx;
-    public static boolean wait4Up;
-//    public static boolean dragging;
     public Activity paintActivity;
     public static RightPosition rightPosition;
     public static NearByPieces nearByPieces;
@@ -64,7 +63,6 @@ public class PaintView extends View {
         pieceTouchMove = new PieceTouchMove();
         nearByFloatPiece = new NearByFloatPiece();
         pieceTouchDown = new PieceTouchDown();
-        wait4Up = false;
 
     }
 
@@ -103,7 +101,7 @@ public class PaintView extends View {
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
-
+        Log.w("onTouchEvent", "doNotUpdate ="+doNotUpdate);
 
 //        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
@@ -119,7 +117,6 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();
-                wait4Up = false;
                 break;
         }
 

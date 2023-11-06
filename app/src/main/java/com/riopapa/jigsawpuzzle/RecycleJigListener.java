@@ -100,13 +100,18 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
+            Log.w("onDown"," pos "+e.getX()+"x"+e.getY()+" raw "+e.getRawX()+"x"+e.getRawY()
+
+            );
+
             return false;   // true or false?
         }
+
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
 //            mTouchHelper.startDrag(this);
 //            View view = e.
-//            Log.w("r27", "Touch onShowPress ");
+//            Log.w("r27 onShowPress", "Touch onShowPress ");
 
         }
 
@@ -125,6 +130,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
+            Log.w("r2l long","long press Event="+e.toString());
 
             doNotUpdate = true;
             removeFrmRecycle.sendEmptyMessage(0);
@@ -172,12 +178,13 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(@NonNull Message msg) {
-//            hangOn = true;
             Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            jigTables[nowC][nowR].outRecycle = true;
-            activeRecyclerJigs.remove(jigRecyclePos);
-            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            if (jigRecyclePos < jigTables.length) {
+                jigTables[nowC][nowR].outRecycle = true;
+                activeRecyclerJigs.remove(jigRecyclePos);
+                jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            }
 //            hangOn = false;
         }
     };

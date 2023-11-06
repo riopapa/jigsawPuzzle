@@ -15,7 +15,6 @@ import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
-import static com.riopapa.jigsawpuzzle.PaintView.wait4Up;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
 
 import android.util.Log;
@@ -50,7 +49,7 @@ public class PieceTouchMove {
         jigTables[nowC][nowR].posY = moveY;
 
         // move anchored pieces too
-        if (fpNow.anchorId > 0 && wait4Up == false) {
+        if (fpNow.anchorId > 0) {
             for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpT = fps.get(i);
                 if (fpT.anchorId == fpNow.anchorId) {
@@ -140,15 +139,15 @@ public class PieceTouchMove {
             }
             long anchorThis = fpThis.anchorId;
 
-            for (int i = 0; i < fps.size(); i++) {
-                Log.w(fps.get(i).C+"x"+fps.get(i).R+" before "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
-            }
+//            for (int i = 0; i < fps.size(); i++) {
+//                Log.w(fps.get(i).C+"x"+fps.get(i).R+" before "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
+//            }
 
             for (int i = 0; i < fps.size(); i++) {
                 FloatPiece fpW = fps.get(i);
                 if (fpW.anchorId == anchorThis) {
-                    jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * picISize;
-                    jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * picISize;
+//                    jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * picISize;
+//                    jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * picISize;
                     fpW.anchorId = anchorBase;
                     fpW.mode = aniANCHOR; // make it not zero
                     fpW.count = 5;
@@ -162,10 +161,18 @@ public class PieceTouchMove {
                 }
             }
 
-            for (int i = 0; i < fps.size(); i++) {
-                Log.w(fps.get(i).C+"x"+fps.get(i).R+" after "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
+            // move anchored pieces too
+            if (fpNow.anchorId > 0) {
+                for (int i = 0; i < fps.size(); i++) {
+                    FloatPiece fpT = fps.get(i);
+                    if (fpT.anchorId == fpNow.anchorId) {
+                        jigTables[fpT.C][fpT.R].posX =
+                                jigTables[nowC][nowR].posX - (nowC - fpT.C) * picISize;
+                        jigTables[fpT.C][fpT.R].posY =
+                                jigTables[nowC][nowR].posY - (nowR - fpT.R) * picISize;
+                    }
+                }
             }
-            wait4Up = true; // wait while retouched
             doNotUpdate = false;
         }
     }

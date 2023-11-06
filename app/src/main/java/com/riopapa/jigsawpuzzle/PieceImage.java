@@ -116,14 +116,15 @@ public class PieceImage {
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
         Paint p = new Paint();
         p.setColor(Color.BLACK);
-        p.setTextSize(outerSize*4/13);
-        p.setStrokeWidth(outerSize/14);
+        p.setTextSize(outerSize*4/18);
+        p.setStrokeWidth(outerSize/15);
+        p.setTextAlign(Paint.Align.CENTER);
         p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/4, outerSize*3/6, p);
+        tCanvas.drawText(c+"."+r, outerSize/2, outerSize*3/6, p);
         p.setStrokeWidth(0);
         p.setColor(Color.WHITE);
         p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/4, outerSize*3/6, p);
+        tCanvas.drawText(c+"."+r, outerSize/2, outerSize*3/6, p);
         return cropped;
     }
 
