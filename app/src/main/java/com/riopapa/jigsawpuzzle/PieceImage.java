@@ -1,11 +1,10 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
-import static com.riopapa.jigsawpuzzle.MainActivity.outMaps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
+import static com.riopapa.jigsawpuzzle.Vars.outMaps;
+import static com.riopapa.jigsawpuzzle.Vars.picOSize;
+import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
 
 import android.content.Context;
 import android.graphics.Bitmap;

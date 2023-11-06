@@ -1,18 +1,17 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
-import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.aniANCHOR;
-import static com.riopapa.jigsawpuzzle.MainActivity.aniTO_PAINT;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.Vars.aniANCHOR;
+import static com.riopapa.jigsawpuzzle.Vars.aniTO_PAINT;
+import static com.riopapa.jigsawpuzzle.Vars.baseX;
+import static com.riopapa.jigsawpuzzle.Vars.baseY;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.offsetC;
+import static com.riopapa.jigsawpuzzle.Vars.offsetR;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

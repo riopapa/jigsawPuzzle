@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityJigsaw">
+
+
+    <TextView
+        android:id="@+id/debug_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="#22667f"
+        android:gravity="center"
+        android:text="info"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/debug_right"
+        android:layout_margin="8dp"
+        />
+
+    <ImageView
+        android:id="@+id/image1"
+        android:layout_width = "80dp"
+        android:layout_height = "80dp"
+        android:layout_margin="4dp"
+        android:background="#aaaaaa"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/debug_left"
+        />
+
+
+    <ImageView
+        android:id = "@+id/image_answer"
+        android:layout_width = "match_parent"
+        android:layout_height = "360dp"
+        android:background = "#00aaaaaa"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <com.riopapa.jigsawpuzzle.PaintView
+        android:id="@+id/paintview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/piece_recycler"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/piece_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_margin="0dp"
+        android:background="@color/recycler_background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        />
+
+
+
+
+
+
+
+
+    <TextView
+        android:id="@+id/debug_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="#22667f"
+        android:gravity="center"
+        android:text=" Val "
+        app:layout_constraintLeft_toRightOf="@id/debug_left"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/move_thumbnail"
+        android:layout_width = "120dp"
+        android:layout_height = "120dp"
+        android:layout_margin="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width = "80dp"
+            android:layout_height = "80dp"
+            android:padding="3dp"
+            app:layout_constraintTop_toBottomOf="@id/move_up"
+            app:layout_constraintRight_toLeftOf="@id/move_right"
+            app:layout_constraintLeft_toRightOf="@id/move_left"
+            app:layout_constraintBottom_toTopOf="@id/move_down"
+            android:src="@mipmap/scenary_two_kids"
+            android:clipToOutline="true"
+            android:scaleType="fitCenter"
+            />
+        <!--            android:background="@drawable/round_thumbnail"-->
+        <ImageView
+            android:id="@+id/move_up"
+            android:layout_width = "70dp"
+            android:layout_height = "20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/move_up"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/thumbnail"
+            />
+
+        <ImageView
+            android:id="@+id/move_down"
+            android:layout_width = "70dp"
+            android:layout_height = "20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/move_down"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/thumbnail"
+            android:layout_gravity="bottom"
+            />
+        <ImageView
+            android:id="@+id/move_left"
+            android:layout_width = "20dp"
+            android:layout_height = "70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/move_left"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <ImageView
+            android:id="@+id/move_right"
+            android:layout_width = "20dp"
+            android:layout_height = "70dp"
+            android:src="@drawable/move_right"
+            android:scaleType="fitXY"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

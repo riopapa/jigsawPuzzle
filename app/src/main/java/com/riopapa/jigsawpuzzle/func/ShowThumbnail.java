@@ -1,24 +1,24 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedHeight;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedWidth;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
+import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
+import static com.riopapa.jigsawpuzzle.Vars.offsetC;
+import static com.riopapa.jigsawpuzzle.Vars.offsetR;
+import static com.riopapa.jigsawpuzzle.Vars.selectedHeight;
+import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
+import static com.riopapa.jigsawpuzzle.Vars.selectedWidth;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
 public class ShowThumbnail {
-    public ShowThumbnail(ActivityMainBinding binding) {
+    public ShowThumbnail(ActivityJigsawBinding binding) {
         int h, w, rectSize, xOff, yOff;
         if (selectedHeight > selectedWidth) {
             h = 1000;

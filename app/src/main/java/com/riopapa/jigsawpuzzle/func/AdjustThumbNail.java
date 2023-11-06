@@ -1,10 +1,10 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.imageAnswer;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.imageAnswer;
+import static com.riopapa.jigsawpuzzle.Vars.picGap;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 

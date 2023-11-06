@@ -1,20 +1,17 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
-import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedHeight;
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedWidth;
+import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
+import static com.riopapa.jigsawpuzzle.Vars.allLocked;
+import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
+import static com.riopapa.jigsawpuzzle.Vars.jPosX;
+import static com.riopapa.jigsawpuzzle.Vars.jPosY;
+import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 
 public class PaintView extends View {
 
-    static Bitmap mBitmap;
     public static int nowIdx;
     public Activity paintActivity;
     public static RightPosition rightPosition;
@@ -55,8 +51,7 @@ public class PaintView extends View {
     public void init(Activity activity){
         this.paintActivity = activity;
         fps = new ArrayList<>();
-//        dragging = false;
-        mBitmap = Bitmap.createBitmap(selectedWidth, selectedHeight, Bitmap.Config.ARGB_8888);
+
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
         pieceDraw = new PieceDraw();
@@ -81,8 +76,9 @@ public class PaintView extends View {
     }
 
     boolean isPiecesAllLocked() {
-        if (activeRecyclerJigs.size() > 0 || fps.size() > 0)
+        if (activeRecyclerJigs.size() > 0 || fps.size() > 0) {
             return false;
+        }
         for (int c = 0; c < jigCOLUMNs; c++) {
             for (int r = 0; r < jigROWs; r++) {
                 if (!jigTables[c][r].locked)
@@ -128,7 +124,7 @@ public class PaintView extends View {
 //            nowJig = jigTables[nowC][nowR];
 //            mapNow = Bitmap.createScaledBitmap(nowJig.src, picOSize, picOSize, true);
 //            dragging = true;
-//            Log.w("p1x "+ jigCR," call by recycler drawing updateting "+jPosX+" x "+jPosY);
+//            Log.w("p1x "+ jigCR," call by recycler drawing updating "+jPosX+" x "+jPosY);
 //            paintView.invalidate();}
 //    };
 

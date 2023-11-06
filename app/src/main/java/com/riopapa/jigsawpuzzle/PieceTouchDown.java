@@ -1,15 +1,15 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
+import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
+import static com.riopapa.jigsawpuzzle.Vars.jPosX;
+import static com.riopapa.jigsawpuzzle.Vars.jPosY;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.nowC;
+import static com.riopapa.jigsawpuzzle.Vars.nowR;
+import static com.riopapa.jigsawpuzzle.Vars.picHSize;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;

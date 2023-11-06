@@ -1,26 +1,26 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.allLocked;
-import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
-import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPhoneSizeX;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPhoneSizeY;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
-import static com.riopapa.jigsawpuzzle.MainActivity.showShiftX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showShiftY;
+
+import static com.riopapa.jigsawpuzzle.Vars.allLocked;
+import static com.riopapa.jigsawpuzzle.Vars.baseX;
+import static com.riopapa.jigsawpuzzle.Vars.baseY;
+import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeX;
+import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeY;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
+import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
+import static com.riopapa.jigsawpuzzle.Vars.offsetC;
+import static com.riopapa.jigsawpuzzle.Vars.offsetR;
+import static com.riopapa.jigsawpuzzle.Vars.picGap;
+import static com.riopapa.jigsawpuzzle.Vars.picHSize;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.picOSize;
+import static com.riopapa.jigsawpuzzle.Vars.screenX;
+import static com.riopapa.jigsawpuzzle.Vars.screenY;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
+import static com.riopapa.jigsawpuzzle.Vars.showShiftX;
+import static com.riopapa.jigsawpuzzle.Vars.showShiftY;
 
 import android.util.Log;
 
@@ -42,8 +42,6 @@ public class intGlobalValues {
         // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 ScreenX 1600 x 2560
 
 //        Log.w("r25 "+Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
-
-        jPosX = -1; // prevent drawing without preload
 
         showMaxX = screenX / picISize - 2;
         if (showMaxX > jigCOLUMNs)

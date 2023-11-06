@@ -1,14 +1,14 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.selectedImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.grayedImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigInnerSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.maskMaps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigOuterSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.Vars.grayedImage;
+import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.Vars.jigInnerSize;
+import static com.riopapa.jigsawpuzzle.Vars.jigOuterSize;
+import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
+import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

@@ -1,17 +1,16 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.fPhoneSizeX;
-import static com.riopapa.jigsawpuzzle.MainActivity.fPhoneSizeY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picOSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenX;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxX;
-import static com.riopapa.jigsawpuzzle.MainActivity.showMaxY;
+import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeX;
+import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeY;
+import static com.riopapa.jigsawpuzzle.Vars.picGap;
+import static com.riopapa.jigsawpuzzle.Vars.picHSize;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.picOSize;
+import static com.riopapa.jigsawpuzzle.Vars.recySize;
+import static com.riopapa.jigsawpuzzle.Vars.screenX;
+import static com.riopapa.jigsawpuzzle.Vars.screenY;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
+import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;

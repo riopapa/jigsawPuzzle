@@ -1,9 +1,9 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
 public class AdjustControl {
-    public AdjustControl(ActivityMainBinding binding, int sizeLong) {
+    public AdjustControl(ActivityJigsawBinding binding, int sizeLong) {
         int sizeShort = sizeLong / 4;
         binding.moveRight.getLayoutParams().width = sizeShort;
         binding.moveRight.getLayoutParams().height = sizeLong;

@@ -1,9 +1,9 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.allPossibleJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigROWs;
-import static com.riopapa.jigsawpuzzle.MainActivity.rnd;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
+import static com.riopapa.jigsawpuzzle.Vars.allPossibleJigs;
+import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
+import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
 
 import java.util.ArrayList;
 

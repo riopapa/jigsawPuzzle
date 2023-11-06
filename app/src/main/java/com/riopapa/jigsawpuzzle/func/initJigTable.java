@@ -1,16 +1,20 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.rnd;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
-import java.util.Random;
-
 public class initJigTable {
+
+    /**
+     * generate random types of each piece L, R, U, D of each pieces
+     * @param colSize, rowSize : jigTable size
+     * @return JigTable
+     **/
 
     public initJigTable(JigTable[][] zz, int colSize, int rowSize) {
 
-        // genereate random types of each piece L, R, U, D
+        //
 
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {

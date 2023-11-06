@@ -1,15 +1,14 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.baseX;
-import static com.riopapa.jigsawpuzzle.MainActivity.baseY;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetC;
-import static com.riopapa.jigsawpuzzle.MainActivity.offsetR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picGap;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.baseX;
+import static com.riopapa.jigsawpuzzle.Vars.baseY;
+import static com.riopapa.jigsawpuzzle.Vars.offsetC;
+import static com.riopapa.jigsawpuzzle.Vars.offsetR;
+import static com.riopapa.jigsawpuzzle.Vars.picGap;
+import static com.riopapa.jigsawpuzzle.Vars.picHSize;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
 
 import android.app.Activity;
-import android.util.Log;
 
 
 public class RightPosition {
@@ -32,9 +31,7 @@ public class RightPosition {
 //        if (calcC != cc || calcR != rr)
 //            return false;
 //        Log.w("Gap", Math.abs(posX - x)+" x "+ Math.abs(posY - y));
-        if (Math.abs(posX - x) > picGap || Math.abs(posY - y) > picGap)
-            return false;
-        return true;
+        return Math.abs(posX - x) <= picGap && Math.abs(posY - y) <= picGap;
     }
 
 }

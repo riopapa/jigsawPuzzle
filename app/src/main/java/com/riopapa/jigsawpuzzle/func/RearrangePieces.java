@@ -1,8 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
-import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -34,8 +32,7 @@ public class RearrangePieces {
             } else
                 i++;
         }
-        for (int i = 0; i < fp2.size(); i++)
-            fps.add(fp2.get(i));
+        fps.addAll(fp2);
         fps.add(fpNow);
         fp2 = null;
 

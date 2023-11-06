@@ -1,4 +1,4 @@
-package com.riopapa.jigsawpuzzle;
+package com.riopapa.jigsawpuzzle.func;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,8 +9,12 @@ import androidx.core.content.ContextCompat;
 
 public class Drawable2bitmap {
 
-    // this module converts drawable resources into oLine;
-    // param xySize means required size : puzzle outer size
+    /**
+     * converts drawable resources into oLine;
+     * @param xySize : piece outer size (one time only)
+     * @param drawableId
+     * @return bitmap
+     **/
 
     Context context;
     int xySize;
@@ -27,6 +31,5 @@ public class Drawable2bitmap {
 
         return bitmap;
     }
-
 
 }

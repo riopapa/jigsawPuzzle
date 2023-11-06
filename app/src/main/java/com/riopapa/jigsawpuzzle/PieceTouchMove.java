@@ -1,21 +1,21 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.aniANCHOR;
-import static com.riopapa.jigsawpuzzle.MainActivity.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.MainActivity.fps;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picHSize;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
+import static com.riopapa.jigsawpuzzle.Vars.aniANCHOR;
+import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.Vars.fps;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.nowC;
+import static com.riopapa.jigsawpuzzle.Vars.nowR;
+import static com.riopapa.jigsawpuzzle.Vars.picHSize;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.recySize;
+import static com.riopapa.jigsawpuzzle.Vars.screenY;
 
 import android.util.Log;
 

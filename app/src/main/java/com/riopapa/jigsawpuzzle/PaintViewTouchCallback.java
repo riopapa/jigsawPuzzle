@@ -1,20 +1,20 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosX;
-import static com.riopapa.jigsawpuzzle.MainActivity.jPosY;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigCR;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigRecycleAdapter;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.MainActivity.jigTables;
-import static com.riopapa.jigsawpuzzle.MainActivity.mActivity;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowC;
-import static com.riopapa.jigsawpuzzle.MainActivity.nowR;
-import static com.riopapa.jigsawpuzzle.MainActivity.picISize;
-import static com.riopapa.jigsawpuzzle.MainActivity.pieceImage;
-import static com.riopapa.jigsawpuzzle.MainActivity.recySize;
-import static com.riopapa.jigsawpuzzle.MainActivity.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.MainActivity.screenY;
-import static com.riopapa.jigsawpuzzle.MainActivity.tvLeft;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.tvLeft;
+import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
+import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
+import static com.riopapa.jigsawpuzzle.Vars.jPosX;
+import static com.riopapa.jigsawpuzzle.Vars.jPosY;
+import static com.riopapa.jigsawpuzzle.Vars.jigCR;
+import static com.riopapa.jigsawpuzzle.Vars.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.Vars.nowC;
+import static com.riopapa.jigsawpuzzle.Vars.nowR;
+import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.Vars.recySize;
+import static com.riopapa.jigsawpuzzle.Vars.screenY;
 
 import android.content.Context;
 import android.graphics.Canvas;
