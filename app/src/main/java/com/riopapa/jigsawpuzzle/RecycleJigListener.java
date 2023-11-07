@@ -3,21 +3,7 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.Vars.aniTO_PAINT;
-import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jPosX;
-import static com.riopapa.jigsawpuzzle.Vars.jPosY;
-import static com.riopapa.jigsawpuzzle.Vars.jigCR;
-import static com.riopapa.jigsawpuzzle.Vars.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.nowC;
-import static com.riopapa.jigsawpuzzle.Vars.nowR;
-import static com.riopapa.jigsawpuzzle.Vars.picHSize;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
-import static com.riopapa.jigsawpuzzle.Vars.picOSize;
-import static com.riopapa.jigsawpuzzle.Vars.recySize;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -46,11 +32,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycle_jigsaw, viewGroup, false);
-        view.getLayoutParams().width = recySize;
-        view.getLayoutParams().height = recySize;
+        view.getLayoutParams().width = vars.recySize;
+        view.getLayoutParams().height = vars.recySize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);
-        iv.getLayoutParams().height = picOSize;
-        iv.getLayoutParams().width = picOSize;
+        iv.getLayoutParams().height = vars.picOSize;
+        iv.getLayoutParams().width = vars.picOSize;
         iv.requestLayout();
         return new JigHolder(view);
     }
@@ -67,11 +53,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         Log.w("r33 Recycler on item move", "from = "+fromPosition);
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(activeRecyclerJigs, i, i + 1);
+                Collections.swap(vars.activeRecyclerJigs, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(activeRecyclerJigs, i, i - 1);
+                Collections.swap(vars.activeRecyclerJigs, i, i - 1);
             }
         }
         notifyItemMoved(fromPosition, toPosition);
@@ -132,25 +118,25 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         public void onLongPress(@NonNull MotionEvent e) {
             Log.w("r2l long","long press Event="+e.toString());
 
-            doNotUpdate = true;
+            vars.doNotUpdate = true;
             removeFrmRecycle.sendEmptyMessage(0);
             add2FloatingPiece();
         }
 
         private void add2FloatingPiece() {
 
-            jigTables[nowC][nowR].posX = jPosX;
-            jigTables[nowC][nowR].posY = jPosY - picOSize;
+            vars.jigTables[vars.nowC][vars.nowR].posX = vars.jPosX;
+            vars.jigTables[vars.nowC][vars.nowR].posY = vars.jPosY - vars.picOSize;
 
             FloatPiece fp = new FloatPiece();
-            fp.C = nowC; fp.R = nowR;
-            fp.oLine = jigTables[nowC][nowR].oLine;
+            fp.C = vars.nowC; fp.R = vars.nowR;
+            fp.oLine = vars.jigTables[vars.nowC][vars.nowR].oLine;
             fp.count = 5;
-            fp.mode = aniTO_PAINT;
+            fp.mode = vars.aniTO_PAINT;
             fp.uId = System.currentTimeMillis();    // set Unique uId
             fp.anchorId = 0;       // let anchorId to itself
-            fps.add(fp);
-            doNotUpdate = false;
+            vars.fps.add(fp);
+            vars.doNotUpdate = false;
         }
 
         @Override
@@ -162,28 +148,28 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigCR = activeRecyclerJigs.get(position);
-        int jigX = jigCR / 10000;
-        int jigY = jigCR - jigX * 10000;
-        if (jigTables[jigX][jigY].src == null)
+        vars.jigCR = vars.activeRecyclerJigs.get(position);
+        int jigX = vars.jigCR / 10000;
+        int jigY = vars.jigCR - jigX * 10000;
+        if (vars.jigTables[jigX][jigY].src == null)
             pieceImage.makeAll(jigX, jigY);
-        viewHolder.ivIcon.setImageBitmap(jigTables[jigX][jigY].src);
-        viewHolder.ivIcon.setTag(jigCR);
+        viewHolder.ivIcon.setImageBitmap(vars.jigTables[jigX][jigY].src);
+        viewHolder.ivIcon.setTag(vars.jigCR);
     }
 
     @Override
     public int getItemCount() {
-        return (activeRecyclerJigs.size());
+        return (vars.activeRecyclerJigs.size());
     }
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(@NonNull Message msg) {
-            Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
+            Log.w("r2m move","removed from recycler vars.jPos="+vars.jPosX+"x"+vars.jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            if (jigRecyclePos < jigTables.length) {
-                jigTables[nowC][nowR].outRecycle = true;
-                activeRecyclerJigs.remove(jigRecyclePos);
-                jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            if (vars.jigRecyclePos < vars.jigTables.length) {
+                vars.jigTables[vars.nowC][vars.nowR].outRecycle = true;
+                vars.activeRecyclerJigs.remove(vars.jigRecyclePos);
+                jigRecycleAdapter.notifyItemRemoved(vars.jigRecyclePos);
             }
 //            hangOn = false;
         }
@@ -194,18 +180,18 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 
             int i = layoutManager.findFirstVisibleItemPosition();
-            jigRecyclePos = i + (jPosX+picISize+ picHSize)/ recySize;
-//            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
+            vars.jigRecyclePos = i + (vars.jPosX+vars.picISize+ vars.picHSize)/ vars.recySize;
+//            Log.w("r2i insert","add to recycler vars.jPos="+vars.jPosX+"x"+vars.jPosY+" i="+i+" pos="+jigRecyclePos);
 
-            jigTables[nowC][nowR].outRecycle = false;
-            if (jigRecyclePos < activeRecyclerJigs.size()-1) {
-                activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
-                jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+            vars.jigTables[vars.nowC][vars.nowR].outRecycle = false;
+            if (vars.jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
+                vars.activeRecyclerJigs.add(vars.jigRecyclePos, vars.nowC * 10000 + vars.nowR);
+                jigRecycleAdapter.notifyItemInserted(vars.jigRecyclePos);
             } else {
-                activeRecyclerJigs.add(nowC * 10000 + nowR);
-                jigRecycleAdapter.notifyItemInserted(activeRecyclerJigs.size()-1);
+                vars.activeRecyclerJigs.add(vars.nowC * 10000 + vars.nowR);
+                jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
             }
-            doNotUpdate = false;
+            vars.doNotUpdate = false;
         }
     };
 }

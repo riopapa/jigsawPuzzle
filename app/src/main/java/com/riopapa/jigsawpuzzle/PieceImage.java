@@ -1,10 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
-import static com.riopapa.jigsawpuzzle.Vars.outMaps;
-import static com.riopapa.jigsawpuzzle.Vars.picOSize;
-import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,7 +32,7 @@ public class PieceImage {
         this.context = context;
         this.outerSize = outerSize;
         this.innerSize = innerSize;
-        this.deltaGap = picOSize * (out2Scale - 1f) / 2f;
+        this.deltaGap = vars.picOSize * (out2Scale - 1f) / 2f;
         Log.w("c1 PieceImage","deltaGap ="+deltaGap);
         matrixOutLine = new Matrix();
         matrixOutLine.setScale(out2Scale, out2Scale);
@@ -81,20 +77,20 @@ public class PieceImage {
      * @return jigTables[col][row] .src, .pic, .oLine
      */
     public void makeAll(int col, int row) {
-        JigTable z = jigTables[col][row];
-        Bitmap orgPiece = Bitmap.createBitmap(selectedImage, col * innerSize, row * innerSize, outerSize, outerSize);
-        Bitmap mask = maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
-                maskMaps[2][z.uType], maskMaps[3][z.dType]);
+        JigTable z = vars.jigTables[col][row];
+        Bitmap orgPiece = Bitmap.createBitmap(vars.selectedImage, col * innerSize, row * innerSize, outerSize, outerSize);
+        Bitmap mask = maskMerge(vars.maskMaps[0][z.lType], vars.maskMaps[1][z.rType],
+                vars.maskMaps[2][z.uType], vars.maskMaps[3][z.dType]);
         z.src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
-        z.pic = Bitmap.createScaledBitmap(z.src, picOSize, picOSize, true);
-        mask = maskMerge(outMaps[0][z.lType], outMaps[1][z.rType],
-                outMaps[2][z.uType], outMaps[3][z.dType]);
+        z.pic = Bitmap.createScaledBitmap(z.src, vars.picOSize, vars.picOSize, true);
+        mask = maskMerge(vars.outMaps[0][z.lType], vars.outMaps[1][z.rType],
+                vars.outMaps[2][z.uType], vars.outMaps[3][z.dType]);
         z.oLine = makeOutline(z.src, mask);
-        jigTables[col][row] = z;
+        vars.jigTables[col][row] = z;
     }
 
     public void makeOline2(int col, int row) {
-        jigTables[col][row].oLine2 = makeOut2Line((jigTables[col][row].oLine));
+        vars.jigTables[col][row].oLine2 = makeOut2Line((vars.jigTables[col][row].oLine));
     }
 
 
@@ -140,7 +136,7 @@ public class PieceImage {
         canvas.drawBitmap(outMask, 0,0, paintOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(srcMap, matrix, paintOutOver);
-        return Bitmap.createScaledBitmap(outMap, picOSize, picOSize, true);
+        return Bitmap.createScaledBitmap(outMap, vars.picOSize, vars.picOSize, true);
 
     }
 
@@ -150,7 +146,7 @@ public class PieceImage {
      * @return double outlined bitmawp with picOSize
      */
     public Bitmap makeOut2Line(Bitmap inMap) {
-        Bitmap outMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
+        Bitmap outMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(inMap, matrixOutLine, null);
         canvas.drawColor(out2LineColor, PorterDuff.Mode.SRC_ATOP); //Color.WHITE is stroke color
@@ -165,7 +161,7 @@ public class PieceImage {
      * @return bigger oLine with picOSize
      */
     public Bitmap makeBigger(Bitmap inMap) {
-        Bitmap bigMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
+        Bitmap bigMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bigMap);
         canvas.drawBitmap(inMap, matrixBig, null);
         return bigMap;
@@ -194,7 +190,7 @@ public class PieceImage {
      */
 
     public Bitmap makeBright(Bitmap inMap) {
-        Bitmap bMap = Bitmap.createBitmap(picOSize, picOSize, Bitmap.Config.ARGB_8888);
+        Bitmap bMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
         canvasBright.drawBitmap(inMap, 0, 0, paintBright);
         return bMap;

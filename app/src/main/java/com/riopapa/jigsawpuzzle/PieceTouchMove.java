@@ -1,21 +1,12 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
 import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
-import static com.riopapa.jigsawpuzzle.Vars.aniANCHOR;
-import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.nowC;
-import static com.riopapa.jigsawpuzzle.Vars.nowR;
-import static com.riopapa.jigsawpuzzle.Vars.picHSize;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
-import static com.riopapa.jigsawpuzzle.Vars.recySize;
-import static com.riopapa.jigsawpuzzle.Vars.screenY;
 
 import android.util.Log;
 
@@ -26,56 +17,56 @@ public class PieceTouchMove {
 
 
     void start(float fMovedX, float fMovedY){
-        if (doNotUpdate)
+        if (vars.doNotUpdate)
             return;
 
-        int moveX = (int) fMovedX - picHSize;
-        int moveY = (int) fMovedY - picHSize;
+        int moveX = (int) fMovedX - vars.picHSize;
+        int moveY = (int) fMovedY - vars.picHSize;
 
         // check whether go back to recycler
-        if (moveY > (screenY - recySize * 2)) {
+        if (moveY > (vars.screenY - vars.recySize * 2)) {
             // if sole piece then can go back to recycler
-            if (fpNow.anchorId == 0 && fps.size() > 0) {
-                doNotUpdate = true;
-                Log.w("pchk Check", "fps size=" + fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
-                fps.remove(nowIdx);
+            if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
+                vars.doNotUpdate = true;
+                Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + vars.nowC + "x" + vars.nowR);
+                vars.fps.remove(nowIdx);
                 insert2Recycle.sendEmptyMessage(0);
             }
             // if anchored can not go back to recycle;
             return;
         }
 
-        jigTables[nowC][nowR].posX = moveX;
-        jigTables[nowC][nowR].posY = moveY;
+        vars.jigTables[vars.nowC][vars.nowR].posX = moveX;
+        vars.jigTables[vars.nowC][vars.nowR].posY = moveY;
 
         // move anchored pieces too
         if (fpNow.anchorId > 0) {
-            for (int i = 0; i < fps.size(); i++) {
-                FloatPiece fpT = fps.get(i);
+            for (int i = 0; i < vars.fps.size(); i++) {
+                FloatPiece fpT = vars.fps.get(i);
                 if (fpT.anchorId == fpNow.anchorId) {
-                    jigTables[fpT.C][fpT.R].posX =
-                            jigTables[nowC][nowR].posX - (nowC - fpT.C) * picISize;
-                    jigTables[fpT.C][fpT.R].posY =
-                            jigTables[nowC][nowR].posY - (nowR - fpT.R) * picISize;
+                    vars.jigTables[fpT.C][fpT.R].posX =
+                            vars.jigTables[vars.nowC][vars.nowR].posX - (vars.nowC - fpT.C) * vars.picISize;
+                    vars.jigTables[fpT.C][fpT.R].posY =
+                            vars.jigTables[vars.nowC][vars.nowR].posY - (vars.nowR - fpT.R) * vars.picISize;
                 }
             }
         }
-        if (nowIdx < fps.size()) {
+        if (nowIdx < vars.fps.size()) {
             new RearrangePieces(fpNow, nowIdx);
-            nowIdx = fps.size() - 1;
+            nowIdx = vars.fps.size() - 1;
         }
 
         // check whether each pieces are in lockable position
         boolean lockable = false;
         long anchorId = fpNow.anchorId;
 
-        for (int i = 0; i < fps.size(); i++) {
-            FloatPiece fpTo = fps.get(i);
+        for (int i = 0; i < vars.fps.size(); i++) {
+            FloatPiece fpTo = vars.fps.get(i);
             if (nearByPieces.lockable(fpTo.C, fpTo.R) && rightPosition.isHere(fpTo.C, fpTo.R,
-                            jigTables[fpTo.C][fpTo.R].posX, jigTables[fpTo.C][fpTo.R].posY)) {
+                            vars.jigTables[fpTo.C][fpTo.R].posX, vars.jigTables[fpTo.C][fpTo.R].posY)) {
                 if (fpTo.anchorId == 0) {
                     fpTo.anchorId = -1;
-                    fps.set(i, fpTo);
+                    vars.fps.set(i, fpTo);
                 }
                 anchorId = fpTo.anchorId;
                 lockable = true;
@@ -85,12 +76,12 @@ public class PieceTouchMove {
 
         // if pieceImage moved to right rightPosition then lock thi pieceImage
         if (lockable) {
-            for (int i = 0; i < fps.size(); ) {
-                FloatPiece fpT = fps.get(i);
+            for (int i = 0; i < vars.fps.size(); ) {
+                FloatPiece fpT = vars.fps.get(i);
                 if (fpT.anchorId == anchorId) {
-                    jigTables[fpT.C][fpT.R].locked = true;
-                    jigTables[fpT.C][fpT.R].count = 7;
-                    fps.remove(i);
+                    vars.jigTables[fpT.C][fpT.R].locked = true;
+                    vars.jigTables[fpT.C][fpT.R].count = 7;
+                    vars.fps.remove(i);
                 } else
                     i++;
             }
@@ -106,74 +97,74 @@ public class PieceTouchMove {
 
         FloatPiece fpThis = null, fpBase = null;
 
-        for (int iA = fps.size()-1; iA >= 0;  iA--) {
-            fpThis = fps.get(iA);
+        for (int iA = vars.fps.size()-1; iA >= 0;  iA--) {
+            fpThis = vars.fps.get(iA);
             ancBase = nearByFloatPiece.isAnchorable(iA, fpThis);
             if (ancBase != -1) {
                 ancThis = iA;
-                fpBase = fps.get(ancBase);
+                fpBase = vars.fps.get(ancBase);
                 break;
             }
         }
 
 
         if (ancBase != -1) {
-            doNotUpdate = true;
+            vars.doNotUpdate = true;
 
 //            Log.w( fpNow.C+"x"+fpNow.R+" fpNow ", "fpNow "+
-//                    jigTables[fpNow.C][fpNow.R].posX +"x"+jigTables[fpNow.C][fpNow.R].posY);
+//                    vars.jigTables[fpNow.C][fpNow.R].posX +"x"+vars.jigTables[fpNow.C][fpNow.R].posY);
 //            Log.w( fpBase.C+"x"+fpBase.R+" fpBase ", "fpBase "+
-//                    jigTables[fpBase.C][fpBase.R].posX +"x"+jigTables[fpBase.C][fpBase.R].posY);
+//                    vars.jigTables[fpBase.C][fpBase.R].posX +"x"+vars.jigTables[fpBase.C][fpBase.R].posY);
 //            Log.w( fpThis.C+"x"+fpThis.R+" fpThis ", "fpThis "+
-//                    jigTables[fpThis.C][fpThis.R].posX +"x"+jigTables[fpThis.C][fpThis.R].posY);
+//                    vars.jigTables[fpThis.C][fpThis.R].posX +"x"+vars.jigTables[fpThis.C][fpThis.R].posY);
 
             if (fpBase.anchorId == 0) {
                 fpBase.anchorId = fpBase.uId;
-                fps.set(ancBase, fpBase);
+                vars.fps.set(ancBase, fpBase);
             }
             long anchorBase = fpBase.anchorId;
 
             if (fpThis.anchorId == 0) {
                 fpThis.anchorId = fpThis.uId;
-                fps.set(ancThis, fpThis);
+                vars.fps.set(ancThis, fpThis);
             }
             long anchorThis = fpThis.anchorId;
 
-//            for (int i = 0; i < fps.size(); i++) {
-//                Log.w(fps.get(i).C+"x"+fps.get(i).R+" before "+i, jigTables[fps.get(i).C][fps.get(i).R].posX +"x"+jigTables[fps.get(i).C][fps.get(i).R].posY);
+//            for (int i = 0; i < vars.fps.size(); i++) {
+//                Log.w(vars.fps.get(i).C+"x"+vars.fps.get(i).R+" before "+i, vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posX +"x"+vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posY);
 //            }
 
-            for (int i = 0; i < fps.size(); i++) {
-                FloatPiece fpW = fps.get(i);
+            for (int i = 0; i < vars.fps.size(); i++) {
+                FloatPiece fpW = vars.fps.get(i);
                 if (fpW.anchorId == anchorThis) {
-//                    jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * picISize;
-//                    jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * picISize;
+//                    vars.jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * vars.picISize;
+//                    vars.jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * vars.picISize;
                     fpW.anchorId = anchorBase;
-                    fpW.mode = aniANCHOR; // make it not zero
+                    fpW.mode = vars.aniANCHOR; // make it not zero
                     fpW.count = 5;
-                    fps.set(i, fpW);
+                    vars.fps.set(i, fpW);
 //                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
-//                            jigTables[fpW.C][fpW.R].posX +"x"+jigTables[fpW.C][fpW.R].posY);
+//                            vars.jigTables[fpW.C][fpW.R].posX +"x"+vars.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
-                    fpW.mode = aniANCHOR; // make it not zero
+                    fpW.mode = vars.aniANCHOR; // make it not zero
                     fpW.count = 5;
-                    fps.set(i, fpW);
+                    vars.fps.set(i, fpW);
                 }
             }
 
             // move anchored pieces too
             if (fpNow.anchorId > 0) {
-                for (int i = 0; i < fps.size(); i++) {
-                    FloatPiece fpT = fps.get(i);
+                for (int i = 0; i < vars.fps.size(); i++) {
+                    FloatPiece fpT = vars.fps.get(i);
                     if (fpT.anchorId == fpNow.anchorId) {
-                        jigTables[fpT.C][fpT.R].posX =
-                                jigTables[nowC][nowR].posX - (nowC - fpT.C) * picISize;
-                        jigTables[fpT.C][fpT.R].posY =
-                                jigTables[nowC][nowR].posY - (nowR - fpT.R) * picISize;
+                        vars.jigTables[fpT.C][fpT.R].posX =
+                                vars.jigTables[vars.nowC][vars.nowR].posX - (vars.nowC - fpT.C) * vars.picISize;
+                        vars.jigTables[fpT.C][fpT.R].posY =
+                                vars.jigTables[vars.nowC][vars.nowR].posY - (vars.nowR - fpT.R) * vars.picISize;
                     }
                 }
             }
-            doNotUpdate = false;
+            vars.doNotUpdate = false;
         }
     }
 

@@ -1,14 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static com.riopapa.jigsawpuzzle.Vars.grayedImage;
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigInnerSize;
-import static com.riopapa.jigsawpuzzle.Vars.jigOuterSize;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
-import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -22,18 +15,20 @@ public class ImageGray {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                grayedImage = Bitmap.createBitmap(selectedImage.getWidth(), selectedImage.getHeight(), Bitmap.Config.ARGB_8888);
+                vars.grayedImage = Bitmap.createBitmap(vars.selectedImage.getWidth(), vars.selectedImage.getHeight(), Bitmap.Config.ARGB_8888);
                 Paint paintGray = new Paint();
                 paintGray.setAlpha(30);
-                Canvas canvasGray = new Canvas(grayedImage);
-                canvasGray.drawBitmap(selectedImage, 0, 0, paintGray);
-                for (int c = 0; c < jigCOLUMNs; c++) {
-                    for (int r = 0; r < jigROWs; r++) {
-                        JigTable z = jigTables[c][r];
-                        Bitmap mask = pieceImage.maskMerge(maskMaps[0][z.lType], maskMaps[1][z.rType],
-                                maskMaps[2][z.uType], maskMaps[3][z.dType]);
-                        Bitmap bm = Bitmap.createBitmap(grayedImage, c* jigInnerSize, r* jigInnerSize, jigOuterSize, jigOuterSize);
-                        canvasGray.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* jigInnerSize, r* jigInnerSize, null);
+                Canvas canvasGray = new Canvas(vars.grayedImage);
+                canvasGray.drawBitmap(vars.selectedImage, 0, 0, paintGray);
+                for (int c = 0; c < vars.jigCOLUMNs; c++) {
+                    for (int r = 0; r < vars.jigROWs; r++) {
+                        JigTable z = vars.jigTables[c][r];
+                        Bitmap mask = pieceImage.maskMerge(vars.maskMaps[0][z.lType],
+                                vars.maskMaps[1][z.rType], vars.maskMaps[2][z.uType],
+                                vars.maskMaps[3][z.dType]);
+                        Bitmap bm = Bitmap.createBitmap(vars.grayedImage, c* vars.jigInnerSize,
+                                r* vars.jigInnerSize, vars.jigOuterSize, vars.jigOuterSize);
+                        canvasGray.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* vars.jigInnerSize, r* vars.jigInnerSize, null);
                     }
                 }
             }

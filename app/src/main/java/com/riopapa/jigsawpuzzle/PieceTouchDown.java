@@ -1,15 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
-import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jPosX;
-import static com.riopapa.jigsawpuzzle.Vars.jPosY;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.nowC;
-import static com.riopapa.jigsawpuzzle.Vars.nowR;
-import static com.riopapa.jigsawpuzzle.Vars.picHSize;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -19,44 +12,44 @@ import java.util.Collections;
 public class PieceTouchDown {
     void start(float fX, float fY){
 
-        if (doNotUpdate)
+        if (vars.doNotUpdate)
             return;
 
-        int iX = (int) fX - picHSize;
-        int iY = (int) fY - picHSize;
+        int iX = (int) fX - vars.picHSize;
+        int iY = (int) fY - vars.picHSize;
 
-        for (int i = fps.size() - 1; i >= 0; i--) {
-            int c = fps.get(i).C;
-            int r = fps.get(i).R;
-            JigTable jt = jigTables[c][r];
+        for (int i = vars.fps.size() - 1; i >= 0; i--) {
+            int c = vars.fps.get(i).C;
+            int r = vars.fps.get(i).R;
+            JigTable jt = vars.jigTables[c][r];
 
-            if (Math.abs(jt.posX - iX) < picHSize && Math.abs(jt.posY - iY) < picHSize) {
-                nowR = r; nowC = c;
+            if (Math.abs(jt.posX - iX) < vars.picHSize && Math.abs(jt.posY - iY) < vars.picHSize) {
+                vars.nowR = r; vars.nowC = c;
                 nowIdx = i;
-                if (nowIdx != fps.size()-1) { // move current puzzle to top
-                    Collections.swap(fps, nowIdx, fps.size() - 1);
-                    nowIdx = fps.size() - 1;
+                if (nowIdx != vars.fps.size()-1) { // move current puzzle to top
+                    Collections.swap(vars.fps, nowIdx, vars.fps.size() - 1);
+                    nowIdx = vars.fps.size() - 1;
                 }
-                fpNow = fps.get(nowIdx);
-                jPosX = jt.posX; jPosY = jt.posY;
+                fpNow = vars.fps.get(nowIdx);
+                vars.jPosX = jt.posX; vars.jPosY = jt.posY;
 
                 // move current pieces with anchored to Top position
-                for (int ii = 0; ii < fps.size(); ii++) {
-                    if (fps.get(ii).anchorId == fpNow.anchorId) {
-                        Collections.swap(fps, ii, fps.size() - 1);
+                for (int ii = 0; ii < vars.fps.size(); ii++) {
+                    if (vars.fps.get(ii).anchorId == fpNow.anchorId) {
+                        Collections.swap(vars.fps, ii, vars.fps.size() - 1);
                     }
                 }
 
                 // reset nowIdx to top pieceImage
-                for (int ii = 0; i < fps.size(); ii++) {
-                    FloatPiece fpAnchor = fps.get(ii);
+                for (int ii = 0; i < vars.fps.size(); ii++) {
+                    FloatPiece fpAnchor = vars.fps.get(ii);
                     if (fpAnchor.C == fpNow.C && fpAnchor.R == fpNow.R) {
-                        Collections.swap(fps, ii, fps.size() - 1);
-                        nowIdx = fps.size() - 1;
+                        Collections.swap(vars.fps, ii, vars.fps.size() - 1);
+                        nowIdx = vars.fps.size() - 1;
                         break;
                     }
                 }
-                fpNow = fps.get(nowIdx);
+                fpNow = vars.fps.get(nowIdx);
                 break;
             }
         }

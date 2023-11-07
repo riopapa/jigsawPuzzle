@@ -1,14 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.Vars.allLocked;
-import static com.riopapa.jigsawpuzzle.Vars.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jPosX;
-import static com.riopapa.jigsawpuzzle.Vars.jPosY;
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 import android.content.Context;
@@ -50,7 +42,7 @@ public class PaintView extends View {
 
     public void init(Activity activity){
         this.paintActivity = activity;
-        fps = new ArrayList<>();
+        vars.fps = new ArrayList<>();
 
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
@@ -72,16 +64,16 @@ public class PaintView extends View {
 
 
     private void paintTouchUp(){
-        allLocked = isPiecesAllLocked();
+        vars.allLocked = isPiecesAllLocked();
     }
 
     boolean isPiecesAllLocked() {
-        if (activeRecyclerJigs.size() > 0 || fps.size() > 0) {
+        if (vars.activeRecyclerJigs.size() > 0 || vars.fps.size() > 0) {
             return false;
         }
-        for (int c = 0; c < jigCOLUMNs; c++) {
-            for (int r = 0; r < jigROWs; r++) {
-                if (!jigTables[c][r].locked)
+        for (int c = 0; c < vars.jigCOLUMNs; c++) {
+            for (int r = 0; r < vars.jigROWs; r++) {
+                if (!vars.jigTables[c][r].locked)
                     return false;
             }
         }
@@ -89,7 +81,7 @@ public class PaintView extends View {
     }
     long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
-        if (doNotUpdate)
+        if (vars.doNotUpdate)
             return true;
         float x = event.getX();
         float y = event.getY();
@@ -97,7 +89,7 @@ public class PaintView extends View {
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
-        Log.w("onTouchEvent", "doNotUpdate ="+doNotUpdate);
+        Log.w("onTouchEvent", "doNotUpdate ="+vars.doNotUpdate);
 
 //        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){
@@ -108,7 +100,7 @@ public class PaintView extends View {
             case MotionEvent.ACTION_MOVE:
 
                 final float TOUCH_TOLERANCE = 30;
-                if (Math.abs(x - jPosX) > TOUCH_TOLERANCE || Math.abs(y - jPosY) > TOUCH_TOLERANCE)
+                if (Math.abs(x - vars.jPosX) > TOUCH_TOLERANCE || Math.abs(y - vars.jPosY) > TOUCH_TOLERANCE)
                     pieceTouchMove.start(x, y);
                 break;
             case MotionEvent.ACTION_UP:
@@ -121,7 +113,7 @@ public class PaintView extends View {
 
 //    public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
 //        public void handleMessage(Message msg) {
-//            nowJig = jigTables[nowC][nowR];
+//            nowJig = vars.jigTables[nowC][nowR];
 //            mapNow = Bitmap.createScaledBitmap(nowJig.src, picOSize, picOSize, true);
 //            dragging = true;
 //            Log.w("p1x "+ jigCR," call by recycler drawing updating "+jPosX+" x "+jPosY);

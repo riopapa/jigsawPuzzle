@@ -1,8 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 
@@ -18,14 +16,14 @@ public class NearByPieces {
 
         boolean left, right = false, up, down = false;
 
-        if (cc == 0 || rr == 0 || cc == jigCOLUMNs - 1 || rr == jigROWs - 1)
+        if (cc == 0 || rr == 0 || cc == vars.jigCOLUMNs - 1 || rr == vars.jigROWs - 1)
             return true;
-        left = jigTables[cc-1][rr].locked;
-        if (cc != jigCOLUMNs-1)
-            right = jigTables[cc+1][rr].locked;
-        up = jigTables[cc][rr-1].locked;
-        if (rr != jigROWs-1)
-            down = jigTables[cc][rr+1].locked;
+        left = vars.jigTables[cc-1][rr].locked;
+        if (cc != vars.jigCOLUMNs-1)
+            right = vars.jigTables[cc+1][rr].locked;
+        up = vars.jigTables[cc][rr-1].locked;
+        if (rr != vars.jigROWs-1)
+            down = vars.jigTables[cc][rr+1].locked;
 
         return left | right | up | down;
     }

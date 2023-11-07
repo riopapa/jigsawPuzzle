@@ -4,17 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.tvLeft;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
-import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.Vars.jPosX;
-import static com.riopapa.jigsawpuzzle.Vars.jPosY;
-import static com.riopapa.jigsawpuzzle.Vars.jigCR;
-import static com.riopapa.jigsawpuzzle.Vars.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.nowC;
-import static com.riopapa.jigsawpuzzle.Vars.nowR;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
-import static com.riopapa.jigsawpuzzle.Vars.recySize;
-import static com.riopapa.jigsawpuzzle.Vars.screenY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -52,7 +42,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //        if (pos < 0)
 //            return;
 //        Log.w("pc clearView","pos "+pos);
-//        int cr = activeRecyclerJigs.get(pos);
+//        int cr = vars.activeRecyclerJigs.get(pos);
 //        int c = cr /10000;
 //        int r = cr - c * 10000;
 
@@ -63,16 +53,16 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-            Log.w("onS sta", "size=" + activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
-            jigCR = activeRecyclerJigs.get(jigRecyclePos);
-            nowC = jigCR /10000;
-            nowR = jigCR - nowC * 10000;
-            if (jigTables[nowC][nowR].picBright == null)
-                jigTables[nowC][nowR].picBright = pieceImage.makeBright(jigTables[nowC][nowR].pic);
+            vars.jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
+            Log.w("onS sta", "size=" + vars.activeRecyclerJigs.size()+" nowPos="+vars.jigRecyclePos);
+            vars.jigCR = vars.activeRecyclerJigs.get(vars.jigRecyclePos);
+            vars.nowC = vars.jigCR /10000;
+            vars.nowR = vars.jigCR - vars.nowC * 10000;
+            if (vars.jigTables[vars.nowC][vars.nowR].picBright == null)
+                vars.jigTables[vars.nowC][vars.nowR].picBright = pieceImage.makeBright(vars.jigTables[vars.nowC][vars.nowR].pic);
 
-            jPosY = screenY - recySize;
-            jPosX = viewHolder.itemView.getLeft();
+            vars.jPosY = vars.screenY - vars.recySize;
+            vars.jPosX = viewHolder.itemView.getLeft();
         }
 
     }
@@ -105,7 +95,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         int holderIdx = viewHolder.getAbsoluteAdapterPosition();
         int tgtIdx = target.getAbsoluteAdapterPosition();
         Log.w("p27 onMove","from "+holderIdx+" to "+tgtIdx);
-        Collections.swap(activeRecyclerJigs, holderIdx, tgtIdx);
+        Collections.swap(vars.activeRecyclerJigs, holderIdx, tgtIdx);
         jigRecycleAdapter.notifyItemMoved(holderIdx, tgtIdx);
 //        listener.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
         return true;
@@ -122,27 +112,27 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 //
 //        helperDrawTime = nowTime;
 
-        if (activeRecyclerJigs.size() == 0)
+        if (vars.activeRecyclerJigs.size() == 0)
             return;
-        if (jigRecyclePos == activeRecyclerJigs.size()) {
-//            Log.e("r tag","activeSize="+activeRecyclerJigs.size()+" jigRecyclePos="+jigRecyclePos);
-//            for (int i = 0; i < activeRecyclerJigs.size(); i++)
-//                Log.w("active "+i, "pos "+activeRecyclerJigs.get(i));
+        if (vars.jigRecyclePos == vars.activeRecyclerJigs.size()) {
+//            Log.e("r tag","activeSize="+vars.activeRecyclerJigs.size()+" vars.jigRecyclePos="+vars.jigRecyclePos);
+//            for (int i = 0; i < vars.activeRecyclerJigs.size(); i++)
+//                Log.w("active "+i, "pos "+vars.activeRecyclerJigs.get(i));
             return;
         }
         View pieceView = viewHolder.itemView;
-        jigCR = activeRecyclerJigs.get(jigRecyclePos);
-        nowC = jigCR / 10000;
-        nowR = jigCR - nowC * 10000;
+        vars.jigCR = vars.activeRecyclerJigs.get(vars.jigRecyclePos);
+        vars.nowC = vars.jigCR / 10000;
+        vars.nowR = vars.jigCR - vars.nowC * 10000;
         if (dX != 0 && dY != 0) {
-            jPosX = pieceView.getLeft() + (int) dX;
-            jPosY = screenY - recySize - picISize + (int) dY;
-            jigTables[nowC][nowR].posX = jPosX;
-            jigTables[nowC][nowR].posY = jPosY;
+            vars.jPosX = pieceView.getLeft() + (int) dX;
+            vars.jPosY = vars.screenY - vars.recySize - vars.picISize + (int) dY;
+            vars.jigTables[vars.nowC][vars.nowR].posX = vars.jPosX;
+            vars.jigTables[vars.nowC][vars.nowR].posY = vars.jPosY;
         }
 
         String txt = "dxDy "+dX+" x "+dY
-                + "\n jPos "+jPosX+" x "+jPosY;
+                + "\n vars.jPos "+vars.jPosX+" x "+vars.jPosY;
         mActivity.runOnUiThread(() -> tvLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //

@@ -1,6 +1,5 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.Vars.possibleImageCount;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 public class ActivityMain extends Activity {
-
-
 
     public static Activity mActivity;
 
@@ -63,8 +60,14 @@ public class ActivityMain extends Activity {
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        vars = new VarsGetPut().get(this);
+        if (vars == null)
+            vars = new Vars();
 
-        possibleImageCount = new TargetImage().count();
+        // get physical values depend on Phone
+        new PhoneMetrics(this);
+
+        vars.possibleImageCount = new TargetImage().count();
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
@@ -77,11 +80,9 @@ public class ActivityMain extends Activity {
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        // get physical values depend on Phone
-        new PhoneMetrics(this);
         // calcuate showMaxX, showMaxY temperaty to determine piece sizes;
 
-        possibleImageCount = new TargetImage().count();
+        vars.possibleImageCount = new TargetImage().count();
 
 
     }
@@ -92,12 +93,12 @@ public class ActivityMain extends Activity {
         super.onResume();
 
         invalidateTimer = new Timer();
-
     }
 
 
     @Override
     protected void onPause() {
+        new VarsGetPut().put(vars, this);
         super.onPause();
     }
 

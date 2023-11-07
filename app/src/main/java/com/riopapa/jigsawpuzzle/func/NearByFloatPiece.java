@@ -1,9 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.picGap;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -20,9 +17,9 @@ public class NearByFloatPiece {
         int cc = fpThis.C;
         int rr = fpThis.R;
 
-        for (int i = 0; i < fps.size(); i++) {
+        for (int i = 0; i < vars.fps.size(); i++) {
             if (i != thisIdx) {
-                FloatPiece fpWork = fps.get(i);
+                FloatPiece fpWork = vars.fps.get(i);
                 // pass if already anchored group
                 if (anchorId > 0 && anchorId == fpWork.anchorId)
                     continue;
@@ -32,11 +29,11 @@ public class NearByFloatPiece {
                     continue;
                 if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)
                     continue;
-                int delX = Math.abs(jigTables[cc][rr].posX - jigTables[fpWork.C][fpWork.R].posX - cDelta*picISize);
-                if (delX > picGap)    // around near
+                int delX = Math.abs(vars.jigTables[cc][rr].posX - vars.jigTables[fpWork.C][fpWork.R].posX - cDelta*vars.picISize);
+                if (delX > vars.picGap)    // around near
                     continue;;
-                int delY = Math.abs(jigTables[cc][rr].posY - jigTables[fpWork.C][fpWork.R].posY - rDelta*picISize);
-                if (delY > picGap)
+                int delY = Math.abs(vars.jigTables[cc][rr].posY - vars.jigTables[fpWork.C][fpWork.R].posY - rDelta*vars.picISize);
+                if (delY > vars.picGap)
                     continue;;
                 return i;   // anchored with i's floatPiece
             }

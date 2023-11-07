@@ -1,10 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.imageAnswer;
-import static com.riopapa.jigsawpuzzle.Vars.picGap;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -13,13 +10,13 @@ public class AdjustThumbNail {
     public AdjustThumbNail() {
         // imageAnswer (will be removed later
         ConstraintLayout.LayoutParams layoutImage = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
-        layoutImage.setMargins(picGap, picGap, picGap, picGap);
+        layoutImage.setMargins(vars.picGap, vars.picGap, vars.picGap, vars.picGap);
         layoutImage.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutImage.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutImage.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutImage.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutImage.width = showMaxX * picISize * 2;
-        layoutImage.height = showMaxY * picISize * 2;
+        layoutImage.width = vars.showMaxX * vars.picISize * 2;
+        layoutImage.height = vars.showMaxY * vars.picISize * 2;
         imageAnswer.setLayoutParams(layoutImage);
 
 //        int thumbSize = screenX/5;

@@ -1,26 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
 
-import static com.riopapa.jigsawpuzzle.Vars.allLocked;
-import static com.riopapa.jigsawpuzzle.Vars.baseX;
-import static com.riopapa.jigsawpuzzle.Vars.baseY;
-import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeX;
-import static com.riopapa.jigsawpuzzle.Vars.fPhoneSizeY;
-import static com.riopapa.jigsawpuzzle.Vars.fps;
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.offsetC;
-import static com.riopapa.jigsawpuzzle.Vars.offsetR;
-import static com.riopapa.jigsawpuzzle.Vars.picGap;
-import static com.riopapa.jigsawpuzzle.Vars.picHSize;
-import static com.riopapa.jigsawpuzzle.Vars.picISize;
-import static com.riopapa.jigsawpuzzle.Vars.picOSize;
-import static com.riopapa.jigsawpuzzle.Vars.screenX;
-import static com.riopapa.jigsawpuzzle.Vars.screenY;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
-import static com.riopapa.jigsawpuzzle.Vars.showShiftX;
-import static com.riopapa.jigsawpuzzle.Vars.showShiftY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.util.Log;
 
@@ -35,43 +16,43 @@ public class intGlobalValues {
 
         // calculate piece size;
 
-//        recySize = (int) ((float) screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
+//        recySize = (int) ((float) vars.vars.screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
 
 
-        // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 ScreenX 1080 x 2316
-        // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 ScreenX 1600 x 2560
+        // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 vars.vars.screenX 1080 x 2316
+        // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 vars.vars.screenX 1600 x 2560
 
 //        Log.w("r25 "+Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
 
-        showMaxX = screenX / picISize - 2;
-        if (showMaxX > jigCOLUMNs)
-            showMaxX = jigCOLUMNs;
+        vars.showMaxX = vars.screenX / vars.picISize - 2;
+        if (vars.showMaxX > vars.jigCOLUMNs)
+            vars.showMaxX = vars.jigCOLUMNs;
 
-        showMaxY = (int) (screenX * fPhoneSizeY / fPhoneSizeX / picISize - 2);
+        vars.showMaxY = (int) (vars.screenX * vars.fPhoneSizeY / vars.fPhoneSizeX / vars.picISize - 2);
 
-        if (showMaxY >  screenY/ picISize - 8)
-            showMaxY =  screenY / picISize - 8;
-        if (showMaxY > jigROWs)
-            showMaxY = jigROWs;
+        if (vars.showMaxY >  vars.screenY/ vars.picISize - 8)
+            vars.showMaxY =  vars.screenY / vars.picISize - 8;
+        if (vars.showMaxY > vars.jigROWs)
+            vars.showMaxY = vars.jigROWs;
 
-        showShiftX = showMaxX * 3 / 4;
-        showShiftY = showMaxY * 3 / 4;
+        vars.showShiftX = vars.showMaxX * 3 / 4;
+        vars.showShiftY = vars.showMaxY * 3 / 4;
 
-        Log.w("show Info", "Jig Cnt="+jigCOLUMNs+" x "+ jigROWs+", showShift "+showShiftX+"x"+showShiftY +
-                ", showMax "+showMaxX+"x"+showMaxY);
+        Log.w("show Info", "Jig Cnt="+vars.jigCOLUMNs+" x "+ vars.jigROWs+", showShift "+vars.showShiftX+"x"+vars.showShiftY +
+                ", showMax "+vars.showMaxX+"x"+vars.showMaxY);
 
-        offsetC = 0; offsetR = 0;
+        vars.offsetC = 0; vars.offsetR = 0;
 
-        fps = new ArrayList<>();
+        vars.fps = new ArrayList<>();
 
-        allLocked = false;
+        vars.allLocked = false;
 //        new Handler().postDelayed(() -> {
-            baseX = (screenX - showMaxX * picISize) / 2 - picGap - picGap;
-            baseY = (screenY - showMaxY * picISize) / 2 - picOSize + picGap;
-//            baseX = imageAnswer.getLeft() - picGap;
-//            baseY = imageAnswer.getTop() - picGap;
-            Log.w("r21 sizeCheck","picOSize="+ picOSize +", picISize="+ picISize +
-                    ", picHSize ="+picHSize+ " picGap="+picGap);
+            vars.baseX = (vars.screenX - vars.showMaxX * vars.picISize) / 2 - vars.picGap - vars.picGap;
+            vars.baseY = (vars.screenY - vars.showMaxY * vars.picISize) / 2 - vars.picOSize + vars.picGap;
+//            baseX = imageAnswer.getLeft() - vars.picGap;
+//            baseY = imageAnswer.getTop() - vars.picGap;
+            Log.w("r21 sizeCheck","vars.picOSize="+ vars.picOSize +", vars.picISize="+ vars.picISize +
+                    ", picHSize ="+vars.picHSize+ " vars.picGap="+vars.picGap);
 
 //        }, 10);
 

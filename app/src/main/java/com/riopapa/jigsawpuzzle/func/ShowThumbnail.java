@@ -1,14 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.offsetC;
-import static com.riopapa.jigsawpuzzle.Vars.offsetR;
-import static com.riopapa.jigsawpuzzle.Vars.selectedHeight;
-import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
-import static com.riopapa.jigsawpuzzle.Vars.selectedWidth;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,25 +12,25 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 public class ShowThumbnail {
     public ShowThumbnail(ActivityJigsawBinding binding) {
         int h, w, rectSize, xOff, yOff;
-        if (selectedHeight > selectedWidth) {
+        if (vars.selectedHeight > vars.selectedWidth) {
             h = 1000;
-            w = h * selectedWidth / selectedHeight;
-            rectSize = 1000 * (showMaxY) / jigROWs;    // 24 to show line boundary
-            xOff = offsetC * 1000  / jigROWs;
-            yOff = offsetR * 1000 / jigROWs;
+            w = h * vars.selectedWidth / vars.selectedHeight;
+            rectSize = 1000 * (vars.showMaxY) / vars.jigROWs;    // 24 to vars.show line boundary
+            xOff = vars.offsetC * 1000  / vars.jigROWs;
+            yOff = vars.offsetR * 1000 / vars.jigROWs;
         } else {
             w = 1000;
-            h = w * selectedHeight / selectedWidth;
-            rectSize = 1000 * (showMaxX) / jigCOLUMNs;
-            xOff = offsetC * 1000  / jigCOLUMNs;
-            yOff = offsetR * 1000 / jigCOLUMNs;
+            h = w * vars.selectedHeight / vars.selectedWidth;
+            rectSize = 1000 * (vars.showMaxX) / vars.jigCOLUMNs;
+            xOff = vars.offsetC * 1000  / vars.jigCOLUMNs;
+            yOff = vars.offsetR * 1000 / vars.jigCOLUMNs;
         }
         if (xOff + rectSize >= w)
             xOff = w - rectSize;
         if (yOff + rectSize >= h)
             yOff = h - rectSize;
 
-        Bitmap thumb = Bitmap.createScaledBitmap(selectedImage, w, h, true);
+        Bitmap thumb = Bitmap.createScaledBitmap(vars.selectedImage, w, h, true);
         Canvas canvas = new Canvas(thumb);
         Paint paint = new Paint();
         paint.setColor(0xffff0000);

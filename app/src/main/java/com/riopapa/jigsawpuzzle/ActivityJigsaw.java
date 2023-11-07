@@ -2,28 +2,6 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.Vars.activeRecyclerJigs;
-import static com.riopapa.jigsawpuzzle.Vars.allPossibleJigs;
-import static com.riopapa.jigsawpuzzle.Vars.difficulties;
-import static com.riopapa.jigsawpuzzle.Vars.difficulty;
-import static com.riopapa.jigsawpuzzle.Vars.jigCOLUMNs;
-import static com.riopapa.jigsawpuzzle.Vars.jigGapSize;
-import static com.riopapa.jigsawpuzzle.Vars.jigInnerSize;
-import static com.riopapa.jigsawpuzzle.Vars.jigOuterSize;
-import static com.riopapa.jigsawpuzzle.Vars.jigROWs;
-import static com.riopapa.jigsawpuzzle.Vars.jigTables;
-import static com.riopapa.jigsawpuzzle.Vars.maskMaps;
-import static com.riopapa.jigsawpuzzle.Vars.offsetC;
-import static com.riopapa.jigsawpuzzle.Vars.offsetR;
-import static com.riopapa.jigsawpuzzle.Vars.outMaps;
-import static com.riopapa.jigsawpuzzle.Vars.recySize;
-import static com.riopapa.jigsawpuzzle.Vars.selectedHeight;
-import static com.riopapa.jigsawpuzzle.Vars.selectedImage;
-import static com.riopapa.jigsawpuzzle.Vars.selectedWidth;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxX;
-import static com.riopapa.jigsawpuzzle.Vars.showMaxY;
-import static com.riopapa.jigsawpuzzle.Vars.showShiftX;
-import static com.riopapa.jigsawpuzzle.Vars.showShiftY;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -96,76 +74,76 @@ public class ActivityJigsaw extends Activity {
         moveD = findViewById(R.id.move_down);
 
         binding.moveLeft.setOnClickListener(v -> {
-            offsetC -= showShiftX;
-            if (offsetC < 0)
-                offsetC = 0;
+            vars.offsetC -= vars.showShiftX;
+            if (vars.offsetC < 0)
+                vars.offsetC = 0;
             copy2RecyclerPieces();
         });
         binding.moveRight.setOnClickListener(v -> {
-            offsetC += showShiftX;
-            if (offsetC >= jigCOLUMNs - showMaxX)
-                offsetC = jigCOLUMNs - showMaxX;
+            vars.offsetC += vars.showShiftX;
+            if (vars.offsetC >= vars.jigCOLUMNs - vars.showMaxX)
+                vars.offsetC = vars.jigCOLUMNs - vars.showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
-            offsetR -= showShiftY;
-            if (offsetR < 0)
-                offsetR = 0;
+            vars.offsetR -= vars.showShiftY;
+            if (vars.offsetR < 0)
+                vars.offsetR = 0;
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
-            offsetR += showShiftY;
-            if (offsetR >= jigROWs - showMaxY)
-                offsetR = jigROWs - showMaxY;
+            vars.offsetR += vars.showShiftY;
+            if (vars.offsetR >= vars.jigROWs - vars.showMaxY)
+                vars.offsetR = vars.jigROWs - vars.showMaxY;
             copy2RecyclerPieces();
         });
 
 
 // Hide the status bar.
 
-        String s = "Show "+showMaxX+" x "+showMaxY;
+        String s = "Show "+vars.showMaxX+" x "+vars.showMaxY;
         for (int i = 0; i < 4; i++) {
             new CalcColRowSize(i);
-            s += "Level "+difficulties[i]+" CR "+jigCOLUMNs+"x"+jigROWs + " \n";
+            s += "Level "+vars.difficulties[i]+" CR "+vars.jigCOLUMNs+"x"+vars.jigROWs + " \n";
         }
-        difficulty = rnd.nextInt(4);
-        new CalcColRowSize(difficulty);
-        s += "Level "+difficulties[difficulty]+" CR "+jigCOLUMNs+"x"+jigROWs + " \n";
+        vars.difficulty = rnd.nextInt(4);
+        new CalcColRowSize(vars.difficulty);
+        s += "Level "+vars.difficulties[vars.difficulty]+" CR "+vars.jigCOLUMNs+"x"+vars.jigROWs + " \n";
         tvLeft.setText(s);
         selectDificulty();
 
-        selectedImage = Bitmap.createBitmap(selectedImage, 0, 0,
-                jigInnerSize * jigCOLUMNs + jigGapSize + jigGapSize,
-                jigInnerSize * jigROWs  + jigGapSize + jigGapSize);
-        selectedWidth = selectedImage.getWidth();
-        selectedHeight = selectedImage.getHeight();
+        vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
+                vars.jigInnerSize * vars.jigCOLUMNs + vars.jigGapSize + vars.jigGapSize,
+                vars.jigInnerSize * vars.jigROWs  + vars.jigGapSize + vars.jigGapSize);
+        vars.selectedWidth = vars.selectedImage.getWidth();
+        vars.selectedHeight = vars.selectedImage.getHeight();
 
         new intGlobalValues();
 
         // decide jigsaw pieces numbers
 
 
-        pieceImage = new PieceImage(this, jigOuterSize, jigInnerSize);
+        pieceImage = new PieceImage(this, vars.jigOuterSize, vars.jigInnerSize);
 
 
-        jigTables = new JigTable[jigCOLUMNs][jigROWs];
-        new initJigTable(jigTables, jigCOLUMNs, jigROWs);
+        vars.jigTables = new JigTable[vars.jigCOLUMNs][vars.jigROWs];
+        new initJigTable(vars.jigTables, vars.jigCOLUMNs, vars.jigROWs);
 
-        maskMaps = new Masks().make(mContext, jigOuterSize);
-        outMaps = new Masks().makeOut(mContext, jigOuterSize);
+        vars.maskMaps = new Masks().make(mContext, vars.jigOuterSize);
+        vars.outMaps = new Masks().makeOut(mContext, vars.jigOuterSize);
 
 
         new FullRecyclePiece();
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        jigRecyclerView.getLayoutParams().height = recySize;
+        jigRecyclerView.getLayoutParams().height = vars.recySize;
         jigRecycleAdapter = new RecycleJigListener();
-//        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(jigRecycleAdapter, mContext);
+//        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(vars.jigRecycleAdapter, mContext);
 //        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
-//        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
+//        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
         ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));;
-//        jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
+//        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
 
         helper.attachToRecyclerView(jigRecyclerView);
         jigRecyclerView.setAdapter(jigRecycleAdapter);
@@ -173,7 +151,7 @@ public class ActivityJigsaw extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding, recySize * 3 / 4);
+        new AdjustControl(binding, vars.recySize * 3 / 4);
         copy2RecyclerPieces();
 
         if (paintView != null) {
@@ -192,27 +170,27 @@ public class ActivityJigsaw extends Activity {
     private static void selectDificulty() {
 
 
-        int szW = selectedWidth / (jigCOLUMNs+1);
-        int szH = selectedHeight / (jigROWs+1);
-        jigInnerSize = Math.min(szW, szH);
-        jigOuterSize = jigInnerSize * (14+5+5) / 14;
-        jigGapSize = jigInnerSize *5/14;
-        Log.w("imageInfo", selectedWidth + "x"+selectedHeight+ "CR="+jigCOLUMNs+"x"+jigROWs);
-        Log.w("main jig Size"," outerSize="+ jigOuterSize +", gapSize="+ jigGapSize +", innerSize="+ jigInnerSize);
+        int szW = vars.selectedWidth / (vars.jigCOLUMNs+1);
+        int szH = vars.selectedHeight / (vars.jigROWs+1);
+        vars.jigInnerSize = Math.min(szW, szH);
+        vars.jigOuterSize = vars.jigInnerSize * (14+5+5) / 14;
+        vars.jigGapSize = vars.jigInnerSize *5/14;
+        Log.w("imageInfo", vars.selectedWidth + "x"+vars.selectedHeight+ "CR="+vars.jigCOLUMNs+"x"+vars.jigROWs);
+        Log.w("main jig Size"," outerSize="+ vars.jigOuterSize +", gapSize="+ vars.jigGapSize +", innerSize="+ vars.jigInnerSize);
     }
 
 
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
-        activeRecyclerJigs = new ArrayList<>();
-        for (int i = 0; i < allPossibleJigs.size(); i++) {
-            int cr = allPossibleJigs.get(i);
+        vars.activeRecyclerJigs = new ArrayList<>();
+        for (int i = 0; i < vars.allPossibleJigs.size(); i++) {
+            int cr = vars.allPossibleJigs.get(i);
             int c = cr / 10000;
             int r = cr - c * 10000;
-            if (!jigTables[c][r].locked && !jigTables[c][r].outRecycle &&
-                    c >= offsetC && c < offsetC + showMaxX && r >= offsetR && r < offsetR + showMaxY) {
-                activeRecyclerJigs.add(cr);
+            if (!vars.jigTables[c][r].locked && !vars.jigTables[c][r].outRecycle &&
+                    c >= vars.offsetC && c < vars.offsetC + vars.showMaxX && r >= vars.offsetR && r < vars.offsetR + vars.showMaxY) {
+                vars.activeRecyclerJigs.add(cr);
             }
         }
         jigRecycleAdapter.notifyDataSetChanged();

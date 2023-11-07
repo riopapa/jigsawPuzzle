@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class Vars {
 
-    public static int jigOuterSize, jigInnerSize, jigGapSize;  // real pieceImage size
+    public int jigOuterSize, jigInnerSize, jigGapSize;  // real pieceImage size
 
-    public static int recySize, picOSize, picISize, picGap, picHSize;
+    public int recySize, picOSize, picISize, picGap, picHSize;
     // recycler size, at PaintView size;
     // picOSize : picture outer size
     // picISize : picture inner size
@@ -20,44 +20,44 @@ public class Vars {
     // pieceISize: one PieceSize for slicing images
     // pieceOSize: one Outer for slicing images
 
-    public static JigTable[][] jigTables;
+    public JigTable[][] jigTables;
 
-    public static int jigCOLUMNs, jigROWs; // jigsaw slices column by row
+    public int jigCOLUMNs, jigROWs; // jigsaw slices column by row
 
-    public static int screenX, screenY; // physical screen size, center puzzleBox
+    public int screenX, screenY; // physical screen size, center puzzleBox
 
-    public static float fPhoneSizeX, fPhoneSizeY;
-    public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
-    public static boolean doNotUpdate; // wait while one action completed
-    public static Bitmap[][] maskMaps, outMaps;
+    public float fPhoneSizeX, fPhoneSizeY;
+    public int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
+    public boolean doNotUpdate; // wait while one action completed
+    public Bitmap[][] maskMaps, outMaps;
 
-    public static int baseX, baseY; // puzzle view x, y offset
+    public int baseX, baseY; // puzzle view x, y offset
 
-    public static ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
+    public ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
     // allRandomJigs contains jigsaws id which is not moved to floatingPiece
     // activeRecyclerJigs contains available jigsaws currently
 
-    public static ArrayList<FloatPiece> fps;    // floating jigsaws
-    public static final int aniTO_PAINT = 123;
-    public static final int aniANCHOR = 321;
-    public static int possibleImageCount, selectedImageNbr;
-    public static Bitmap selectedImage, grayedImage, brightImage;
-    public static int showMaxX, showMaxY;   // how many pieces can be in columns / rows
-    public static int showShiftX, showShiftY;
+    public ArrayList<FloatPiece> fps;    // floating jigsaws
+    public final int aniTO_PAINT = 123;
+    public final int aniANCHOR = 321;
+    public int possibleImageCount, selectedImageNbr;
+    public Bitmap selectedImage, grayedImage, brightImage;
+    public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
+    public int showShiftX, showShiftY;
 
-    public static  int difficulty;
-    final static String[] difficulties= {"Easy", "Normal", "Hard", "Expert"};
-
-
-    public static boolean allLocked = false;
-
-    public static int jigRecyclePos; // jigsaw slide x, y count
-
-    public static int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
+    public  int difficulty;
+    final String[] difficulties= {"Easy", "Normal", "Hard", "Expert"};
 
 
-    public static int offsetC, offsetR; // show offset Column, Row;
+    public boolean allLocked = false;
 
-    public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
+    public int jigRecyclePos; // jigsaw slide x, y count
+
+    public int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
+
+
+    public int offsetC, offsetR; // show offset Column, Row;
+
+    public int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
 }

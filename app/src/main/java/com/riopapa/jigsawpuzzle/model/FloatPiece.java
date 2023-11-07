@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public class FloatPiece {
     public int R, C;
-    public Bitmap oLine, bigMap;
+    public Bitmap oLine;
     public int count;
     public int mode;
 
