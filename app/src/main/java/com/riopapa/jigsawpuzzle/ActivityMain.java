@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
+import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 import com.riopapa.jigsawpuzzle.func.TargetImage;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 
@@ -39,6 +40,22 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static Vars vars;
+
+    final public static int GAME_NEW = 0;
+    final public static int GAME_SELECT_IMAGE = 11;
+    final public static int GAME_SELECT_LEVEL = 22;
+    final public static int GAME_STARTED = 33;
+    final public static int GAME_PAUSED = 44;
+    final public static int GAME_COMPLETED = 55;
+    final public static int GAME_ALL_COMPLETED = 88;
+
+    //          10: show all images to be selected
+    //          20: target Image selected
+    //          30: level selected and then game started
+    //          40: game paused (save current status
+    //          50: game completed (save to history
+    //          60:
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +83,15 @@ public class ActivityMain extends Activity {
 
         // get physical values depend on Phone
         new PhoneMetrics(this);
+        // then set picXSizes
+        new SetPicSizes(vars.screenX, vars.screenY);
 
         vars.possibleImageCount = new TargetImage().count();
 
+//        binding.imageRecycler.getLayoutParams().height = vars.screenY * 8 / 10;
+
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
-
         imageSelAdapter = new ImageSelAdapter();
         imageRecyclers.setAdapter(imageSelAdapter);
 
@@ -79,11 +99,6 @@ public class ActivityMain extends Activity {
         int uiOptions = decorView.getSystemUiVisibility();
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-
-        // calcuate showMaxX, showMaxY temperaty to determine piece sizes;
-
-        vars.possibleImageCount = new TargetImage().count();
-
 
     }
 
@@ -93,6 +108,15 @@ public class ActivityMain extends Activity {
         super.onResume();
 
         invalidateTimer = new Timer();
+
+//        if (vars.gameMode == GAME_PAUSED) {
+//            // todo: ask whether to continue
+//            Intent intent = new Intent(this, ActivitySelLevel.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//        } else
+            vars.gameMode = GAME_SELECT_IMAGE;
+
     }
 
 

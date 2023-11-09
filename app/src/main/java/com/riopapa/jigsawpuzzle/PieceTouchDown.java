@@ -12,6 +12,10 @@ import java.util.Collections;
 public class PieceTouchDown {
     void start(float fX, float fY){
 
+        /*
+         * if new item has been touched in right position then set it to fpNow
+         */
+
         if (vars.doNotUpdate)
             return;
 

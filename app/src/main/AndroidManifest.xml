@@ -14,16 +14,19 @@
         android:icon="@mipmap/jigsaw_puzzle"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/jigsaw_puzzle"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.JigsawPuzzle"
         tools:targetApi="31">
+        <activity
+            android:name=".ActivitySelLevel"
+            android:exported="false" />
         <activity android:name=".ActivityJigsaw" />
         <activity
             android:name=".ActivityMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

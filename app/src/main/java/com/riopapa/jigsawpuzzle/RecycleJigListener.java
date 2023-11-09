@@ -151,6 +151,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         vars.jigCR = vars.activeRecyclerJigs.get(position);
         int jigX = vars.jigCR / 10000;
         int jigY = vars.jigCR - jigX * 10000;
+        Log.w("onBindViewHolder "+position,jigX+"x"+jigY);
         if (vars.jigTables[jigX][jigY].src == null)
             pieceImage.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(vars.jigTables[jigX][jigY].src);

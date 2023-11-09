@@ -20,13 +20,16 @@ public class Vars {
     // pieceISize: one PieceSize for slicing images
     // pieceOSize: one Outer for slicing images
 
+    public int gameMode;
+    // gameMode 0: newly installed;
+
     public JigTable[][] jigTables;
 
     public int jigCOLUMNs, jigROWs; // jigsaw slices column by row
 
     public int screenX, screenY; // physical screen size, center puzzleBox
 
-    public float fPhoneSizeX, fPhoneSizeY;
+    public float fPhoneInchX, fPhoneInchY;
     public int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
     public boolean doNotUpdate; // wait while one action completed
     public Bitmap[][] maskMaps, outMaps;

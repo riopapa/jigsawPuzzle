@@ -43,6 +43,7 @@ public class PaintView extends View {
     public void init(Activity activity){
         this.paintActivity = activity;
         vars.fps = new ArrayList<>();
+        fpNow = null;
 
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
@@ -99,8 +100,9 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float TOUCH_TOLERANCE = 30;
-                if (Math.abs(x - vars.jPosX) > TOUCH_TOLERANCE || Math.abs(y - vars.jPosY) > TOUCH_TOLERANCE)
+                final float MOVE = 30;
+                if (fpNow != null &&
+                    (Math.abs(x - vars.jPosX) > MOVE || Math.abs(y - vars.jPosY) > MOVE))
                     pieceTouchMove.start(x, y);
                 break;
             case MotionEvent.ACTION_UP:

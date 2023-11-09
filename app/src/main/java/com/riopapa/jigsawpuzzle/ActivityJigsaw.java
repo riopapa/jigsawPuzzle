@@ -1,12 +1,12 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
-import com.riopapa.jigsawpuzzle.func.CalcColRowSize;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
-import com.riopapa.jigsawpuzzle.func.intGlobalValues;
+import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -99,18 +98,6 @@ public class ActivityJigsaw extends Activity {
         });
 
 
-// Hide the status bar.
-
-        String s = "Show "+vars.showMaxX+" x "+vars.showMaxY;
-        for (int i = 0; i < 4; i++) {
-            new CalcColRowSize(i);
-            s += "Level "+vars.difficulties[i]+" CR "+vars.jigCOLUMNs+"x"+vars.jigROWs + " \n";
-        }
-        vars.difficulty = rnd.nextInt(4);
-        new CalcColRowSize(vars.difficulty);
-        s += "Level "+vars.difficulties[vars.difficulty]+" CR "+vars.jigCOLUMNs+"x"+vars.jigROWs + " \n";
-        tvLeft.setText(s);
-        selectDificulty();
 
         vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
                 vars.jigInnerSize * vars.jigCOLUMNs + vars.jigGapSize + vars.jigGapSize,
@@ -118,7 +105,7 @@ public class ActivityJigsaw extends Activity {
         vars.selectedWidth = vars.selectedImage.getWidth();
         vars.selectedHeight = vars.selectedImage.getHeight();
 
-        new intGlobalValues();
+        new ClearGlobalValues();
 
         // decide jigsaw pieces numbers
 
@@ -167,17 +154,17 @@ public class ActivityJigsaw extends Activity {
 
     }
 
-    private static void selectDificulty() {
-
-
-        int szW = vars.selectedWidth / (vars.jigCOLUMNs+1);
-        int szH = vars.selectedHeight / (vars.jigROWs+1);
-        vars.jigInnerSize = Math.min(szW, szH);
-        vars.jigOuterSize = vars.jigInnerSize * (14+5+5) / 14;
-        vars.jigGapSize = vars.jigInnerSize *5/14;
-        Log.w("imageInfo", vars.selectedWidth + "x"+vars.selectedHeight+ "CR="+vars.jigCOLUMNs+"x"+vars.jigROWs);
-        Log.w("main jig Size"," outerSize="+ vars.jigOuterSize +", gapSize="+ vars.jigGapSize +", innerSize="+ vars.jigInnerSize);
-    }
+//    private static void selectDificulty() {
+//
+//
+//        int szW = vars.selectedWidth / (vars.jigCOLUMNs+1);
+//        int szH = vars.selectedHeight / (vars.jigROWs+1);
+//        vars.jigInnerSize = Math.min(szW, szH);
+//        vars.jigOuterSize = vars.jigInnerSize * (14+5+5) / 14;
+//        vars.jigGapSize = vars.jigInnerSize *5/14;
+//        Log.w("imageInfo", vars.selectedWidth + "x"+vars.selectedHeight+ "CR="+vars.jigCOLUMNs+"x"+vars.jigROWs);
+//        Log.w("main jig Size"," outerSize="+ vars.jigOuterSize +", gapSize="+ vars.jigGapSize +", innerSize="+ vars.jigInnerSize);
+//    }
 
 
 
@@ -201,6 +188,7 @@ public class ActivityJigsaw extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        vars.gameMode = GAME_PAUSED;
         invalidateTimer.cancel();
         new VarsGetPut().put(vars, this);
     }

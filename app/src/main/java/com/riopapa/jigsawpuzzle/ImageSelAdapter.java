@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -11,9 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
@@ -38,8 +43,10 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 vars.selectedImage = new TargetImage().get(vars.selectedImageNbr);
                 vars.selectedWidth = vars.selectedImage.getWidth();
                 vars.selectedHeight = vars.selectedImage.getHeight();
-
-                launchJigsawActivity();
+                vars.gameMode = GAME_SELECT_LEVEL;
+                Intent intent = new Intent(context, ActivitySelLevel.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
 
             });
             tVInfo = itemView.findViewById(R.id.info);
@@ -65,28 +72,17 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         Bitmap oMap = new TargetImage().get(position);
         Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/3, oMap.getHeight()/3, true);
 
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
+        int width = vars.screenX * 3 / 7;
+        int height = width*oMap.getHeight()/oMap.getWidth();
+        if (width < height) {
+            width = width * 7/10;
+            height = height * 7/10;
+        }
+        params.width = width; params.height = height;
+        holder.iVImage.setLayoutParams(params);
         holder.iVImage.setImageBitmap(bitmap);
         holder.tVInfo.setText(" "+position);
 
-    }
-
-
-    static void launchJigsawActivity() {
-
-        ActivityMainBinding binding = ActivityMainBinding.inflate(mActivity.getLayoutInflater());
-        int width = vars.screenX * 8 / 10;
-        int height = width * vars.selectedHeight / vars.selectedWidth;
-        if (height > vars.screenY * 7 /10)
-            height = vars.screenY * 7 / 10;
-
-        binding.selImage.getLayoutParams().width = width;
-        binding.selImage.getLayoutParams().height = height;
-        binding.selImage.setImageBitmap(vars.selectedImage);
-
-        vars.selectedImageNbr = 0;
-        binding.imageRecycler.setVisibility(View.GONE);
-//        Intent intent = new Intent(context, ActivityJigsaw.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intent);
     }
 }

@@ -7,8 +7,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class intGlobalValues {
-    public intGlobalValues() {
+public class ClearGlobalValues {
+    public ClearGlobalValues() {
 
 //        float pxVal, dipVal, dipRatio;
 //        pxVal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 1000f,
@@ -28,7 +28,7 @@ public class intGlobalValues {
         if (vars.showMaxX > vars.jigCOLUMNs)
             vars.showMaxX = vars.jigCOLUMNs;
 
-        vars.showMaxY = (int) (vars.screenX * vars.fPhoneSizeY / vars.fPhoneSizeX / vars.picISize - 2);
+        vars.showMaxY = (int) (vars.screenX * vars.fPhoneInchY / vars.fPhoneInchX / vars.picISize - 2);
 
         if (vars.showMaxY >  vars.screenY/ vars.picISize - 8)
             vars.showMaxY =  vars.screenY / vars.picISize - 8;
