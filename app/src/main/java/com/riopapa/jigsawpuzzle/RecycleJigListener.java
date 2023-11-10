@@ -1,8 +1,10 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.os.Handler;
@@ -116,9 +118,9 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
-            Log.w("r2l long","long press Event="+e.toString());
+            Log.w("r2l long","long press Event="+e);
 
-            vars.doNotUpdate = true;
+            doNotUpdate = true;
             removeFrmRecycle.sendEmptyMessage(0);
             add2FloatingPiece();
         }
@@ -132,11 +134,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             fp.C = vars.nowC; fp.R = vars.nowR;
             fp.oLine = vars.jigTables[vars.nowC][vars.nowR].oLine;
             fp.count = 5;
-            fp.mode = vars.aniTO_PAINT;
+            fp.mode = ANI_TO_PAINT;
             fp.uId = System.currentTimeMillis();    // set Unique uId
             fp.anchorId = 0;       // let anchorId to itself
             vars.fps.add(fp);
-            vars.doNotUpdate = false;
+            doNotUpdate = false;
         }
 
         @Override
@@ -192,7 +194,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
                 vars.activeRecyclerJigs.add(vars.nowC * 10000 + vars.nowR);
                 jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
             }
-            vars.doNotUpdate = false;
+            doNotUpdate = false;
         }
     };
 }

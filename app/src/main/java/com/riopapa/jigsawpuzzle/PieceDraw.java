@@ -1,6 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Canvas;
@@ -63,7 +65,7 @@ public class PieceDraw {
                 continue;
             }
             // animate just anchored
-            if (fp.count > 0 && fp.mode == vars.aniANCHOR) {
+            if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 vars.jigTables[c][r].picBright : vars.jigTables[c][r].pic,
@@ -75,7 +77,7 @@ public class PieceDraw {
                 continue;
             }
             // animate recycler to paint
-            if (fp.count > 0 && fp.mode == vars.aniTO_PAINT) {  // animate from recycle to paintView
+            if (fp.count > 0 && fp.mode == ANI_TO_PAINT) {  // animate from recycle to paintView
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                                 vars.jigTables[c][r].picBright : vars.jigTables[c][r].pic,

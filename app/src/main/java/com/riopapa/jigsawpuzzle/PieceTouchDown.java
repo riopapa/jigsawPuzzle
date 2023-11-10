@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
@@ -16,7 +17,7 @@ public class PieceTouchDown {
          * if new item has been touched in right position then set it to fpNow
          */
 
-        if (vars.doNotUpdate)
+        if (doNotUpdate)
             return;
 
         int iX = (int) fX - vars.picHSize;

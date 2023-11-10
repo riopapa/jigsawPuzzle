@@ -35,12 +35,14 @@ public class ActivityMain extends Activity {
 
     public static Timer invalidateTimer;
     ActivityMainBinding binding;
-
     RecyclerView imageRecyclers;
     ImageSelAdapter imageSelAdapter;
 
     public static Vars vars;
 
+
+    final public static int ANI_TO_PAINT = 123;
+    final public static int ANI_ANCHOR = 321;
     final public static int GAME_NEW = 0;
     final public static int GAME_SELECT_IMAGE = 11;
     final public static int GAME_SELECT_LEVEL = 22;
@@ -49,12 +51,11 @@ public class ActivityMain extends Activity {
     final public static int GAME_COMPLETED = 55;
     final public static int GAME_ALL_COMPLETED = 88;
 
-    //          10: show all images to be selected
-    //          20: target Image selected
-    //          30: level selected and then game started
-    //          40: game paused (save current status
-    //          50: game completed (save to history
-    //          60:
+    final public static String[] gameLevels= {"Easy", "Normal", "Hard", "Expert"};
+
+    public static int screenX, screenY; // physical screen size, center puzzleBox
+
+    public static float fPhoneInchX, fPhoneInchY;
 
 
     @Override
@@ -84,7 +85,7 @@ public class ActivityMain extends Activity {
         // get physical values depend on Phone
         new PhoneMetrics(this);
         // then set picXSizes
-        new SetPicSizes(vars.screenX, vars.screenY);
+        new SetPicSizes(screenX, screenY);
 
         vars.possibleImageCount = new TargetImage().count();
 

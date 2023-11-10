@@ -12,7 +12,7 @@ public class FullRecyclePiece {
          */
     public  FullRecyclePiece() {
 
-        int mxSize = vars.jigCOLUMNs * vars.jigROWs;
+        int mxSize = vars.jigCOLs * vars.jigROWs;
         vars.allPossibleJigs = new ArrayList<>();
         int []temp = new int[mxSize];
         int wkIdx = rnd.nextInt(mxSize/2);
@@ -29,9 +29,9 @@ public class FullRecyclePiece {
                         tmp = 0;
                 }
             }
-            if (vars.jigCOLUMNs > vars.jigROWs) {
-                r = tmp / vars.jigCOLUMNs;
-                c = tmp - r * vars.jigCOLUMNs;
+            if (vars.jigCOLs > vars.jigROWs) {
+                r = tmp / vars.jigCOLs;
+                c = tmp - r * vars.jigCOLs;
             } else {
                 c = tmp / vars.jigROWs;
                 r = tmp - c * vars.jigROWs;

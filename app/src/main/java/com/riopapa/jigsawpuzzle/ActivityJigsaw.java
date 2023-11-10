@@ -45,6 +45,7 @@ public class ActivityJigsaw extends Activity {
 
     public static RecycleJigListener jigRecycleAdapter;
 
+    public static boolean doNotUpdate; // wait while one action completed
 
     public static Random rnd;
     public static Timer invalidateTimer;
@@ -80,8 +81,8 @@ public class ActivityJigsaw extends Activity {
         });
         binding.moveRight.setOnClickListener(v -> {
             vars.offsetC += vars.showShiftX;
-            if (vars.offsetC >= vars.jigCOLUMNs - vars.showMaxX)
-                vars.offsetC = vars.jigCOLUMNs - vars.showMaxX;
+            if (vars.offsetC >= vars.jigCOLs - vars.showMaxX)
+                vars.offsetC = vars.jigCOLs - vars.showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
@@ -100,8 +101,8 @@ public class ActivityJigsaw extends Activity {
 
 
         vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
-                vars.jigInnerSize * vars.jigCOLUMNs + vars.jigGapSize + vars.jigGapSize,
-                vars.jigInnerSize * vars.jigROWs  + vars.jigGapSize + vars.jigGapSize);
+                vars.imgInSize * vars.jigCOLs + vars.imgGapSize + vars.imgGapSize,
+                vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
         vars.selectedWidth = vars.selectedImage.getWidth();
         vars.selectedHeight = vars.selectedImage.getHeight();
 
@@ -110,14 +111,14 @@ public class ActivityJigsaw extends Activity {
         // decide jigsaw pieces numbers
 
 
-        pieceImage = new PieceImage(this, vars.jigOuterSize, vars.jigInnerSize);
+        pieceImage = new PieceImage(this, vars.imgOutSize, vars.imgInSize);
 
 
-        vars.jigTables = new JigTable[vars.jigCOLUMNs][vars.jigROWs];
-        new initJigTable(vars.jigTables, vars.jigCOLUMNs, vars.jigROWs);
+        vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
+        new initJigTable(vars.jigTables, vars.jigCOLs, vars.jigROWs);
 
-        vars.maskMaps = new Masks().make(mContext, vars.jigOuterSize);
-        vars.outMaps = new Masks().makeOut(mContext, vars.jigOuterSize);
+        vars.maskMaps = new Masks().make(mContext, vars.imgOutSize);
+        vars.outMaps = new Masks().makeOut(mContext, vars.imgOutSize);
 
 
         new FullRecyclePiece();

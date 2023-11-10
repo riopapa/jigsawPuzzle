@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Vars {
 
-    public int jigOuterSize, jigInnerSize, jigGapSize;  // real pieceImage size
+    public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
     public int recySize, picOSize, picISize, picGap, picHSize;
     // recycler size, at PaintView size;
@@ -25,13 +25,9 @@ public class Vars {
 
     public JigTable[][] jigTables;
 
-    public int jigCOLUMNs, jigROWs; // jigsaw slices column by row
+    public int jigCOLs, jigROWs; // jigsaw slices column by row
 
-    public int screenX, screenY; // physical screen size, center puzzleBox
-
-    public float fPhoneInchX, fPhoneInchY;
     public int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
-    public boolean doNotUpdate; // wait while one action completed
     public Bitmap[][] maskMaps, outMaps;
 
     public int baseX, baseY; // puzzle view x, y offset
@@ -41,16 +37,12 @@ public class Vars {
     // activeRecyclerJigs contains available jigsaws currently
 
     public ArrayList<FloatPiece> fps;    // floating jigsaws
-    public final int aniTO_PAINT = 123;
-    public final int aniANCHOR = 321;
     public int possibleImageCount, selectedImageNbr;
     public Bitmap selectedImage, grayedImage, brightImage;
     public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
     public int showShiftX, showShiftY;
 
-    public  int difficulty;
-    final String[] difficulties= {"Easy", "Normal", "Hard", "Expert"};
-
+    public  int gameLevel;
 
     public boolean allLocked = false;
 

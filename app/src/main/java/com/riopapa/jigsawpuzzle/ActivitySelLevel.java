@@ -2,6 +2,9 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gameLevels;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.AlertDialog;
@@ -25,7 +28,7 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         if (vars.gameMode == GAME_PAUSED) {
             vars.gameMode = GAME_STARTED; // target Image, level has been set
-            new CalcCOLUMN_ROW(vars.difficulty);
+            new CalcCOLUMN_ROW(vars.gameLevel);
             Intent intent = new Intent(this, ActivityJigsaw.class);
             startActivity(intent);
         }
@@ -33,10 +36,10 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
-        int width = vars.screenX * 8 / 10;
+        int width = screenX * 8 / 10;
         int height = width * vars.selectedHeight / vars.selectedWidth;
-        if (height > vars.screenY * 7 /10)
-            height = vars.screenY * 7 / 10;
+        if (height > screenY * 7 /10)
+            height = screenY * 7 / 10;
         Bitmap selected = Bitmap.createScaledBitmap(vars.selectedImage,
                 vars.selectedWidth/2, vars.selectedHeight/2, true);
 
@@ -58,27 +61,27 @@ public class ActivitySelLevel extends AppCompatActivity {
         alertDialog.show();
         TextView tv;
         String s;
-        s = "Easy"; new CalcCOLUMN_ROW(0); s += "\n" + vars.jigCOLUMNs+" x "+vars.jigROWs;
+        s = gameLevels[0]; new CalcCOLUMN_ROW(0); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_easy); tv.setText(s);
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
 
-        s = "Normal"; new CalcCOLUMN_ROW(1); s += "\n" + vars.jigCOLUMNs+" x "+vars.jigROWs;
+        s = gameLevels[1]; new CalcCOLUMN_ROW(1); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_normal); tv.setText(s);
         dialogView.findViewById(R.id.lvl_normal).setOnClickListener(this::edit_table);
 
-        s = "Hard"; new CalcCOLUMN_ROW(2); s += "\n" + vars.jigCOLUMNs+" x "+vars.jigROWs;
+        s = gameLevels[2]; new CalcCOLUMN_ROW(2); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_hard); tv.setText(s);
         dialogView.findViewById(R.id.lvl_hard).setOnClickListener(this::edit_table);
 
-        s = "Expert"; new CalcCOLUMN_ROW(3); s += "\n" + vars.jigCOLUMNs+" x "+vars.jigROWs;
+        s = gameLevels[3]; new CalcCOLUMN_ROW(3); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
     }
 
     private void edit_table(View view) {
-        vars.difficulty = Integer.parseInt(view.getTag().toString());
+        vars.gameLevel = Integer.parseInt(view.getTag().toString());
         vars.gameMode = GAME_STARTED; // target Image, level has been set
-        new CalcCOLUMN_ROW(vars.difficulty);
+        new CalcCOLUMN_ROW(vars.gameLevel);
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }

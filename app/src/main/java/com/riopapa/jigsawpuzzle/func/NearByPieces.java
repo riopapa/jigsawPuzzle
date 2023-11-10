@@ -16,10 +16,10 @@ public class NearByPieces {
 
         boolean left, right = false, up, down = false;
 
-        if (cc == 0 || rr == 0 || cc == vars.jigCOLUMNs - 1 || rr == vars.jigROWs - 1)
+        if (cc == 0 || rr == 0 || cc == vars.jigCOLs - 1 || rr == vars.jigROWs - 1)
             return true;
         left = vars.jigTables[cc-1][rr].locked;
-        if (cc != vars.jigCOLUMNs-1)
+        if (cc != vars.jigCOLs -1)
             right = vars.jigTables[cc+1][rr].locked;
         up = vars.jigTables[cc][rr-1].locked;
         if (rr != vars.jigROWs-1)

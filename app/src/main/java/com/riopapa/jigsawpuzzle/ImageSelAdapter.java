@@ -3,6 +3,7 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.content.Context;
@@ -73,7 +74,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/3, oMap.getHeight()/3, true);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
-        int width = vars.screenX * 3 / 7;
+        int width = screenX * 3 / 7;
         int height = width*oMap.getHeight()/oMap.getWidth();
         if (width < height) {
             width = width * 7/10;

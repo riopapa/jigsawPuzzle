@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
@@ -72,7 +73,7 @@ public class PaintView extends View {
         if (vars.activeRecyclerJigs.size() > 0 || vars.fps.size() > 0) {
             return false;
         }
-        for (int c = 0; c < vars.jigCOLUMNs; c++) {
+        for (int c = 0; c < vars.jigCOLs; c++) {
             for (int r = 0; r < vars.jigROWs; r++) {
                 if (!vars.jigTables[c][r].locked)
                     return false;
@@ -82,7 +83,7 @@ public class PaintView extends View {
     }
     long touchTime = 0, tempTime;
     public boolean onTouchEvent(MotionEvent event) {
-        if (vars.doNotUpdate)
+        if (doNotUpdate)
             return true;
         float x = event.getX();
         float y = event.getY();
@@ -90,7 +91,7 @@ public class PaintView extends View {
         if (touchTime > tempTime)
             return true;
         touchTime = tempTime;
-        Log.w("onTouchEvent", "doNotUpdate ="+vars.doNotUpdate);
+        Log.w("onTouchEvent", "doNotUpdate ="+doNotUpdate);
 
 //        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){

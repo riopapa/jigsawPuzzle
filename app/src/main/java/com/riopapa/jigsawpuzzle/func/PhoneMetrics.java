@@ -1,5 +1,9 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
@@ -13,12 +17,12 @@ public class PhoneMetrics {
          */
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-        vars.screenX = metrics.widthPixels;
-        vars.screenY = metrics.heightPixels;
+        screenX = metrics.widthPixels;
+        screenY = metrics.heightPixels;
 
         // Calculate the physical screen size in inches.
-        vars.fPhoneInchX = vars.screenX / metrics.xdpi;       // 2.9 x 6.22 for note 20
-        vars.fPhoneInchY = vars.screenY / metrics.ydpi;
+        fPhoneInchX = screenX / metrics.xdpi;       // 2.9 x 6.22 for note 20
+        fPhoneInchY = screenY / metrics.ydpi;
 
     }
 }

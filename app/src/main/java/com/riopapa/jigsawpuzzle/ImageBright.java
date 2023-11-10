@@ -38,13 +38,13 @@ public class ImageBright {
                 Paint paintBright = new Paint();
                 paintBright.setColorFilter(new ColorMatrixColorFilter(cm));
                 canvasBright.drawBitmap(vars.selectedImage, 0, 0, paintBright);
-                for (int c = 0; c < vars.jigCOLUMNs; c++) {
+                for (int c = 0; c < vars.jigCOLs; c++) {
                     for (int r = 0; r < vars.jigROWs; r++) {
                         JigTable z = vars.jigTables[c][r];
                         Bitmap mask = pieceImage.maskMerge(vars.maskMaps[0][z.lType],
                                 vars.maskMaps[1][z.rType], vars.maskMaps[2][z.uType], vars.maskMaps[3][z.dType]);
-                        Bitmap bm = Bitmap.createBitmap(vars.grayedImage, c* vars.jigInnerSize, r* vars.jigInnerSize, vars.jigOuterSize, vars.jigOuterSize);
-                        canvasBright.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* vars.jigInnerSize, r*vars.jigInnerSize, null);
+                        Bitmap bm = Bitmap.createBitmap(vars.grayedImage, c* vars.imgInSize, r* vars.imgInSize, vars.imgOutSize, vars.imgOutSize);
+                        canvasBright.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* vars.imgInSize, r*vars.imgInSize, null);
                     }
                 }
             }

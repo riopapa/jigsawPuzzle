@@ -1,5 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
@@ -17,17 +20,17 @@ public class PieceTouchMove {
 
 
     void start(float fMovedX, float fMovedY){
-        if (vars.doNotUpdate)
+        if (doNotUpdate)
             return;
 
         int moveX = (int) fMovedX - vars.picHSize;
         int moveY = (int) fMovedY - vars.picHSize;
 
         // check whether go back to recycler
-        if (moveY > (vars.screenY - vars.recySize * 2)) {
+        if (moveY > (screenY - vars.recySize * 2)) {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
-                vars.doNotUpdate = true;
+                doNotUpdate = true;
                 Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + vars.nowC + "x" + vars.nowR);
                 vars.fps.remove(nowIdx);
                 insert2Recycle.sendEmptyMessage(0);
@@ -109,7 +112,7 @@ public class PieceTouchMove {
 
 
         if (ancBase != -1) {
-            vars.doNotUpdate = true;
+            doNotUpdate = true;
 
 //            Log.w( fpNow.C+"x"+fpNow.R+" fpNow ", "fpNow "+
 //                    vars.jigTables[fpNow.C][fpNow.R].posX +"x"+vars.jigTables[fpNow.C][fpNow.R].posY);
@@ -140,13 +143,13 @@ public class PieceTouchMove {
 //                    vars.jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * vars.picISize;
 //                    vars.jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * vars.picISize;
                     fpW.anchorId = anchorBase;
-                    fpW.mode = vars.aniANCHOR; // make it not zero
+                    fpW.mode = ANI_ANCHOR; // make it not zero
                     fpW.count = 5;
                     vars.fps.set(i, fpW);
 //                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
 //                            vars.jigTables[fpW.C][fpW.R].posX +"x"+vars.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
-                    fpW.mode = vars.aniANCHOR; // make it not zero
+                    fpW.mode = ANI_ANCHOR; // make it not zero
                     fpW.count = 5;
                     vars.fps.set(i, fpW);
                 }
@@ -164,7 +167,7 @@ public class PieceTouchMove {
                     }
                 }
             }
-            vars.doNotUpdate = false;
+            doNotUpdate = false;
         }
     }
 
