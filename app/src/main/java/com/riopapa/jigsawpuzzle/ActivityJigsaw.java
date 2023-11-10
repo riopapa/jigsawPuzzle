@@ -109,7 +109,6 @@ public class ActivityJigsaw extends Activity {
 
         defineImgSize();
 
-
         vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
                 vars.imgInSize * vars.jigCOLs + vars.imgGapSize + vars.imgGapSize,
                 vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
