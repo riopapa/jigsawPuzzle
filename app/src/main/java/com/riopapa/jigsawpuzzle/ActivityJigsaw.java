@@ -1,7 +1,9 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
+import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
+import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
@@ -50,6 +52,11 @@ public class ActivityJigsaw extends Activity {
     public static Random rnd;
     public static Timer invalidateTimer;
 
+    public static Bitmap [][] jigPic;
+    public static Bitmap [][] jigBright;
+    public static Bitmap [][] jigOLine;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +66,6 @@ public class ActivityJigsaw extends Activity {
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
-
 
         tvLeft = findViewById(R.id.debug_left);
         tvRight = findViewById(R.id.debug_right);
@@ -98,6 +104,7 @@ public class ActivityJigsaw extends Activity {
             copy2RecyclerPieces();
         });
 
+        defineImgSize();
 
 
         vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
@@ -115,22 +122,26 @@ public class ActivityJigsaw extends Activity {
 
 
         vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
-        new initJigTable(vars.jigTables, vars.jigCOLs, vars.jigROWs);
+        jigPic = new Bitmap[vars.jigCOLs][vars.jigROWs];
+        jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
+        jigOLine = new Bitmap[vars.jigCOLs][vars.jigROWs];
 
-        vars.maskMaps = new Masks().make(mContext, vars.imgOutSize);
-        vars.outMaps = new Masks().makeOut(mContext, vars.imgOutSize);
+        new initJigTable(vars.jigTables);
+
+        srcMaskMaps = new Masks().make(mContext, vars.imgOutSize);
+        outMaskMaps = new Masks().makeOut(mContext, vars.imgOutSize);
 
 
         new FullRecyclePiece();
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        jigRecyclerView.getLayoutParams().height = vars.recySize;
+        jigRecyclerView.getLayoutParams().height = vars.recSize;
         jigRecycleAdapter = new RecycleJigListener();
 //        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(vars.jigRecycleAdapter, mContext);
 //        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
 //        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
-        ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));;
+        ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));
 //        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
 
         helper.attachToRecyclerView(jigRecyclerView);
@@ -139,7 +150,7 @@ public class ActivityJigsaw extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding, vars.recySize * 3 / 4);
+        new AdjustControl(binding, vars.recSize * 3 / 4);
         copy2RecyclerPieces();
 
         if (paintView != null) {
@@ -155,18 +166,14 @@ public class ActivityJigsaw extends Activity {
 
     }
 
-//    private static void selectDificulty() {
-//
-//
-//        int szW = vars.selectedWidth / (vars.jigCOLUMNs+1);
-//        int szH = vars.selectedHeight / (vars.jigROWs+1);
-//        vars.jigInnerSize = Math.min(szW, szH);
-//        vars.jigOuterSize = vars.jigInnerSize * (14+5+5) / 14;
-//        vars.jigGapSize = vars.jigInnerSize *5/14;
-//        Log.w("imageInfo", vars.selectedWidth + "x"+vars.selectedHeight+ "CR="+vars.jigCOLUMNs+"x"+vars.jigROWs);
-//        Log.w("main jig Size"," outerSize="+ vars.jigOuterSize +", gapSize="+ vars.jigGapSize +", innerSize="+ vars.jigInnerSize);
-//    }
+    private static void defineImgSize() {
+        float szW = (float) vars.selectedWidth / (float) (vars.jigCOLs+1);
+        float szH = (float) vars.selectedHeight / (float) (vars.jigROWs+1);
+        vars.imgInSize = (szH > szW) ? (int) szW : (int) szH;
+        vars.imgGapSize = vars.imgInSize * 5 / 24;
+        vars.imgOutSize = vars.imgInSize + vars.imgGapSize + vars.imgGapSize;
 
+    }
 
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR

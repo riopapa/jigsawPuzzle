@@ -8,6 +8,11 @@ import android.graphics.Bitmap;
 import com.riopapa.jigsawpuzzle.func.Drawable2bitmap;
 
 public class Masks {
+
+    /*
+     * predefine masks with imgOutSize for maskup to crop image
+     * output : masks[][]
+     */
     public Bitmap[][] make(Context cxt, int outerSize) {
 
         // remember to set com.riopapa.jigsawpuzzle.initJigTable() nextInt with this value
@@ -45,6 +50,11 @@ public class Masks {
         masks[3][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d4), part_dn);
         return masks;
     }
+    /*
+     * predefine masks with imgOutSize for maskup to crop image with outline
+     * output : masks[][]
+     */
+
     public Bitmap[][] makeOut(Context cxt, int outerSize) {
 
         // remember to set com.riopapa.jigsawpuzzle.initJigTable() nextInt with this value

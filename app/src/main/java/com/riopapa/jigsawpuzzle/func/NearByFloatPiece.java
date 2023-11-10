@@ -31,10 +31,10 @@ public class NearByFloatPiece {
                     continue;
                 int delX = Math.abs(vars.jigTables[cc][rr].posX - vars.jigTables[fpWork.C][fpWork.R].posX - cDelta*vars.picISize);
                 if (delX > vars.picGap)    // around near
-                    continue;;
+                    continue;
                 int delY = Math.abs(vars.jigTables[cc][rr].posY - vars.jigTables[fpWork.C][fpWork.R].posY - rDelta*vars.picISize);
                 if (delY > vars.picGap)
-                    continue;;
+                    continue;
                 return i;   // anchored with i's floatPiece
             }
         }

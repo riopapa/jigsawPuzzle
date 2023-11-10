@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileIO {
+public class zFileIO {
     void writeFile(File targetFolder, String fileName, String outText) {
         try {
             File targetFile = new File(targetFolder, fileName);

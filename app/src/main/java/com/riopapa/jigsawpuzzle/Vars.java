@@ -11,7 +11,7 @@ public class Vars {
 
     public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
-    public int recySize, picOSize, picISize, picGap, picHSize;
+    public int recSize, picOSize, picISize, picGap, picHSize;
     // recycler size, at PaintView size;
     // picOSize : picture outer size
     // picISize : picture inner size
@@ -28,8 +28,6 @@ public class Vars {
     public int jigCOLs, jigROWs; // jigsaw slices column by row
 
     public int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
-    public Bitmap[][] maskMaps, outMaps;
-
     public int baseX, baseY; // puzzle view x, y offset
 
     public ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
@@ -41,18 +39,11 @@ public class Vars {
     public Bitmap selectedImage, grayedImage, brightImage;
     public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
     public int showShiftX, showShiftY;
-
     public  int gameLevel;
-
     public boolean allLocked = false;
-
     public int jigRecyclePos; // jigsaw slide x, y count
-
     public int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
-
-
     public int offsetC, offsetR; // show offset Column, Row;
-
     public int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
 }

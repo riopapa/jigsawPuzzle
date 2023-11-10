@@ -1,8 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
 
-import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -32,33 +30,23 @@ public class ClearGlobalValues {
         if (vars.showMaxX > vars.jigCOLs)
             vars.showMaxX = vars.jigCOLs;
 
-        vars.showMaxY = (int) (screenX * fPhoneInchY / fPhoneInchX / vars.picISize - 2);
-
-        if (vars.showMaxY >  screenY/ vars.picISize - 8)
-            vars.showMaxY =  screenY / vars.picISize - 8;
+        vars.showMaxY = screenY / vars.picISize - 6;
         if (vars.showMaxY > vars.jigROWs)
             vars.showMaxY = vars.jigROWs;
 
         vars.showShiftX = vars.showMaxX * 3 / 4;
         vars.showShiftY = vars.showMaxY * 3 / 4;
 
-        Log.w("show Info", "Jig Cnt="+vars.jigCOLs +" x "+ vars.jigROWs+", showShift "+vars.showShiftX+"x"+vars.showShiftY +
-                ", showMax "+vars.showMaxX+"x"+vars.showMaxY);
-
         vars.offsetC = 0; vars.offsetR = 0;
 
         vars.fps = new ArrayList<>();
 
         vars.allLocked = false;
-//        new Handler().postDelayed(() -> {
-            vars.baseX = (screenX - vars.showMaxX * vars.picISize) / 2 - vars.picGap - vars.picGap;
-            vars.baseY = (screenY - vars.showMaxY * vars.picISize) / 2 - vars.picOSize + vars.picGap;
-//            baseX = imageAnswer.getLeft() - vars.picGap;
-//            baseY = imageAnswer.getTop() - vars.picGap;
-            Log.w("r21 sizeCheck","vars.picOSize="+ vars.picOSize +", vars.picISize="+ vars.picISize +
-                    ", picHSize ="+vars.picHSize+ " vars.picGap="+vars.picGap);
+        vars.baseX = (screenX - vars.showMaxX * vars.picISize) / 2 - vars.picGap - vars.picGap;
+        vars.baseY = (screenY - vars.showMaxY * vars.picISize) / 2;
 
-//        }, 10);
+        Log.w("r23 ClearGlobalValues", "Jig Cnt="+vars.jigCOLs +" x "+ vars.jigROWs+", showShift "+vars.showShiftX+"x"+vars.showShiftY +
+                ", showMax "+vars.showMaxX+"x"+vars.showMaxY);
 
     }
 

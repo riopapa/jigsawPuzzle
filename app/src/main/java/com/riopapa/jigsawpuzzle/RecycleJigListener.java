@@ -1,6 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
@@ -34,8 +36,8 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     public JigHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycle_jigsaw, viewGroup, false);
-        view.getLayoutParams().width = vars.recySize;
-        view.getLayoutParams().height = vars.recySize;
+        view.getLayoutParams().width = vars.recSize;
+        view.getLayoutParams().height = vars.recSize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);
         iv.getLayoutParams().height = vars.picOSize;
         iv.getLayoutParams().width = vars.picOSize;
@@ -132,7 +134,6 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
             FloatPiece fp = new FloatPiece();
             fp.C = vars.nowC; fp.R = vars.nowR;
-            fp.oLine = vars.jigTables[vars.nowC][vars.nowR].oLine;
             fp.count = 5;
             fp.mode = ANI_TO_PAINT;
             fp.uId = System.currentTimeMillis();    // set Unique uId
@@ -153,10 +154,10 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         vars.jigCR = vars.activeRecyclerJigs.get(position);
         int jigX = vars.jigCR / 10000;
         int jigY = vars.jigCR - jigX * 10000;
-        Log.w("onBindViewHolder "+position,jigX+"x"+jigY);
-        if (vars.jigTables[jigX][jigY].src == null)
+//        Log.w("onBindViewHolder "+position,jigX+"x"+jigY);
+        if (jigPic[jigX][jigY] == null)
             pieceImage.makeAll(jigX, jigY);
-        viewHolder.ivIcon.setImageBitmap(vars.jigTables[jigX][jigY].src);
+        viewHolder.ivIcon.setImageBitmap(jigPic[jigX][jigY]);
         viewHolder.ivIcon.setTag(vars.jigCR);
     }
 
@@ -183,7 +184,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 
             int i = layoutManager.findFirstVisibleItemPosition();
-            vars.jigRecyclePos = i + (vars.jPosX+vars.picISize+ vars.picHSize)/ vars.recySize;
+            vars.jigRecyclePos = i + (vars.jPosX+vars.picISize+ vars.picHSize)/ vars.recSize;
 //            Log.w("r2i insert","add to recycler vars.jPos="+vars.jPosX+"x"+vars.jPosY+" i="+i+" pos="+jigRecyclePos);
 
             vars.jigTables[vars.nowC][vars.nowR].outRecycle = false;

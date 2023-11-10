@@ -22,6 +22,8 @@ import com.riopapa.jigsawpuzzle.func.CalcCOLUMN_ROW;
 public class ActivitySelLevel extends AppCompatActivity {
 
     ActivitySelLevelBinding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +77,7 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         s = gameLevels[3]; new CalcCOLUMN_ROW(3); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
-        dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
+        dialogView.findViewById(R.id.lvl_expert).setOnClickListener(this::edit_table);
     }
 
     private void edit_table(View view) {

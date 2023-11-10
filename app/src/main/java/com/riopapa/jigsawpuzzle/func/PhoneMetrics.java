@@ -4,7 +4,6 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;

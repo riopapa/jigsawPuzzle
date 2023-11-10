@@ -18,11 +18,12 @@ public class ShowThumbnail {
         if (vars.selectedHeight > vars.selectedWidth) {
             h = 1000;
             w = h * vars.selectedWidth / vars.selectedHeight;
+            oneSize = 1000f / (float) vars.jigROWs;
         } else {
             w = 1000;
             h = w * vars.selectedHeight / vars.selectedWidth;
+            oneSize = 1000f / (float) vars.jigCOLs;
         }
-        oneSize = 1000f / (float) vars.jigCOLs;
         Log.w("oneSize", "oneSize="+oneSize);
 
         rectW =  oneSize * (float) (vars.showMaxX-1);    // 24 to vars.show line boundary

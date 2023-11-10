@@ -1,7 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
-import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -13,16 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.TargetImage;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {

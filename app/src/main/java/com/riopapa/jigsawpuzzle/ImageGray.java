@@ -1,6 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Bitmap;
@@ -23,12 +24,12 @@ public class ImageGray {
                 for (int c = 0; c < vars.jigCOLs; c++) {
                     for (int r = 0; r < vars.jigROWs; r++) {
                         JigTable z = vars.jigTables[c][r];
-                        Bitmap mask = pieceImage.maskMerge(vars.maskMaps[0][z.lType],
-                                vars.maskMaps[1][z.rType], vars.maskMaps[2][z.uType],
-                                vars.maskMaps[3][z.dType]);
+                        Bitmap mask = pieceImage.maskMerge(srcMaskMaps[0][z.lType],
+                                srcMaskMaps[1][z.rType], srcMaskMaps[2][z.uType],
+                                srcMaskMaps[3][z.dType]);
                         Bitmap bm = Bitmap.createBitmap(vars.grayedImage, c* vars.imgInSize,
                                 r* vars.imgInSize, vars.imgOutSize, vars.imgOutSize);
-                        canvasGray.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* vars.imgInSize, r* vars.imgInSize, null);
+//                        canvasGray.drawBitmap(pieceImage.makeOut2Line(pieceImage.cropSrc(bm, mask, c, r)), c* vars.imgInSize, r* vars.imgInSize, null);
                     }
                 }
             }

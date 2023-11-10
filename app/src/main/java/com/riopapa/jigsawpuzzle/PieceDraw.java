@@ -1,5 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
@@ -25,19 +28,19 @@ public class PieceDraw {
         for (int c = 0; c < vars.showMaxX; c++) {
             for (int r = 0; r < vars.showMaxY; r++) {
                 final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
-                if (vars.jigTables[cc][rr].oLine == null)
+                if (jigOLine[cc][rr] == null)
                     pieceImage.makeAll(c+vars.offsetC, r+vars.offsetR);
                 if (vars.jigTables[cc][rr].locked) {
                     if (vars.jigTables[cc][rr].count == 0)
-                        canvas.drawBitmap(vars.jigTables[cc][rr].pic,
+                        canvas.drawBitmap(jigPic[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                     else {
                         vars.jigTables[cc][rr].count--;
                         canvas.drawBitmap((vars.jigTables[cc][rr].count % 2 == 0) ?
-                                        vars.jigTables[cc][rr].picBright : vars.jigTables[cc][rr].pic,
+                                        jigBright[cc][rr] : jigPic[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                         if (vars.jigTables[cc][rr].count == 0) {
-                            vars.jigTables[cc][rr].picBright = null;
+                            jigBright[cc][rr] = null;
                         }
                     }
                 }
@@ -48,8 +51,9 @@ public class PieceDraw {
             for (int r = 0; r < vars.showMaxY; r++) {
                 final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
                 if (!vars.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(vars.jigTables[cc][rr].oLine,
-                            vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, pGrayed);
+                    canvas.drawBitmap(jigOLine[cc][rr],
+                            vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize,
+                            pGrayed);
                 }
             }
         }
@@ -61,14 +65,14 @@ public class PieceDraw {
             int r = fp.R;
             JigTable jt = vars.jigTables[c][r];
             if (fp.count == 0) { // normal pieceImage
-                canvas.drawBitmap(fp.oLine, jt.posX, jt.posY, null);
+                canvas.drawBitmap(jigOLine[c][r], jt.posX, jt.posY, null);
                 continue;
             }
             // animate just anchored
             if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
-                                vars.jigTables[c][r].picBright : vars.jigTables[c][r].pic,
+                                jigBright[c][r] : jigPic[c][r],
                         vars.jigTables[c][r].posX, vars.jigTables[c][r].posY, null);
                 if (fp.count == 0) {
                     fp.mode = 0;
@@ -80,7 +84,7 @@ public class PieceDraw {
             if (fp.count > 0 && fp.mode == ANI_TO_PAINT) {  // animate from recycle to paintView
                 fp.count--;
                 canvas.drawBitmap((fp.count % 2 == 0) ?
-                                vars.jigTables[c][r].picBright : vars.jigTables[c][r].pic,
+                                jigBright[c][r] : jigPic[c][r],
                         vars.jigTables[c][r].posX, vars.jigTables[c][r].posY, null);
                 vars.jigTables[c][r].posY -= vars.picISize / 4;
                 if (fp.count == 0) {

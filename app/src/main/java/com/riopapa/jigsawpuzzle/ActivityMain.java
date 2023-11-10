@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -56,6 +57,7 @@ public class ActivityMain extends Activity {
     public static int screenX, screenY; // physical screen size, center puzzleBox
 
     public static float fPhoneInchX, fPhoneInchY;
+    public static Bitmap[][] srcMaskMaps, outMaskMaps;
 
 
     @Override
@@ -85,7 +87,7 @@ public class ActivityMain extends Activity {
         // get physical values depend on Phone
         new PhoneMetrics(this);
         // then set picXSizes
-        new SetPicSizes(screenX, screenY);
+        new SetPicSizes(screenX);
 
         vars.possibleImageCount = new TargetImage().count();
 

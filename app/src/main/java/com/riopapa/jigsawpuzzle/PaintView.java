@@ -81,17 +81,17 @@ public class PaintView extends View {
         }
         return true;
     }
-    long touchTime = 0, tempTime;
+    long nextOKTime = 0, nowTime;
     public boolean onTouchEvent(MotionEvent event) {
         if (doNotUpdate)
             return true;
+        nowTime = System.currentTimeMillis();
+        if (nextOKTime > nowTime)
+            return true;
+        nextOKTime = nowTime + 120;
+
         float x = event.getX();
         float y = event.getY();
-        tempTime = System.currentTimeMillis() + 100;
-        if (touchTime > tempTime)
-            return true;
-        touchTime = tempTime;
-        Log.w("onTouchEvent", "doNotUpdate ="+doNotUpdate);
 
 //        Log.w("px on TouchEvent", "time="+touchTime);
         switch (event.getAction()){

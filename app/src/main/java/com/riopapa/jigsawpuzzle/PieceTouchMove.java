@@ -27,7 +27,7 @@ public class PieceTouchMove {
         int moveY = (int) fMovedY - vars.picHSize;
 
         // check whether go back to recycler
-        if (moveY > (screenY - vars.recySize * 2)) {
+        if (moveY > (screenY - vars.recSize)) {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
                 doNotUpdate = true;

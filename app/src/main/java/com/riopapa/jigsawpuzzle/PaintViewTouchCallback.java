@@ -1,5 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.tvLeft;
@@ -59,10 +61,10 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             vars.jigCR = vars.activeRecyclerJigs.get(vars.jigRecyclePos);
             vars.nowC = vars.jigCR /10000;
             vars.nowR = vars.jigCR - vars.nowC * 10000;
-            if (vars.jigTables[vars.nowC][vars.nowR].picBright == null)
-                vars.jigTables[vars.nowC][vars.nowR].picBright = pieceImage.makeBright(vars.jigTables[vars.nowC][vars.nowR].pic);
+            if (jigBright[vars.nowC][vars.nowR] == null)
+                jigBright[vars.nowC][vars.nowR] = pieceImage.makeBright(jigPic[vars.nowC][vars.nowR]);
 
-            vars.jPosY = screenY - vars.recySize;
+            vars.jPosY = screenY - vars.recSize;
             vars.jPosX = viewHolder.itemView.getLeft();
         }
 
@@ -127,7 +129,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         vars.nowR = vars.jigCR - vars.nowC * 10000;
         if (dX != 0 && dY != 0) {
             vars.jPosX = pieceView.getLeft() + (int) dX;
-            vars.jPosY = screenY - vars.recySize - vars.picISize + (int) dY;
+            vars.jPosY = screenY - vars.recSize - vars.picISize + (int) dY;
             vars.jigTables[vars.nowC][vars.nowR].posX = vars.jPosX;
             vars.jigTables[vars.nowC][vars.nowR].posY = vars.jPosY;
         }
