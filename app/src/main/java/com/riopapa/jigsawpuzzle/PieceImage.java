@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -74,7 +75,7 @@ public class PieceImage {
      */
     public void makeAll(int col, int row) {
         JigTable z = vars.jigTables[col][row];
-        Bitmap orgPiece = Bitmap.createBitmap(vars.selectedImage, col * innerSize, row * innerSize, outerSize, outerSize);
+        Bitmap orgPiece = Bitmap.createBitmap(selectedImage, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
                 srcMaskMaps[2][z.uType], srcMaskMaps[3][z.dType]);
         Bitmap src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later

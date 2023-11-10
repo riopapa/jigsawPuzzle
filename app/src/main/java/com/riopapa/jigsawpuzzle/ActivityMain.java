@@ -89,7 +89,7 @@ public class ActivityMain extends Activity {
         // then set picXSizes
         new SetPicSizes(screenX);
 
-        vars.possibleImageCount = new TargetImage().count();
+        vars.maxImageCount = new TargetImage().count();
 
 //        binding.imageRecycler.getLayoutParams().height = vars.screenY * 8 / 10;
 

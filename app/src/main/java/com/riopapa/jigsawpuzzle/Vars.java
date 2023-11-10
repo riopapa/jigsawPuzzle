@@ -27,7 +27,6 @@ public class Vars {
 
     public int jigCOLs, jigROWs; // jigsaw slices column by row
 
-    public int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
     public int baseX, baseY; // puzzle view x, y offset
 
     public ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
@@ -35,8 +34,7 @@ public class Vars {
     // activeRecyclerJigs contains available jigsaws currently
 
     public ArrayList<FloatPiece> fps;    // floating jigsaws
-    public int possibleImageCount, selectedImageNbr;
-    public Bitmap selectedImage, grayedImage, brightImage;
+    public int maxImageCount, selectedImageNbr;
     public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
     public int showShiftX, showShiftY;
     public  int gameLevel;

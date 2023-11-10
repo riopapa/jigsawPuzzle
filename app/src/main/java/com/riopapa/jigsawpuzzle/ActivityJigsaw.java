@@ -52,6 +52,9 @@ public class ActivityJigsaw extends Activity {
     public static Random rnd;
     public static Timer invalidateTimer;
 
+    public static Bitmap selectedImage;
+    public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
+
     public static Bitmap [][] jigPic;
     public static Bitmap [][] jigBright;
     public static Bitmap [][] jigOLine;
@@ -109,11 +112,11 @@ public class ActivityJigsaw extends Activity {
 
         defineImgSize();
 
-        vars.selectedImage = Bitmap.createBitmap(vars.selectedImage, 0, 0,
+        selectedImage = Bitmap.createBitmap(selectedImage, 0, 0,
                 vars.imgInSize * vars.jigCOLs + vars.imgGapSize + vars.imgGapSize,
                 vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
-        vars.selectedWidth = vars.selectedImage.getWidth();
-        vars.selectedHeight = vars.selectedImage.getHeight();
+        selectedWidth = selectedImage.getWidth();
+        selectedHeight = selectedImage.getHeight();
 
         new ClearGlobalValues();
 
@@ -169,8 +172,8 @@ public class ActivityJigsaw extends Activity {
     }
 
     private static void defineImgSize() {
-        float szW = (float) vars.selectedWidth / (float) (vars.jigCOLs+1);
-        float szH = (float) vars.selectedHeight / (float) (vars.jigROWs+1);
+        float szW = (float) selectedWidth / (float) (vars.jigCOLs+1);
+        float szH = (float) selectedHeight / (float) (vars.jigROWs+1);
         vars.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         vars.imgGapSize = vars.imgInSize * 5 / 24;
         vars.imgOutSize = vars.imgInSize + vars.imgGapSize + vars.imgGapSize;

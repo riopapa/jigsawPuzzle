@@ -1,5 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedHeight;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -36,9 +39,9 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage.setOnClickListener(view -> {
 
                 vars.selectedImageNbr = getBindingAdapterPosition();
-                vars.selectedImage = new TargetImage().get(vars.selectedImageNbr);
-                vars.selectedWidth = vars.selectedImage.getWidth();
-                vars.selectedHeight = vars.selectedImage.getHeight();
+                selectedImage = new TargetImage().get(vars.selectedImageNbr);
+                selectedWidth = selectedImage.getWidth();
+                selectedHeight = selectedImage.getHeight();
                 vars.gameMode = GAME_SELECT_LEVEL;
                 Intent intent = new Intent(context, ActivitySelLevel.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -53,7 +56,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public int getItemCount() {
         context = mContext;
-        return vars.possibleImageCount;
+        return vars.maxImageCount;
     }
 
 

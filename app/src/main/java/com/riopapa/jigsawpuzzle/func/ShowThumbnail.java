@@ -1,5 +1,8 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedHeight;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Bitmap;
@@ -15,14 +18,14 @@ public class ShowThumbnail {
 
         int h, w;
         float oneSize, rectW, rectH, xOff, yOff;
-        if (vars.selectedHeight > vars.selectedWidth) {
+        if (selectedHeight > selectedWidth) {
             h = 1000;
-            w = h * vars.selectedWidth / vars.selectedHeight;
-            oneSize = vars.imgInSize  * 1000f / vars.selectedHeight;
+            w = h * selectedWidth / selectedHeight;
+            oneSize = vars.imgInSize  * 1000f / selectedHeight;
         } else {
             w = 1000;
-            h = w * vars.selectedHeight / vars.selectedWidth;
-            oneSize = vars.imgInSize  * 1000f / vars.selectedWidth;
+            h = w * selectedHeight / selectedWidth;
+            oneSize = vars.imgInSize  * 1000f / selectedWidth;
         }
 
         rectW = oneSize * (float) (vars.showMaxX);    // 24 to vars.show line boundary
@@ -31,12 +34,12 @@ public class ShowThumbnail {
         yOff = oneSize * (float) vars.offsetR;
 
 
-        Bitmap thumb = Bitmap.createScaledBitmap(vars.selectedImage, w, h, true);
+        Bitmap thumb = Bitmap.createScaledBitmap(selectedImage, w, h, true);
         Canvas canvas = new Canvas(thumb);
 
 
         Paint pBox = new Paint();
-        pBox.setColor(0x7fCCCCCC);
+        pBox.setColor(0x7fCC9999);
 
         canvas.drawRect(xOff, yOff, xOff+rectW, yOff+rectH, pBox);
 

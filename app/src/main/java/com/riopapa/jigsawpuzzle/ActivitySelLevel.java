@@ -1,5 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedHeight;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameLevels;
@@ -39,11 +42,11 @@ public class ActivitySelLevel extends AppCompatActivity {
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
         int width = screenX * 8 / 10;
-        int height = width * vars.selectedHeight / vars.selectedWidth;
+        int height = width * selectedHeight / selectedWidth;
         if (height > screenY * 7 /10)
             height = screenY * 7 / 10;
-        Bitmap selected = Bitmap.createScaledBitmap(vars.selectedImage,
-                vars.selectedWidth/2, vars.selectedHeight/2, true);
+        Bitmap selected = Bitmap.createScaledBitmap(selectedImage,
+                selectedWidth/2, selectedHeight/2, true);
 
         binding.selImage.getLayoutParams().width = width;
         binding.selImage.getLayoutParams().height = height;
