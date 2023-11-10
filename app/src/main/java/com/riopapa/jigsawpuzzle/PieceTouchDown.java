@@ -1,6 +1,10 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
@@ -29,14 +33,14 @@ public class PieceTouchDown {
             JigTable jt = vars.jigTables[c][r];
 
             if (Math.abs(jt.posX - iX) < vars.picHSize && Math.abs(jt.posY - iY) < vars.picHSize) {
-                vars.nowR = r; vars.nowC = c;
+                nowR = r; nowC = c;
                 nowIdx = i;
                 if (nowIdx != vars.fps.size()-1) { // move current puzzle to top
                     Collections.swap(vars.fps, nowIdx, vars.fps.size() - 1);
                     nowIdx = vars.fps.size() - 1;
                 }
                 fpNow = vars.fps.get(nowIdx);
-                vars.jPosX = jt.posX; vars.jPosY = jt.posY;
+                jPosX = jt.posX; jPosY = jt.posY;
 
                 // move current pieces with anchored to Top position
                 for (int ii = 0; ii < vars.fps.size(); ii++) {

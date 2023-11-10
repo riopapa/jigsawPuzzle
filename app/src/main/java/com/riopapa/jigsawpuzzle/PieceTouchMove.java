@@ -1,6 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -31,7 +33,7 @@ public class PieceTouchMove {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
                 doNotUpdate = true;
-                Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + vars.nowC + "x" + vars.nowR);
+                Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
                 vars.fps.remove(nowIdx);
                 insert2Recycle.sendEmptyMessage(0);
             }
@@ -39,8 +41,8 @@ public class PieceTouchMove {
             return;
         }
 
-        vars.jigTables[vars.nowC][vars.nowR].posX = moveX;
-        vars.jigTables[vars.nowC][vars.nowR].posY = moveY;
+        vars.jigTables[nowC][nowR].posX = moveX;
+        vars.jigTables[nowC][nowR].posY = moveY;
 
         // move anchored pieces too
         if (fpNow.anchorId > 0) {
@@ -48,9 +50,9 @@ public class PieceTouchMove {
                 FloatPiece fpT = vars.fps.get(i);
                 if (fpT.anchorId == fpNow.anchorId) {
                     vars.jigTables[fpT.C][fpT.R].posX =
-                            vars.jigTables[vars.nowC][vars.nowR].posX - (vars.nowC - fpT.C) * vars.picISize;
+                            vars.jigTables[nowC][nowR].posX - (nowC - fpT.C) * vars.picISize;
                     vars.jigTables[fpT.C][fpT.R].posY =
-                            vars.jigTables[vars.nowC][vars.nowR].posY - (vars.nowR - fpT.R) * vars.picISize;
+                            vars.jigTables[nowC][nowR].posY - (nowR - fpT.R) * vars.picISize;
                 }
             }
         }
@@ -161,9 +163,9 @@ public class PieceTouchMove {
                     FloatPiece fpT = vars.fps.get(i);
                     if (fpT.anchorId == fpNow.anchorId) {
                         vars.jigTables[fpT.C][fpT.R].posX =
-                                vars.jigTables[vars.nowC][vars.nowR].posX - (vars.nowC - fpT.C) * vars.picISize;
+                                vars.jigTables[nowC][nowR].posX - (nowC - fpT.C) * vars.picISize;
                         vars.jigTables[fpT.C][fpT.R].posY =
-                                vars.jigTables[vars.nowC][vars.nowR].posY - (vars.nowR - fpT.R) * vars.picISize;
+                                vars.jigTables[nowC][nowR].posY - (nowR - fpT.R) * vars.picISize;
                     }
                 }
             }

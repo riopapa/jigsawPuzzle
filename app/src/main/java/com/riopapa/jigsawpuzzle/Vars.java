@@ -41,9 +41,6 @@ public class Vars {
     public int showShiftX, showShiftY;
     public  int gameLevel;
     public boolean allLocked = false;
-    public int jigRecyclePos; // jigsaw slide x, y count
-    public int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
     public int offsetC, offsetR; // show offset Column, Row;
-    public int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
 }

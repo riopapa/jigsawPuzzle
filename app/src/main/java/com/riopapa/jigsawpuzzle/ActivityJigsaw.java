@@ -55,6 +55,9 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap [][] jigPic;
     public static Bitmap [][] jigBright;
     public static Bitmap [][] jigOLine;
+    public static int jigRecyclePos; // jigsaw slide x, y count
+    public static int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
+    public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
 
     @Override

@@ -1,10 +1,15 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -129,11 +134,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
         private void add2FloatingPiece() {
 
-            vars.jigTables[vars.nowC][vars.nowR].posX = vars.jPosX;
-            vars.jigTables[vars.nowC][vars.nowR].posY = vars.jPosY - vars.picOSize;
+            vars.jigTables[nowC][nowR].posX = jPosX;
+            vars.jigTables[nowC][nowR].posY = jPosY - vars.picOSize;
 
             FloatPiece fp = new FloatPiece();
-            fp.C = vars.nowC; fp.R = vars.nowR;
+            fp.C = nowC; fp.R = nowR;
             fp.count = 5;
             fp.mode = ANI_TO_PAINT;
             fp.uId = System.currentTimeMillis();    // set Unique uId
@@ -151,14 +156,14 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        vars.jigCR = vars.activeRecyclerJigs.get(position);
-        int jigX = vars.jigCR / 10000;
-        int jigY = vars.jigCR - jigX * 10000;
+        jigCR = vars.activeRecyclerJigs.get(position);
+        int jigX = jigCR / 10000;
+        int jigY = jigCR - jigX * 10000;
 //        Log.w("onBindViewHolder "+position,jigX+"x"+jigY);
         if (jigPic[jigX][jigY] == null)
             pieceImage.makeAll(jigX, jigY);
         viewHolder.ivIcon.setImageBitmap(jigPic[jigX][jigY]);
-        viewHolder.ivIcon.setTag(vars.jigCR);
+        viewHolder.ivIcon.setTag(jigCR);
     }
 
     @Override
@@ -168,12 +173,12 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(@NonNull Message msg) {
-            Log.w("r2m move","removed from recycler vars.jPos="+vars.jPosX+"x"+vars.jPosY);
+            Log.w("r2m move","removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            if (vars.jigRecyclePos < vars.jigTables.length) {
-                vars.jigTables[vars.nowC][vars.nowR].outRecycle = true;
-                vars.activeRecyclerJigs.remove(vars.jigRecyclePos);
-                jigRecycleAdapter.notifyItemRemoved(vars.jigRecyclePos);
+            if (jigRecyclePos < vars.jigTables.length) {
+                vars.jigTables[nowC][nowR].outRecycle = true;
+                vars.activeRecyclerJigs.remove(jigRecyclePos);
+                jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
             }
 //            hangOn = false;
         }
@@ -184,15 +189,15 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
 
             int i = layoutManager.findFirstVisibleItemPosition();
-            vars.jigRecyclePos = i + (vars.jPosX+vars.picISize+ vars.picHSize)/ vars.recSize;
-//            Log.w("r2i insert","add to recycler vars.jPos="+vars.jPosX+"x"+vars.jPosY+" i="+i+" pos="+jigRecyclePos);
+            jigRecyclePos = i + (jPosX+vars.picISize+ vars.picHSize)/ vars.recSize;
+//            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
 
-            vars.jigTables[vars.nowC][vars.nowR].outRecycle = false;
-            if (vars.jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
-                vars.activeRecyclerJigs.add(vars.jigRecyclePos, vars.nowC * 10000 + vars.nowR);
-                jigRecycleAdapter.notifyItemInserted(vars.jigRecyclePos);
+            vars.jigTables[nowC][nowR].outRecycle = false;
+            if (jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
+                vars.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
+                jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
             } else {
-                vars.activeRecyclerJigs.add(vars.nowC * 10000 + vars.nowR);
+                vars.activeRecyclerJigs.add(nowC * 10000 + nowR);
                 jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
             }
             doNotUpdate = false;

@@ -1,8 +1,14 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.tvLeft;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
@@ -56,16 +62,16 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            vars.jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-            Log.w("onS sta", "size=" + vars.activeRecyclerJigs.size()+" nowPos="+vars.jigRecyclePos);
-            vars.jigCR = vars.activeRecyclerJigs.get(vars.jigRecyclePos);
-            vars.nowC = vars.jigCR /10000;
-            vars.nowR = vars.jigCR - vars.nowC * 10000;
-            if (jigBright[vars.nowC][vars.nowR] == null)
-                jigBright[vars.nowC][vars.nowR] = pieceImage.makeBright(jigPic[vars.nowC][vars.nowR]);
+            jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
+            Log.w("onS sta", "size=" + vars.activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
+            jigCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+            nowC = jigCR /10000;
+            nowR = jigCR - nowC * 10000;
+            if (jigBright[nowC][nowR] == null)
+                jigBright[nowC][nowR] = pieceImage.makeBright(jigPic[nowC][nowR]);
 
-            vars.jPosY = screenY - vars.recSize;
-            vars.jPosX = viewHolder.itemView.getLeft();
+            jPosY = screenY - vars.recSize;
+            jPosX = viewHolder.itemView.getLeft();
         }
 
     }
@@ -117,25 +123,25 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
         if (vars.activeRecyclerJigs.size() == 0)
             return;
-        if (vars.jigRecyclePos == vars.activeRecyclerJigs.size()) {
+        if (jigRecyclePos == vars.activeRecyclerJigs.size()) {
 //            Log.e("r tag","activeSize="+vars.activeRecyclerJigs.size()+" vars.jigRecyclePos="+vars.jigRecyclePos);
 //            for (int i = 0; i < vars.activeRecyclerJigs.size(); i++)
 //                Log.w("active "+i, "pos "+vars.activeRecyclerJigs.get(i));
             return;
         }
         View pieceView = viewHolder.itemView;
-        vars.jigCR = vars.activeRecyclerJigs.get(vars.jigRecyclePos);
-        vars.nowC = vars.jigCR / 10000;
-        vars.nowR = vars.jigCR - vars.nowC * 10000;
+        jigCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+        nowC = jigCR / 10000;
+        nowR = jigCR - nowC * 10000;
         if (dX != 0 && dY != 0) {
-            vars.jPosX = pieceView.getLeft() + (int) dX;
-            vars.jPosY = screenY - vars.recSize - vars.picISize + (int) dY;
-            vars.jigTables[vars.nowC][vars.nowR].posX = vars.jPosX;
-            vars.jigTables[vars.nowC][vars.nowR].posY = vars.jPosY;
+            jPosX = pieceView.getLeft() + (int) dX;
+            jPosY = screenY - vars.recSize - vars.picISize + (int) dY;
+            vars.jigTables[nowC][nowR].posX = jPosX;
+            vars.jigTables[nowC][nowR].posY = jPosY;
         }
 
         String txt = "dxDy "+dX+" x "+dY
-                + "\n vars.jPos "+vars.jPosX+" x "+vars.jPosY;
+                + "\n vars.jPos "+jPosX+" x "+jPosY;
         mActivity.runOnUiThread(() -> tvLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //

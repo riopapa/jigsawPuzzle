@@ -43,7 +43,7 @@ public class ClearGlobalValues {
 
         vars.allLocked = false;
         vars.baseX = (screenX - vars.showMaxX * vars.picISize) / 2 - vars.picGap - vars.picGap;
-        vars.baseY = (screenY - vars.showMaxY * vars.picISize) / 2;
+        vars.baseY = (screenY - vars.showMaxY * vars.picISize) / 2 - vars.picISize;
 
         Log.w("r23 ClearGlobalValues", "Jig Cnt="+vars.jigCOLs +" x "+ vars.jigROWs+", showShift "+vars.showShiftX+"x"+vars.showShiftY +
                 ", showMax "+vars.showMaxX+"x"+vars.showMaxY);

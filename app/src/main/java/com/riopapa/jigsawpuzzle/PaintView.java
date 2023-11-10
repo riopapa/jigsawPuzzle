@@ -1,6 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
@@ -103,7 +105,7 @@ public class PaintView extends View {
 
                 final float MOVE = 30;
                 if (fpNow != null &&
-                    (Math.abs(x - vars.jPosX) > MOVE || Math.abs(y - vars.jPosY) > MOVE))
+                    (Math.abs(x - jPosX) > MOVE || Math.abs(y - jPosY) > MOVE))
                     pieceTouchMove.start(x, y);
                 break;
             case MotionEvent.ACTION_UP:
