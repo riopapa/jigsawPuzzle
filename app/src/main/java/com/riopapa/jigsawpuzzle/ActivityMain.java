@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
-import com.riopapa.jigsawpuzzle.func.TargetImage;
+import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class ActivityMain extends Activity {
         // then set picXSizes
         new SetPicSizes(screenX);
 
-        vars.maxImageCount = new TargetImage().count();
+        vars.maxImageCount = new ImageStorage().count();
 
 //        binding.imageRecycler.getLayoutParams().height = vars.screenY * 8 / 10;
 

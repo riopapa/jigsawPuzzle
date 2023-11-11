@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.func.ImageChosen;
-import com.riopapa.jigsawpuzzle.func.TargetImage;
+import com.riopapa.jigsawpuzzle.func.ImageStorage;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
 
@@ -38,7 +38,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage.setOnClickListener(view -> {
 
                 vars.selectedImageNbr = getBindingAdapterPosition();
-                chosenImageMap = new TargetImage().get(vars.selectedImageNbr);
+                chosenImageMap = new ImageStorage().getMap(vars.selectedImageNbr);
                 new ImageChosen();
                 vars.gameMode = GAME_SELECT_LEVEL;
                 Intent intent = new Intent(context, ActivitySelLevel.class);
@@ -66,7 +66,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Bitmap oMap = new TargetImage().get(position);
+        Bitmap oMap = new ImageStorage().getMap(position);
         Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/3, oMap.getHeight()/3, true);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
@@ -79,7 +79,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         params.width = width; params.height = height;
         holder.iVImage.setLayoutParams(params);
         holder.iVImage.setImageBitmap(bitmap);
-        holder.tVInfo.setText(" "+position);
+        holder.tVInfo.setText(position + " : " + new ImageStorage().getStr(position)+
+                " " + oMap.getWidth()+"x"+oMap.getHeight());
 
     }
 }
