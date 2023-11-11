@@ -1,8 +1,9 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedHeight;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedWidth;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameLevels;
@@ -14,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import com.riopapa.jigsawpuzzle.func.CalcCOLUMN_ROW;
+import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 
 public class ActivitySelLevel extends AppCompatActivity {
 
@@ -42,11 +45,11 @@ public class ActivitySelLevel extends AppCompatActivity {
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
         int width = screenX * 8 / 10;
-        int height = width * selectedHeight / selectedWidth;
+        int height = width * chosenImageHeight / chosenImageWidth;
         if (height > screenY * 7 /10)
             height = screenY * 7 / 10;
-        Bitmap selected = Bitmap.createScaledBitmap(selectedImage,
-                selectedWidth/2, selectedHeight/2, true);
+        Bitmap selected = Bitmap.createScaledBitmap(chosenImageMap,
+                chosenImageWidth /2, chosenImageHeight /2, true);
 
         binding.selImage.getLayoutParams().width = width;
         binding.selImage.getLayoutParams().height = height;
@@ -54,6 +57,15 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         select_level();
 //        selected = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
+            Log.w("SelLevel"," go back to main");
+            finish();
+        }
     }
 
     void select_level() {
@@ -87,6 +99,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         vars.gameLevel = Integer.parseInt(view.getTag().toString());
         vars.gameMode = GAME_STARTED; // target Image, level has been set
         new CalcCOLUMN_ROW(vars.gameLevel);
+        new SetPicSizes(screenX * (12 - vars.gameLevel) / 12);
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }

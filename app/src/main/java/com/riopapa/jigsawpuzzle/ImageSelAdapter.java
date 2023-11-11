@@ -1,8 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedHeight;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedImage;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.selectedWidth;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -21,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.jigsawpuzzle.func.ImageChosen;
 import com.riopapa.jigsawpuzzle.func.TargetImage;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
@@ -39,9 +38,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage.setOnClickListener(view -> {
 
                 vars.selectedImageNbr = getBindingAdapterPosition();
-                selectedImage = new TargetImage().get(vars.selectedImageNbr);
-                selectedWidth = selectedImage.getWidth();
-                selectedHeight = selectedImage.getHeight();
+                chosenImageMap = new TargetImage().get(vars.selectedImageNbr);
+                new ImageChosen();
                 vars.gameMode = GAME_SELECT_LEVEL;
                 Intent intent = new Intent(context, ActivitySelLevel.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

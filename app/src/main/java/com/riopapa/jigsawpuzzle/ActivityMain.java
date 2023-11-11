@@ -49,6 +49,7 @@ public class ActivityMain extends Activity {
     final public static int GAME_SELECT_LEVEL = 22;
     final public static int GAME_STARTED = 33;
     final public static int GAME_PAUSED = 44;
+    final public static int GAME_GOBACK_TO_MAIN = 47;
     final public static int GAME_COMPLETED = 55;
     final public static int GAME_ALL_COMPLETED = 88;
 

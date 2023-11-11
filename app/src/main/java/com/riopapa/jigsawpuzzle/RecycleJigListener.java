@@ -106,20 +106,21 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         public void onShowPress(@NonNull MotionEvent e) {
 //            mTouchHelper.startDrag(this);
 //            View view = e.
-//            Log.w("r27 onShowPress", "Touch onShowPress ");
+            Log.w("r27 onShowPress", "Touch onShowPress ");
 
         }
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {
-//            Log.w("r28 on single tab up", "Touch ");
+            Log.w("r28 Recycler", "onSingleTapUp ");
             return true;
         }
 
         @Override
         public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
 
-//            Log.w("r14", " onScroll");
+            Log.w("r14", " onScroll d="+distanceX+":"+distanceY+ " e1="+
+                    e1.getX()+"x"+e1.getY()+" e2="+e2.getX()+"x"+e2.getY());
             return false;
         }
 

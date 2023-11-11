@@ -63,7 +63,6 @@ public class TargetImage {
             R.mipmap.unicon,
             R.mipmap.winter_scean
 
-
     };
 
     public int count() {

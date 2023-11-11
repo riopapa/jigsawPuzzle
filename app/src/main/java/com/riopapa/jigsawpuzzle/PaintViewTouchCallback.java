@@ -10,7 +10,6 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.tvLeft;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -25,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
+
 import java.util.Collections;
 
 public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
@@ -32,8 +33,10 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
     private final ZItemTouchHelperListener listener;
     private final Paint nullPaint = new Paint();
 
-    public PaintViewTouchCallback(ZItemTouchHelperListener listener, Context context) {
+    private final ActivityJigsawBinding binding;
+    public PaintViewTouchCallback(ZItemTouchHelperListener listener, ActivityJigsawBinding binding) {
         this.listener = listener;
+        this.binding = binding;
     }
 
     @Override
@@ -142,7 +145,7 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
 
         String txt = "dxDy "+dX+" x "+dY
                 + "\n vars.jPos "+jPosX+" x "+jPosY;
-        mActivity.runOnUiThread(() -> tvLeft.setText(txt));
+        mActivity.runOnUiThread(() -> binding.debugLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //
 

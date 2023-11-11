@@ -1,16 +1,16 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
-import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
+import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
+import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
-import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -33,10 +33,6 @@ import java.util.TimerTask;
 public class ActivityJigsaw extends Activity {
 
     ActivityJigsawBinding binding;
-    public static TextView tvLeft, tvRight;
-
-    public static ImageView imageAnswer, thumbNail, moveL, moveR, moveU, moveD;
-
 
     public static PieceImage pieceImage;
 
@@ -52,8 +48,8 @@ public class ActivityJigsaw extends Activity {
     public static Random rnd;
     public static Timer invalidateTimer;
 
-    public static Bitmap selectedImage;
-    public static int selectedWidth, selectedHeight; // puzzle photo size (in dpi)
+    public static Bitmap chosenImageMap;
+    public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
 
     public static Bitmap [][] jigPic;
     public static Bitmap [][] jigBright;
@@ -73,17 +69,7 @@ public class ActivityJigsaw extends Activity {
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
 
-        tvLeft = findViewById(R.id.debug_left);
-        tvRight = findViewById(R.id.debug_right);
-
-        imageAnswer = findViewById(R.id.image_answer);
         rnd = new Random(System.currentTimeMillis() & 0xfffff);
-
-        thumbNail = findViewById(R.id.thumbnail);
-        moveL = findViewById(R.id.move_left);
-        moveR = findViewById(R.id.move_right);
-        moveU = findViewById(R.id.move_up);
-        moveD = findViewById(R.id.move_down);
 
         binding.moveLeft.setOnClickListener(v -> {
             vars.offsetC -= vars.showShiftX;
@@ -112,11 +98,11 @@ public class ActivityJigsaw extends Activity {
 
         defineImgSize();
 
-        selectedImage = Bitmap.createBitmap(selectedImage, 0, 0,
+        chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,
                 vars.imgInSize * vars.jigCOLs + vars.imgGapSize + vars.imgGapSize,
                 vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
-        selectedWidth = selectedImage.getWidth();
-        selectedHeight = selectedImage.getHeight();
+        chosenImageWidth = chosenImageMap.getWidth();
+        chosenImageHeight = chosenImageMap.getHeight();
 
         new ClearGlobalValues();
 
@@ -143,11 +129,8 @@ public class ActivityJigsaw extends Activity {
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = vars.recSize;
         jigRecycleAdapter = new RecycleJigListener();
-//        ItemTouchHelper.Callback mainCallback = new PaintViewTouchCallback(vars.jigRecycleAdapter, mContext);
-//        ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
-//        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
-        ItemTouchHelper helper = new ItemTouchHelper(new PaintViewTouchCallback(jigRecycleAdapter, mContext));
-//        vars.jigRecycleAdapter.setTouchHelper(mainItemTouchHelper);
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new PaintViewTouchCallback(jigRecycleAdapter, binding));
 
         helper.attachToRecyclerView(jigRecyclerView);
         jigRecyclerView.setAdapter(jigRecycleAdapter);
@@ -172,8 +155,8 @@ public class ActivityJigsaw extends Activity {
     }
 
     private static void defineImgSize() {
-        float szW = (float) selectedWidth / (float) (vars.jigCOLs+1);
-        float szH = (float) selectedHeight / (float) (vars.jigROWs+1);
+        float szW = (float) chosenImageWidth / (float) (vars.jigCOLs+1);
+        float szH = (float) chosenImageHeight / (float) (vars.jigROWs+1);
         vars.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         vars.imgGapSize = vars.imgInSize * 5 / 24;
         vars.imgOutSize = vars.imgInSize + vars.imgGapSize + vars.imgGapSize;
@@ -193,6 +176,7 @@ public class ActivityJigsaw extends Activity {
                 vars.activeRecyclerJigs.add(cr);
             }
         }
+
         jigRecycleAdapter.notifyDataSetChanged();
         new ShowThumbnail(binding);
 
@@ -200,9 +184,18 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     protected void onPause() {
-        super.onPause();
-        vars.gameMode = GAME_PAUSED;
+        Log.w("jigsaw","onPause");
+        if (vars.gameMode != GAME_GOBACK_TO_MAIN)
+            vars.gameMode = GAME_PAUSED;
         invalidateTimer.cancel();
         new VarsGetPut().put(vars, this);
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.w("jigsaw","onPause");
+        vars.gameMode = GAME_GOBACK_TO_MAIN;
+        super.onBackPressed();
     }
 }
