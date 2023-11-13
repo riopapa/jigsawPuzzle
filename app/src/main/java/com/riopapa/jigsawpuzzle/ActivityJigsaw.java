@@ -20,6 +20,7 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
+import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
@@ -103,6 +104,7 @@ public class ActivityJigsaw extends Activity {
                 vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
+        Log.w("jigsaw Info", " size="+chosenImageWidth+"x"+chosenImageHeight);
 
         new ClearGlobalValues();
 

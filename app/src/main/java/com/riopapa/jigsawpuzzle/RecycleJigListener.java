@@ -119,10 +119,11 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         @Override
         public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
 
-            Log.w("r14", " onScroll d="+distanceX+":"+distanceY+ " e1="+
-                    e1.getX()+"x"+e1.getY()+" e2="+e2.getX()+"x"+e2.getY());
+//            Log.w("r14", " onScroll d="+distanceX+":"+distanceY+ " e1="+
+//                    e1.getX()+"x"+e1.getY()+" e2="+e2.getX()+"x"+e2.getY());
             return false;
         }
+
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {

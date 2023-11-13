@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border_back"
     android:id="@+id/main_layout"
     tools:context=".ActivityMain">
 
@@ -11,12 +12,8 @@
         android:id="@+id/imageRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        app:layoutManager="GridLayoutManager"
-        app:spanCount="2">
+        android:layout_margin="4dp"
+        />
 
-    </androidx.recyclerview.widget.RecyclerView>
+
 </RelativeLayout>

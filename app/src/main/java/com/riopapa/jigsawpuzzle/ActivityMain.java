@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
@@ -99,6 +100,10 @@ public class ActivityMain extends Activity {
         imageSelAdapter = new ImageSelAdapter();
         imageRecyclers.setAdapter(imageSelAdapter);
 
+        // StaggeredGridLayoutManager makes various height
+        StaggeredGridLayoutManager staggeredGridLayoutManager
+                = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
+        imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
         View decorView = getWindow().getDecorView();
         int uiOptions = decorView.getSystemUiVisibility();
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;

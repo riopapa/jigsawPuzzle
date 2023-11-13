@@ -9,6 +9,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,16 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         return vars.maxImageCount;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
 
     @NonNull
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,14 +78,15 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Bitmap oMap = new ImageStorage().getMap(position);
-        Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/3, oMap.getHeight()/3, true);
+
+        Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/2, oMap.getHeight()/2, true);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
-        int height = width*oMap.getHeight()/oMap.getWidth();
+        int height = width*bitmap.getHeight()/bitmap.getWidth();
         if (width < height) {
-            width = width * 7/10;
-            height = height * 7/10;
+            width = width * 8/10;
+            height = height * 8/10;
         }
         params.width = width; params.height = height;
         holder.iVImage.setLayoutParams(params);
