@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 
+import com.riopapa.jigsawpuzzle.PaintView;
+
 public class ShadowDraw extends View.DragShadowBuilder{
 
     public ShadowDraw(View view) {
@@ -28,10 +30,12 @@ public class ShadowDraw extends View.DragShadowBuilder{
         shadowTouchPoint.set(vars.picOSize/2, vars.picOSize/2);//중심점 지정
     }
 
-   public void xonDrawShadow(Canvas canvas){
+   public void onDrawShadow(Canvas canvas){
 
-        canvas.save();
-        Log.w("found "+nowCR, "onDrawShadow start");
+//        canvas.save();
+//        Paint p = new Paint();
+//        p.setAlpha(255);
+        Log.w("start "+nowCR, "onDrawShadow start");
         for (int i = 0; i < vars.activeRecyclerJigs.size(); i++) {
             int cr = vars.activeRecyclerJigs.get(i);
             if (cr == nowCR) {
@@ -44,7 +48,7 @@ public class ShadowDraw extends View.DragShadowBuilder{
                 break;
             }
         }
-        canvas.restore();
+//        canvas.restore();
     }
 
 }

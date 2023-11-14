@@ -6,12 +6,12 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
-import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
 
 import android.util.Log;
 
@@ -19,7 +19,6 @@ import com.riopapa.jigsawpuzzle.func.RearrangePieces;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceTouchMove {
-
 
     void start(float fMovedX, float fMovedY){
         if (doNotUpdate)
@@ -94,7 +93,6 @@ public class PieceTouchMove {
         }
 
 
-
         // check whether can be anchored to near by pieceImage
 
         int ancBase = -1;
@@ -115,13 +113,6 @@ public class PieceTouchMove {
 
         if (ancBase != -1) {
             doNotUpdate = true;
-
-//            Log.w( fpNow.C+"x"+fpNow.R+" fpNow ", "fpNow "+
-//                    vars.jigTables[fpNow.C][fpNow.R].posX +"x"+vars.jigTables[fpNow.C][fpNow.R].posY);
-//            Log.w( fpBase.C+"x"+fpBase.R+" fpBase ", "fpBase "+
-//                    vars.jigTables[fpBase.C][fpBase.R].posX +"x"+vars.jigTables[fpBase.C][fpBase.R].posY);
-//            Log.w( fpThis.C+"x"+fpThis.R+" fpThis ", "fpThis "+
-//                    vars.jigTables[fpThis.C][fpThis.R].posX +"x"+vars.jigTables[fpThis.C][fpThis.R].posY);
 
             if (fpBase.anchorId == 0) {
                 fpBase.anchorId = fpBase.uId;

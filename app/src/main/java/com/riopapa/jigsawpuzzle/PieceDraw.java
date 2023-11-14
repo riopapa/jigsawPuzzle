@@ -1,12 +1,17 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Canvas;
@@ -99,6 +104,9 @@ public class PieceDraw {
                 }
                 vars.fps.set(cnt, fp);
             }
+        }
+        if (jPosY > 0 && jPosY < (screenY - vars.recSize)) {
+            canvas.drawBitmap(jigPic[nowC][nowR],jPosX - vars.picGap, jPosY - vars.picGap, null);
         }
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+vars.offsetC + " x " + vars.offsetR+"\n calc " + calcC +" x "+ calcR+"\n vars.fps "+vars.fps.size();

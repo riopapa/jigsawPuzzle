@@ -117,6 +117,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         vars.gameMode = GAME_STARTED; // target Image, level has been set
         new CalcCOLUMN_ROW(vars.gameLevel);
         new SetPicSizes(screenX * (12 - vars.gameLevel) / 12);
+        Log.w("sel level", "Game Level="+vars.gameLevel);
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }

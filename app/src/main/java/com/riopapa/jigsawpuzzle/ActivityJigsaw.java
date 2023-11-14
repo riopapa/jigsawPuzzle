@@ -1,11 +1,14 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.JigsawAdapter.removeFrmRecycle;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -25,6 +28,7 @@ import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
+import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -132,10 +136,13 @@ public class ActivityJigsaw extends Activity {
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = vars.recSize;
         jigRecycleAdapter = new JigsawAdapter();
+        jigRecyclerView.setHasFixedSize(true);
+
         ItemTouchHelper helper = new ItemTouchHelper(
                 new PaintViewTouchCallback(jigRecycleAdapter, binding));
 
         helper.attachToRecyclerView(jigRecyclerView);
+
         jigRecyclerView.setAdapter(jigRecycleAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
@@ -166,16 +173,39 @@ public class ActivityJigsaw extends Activity {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 if (event.getAction() == DragEvent.ACTION_DROP) {
-                    Log.w("onDrag "," Dropped");
-                    Log.w("drop info "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
-                            + " xy= "+event.getX()+"x"+event.getY());
+                    int iX = (int) event.getX() - vars.picHSize;
+                    int iY = (int) event.getY() - vars.picHSize;
 
+                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
+                        jPosX = iX;
+                        jPosY = iY;
+                        doNotUpdate = true;
+                        removeFrmRecycle.sendEmptyMessage(0);
+                        add2FloatingPiece();
+                    }
                 }
                 return true;
             }
         });
 
     }
+
+    void add2FloatingPiece() {
+
+        vars.jigTables[nowC][nowR].posX = jPosX;
+        vars.jigTables[nowC][nowR].posY = jPosY; // - vars.picOSize;
+
+        FloatPiece fp = new FloatPiece();
+        fp.C = nowC;
+        fp.R = nowR;
+//        fp.count = 5;
+//        fp.mode = ANI_TO_PAINT;
+        fp.uId = System.currentTimeMillis();    // set Unique uId
+        fp.anchorId = 0;       // let anchorId to itself
+        vars.fps.add(fp);
+        doNotUpdate = false;
+    }
+
 
     private static void defineImgSize() {
         float szW = (float) chosenImageWidth / (float) (vars.jigCOLs+1);

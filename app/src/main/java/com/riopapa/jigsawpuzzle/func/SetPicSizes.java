@@ -25,5 +25,6 @@ public class SetPicSizes {
         vars.showMaxX = screenX / vars.picISize - 2;
         vars.showMaxY = vars.showMaxX * screenY / screenX;
 
+
     }
 }

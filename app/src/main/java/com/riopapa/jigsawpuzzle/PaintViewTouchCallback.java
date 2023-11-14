@@ -146,6 +146,9 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             vars.jigTables[nowC][nowR].posY = jPosY;
         }
 
+
+
+
         String txt = "dxDy "+dX+" x "+dY
                 + "\n vars.jPos "+jPosX+" x "+jPosY;
         mActivity.runOnUiThread(() -> binding.debugLeft.setText(txt));
