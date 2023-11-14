@@ -19,17 +19,19 @@ import android.view.ViewDebug;
 
 public class ShadowDraw extends View.DragShadowBuilder{
 
-    public ShadowDraw() {
-
+    public ShadowDraw(View view) {
+        super(view);
     }
     public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint){
 
         shadowSize.set(vars.picOSize, vars.picOSize);//사이즈 지정
         shadowTouchPoint.set(vars.picOSize/2, vars.picOSize/2);//중심점 지정
     }
-   public void onDrawShadow(Canvas canvas){
 
-       Log.w("found "+nowCR, "onDrawShadow start");
+   public void xonDrawShadow(Canvas canvas){
+
+        canvas.save();
+        Log.w("found "+nowCR, "onDrawShadow start");
         for (int i = 0; i < vars.activeRecyclerJigs.size(); i++) {
             int cr = vars.activeRecyclerJigs.get(i);
             if (cr == nowCR) {
@@ -42,6 +44,7 @@ public class ShadowDraw extends View.DragShadowBuilder{
                 break;
             }
         }
+        canvas.restore();
     }
 
 }

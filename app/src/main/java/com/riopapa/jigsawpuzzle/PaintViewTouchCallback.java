@@ -66,16 +66,20 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
             Log.w("onS sta", "size=" + vars.activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
-            nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
-            nowC = nowCR /10000;
-            nowR = nowCR - nowC * 10000;
-            if (jigBright[nowC][nowR] == null)
-                jigBright[nowC][nowR] = pieceImage.makeBright(jigPic[nowC][nowR]);
-
-            jPosY = screenY - vars.recSize;
-            jPosX = viewHolder.itemView.getLeft();
+            setNowPiece(viewHolder);
         }
 
+    }
+
+    private static void setNowPiece(RecyclerView.ViewHolder viewHolder) {
+        nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+        nowC = nowCR /10000;
+        nowR = nowCR - nowC * 10000;
+        if (jigBright[nowC][nowR] == null)
+            jigBright[nowC][nowR] = pieceImage.makeBright(jigPic[nowC][nowR]);
+
+        jPosY = screenY - vars.recSize;
+        jPosX = viewHolder.itemView.getLeft() + vars.picOSize/2;
     }
 
     @Override
