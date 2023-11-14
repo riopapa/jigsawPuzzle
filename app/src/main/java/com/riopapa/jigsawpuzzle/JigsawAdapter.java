@@ -1,9 +1,11 @@
 package com.riopapa.jigsawpuzzle;
 
+import static android.view.View.DRAG_FLAG_OPAQUE;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigCR;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
@@ -14,6 +16,8 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -26,15 +30,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.jigsawpuzzle.func.ShadowDraw;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.Collections;
 
-public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.JigHolder>
-        implements ZItemTouchHelperListener {
+//public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.JigHolder>
+//         {
+    public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.JigHolder>
+            implements ZItemTouchHelperListener {
 
     @NonNull
     @Override
@@ -50,7 +58,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         return new JigHolder(view);
     }
 
-    @Override
+        @Override
     public void onItemSwiped(int position) {
 
         Log.w("r13 Recycler onItemSwiped", "rightPosition = "+position);
@@ -72,6 +80,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
+
     public static class JigHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
@@ -82,6 +91,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             super(view);
             this.viewLine = itemView.findViewById(R.id.piece_layout);
             this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
+
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);
         }
@@ -130,6 +140,7 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             Log.w("r2l long","long press Event="+e);
 
             doNotUpdate = true;
+            // Todo: resolve jigRecyclePos
             removeFrmRecycle.sendEmptyMessage(0);
             add2FloatingPiece();
         }
@@ -149,23 +160,49 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             doNotUpdate = false;
         }
 
-        @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
-            return false;
+    @Override
+    public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        return false;
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull JigHolder viewHolder, int position) {
 
-        jigCR = vars.activeRecyclerJigs.get(position);
-        int jigX = jigCR / 10000;
-        int jigY = jigCR - jigX * 10000;
-//        Log.w("onBindViewHolder "+position,jigX+"x"+jigY);
-        if (jigPic[jigX][jigY] == null)
-            pieceImage.makeAll(jigX, jigY);
-        viewHolder.ivIcon.setImageBitmap(jigPic[jigX][jigY]);
-        viewHolder.ivIcon.setTag(jigCR);
+        nowCR = vars.activeRecyclerJigs.get(position);
+        int jigC = nowCR / 10000;
+        int jigR = nowCR - jigC * 10000;
+//        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
+        if (jigPic[jigC][jigR] == null)
+            pieceImage.buildPiece(jigC, jigR);
+        viewHolder.ivIcon.setImageBitmap(jigOLine[jigC][jigR]);
+        viewHolder.ivIcon.setTag(nowCR);
+//        viewHolder.ivIcon.setOnTouchListener((view, evt) -> {
+//            float fromX = evt.getX();
+//            float fromY = evt.getY();
+//            Log.w("onTouch "+evt.getAction(), "DOWN "+fromX+"x"+fromY);
+//
+//            int action = evt.getAction();
+//            switch (action) {
+//                case MotionEvent.ACTION_DOWN:
+//                    if (view != null) {
+//                        String tag = view.getTag().toString();
+//                        nowCR = Integer.parseInt(tag);
+//                        Log.w("onTouch DOWN ", "tag="+tag);
+////                            ClipData.Item item = new ClipData.Item((CharSequence) view.getTag());
+//                        ClipData.Item item = new ClipData.Item(tag);
+//                        String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+//                        ClipData data = new ClipData(tag, mimeTypes, item);
+////                        View.DragShadowBuilder builder = new View.DragShadowBuilder(view);
+////                        view.startDragAndDrop(data, new ShadowDraw(), null, 0);
+//                        view.startDrag(data, new ShadowDraw(), view, DRAG_FLAG_OPAQUE);
+//                    }
+//                    break;
+//            }
+//            return view.performClick();
+//        });
+
+
     }
 
     @Override
@@ -205,4 +242,5 @@ public class RecycleJigListener extends RecyclerView.Adapter<RecycleJigListener.
             doNotUpdate = false;
         }
     };
+
 }

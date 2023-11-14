@@ -11,6 +11,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.View;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +22,6 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
-import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
@@ -42,7 +43,7 @@ public class ActivityJigsaw extends Activity {
 
     public static PaintView paintView;
 
-    public static RecycleJigListener jigRecycleAdapter;
+    public static JigsawAdapter jigRecycleAdapter;
 
     public static boolean doNotUpdate; // wait while one action completed
 
@@ -56,7 +57,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap [][] jigBright;
     public static Bitmap [][] jigOLine;
     public static int jigRecyclePos; // jigsaw slide x, y count
-    public static int nowC, nowR, jigCR;   // fullImage pieceImage array column, row , x*10000+y
+    public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
 
 
@@ -130,7 +131,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = vars.recSize;
-        jigRecycleAdapter = new RecycleJigListener();
+        jigRecycleAdapter = new JigsawAdapter();
         ItemTouchHelper helper = new ItemTouchHelper(
                 new PaintViewTouchCallback(jigRecycleAdapter, binding));
 
@@ -153,6 +154,26 @@ public class ActivityJigsaw extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
+//        binding.layoutJigsaw.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.w("paintview onTouch "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
+//                        + " xy= "+event.getX()+"x"+event.getY());
+//                return binding.layoutJigsaw.performClick();
+//            }
+//        });
+        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                if (event.getAction() == DragEvent.ACTION_DROP) {
+                    Log.w("onDrag "," Dropped");
+                    Log.w("drop info "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
+                            + " xy= "+event.getX()+"x"+event.getY());
+
+                }
+                return true;
+            }
+        });
 
     }
 

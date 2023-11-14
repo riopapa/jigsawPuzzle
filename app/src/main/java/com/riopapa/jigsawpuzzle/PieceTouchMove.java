@@ -11,7 +11,7 @@ import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
-import static com.riopapa.jigsawpuzzle.RecycleJigListener.insert2Recycle;
+import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
 
 import android.util.Log;
 

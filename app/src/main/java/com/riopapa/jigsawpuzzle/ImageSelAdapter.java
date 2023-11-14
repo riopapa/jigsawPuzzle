@@ -37,10 +37,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
             iVImage = itemView.findViewById(R.id.image);
             iVImage.setOnClickListener(view -> {
-
                 vars.selectedImageNbr = getBindingAdapterPosition();
-                chosenImageMap = new ImageStorage().getMap(vars.selectedImageNbr);
-                new ImageChosen();
                 vars.gameMode = GAME_SELECT_LEVEL;
                 Intent intent = new Intent(context, ActivitySelLevel.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -92,8 +93,6 @@ public class ActivityMain extends Activity {
         new SetPicSizes(screenX);
 
         vars.maxImageCount = new ImageStorage().count();
-
-//        binding.imageRecycler.getLayoutParams().height = vars.screenY * 8 / 10;
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);

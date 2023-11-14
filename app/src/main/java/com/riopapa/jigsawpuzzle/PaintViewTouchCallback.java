@@ -3,7 +3,7 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigCR;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
@@ -14,7 +14,6 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
@@ -67,9 +66,9 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
             Log.w("onS sta", "size=" + vars.activeRecyclerJigs.size()+" nowPos="+jigRecyclePos);
-            jigCR = vars.activeRecyclerJigs.get(jigRecyclePos);
-            nowC = jigCR /10000;
-            nowR = jigCR - nowC * 10000;
+            nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+            nowC = nowCR /10000;
+            nowR = nowCR - nowC * 10000;
             if (jigBright[nowC][nowR] == null)
                 jigBright[nowC][nowR] = pieceImage.makeBright(jigPic[nowC][nowR]);
 
@@ -133,9 +132,9 @@ public class PaintViewTouchCallback extends ItemTouchHelper.Callback {
             return;
         }
         View pieceView = viewHolder.itemView;
-        jigCR = vars.activeRecyclerJigs.get(jigRecyclePos);
-        nowC = jigCR / 10000;
-        nowR = jigCR - nowC * 10000;
+        nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+        nowC = nowCR / 10000;
+        nowR = nowCR - nowC * 10000;
         if (dX != 0 && dY != 0) {
             jPosX = pieceView.getLeft() + (int) dX;
             jPosY = screenY - vars.recSize - vars.picISize + (int) dY;

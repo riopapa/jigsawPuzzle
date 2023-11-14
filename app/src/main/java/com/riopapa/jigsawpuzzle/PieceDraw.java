@@ -30,7 +30,7 @@ public class PieceDraw {
             for (int r = 0; r < vars.showMaxY; r++) {
                 final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
                 if (jigOLine[cc][rr] == null)
-                    pieceImage.makeAll(c+vars.offsetC, r+vars.offsetR);
+                    pieceImage.buildPiece(c+vars.offsetC, r+vars.offsetR);
                 if (vars.jigTables[cc][rr].locked) {
                     if (vars.jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigPic[cc][rr],
@@ -72,6 +72,8 @@ public class PieceDraw {
             // animate just anchored
             if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
                 fp.count--;
+                if (jigBright[c][r] == null)
+                    jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                         jigBright[c][r] : jigPic[c][r],
                         vars.jigTables[c][r].posX + rnd.nextInt(10) - 5,
@@ -85,6 +87,8 @@ public class PieceDraw {
             // animate recycler to paint
             if (fp.count > 0 && fp.mode == ANI_TO_PAINT) {  // animate from recycle to paintView
                 fp.count--;
+                if (jigBright[c][r] == null)
+                    jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
                 canvas.drawBitmap((fp.count % 2 == 0) ?
                         jigBright[c][r] : jigPic[c][r],
                         vars.jigTables[c][r].posX + rnd.nextInt(10) - 5,

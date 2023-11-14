@@ -16,20 +16,24 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import com.riopapa.jigsawpuzzle.func.CalcCOLUMN_ROW;
+import com.riopapa.jigsawpuzzle.func.ImageChosen;
+import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 
 public class ActivitySelLevel extends AppCompatActivity {
 
     ActivitySelLevelBinding binding;
-
-
+    AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,20 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
+
+//        selected = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
+            Log.w("SelLevel"," go back to main");
+            finish();
+        }
+        Log.w("sl1 selectLevel","onResume");
+        chosenImageMap = new ImageStorage().getMap(vars.selectedImageNbr);
+        new ImageChosen();
         int width = screenX * 8 / 10;
         int height = width * chosenImageHeight / chosenImageWidth;
         if (height > screenY * 7 /10)
@@ -56,16 +74,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         binding.selImage.setImageBitmap(selected);
 
         select_level();
-//        selected = null;
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
-            Log.w("SelLevel"," go back to main");
-            finish();
-        }
     }
 
     void select_level() {
@@ -74,8 +83,15 @@ public class ActivitySelLevel extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
         builder.setView(dialogView);
 
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
+        // show this dialog at the bottom
+        Window window = alertDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(wlp);
         alertDialog.show();
+
         TextView tv;
         String s;
         s = gameLevels[0]; new CalcCOLUMN_ROW(0); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
@@ -96,6 +112,7 @@ public class ActivitySelLevel extends AppCompatActivity {
     }
 
     private void edit_table(View view) {
+        alertDialog.dismiss();
         vars.gameLevel = Integer.parseInt(view.getTag().toString());
         vars.gameMode = GAME_STARTED; // target Image, level has been set
         new CalcCOLUMN_ROW(vars.gameLevel);

@@ -73,7 +73,7 @@ public class PieceImage {
      *    make .oLine from .pic
      *    output jigTables[col][row] .src, .pic, .oLine
      */
-    public void makeAll(int col, int row) {
+    public void buildPiece(int col, int row) {
         JigTable z = vars.jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
