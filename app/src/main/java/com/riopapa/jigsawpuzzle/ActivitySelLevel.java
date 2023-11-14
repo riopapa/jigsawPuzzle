@@ -58,6 +58,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
             Log.w("SelLevel"," go back to main");
             finish();
+            return;
         }
         Log.w("sl1 selectLevel","onResume");
         chosenImageMap = new ImageStorage().getMap(vars.selectedImageNbr);

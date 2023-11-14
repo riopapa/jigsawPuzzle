@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -25,6 +26,7 @@ public class SetPicSizes {
         vars.showMaxX = screenX / vars.picISize - 2;
         vars.showMaxY = vars.showMaxX * screenY / screenX;
 
+        screenBottom = screenY - vars.recSize - vars.recSize + vars.picGap;
 
     }
 }

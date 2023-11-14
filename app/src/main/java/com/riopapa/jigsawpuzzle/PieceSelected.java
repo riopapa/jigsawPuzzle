@@ -14,8 +14,8 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.Collections;
 
-public class PieceTouchDown {
-    void start(float fX, float fY){
+public class PieceSelected {
+    void check(int iX, int iY){
 
         /*
          * if new item has been touched in right position then set it to fpNow
@@ -23,9 +23,6 @@ public class PieceTouchDown {
 
         if (doNotUpdate)
             return;
-
-        int iX = (int) fX - vars.picHSize;
-        int iY = (int) fY - vars.picHSize;
 
         for (int i = vars.fps.size() - 1; i >= 0; i--) {
             int c = vars.fps.get(i).C;

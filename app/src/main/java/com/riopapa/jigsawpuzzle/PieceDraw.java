@@ -1,5 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
@@ -105,8 +107,8 @@ public class PieceDraw {
                 vars.fps.set(cnt, fp);
             }
         }
-        if (jPosY > 0 && jPosY < (screenY - vars.recSize)) {
-            canvas.drawBitmap(jigPic[nowC][nowR],jPosX - vars.picGap, jPosY - vars.picGap, null);
+        if (dragX > 0) {
+            canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
         }
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+vars.offsetC + " x " + vars.offsetR+"\n calc " + calcC +" x "+ calcR+"\n vars.fps "+vars.fps.size();

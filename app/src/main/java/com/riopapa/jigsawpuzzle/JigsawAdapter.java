@@ -33,9 +33,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.riopapa.jigsawpuzzle.func.ShadowDraw;
-import com.riopapa.jigsawpuzzle.model.FloatPiece;
-
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
             implements ZItemTouchHelperListener {
 
@@ -85,24 +82,18 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
-            Log.w("rq ontouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
+//            Log.w("rq ontouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
             return v.performClick();
         }
 
         @Override
-        public boolean onDown(@NonNull MotionEvent e) {
-            return false;
-        }
+        public boolean onDown(@NonNull MotionEvent e) {return false;}
 
         @Override
-        public void onShowPress(@NonNull MotionEvent e) {
-
-        }
+        public void onShowPress(@NonNull MotionEvent e) {}
 
         @Override
-        public boolean onSingleTapUp(@NonNull MotionEvent e) {
-            return false;
-        }
+        public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
 
         @Override
         public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
@@ -114,7 +105,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         }
         @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
             return false;
         }
     }
@@ -128,19 +119,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 //            return false;   // true or false?
 //        }
 //
-//        @Override
-//        public void onShowPress(@NonNull MotionEvent e) {
-////            mTouchHelper.startDrag(this);
-////            View view = e.
-//            Log.w("r27 onShowPress", "Touch onShowPress ");
-//
-//        }
-//
-//        @Override
-//        public boolean onSingleTapUp(@NonNull MotionEvent e) {
-//            Log.w("r28 Recycler", "onSingleTapUp ");
-//            return true;
-//        }
 //
 //        @Override
 //        public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
@@ -183,12 +161,13 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
     public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
         public void handleMessage(@NonNull Message msg) {
-            Log.w("r2m move "+jigRecyclePos,"removed from recycler jPos="+jPosX+"x"+jPosY);
 //            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            if (jigRecyclePos < vars.jigTables.length) {
+            Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+jPosX+"x"+jPosY);
+            if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
                 vars.jigTables[nowC][nowR].outRecycle = true;
                 vars.activeRecyclerJigs.remove(jigRecyclePos);
                 jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+                Log.w("r2m move R"+nowCR,"removed from recycler jPos="+jPosX+"x"+jPosY);
             }
 //            hangOn = false;
         }

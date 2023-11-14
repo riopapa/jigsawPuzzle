@@ -57,7 +57,7 @@ public class ActivityMain extends Activity {
 
     final public static String[] gameLevels= {"Easy", "Normal", "Hard", "Expert"};
 
-    public static int screenX, screenY; // physical screen size, center puzzleBox
+    public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;

@@ -62,7 +62,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap [][] jigOLine;
     public static int jigRecyclePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
-    public static int jPosX, jPosY; // absolute x,y rightPosition drawing current jigsaw
+    public static int jPosX, jPosY, dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
 
 
     @Override
@@ -169,41 +169,25 @@ public class ActivityJigsaw extends Activity {
 //                return binding.layoutJigsaw.performClick();
 //            }
 //        });
-        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                if (event.getAction() == DragEvent.ACTION_DROP) {
-                    int iX = (int) event.getX() - vars.picHSize;
-                    int iY = (int) event.getY() - vars.picHSize;
+//        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View v, DragEvent event) {
+//                if (event.getAction() == DragEvent.ACTION_DROP) {
+//                    int iX = (int) event.getX() - vars.picHSize;
+//                    int iY = (int) event.getY() - vars.picHSize;
+//
+//                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
+//                        jPosX = iX;
+//                        jPosY = iY;
+//                        doNotUpdate = true;
+//                        removeFrmRecycle.sendEmptyMessage(0);
+//                        add2FloatingPiece();
+//                    }
+//                }
+//                return true;
+//            }
+//        });
 
-                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
-                        jPosX = iX;
-                        jPosY = iY;
-                        doNotUpdate = true;
-                        removeFrmRecycle.sendEmptyMessage(0);
-                        add2FloatingPiece();
-                    }
-                }
-                return true;
-            }
-        });
-
-    }
-
-    void add2FloatingPiece() {
-
-        vars.jigTables[nowC][nowR].posX = jPosX;
-        vars.jigTables[nowC][nowR].posY = jPosY; // - vars.picOSize;
-
-        FloatPiece fp = new FloatPiece();
-        fp.C = nowC;
-        fp.R = nowR;
-//        fp.count = 5;
-//        fp.mode = ANI_TO_PAINT;
-        fp.uId = System.currentTimeMillis();    // set Unique uId
-        fp.anchorId = 0;       // let anchorId to itself
-        vars.fps.add(fp);
-        doNotUpdate = false;
     }
 
 
@@ -237,7 +221,7 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     protected void onPause() {
-        Log.w("jigsaw","onPause");
+        Log.w("jigsaw","Activityjigsaw onPause "+vars.gameMode);
         if (vars.gameMode != GAME_GOBACK_TO_MAIN)
             vars.gameMode = GAME_PAUSED;
         invalidateTimer.cancel();
@@ -247,7 +231,7 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     public void onBackPressed() {
-        Log.w("jigsaw","onPause");
+        Log.w("jigsaw","Activityjigsaw onBackPressed");
         vars.gameMode = GAME_GOBACK_TO_MAIN;
         super.onBackPressed();
     }

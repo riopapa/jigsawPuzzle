@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,8 +29,8 @@ public class PaintView extends View {
     public static NearByPieces nearByPieces;
     public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
-    PieceTouchMove pieceTouchMove;
-    PieceTouchDown pieceTouchDown;
+    NearPieceMerge nearPieceMerge;
+    PieceSelected pieceSelected;
 
     public static FloatPiece fpNow;
 
@@ -51,9 +50,9 @@ public class PaintView extends View {
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
         pieceDraw = new PieceDraw();
-        pieceTouchMove = new PieceTouchMove();
+        nearPieceMerge = new NearPieceMerge();
         nearByFloatPiece = new NearByFloatPiece();
-        pieceTouchDown = new PieceTouchDown();
+        pieceSelected = new PieceSelected();
 
     }
 
@@ -95,10 +94,10 @@ public class PaintView extends View {
         float x = event.getX();
         float y = event.getY();
 
-//        Log.w("px on TouchEvent", "time="+touchTime);
+//        Log.w("px on TouchEvent", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                pieceTouchDown.start(x, y);
+                pieceSelected.check((int)x, (int)y);
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -106,7 +105,7 @@ public class PaintView extends View {
                 final float MOVE = 30;
                 if (fpNow != null &&
                     (Math.abs(x - jPosX) > MOVE || Math.abs(y - jPosY) > MOVE))
-                    pieceTouchMove.start(x, y);
+                    nearPieceMerge.check((int)x, (int)y);
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();

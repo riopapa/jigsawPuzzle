@@ -4,6 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
@@ -18,17 +19,17 @@ import android.util.Log;
 import com.riopapa.jigsawpuzzle.func.RearrangePieces;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
-public class PieceTouchMove {
+public class NearPieceMerge {
 
-    void start(float fMovedX, float fMovedY){
+    void check(int moveX, int moveY){
         if (doNotUpdate)
             return;
 
-        int moveX = (int) fMovedX - vars.picHSize;
-        int moveY = (int) fMovedY - vars.picHSize;
+//        int moveX = (int) fMovedX - vars.picHSize;
+//        int moveY = (int) fMovedY - vars.picHSize;
 
         // check whether go back to recycler
-        if (moveY > (screenY - vars.recSize)) {
+        if (moveY > (screenBottom + vars.picHSize)) {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
                 doNotUpdate = true;

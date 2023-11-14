@@ -14,6 +14,7 @@ public class ImageStorage {
             R.mipmap.a01_bears,
             R.mipmap.a02_boat,
             R.mipmap.a03_birds,
+            R.mipmap.a01_sign,  // to be removed
             R.mipmap.a09_cafe,
             R.mipmap.a10_cat_dog,
             R.mipmap.b15_city3,
