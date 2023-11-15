@@ -22,13 +22,11 @@ public class ImageChosen {
                 b += Color.blue(pixel);
             }
         }
-        Log.w("ImageChosen", "r="+r+" g="+g+" b="+b);
         long mx = Math.max(r, Math.max(g, b));
         r = 255 - 255 * r / mx;
         g = 255 - 255 * g / mx;
         b = 255 - 255 * b / mx;
         chosenImageColor = Color.rgb (r, g, b);
-        Log.w("ImageChosen", "r="+r+" g="+g+" b="+b);
 
     }
 }

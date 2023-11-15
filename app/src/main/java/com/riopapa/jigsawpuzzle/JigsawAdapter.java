@@ -156,39 +156,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         return (vars.activeRecyclerJigs.size());
     }
 
-    public final static Handler removeFrmRecycle = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(@NonNull Message msg) {
-//            vHolder.itemView.setBackgroundColor(0x000FFFF);
-            Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+jPosX+"x"+jPosY);
-            if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
-                vars.jigTables[nowC][nowR].outRecycle = true;
-                vars.activeRecyclerJigs.remove(jigRecyclePos);
-                jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-                Log.w("r2m move R"+nowCR,"removed from recycler jPos="+jPosX+"x"+jPosY);
-            }
-//            hangOn = false;
-        }
-    };
-    public final static Handler insert2Recycle = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(@NonNull Message msg) {
-            // todo: calculate jigRecyclePos
-            LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
-
-            int i = layoutManager.findFirstVisibleItemPosition();
-            jigRecyclePos = i + (jPosX+vars.picISize+ vars.picHSize)/ vars.recSize;
-//            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
-
-            vars.jigTables[nowC][nowR].outRecycle = false;
-            if (jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
-                vars.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
-                jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
-            } else {
-                vars.activeRecyclerJigs.add(nowC * 10000 + nowR);
-                jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
-            }
-            doNotUpdate = false;
-        }
-    };
 
 }
 

@@ -14,12 +14,14 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.JigsawAdapter.removeFrmRecycle;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -80,6 +82,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
+
             // Piece is selected and begun dragging
             recyclerSelected(viewHolder);
 
@@ -92,15 +95,25 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 dragX = -1; // no more dragging piece drawing
                 jPosY = dragY;
                 Log.w("idle ", "ACTION_STATE_IDLE =" + jPosX + " x " + jPosY);
-                removeFrmRecycle.sendEmptyMessage(0);
+                removeFromRecycle();
                 add2FloatingPiece();
-
                 nearPieceBind.check(jPosX, jPosY);
+                doNotUpdate = false;
 
             }
 
         }
 
+    }
+
+    private void removeFromRecycle() {
+        Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+jPosX+"x"+jPosY);
+        if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
+            vars.jigTables[nowC][nowR].outRecycle = true;
+            vars.activeRecyclerJigs.remove(jigRecyclePos);
+            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            Log.w("r2m move R"+nowCR,"removed from recycler jPos="+jPosX+"x"+jPosY);
+        }
     }
 
     private static void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
@@ -114,7 +127,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
         dragY = screenBottom + vars.picHSize;
         dragX = viewHolder.itemView.getLeft() + vars.picGap;
-        Log.w("selectedChg CR"+nowCR, "Drag stated nowPos="+jigRecyclePos);
+        Log.w("selected CR"+nowCR, " piece // x="+dragX+ " Drag stated nowPos="+jigRecyclePos
+        + " H="+vars.picHSize+" O="+vars.picOSize);
 
     }
     void add2FloatingPiece() {

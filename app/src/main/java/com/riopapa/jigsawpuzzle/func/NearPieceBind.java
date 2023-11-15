@@ -1,19 +1,30 @@
 package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -27,14 +38,16 @@ public class NearPieceBind {
 //        int moveY = (int) fMovedY - vars.picHSize;
 
         // check whether go back to recycler
-        if (moveY > (screenBottom + vars.picHSize)) {
+        if (moveY > (screenBottom - vars.picHSize)) {
             // if sole piece then can go back to recycler
             if (fpNow.anchorId == 0 && vars.fps.size() > 0) {
                 doNotUpdate = true;
                 Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
                 vars.fps.remove(nowIdx);
-                insert2Recycle.sendEmptyMessage(0);
+                insert2Recycle();
             }
+            fpNow = null;
+            dragX = -1;
             // if anchored can not go back to recycle;
             return;
         }
@@ -163,5 +176,21 @@ public class NearPieceBind {
         }
     }
 
+    private void insert2Recycle() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
+        int i = layoutManager.findFirstVisibleItemPosition();
+        jigRecyclePos = i + (jPosX+vars.picOSize) / vars.picOSize;
+//            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
+
+        vars.jigTables[nowC][nowR].outRecycle = false;
+        if (jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
+            vars.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
+            jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+        } else {
+            vars.activeRecyclerJigs.add(nowC * 10000 + nowR);
+            jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
+        }
+        doNotUpdate = false;
+    }
 
 }
