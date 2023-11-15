@@ -5,14 +5,11 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
@@ -32,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
+import com.riopapa.jigsawpuzzle.func.NearPieceBind;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.Collections;
@@ -44,12 +42,17 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     private final ActivityJigsawBinding binding;
 
     private NearByFloatPiece nearByFloatPiece;
+    private NearPieceBind nearPieceBind;
+
+    private static boolean clearRecycler = false;
 
     public JigRecycleCallback(ZItemTouchHelperListener listener, ActivityJigsawBinding binding) {
         this.listener = listener;
         this.binding = binding;
         nearByFloatPiece = new NearByFloatPiece();
+        nearPieceBind = new NearPieceBind();
     }
+
 
     @Override
     public boolean isLongPressDragEnabled() {
@@ -78,32 +81,36 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             // Piece is selected and begun dragging
-            setNowPiece(viewHolder);
+            recyclerSelected(viewHolder);
+
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
             if (dragY < screenBottom) {
+                doNotUpdate = true;
                 jPosX = dragX;
                 dragX = -1; // no more dragging piece drawing
-                jPosY = dragY + vars.picGap + vars.picGap;
+                jPosY = dragY;
                 Log.w("idle ", "ACTION_STATE_IDLE =" + jPosX + " x " + jPosY);
-                doNotUpdate = true;
                 removeFrmRecycle.sendEmptyMessage(0);
                 add2FloatingPiece();
-//                nearByFloatPiece.check(vars.fps.size()-1, fpNow);
+
+                nearPieceBind.check(jPosX, jPosY);
+
             }
 
         }
 
     }
 
-    private static void setNowPiece(RecyclerView.ViewHolder viewHolder) {
+    private static void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
+        fpNow = null;
         jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
         nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
         nowC = nowCR / 10000;
         nowR = nowCR - nowC * 10000;
-        if (jigBright[nowC][nowR] == null)
-            jigBright[nowC][nowR] = pieceImage.makeBright(jigPic[nowC][nowR]);
+//        if (jigBright[nowC][nowR] == null)
+//            jigBright[nowC][nowR] = pieceImage.makeBright(jigOLine[nowC][nowR]);
 
         dragY = screenBottom + vars.picHSize;
         dragX = viewHolder.itemView.getLeft() + vars.picGap;
@@ -125,6 +132,11 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         vars.fps.add(fpNow);
         nowIdx = vars.fps.size() - 1;
         doNotUpdate = false;
+        Log.w("FPS xy"," info");
+        for (int i = 0; i < vars.fps.size(); i++) {
+            Log.w(vars.picGap+" gap "+i, (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posX-jPosX)
+                    + " x "+ (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posY-jPosY));
+        }
     }
 
 
@@ -182,22 +194,19 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
             return;
         }
         View pieceView = viewHolder.itemView;
-        nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
-        nowC = nowCR / 10000;
-        nowR = nowCR - nowC * 10000;
+//        nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
+//        nowC = nowCR / 10000;
+//        nowR = nowCR - nowC * 10000;
         if (dX != 0 && dY != 0) {
-//            Log.w("PieceView",pieceView.getX()+" x "+pieceView.getY()+" delta="+dX+"x"+dY);
-//            dragX = pieceView.getLeft() + (int) dX;
-//            dragY = (int) (pieceView.getY()+ (int) dY);
             dragX = (int) pieceView.getX();
             dragY = screenBottom + (int) pieceView.getY();
             vars.jigTables[nowC][nowR].posX = dragX;
             vars.jigTables[nowC][nowR].posY = dragY;
+            String txt = "dxDy "+dX+" x "+dY
+                    + "\n vars.jPos "+dragX+" x "+dragY;
+            mActivity.runOnUiThread(() -> binding.debugLeft.setText(txt));
         }
 
-        String txt = "dxDy "+dX+" x "+dY
-                + "\n vars.jPos "+dragX+" x "+dragY;
-        mActivity.runOnUiThread(() -> binding.debugLeft.setText(txt));
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
 //
 

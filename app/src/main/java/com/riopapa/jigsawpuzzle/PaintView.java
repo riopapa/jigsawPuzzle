@@ -3,6 +3,8 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import com.riopapa.jigsawpuzzle.func.NearByPieces;
+import com.riopapa.jigsawpuzzle.func.NearPieceBind;
 import com.riopapa.jigsawpuzzle.func.PieceSelection;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
@@ -30,7 +33,7 @@ public class PaintView extends View {
     public static NearByPieces nearByPieces;
     public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
-    NearPieceMerge nearPieceMerge;
+    NearPieceBind nearPieceBind;
     PieceSelection pieceSelection;
 
     public static FloatPiece fpNow;
@@ -51,7 +54,7 @@ public class PaintView extends View {
         rightPosition = new RightPosition(activity);
         nearByPieces = new NearByPieces(activity);
         pieceDraw = new PieceDraw();
-        nearPieceMerge = new NearPieceMerge();
+        nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
 
@@ -103,10 +106,13 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float MOVE = 30;
+                final float MOVING = 30;
                 if (fpNow != null &&
-                    (Math.abs(x - jPosX) > MOVE || Math.abs(y - jPosY) > MOVE))
-                    nearPieceMerge.check(x, y);
+                    (Math.abs(x - jPosX) > MOVING || Math.abs(y - jPosY) > MOVING)) {
+                    vars.jigTables[nowC][nowR].posX = x;
+                    vars.jigTables[nowC][nowR].posY = y;
+                    nearPieceBind.check(x, y);
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();

@@ -35,14 +35,16 @@ public class PieceDraw {
                 final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
                 if (jigOLine[cc][rr] == null)
                     pieceImage.buildOline(c+vars.offsetC, r+vars.offsetR);
+                if (jigBright[cc][rr] == null)
+                    jigBright[cc][rr] = pieceImage.makeBright(jigOLine[cc][rr]);
                 if (vars.jigTables[cc][rr].locked) {
                     if (vars.jigTables[cc][rr].count == 0)
-                        canvas.drawBitmap(jigPic[cc][rr],
+                        canvas.drawBitmap(jigOLine[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                     else {
                         vars.jigTables[cc][rr].count--;
                         canvas.drawBitmap((vars.jigTables[cc][rr].count % 2 == 0) ?
-                                        jigBright[cc][rr] : jigPic[cc][rr],
+                                        jigBright[cc][rr] : jigOLine[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                         if (vars.jigTables[cc][rr].count == 0) {
                             jigBright[cc][rr] = null;
@@ -97,7 +99,7 @@ public class PieceDraw {
                         jigBright[c][r] : jigPic[c][r],
                         jt.posX + rnd.nextInt(10) - 5,
                         jt.posY + rnd.nextInt(10) - 5, null);
-                vars.jigTables[c][r].posY -= vars.picISize / 4;
+//                vars.jigTables[c][r].posY -= vars.picISize / 4;
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }

@@ -1,4 +1,4 @@
-package com.riopapa.jigsawpuzzle;
+package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
@@ -15,12 +15,11 @@ import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
 
 import android.util.Log;
 
-import com.riopapa.jigsawpuzzle.func.RearrangePieces;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
-public class NearPieceMerge {
+public class NearPieceBind {
 
-    void check(int moveX, int moveY){
+    public void check(int moveX, int moveY){
         if (doNotUpdate)
             return;
 
@@ -40,8 +39,8 @@ public class NearPieceMerge {
             return;
         }
 
-        vars.jigTables[nowC][nowR].posX = moveX;
-        vars.jigTables[nowC][nowR].posY = moveY;
+//        vars.jigTables[nowC][nowR].posX = moveX;
+//        vars.jigTables[nowC][nowR].posY = moveY;
 
         // move anchored pieces too
         if (fpNow.anchorId > 0) {
@@ -55,7 +54,7 @@ public class NearPieceMerge {
                 }
             }
         }
-        if (nowIdx < vars.fps.size()) {
+        if (nowIdx < vars.fps.size() && nowIdx != vars.fps.size() - 1) {
             new RearrangePieces(fpNow, nowIdx);
             nowIdx = vars.fps.size() - 1;
         }
@@ -78,7 +77,7 @@ public class NearPieceMerge {
             }
         }
 
-        // if pieceImage moved to right rightPosition then lock thi pieceImage
+        // if pieceImage moved to right Position then lock thi pieceImage
         if (lockable) {
             for (int i = 0; i < vars.fps.size(); ) {
                 FloatPiece fpT = vars.fps.get(i);
