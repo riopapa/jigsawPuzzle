@@ -11,7 +11,7 @@ public class NearByFloatPiece {
      * return fps idx if anchorable else return -1
      */
     public NearByFloatPiece() {}
-    public int isAnchorable(int thisIdx, FloatPiece fpThis) {
+    public int check(int thisIdx, FloatPiece fpThis) {
 
         long anchorId = fpThis.anchorId;
         int cc = fpThis.C;

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import com.riopapa.jigsawpuzzle.func.NearByPieces;
+import com.riopapa.jigsawpuzzle.func.PieceSelection;
 import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -30,7 +31,7 @@ public class PaintView extends View {
     public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
     NearPieceMerge nearPieceMerge;
-    PieceSelected pieceSelected;
+    PieceSelection pieceSelection;
 
     public static FloatPiece fpNow;
 
@@ -52,7 +53,7 @@ public class PaintView extends View {
         pieceDraw = new PieceDraw();
         nearPieceMerge = new NearPieceMerge();
         nearByFloatPiece = new NearByFloatPiece();
-        pieceSelected = new PieceSelected();
+        pieceSelection = new PieceSelection();
 
     }
 
@@ -89,15 +90,15 @@ public class PaintView extends View {
         nowTime = System.currentTimeMillis();
         if (nextOKTime > nowTime)
             return true;
-        nextOKTime = nowTime + 120;
+        nextOKTime = nowTime + 100;
 
-        float x = event.getX();
-        float y = event.getY();
+        int x = (int) event.getX() - vars.picHSize;
+        int y = (int) event.getY() - vars.picHSize;
 
-//        Log.w("px on TouchEvent", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                pieceSelected.check((int)x, (int)y);
+//                Log.w("px on ACTION_DOWN", x+"x"+y);
+                pieceSelection.check(x, y);
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -105,7 +106,7 @@ public class PaintView extends View {
                 final float MOVE = 30;
                 if (fpNow != null &&
                     (Math.abs(x - jPosX) > MOVE || Math.abs(y - jPosY) > MOVE))
-                    nearPieceMerge.check((int)x, (int)y);
+                    nearPieceMerge.check(x, y);
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();

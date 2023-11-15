@@ -1,6 +1,5 @@
 package com.riopapa.jigsawpuzzle;
 
-import static android.view.View.DRAG_FLAG_GLOBAL;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
@@ -15,8 +14,6 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -146,8 +143,8 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         int jigC = nowCR / 10000;
         int jigR = nowCR - jigC * 10000;
 //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
-        if (jigPic[jigC][jigR] == null)
-            pieceImage.buildPiece(jigC, jigR);
+        if (jigOLine[jigC][jigR] == null)
+            pieceImage.buildOline(jigC, jigR);
         viewHolder.ivIcon.setImageBitmap(jigOLine[jigC][jigR]);
         viewHolder.ivIcon.setTag(nowCR);
 //        startPieceMove(viewHolder);

@@ -5,7 +5,6 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.JigsawAdapter.insert2Recycle;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
@@ -103,7 +102,7 @@ public class NearPieceMerge {
 
         for (int iA = vars.fps.size()-1; iA >= 0;  iA--) {
             fpThis = vars.fps.get(iA);
-            ancBase = nearByFloatPiece.isAnchorable(iA, fpThis);
+            ancBase = nearByFloatPiece.check(iA, fpThis);
             if (ancBase != -1) {
                 ancThis = iA;
                 fpBase = vars.fps.get(ancBase);

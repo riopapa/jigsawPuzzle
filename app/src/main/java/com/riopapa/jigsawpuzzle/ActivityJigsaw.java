@@ -1,21 +1,16 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
-import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.JigsawAdapter.removeFrmRecycle;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.View;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +23,6 @@ import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.func.initJigTable;
-import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -139,7 +133,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView.setHasFixedSize(true);
 
         ItemTouchHelper helper = new ItemTouchHelper(
-                new PaintViewTouchCallback(jigRecycleAdapter, binding));
+                new JigRecycleCallback(jigRecycleAdapter, binding));
 
         helper.attachToRecyclerView(jigRecyclerView);
 
