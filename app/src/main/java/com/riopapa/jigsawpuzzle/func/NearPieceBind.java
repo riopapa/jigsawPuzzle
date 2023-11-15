@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -122,7 +123,6 @@ public class NearPieceBind {
             }
         }
 
-
         if (ancBase != -1) {
             doNotUpdate = true;
 
@@ -179,7 +179,13 @@ public class NearPieceBind {
     private void insert2Recycle() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         int i = layoutManager.findFirstVisibleItemPosition();
-        jigRecyclePos = i + (jPosX+vars.picOSize) / vars.picOSize;
+        Log.w("i value","i="+i);
+        View v = layoutManager.findViewByPosition(i);
+        if (v == null)
+            Log.e("View"," is error");
+        Log.w("left item position"," view getX="+v.getX()+" left="+v.getLeft());
+
+        jigRecyclePos = i + (jPosX + vars.picOSize - (int) v.getX()) / vars.picOSize;
 //            Log.w("r2i insert","add to recycler jPos="+jPosX+"x"+jPosY+" i="+i+" pos="+jigRecyclePos);
 
         vars.jigTables[nowC][nowR].outRecycle = false;
