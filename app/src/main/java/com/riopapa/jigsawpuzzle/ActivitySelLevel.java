@@ -3,6 +3,7 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
@@ -10,6 +11,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.gameLevels;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ImageSelAdapter.context;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -91,6 +93,10 @@ public class ActivitySelLevel extends AppCompatActivity {
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(wlp);
+        doNotUpdate = true;
+        // give some bottom space on level dialog
+        alertDialog.getWindow().getAttributes().height = (int) (screenY * 0.7);
+        alertDialog.setCancelable(false);
         alertDialog.show();
 
         TextView tv;

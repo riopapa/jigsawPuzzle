@@ -1,20 +1,27 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import com.riopapa.jigsawpuzzle.func.NearByPieces;
@@ -57,7 +64,6 @@ public class PaintView extends View {
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
-
     }
 
     //  screenXY 1080 x 2316
@@ -107,11 +113,24 @@ public class PaintView extends View {
             case MotionEvent.ACTION_MOVE:
 
                 final float MOVING = 30;
-                if (fpNow != null &&
-                    (Math.abs(x - jPosX) > MOVING || Math.abs(y - jPosY) > MOVING)) {
-                    vars.jigTables[nowC][nowR].posX = x;
-                    vars.jigTables[nowC][nowR].posY = y;
-                    nearPieceBind.check(x, y);
+                if ((Math.abs(x - jPosX) > MOVING || Math.abs(y - jPosY) > MOVING) &&
+                    fpNow != null) {
+                    if (wannaBack2Recycler(y)) {
+                        doNotUpdate = true;
+                        Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
+                        vars.fps.remove(nowIdx);
+                        goBack2Recycler();
+                        fpNow = null;
+                        dragX = -1;
+                    } else if (y < screenBottom) {
+                        vars.jigTables[nowC][nowR].posX = x;
+                        vars.jigTables[nowC][nowR].posY = y;
+                        nearPieceBind.check(x, y);
+                    } else {
+                        y -= vars.picOSize;
+                        vars.jigTables[nowC][nowR].posX = x;
+                        vars.jigTables[nowC][nowR].posY = y;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -122,13 +141,31 @@ public class PaintView extends View {
         return true;
     }
 
-//    public final static Handler updateViewHandler = new Handler(Looper.getMainLooper()) {
-//        public void handleMessage(Message msg) {
-//            nowJig = vars.jigTables[nowC][nowR];
-//            mapNow = Bitmap.createScaledBitmap(nowJig.src, picOSize, picOSize, true);
-//            dragging = true;
-//            Log.w("p1x "+ jigCR," call by recycler drawing updating "+jPosX+" x "+jPosY);
-//            paintView.invalidate();}
-//    };
+    public void goBack2Recycler() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
+        int i = layoutManager.findFirstVisibleItemPosition();
+        View v = layoutManager.findViewByPosition(i);
+        jigRecyclePos = i + (jPosX + vars.picOSize - (int) v.getX()) / vars.picOSize;
+        vars.jigTables[nowC][nowR].outRecycle = false;
+        if (jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
+            vars.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
+            jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+        } else {
+            vars.activeRecyclerJigs.add(nowC * 10000 + nowR);
+            jigRecycleAdapter.notifyItemInserted(vars.activeRecyclerJigs.size()-1);
+        }
+        doNotUpdate = false;
+    }
 
+    public boolean wannaBack2Recycler(int moveY) {
+
+        // if sole piece then can go back to recycler
+        if (fpNow.anchorId == 0 && moveY > (screenBottom - vars.picHSize) &&
+                vars.fps.size() > 0) {
+            fpNow = null;
+            dragX = -1;
+            return true;
+        }
+        return false;
+    }
 }
