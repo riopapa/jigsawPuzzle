@@ -44,8 +44,8 @@ public class ActivityMain extends Activity {
     public static Vars vars;
 
 
-    final public static int ANI_TO_PAINT = 123;
-    final public static int ANI_ANCHOR = 321;
+    final public static int ANI_TO_PAINT = 10123;
+    final public static int ANI_ANCHOR = 10321;
     final public static int GAME_NEW = 0;
     final public static int GAME_SELECT_IMAGE = 11;
     final public static int GAME_SELECT_LEVEL = 22;

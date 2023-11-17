@@ -20,9 +20,9 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
 import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
+import com.riopapa.jigsawpuzzle.func.SettleJigTableWall;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
-import com.riopapa.jigsawpuzzle.func.initJigTable;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class ActivityJigsaw extends Activity {
         jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
         jigOLine = new Bitmap[vars.jigCOLs][vars.jigROWs];
 
-        new initJigTable(vars.jigTables);
+        new SettleJigTableWall(vars.jigTables);
 
         srcMaskMaps = new Masks().make(mContext, vars.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, vars.imgOutSize);

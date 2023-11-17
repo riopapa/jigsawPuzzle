@@ -24,10 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.riopapa.jigsawpuzzle.func.NearByFloatPiece;
-import com.riopapa.jigsawpuzzle.func.NearByPieces;
+import com.riopapa.jigsawpuzzle.func.PiecePosition;
 import com.riopapa.jigsawpuzzle.func.NearPieceBind;
 import com.riopapa.jigsawpuzzle.func.PieceSelection;
-import com.riopapa.jigsawpuzzle.func.RightPosition;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.ArrayList;
@@ -36,8 +35,7 @@ public class PaintView extends View {
 
     public static int nowIdx;
     public Activity paintActivity;
-    public static RightPosition rightPosition;
-    public static NearByPieces nearByPieces;
+    public static PiecePosition piecePosition;
     public static NearByFloatPiece nearByFloatPiece;
     PieceDraw pieceDraw;
     NearPieceBind nearPieceBind;
@@ -58,8 +56,7 @@ public class PaintView extends View {
         vars.fps = new ArrayList<>();
         fpNow = null;
 
-        rightPosition = new RightPosition(activity);
-        nearByPieces = new NearByPieces(activity);
+        piecePosition = new PiecePosition(activity);
         pieceDraw = new PieceDraw();
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();

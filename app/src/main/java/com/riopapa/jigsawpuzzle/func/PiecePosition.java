@@ -4,13 +4,22 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.Activity;
 
-public class NearByPieces {
+public class PiecePosition {
 
     Activity activity;
-    public NearByPieces(Activity activity) {
+    public PiecePosition(Activity activity) {
         this.activity = activity;
     }
-    public boolean lockable(int cc, int rr) {
+    public boolean isHere(int cc, int rr, int posX, int posY) {
+
+        if (lockable(cc, rr)) {
+            int x = vars.baseX + (cc - vars.offsetC) * vars.picISize;
+            int y = vars.baseY + (rr - vars.offsetR) * vars.picISize;
+            return Math.abs(posX - x) <= vars.picGap && Math.abs(posY - y) <= vars.picGap;
+        } else
+            return false;
+    }
+    boolean lockable(int cc, int rr) {
 
         // return true if near by pieces are already locked
 
@@ -27,4 +36,7 @@ public class NearByPieces {
 
         return left | right | up | down;
     }
+
+
 }
+

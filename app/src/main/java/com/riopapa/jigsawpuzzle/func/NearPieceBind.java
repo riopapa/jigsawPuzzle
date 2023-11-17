@@ -1,23 +1,14 @@
 package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
-import static com.riopapa.jigsawpuzzle.PaintView.nearByPieces;
+import static com.riopapa.jigsawpuzzle.PaintView.piecePosition;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
-import static com.riopapa.jigsawpuzzle.PaintView.rightPosition;
-
-import android.view.View;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -26,13 +17,6 @@ public class NearPieceBind {
     public void check(int moveX, int moveY){
         if (doNotUpdate)
             return;
-
-//        int moveX = (int) fMovedX - vars.picHSize;
-//        int moveY = (int) fMovedY - vars.picHSize;
-
-
-//        vars.jigTables[nowC][nowR].posX = moveX;
-//        vars.jigTables[nowC][nowR].posY = moveY;
 
         // move anchored pieces too
         if (fpNow.anchorId > 0) {
@@ -57,7 +41,7 @@ public class NearPieceBind {
 
         for (int i = 0; i < vars.fps.size(); i++) {
             FloatPiece fpTo = vars.fps.get(i);
-            if (nearByPieces.lockable(fpTo.C, fpTo.R) && rightPosition.isHere(fpTo.C, fpTo.R,
+            if (piecePosition.isHere(fpTo.C, fpTo.R,
                             vars.jigTables[fpTo.C][fpTo.R].posX, vars.jigTables[fpTo.C][fpTo.R].posY)) {
                 if (fpTo.anchorId == 0) {
                     fpTo.anchorId = -1;
@@ -127,13 +111,13 @@ public class NearPieceBind {
 //                    vars.jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * vars.picISize;
                     fpW.anchorId = anchorBase;
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 5;
+                    fpW.count = 7;
                     vars.fps.set(i, fpW);
 //                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
 //                            vars.jigTables[fpW.C][fpW.R].posX +"x"+vars.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 5;
+                    fpW.count = 7;
                     vars.fps.set(i, fpW);
                 }
             }

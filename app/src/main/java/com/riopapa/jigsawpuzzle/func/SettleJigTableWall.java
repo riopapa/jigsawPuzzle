@@ -4,13 +4,14 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
 
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
-public class initJigTable {
+public class SettleJigTableWall {
 
     /**
      * generate random types of each piece L, R, U, D of each pieces
+     * JigTable column, row counts has be settled already
      **/
 
-    public initJigTable(JigTable[][] zz) {
+    public SettleJigTableWall(JigTable[][] zz) {
 
         int columns = zz.length;
         int rows = zz[0].length;
