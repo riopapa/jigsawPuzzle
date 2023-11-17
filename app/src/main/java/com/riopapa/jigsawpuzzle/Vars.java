@@ -1,8 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
-import android.graphics.Bitmap;
-
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
+import com.riopapa.jigsawpuzzle.model.History;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ public class Vars {
 
     public int gameMode;
     // gameMode 0: newly installed;
+    public ArrayList<History> histories;
 
     public JigTable[][] jigTables;
 
@@ -34,7 +34,7 @@ public class Vars {
     // activeRecyclerJigs contains available jigsaws currently
 
     public ArrayList<FloatPiece> fps;    // floating jigsaws
-    public int maxImageCount, selectedImageNbr;
+    public int maxImageCount, chosenNumber;
     public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
     public int showShiftX, showShiftY;
     public  int gameLevel;

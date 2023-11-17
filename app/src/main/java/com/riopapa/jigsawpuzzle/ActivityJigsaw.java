@@ -23,6 +23,7 @@ import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
 import com.riopapa.jigsawpuzzle.func.SettleJigTableWall;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
+import com.riopapa.jigsawpuzzle.model.History;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -50,14 +51,14 @@ public class ActivityJigsaw extends Activity {
 
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
-
+    public static String chosenKey;
     public static Bitmap [][] jigPic;
     public static Bitmap [][] jigBright;
     public static Bitmap [][] jigOLine;
     public static int jigRecyclePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int jPosX, jPosY, dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
-
+    public static History history;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,32 +156,15 @@ public class ActivityJigsaw extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
-//        binding.layoutJigsaw.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.w("paintview onTouch "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
-//                        + " xy= "+event.getX()+"x"+event.getY());
-//                return binding.layoutJigsaw.performClick();
-//            }
-//        });
-//        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//                if (event.getAction() == DragEvent.ACTION_DROP) {
-//                    int iX = (int) event.getX() - vars.picHSize;
-//                    int iY = (int) event.getY() - vars.picHSize;
-//
-//                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
-//                        jPosX = iX;
-//                        jPosY = iY;
-//                        doNotUpdate = true;
-//                        removeFrmRecycle.sendEmptyMessage(0);
-//                        add2FloatingPiece();
-//                    }
-//                }
-//                return true;
-//            }
-//        });
+
+        history = new History();
+        history.key = chosenKey;
+        for (int i = 0; i <  vars.histories.size(); i++) {
+            if (chosenKey.equals(vars.histories.get(i).key)) {
+                history = vars.histories.get(i);
+                break;
+            }
+        }
 
     }
 
@@ -216,6 +200,24 @@ public class ActivityJigsaw extends Activity {
     @Override
     protected void onPause() {
         Log.w("jigsaw","Activityjigsaw onPause "+vars.gameMode);
+        history.time[vars.gameLevel] = System.currentTimeMillis();
+        int locked = 1;
+        for (int cc = 0; cc < vars.jigCOLs; cc++) {
+            for (int rr = 0; rr < vars.jigROWs; rr++) {
+                if (vars.jigTables[cc][rr].locked)
+                    locked++;
+            }
+        }
+        history.percent[vars.gameLevel] = locked * 100 / (vars.jigCOLs * vars.jigROWs);
+        for (int i = 0; i < vars.histories.size(); i++) {
+            if (vars.histories.get(i).key.equals(chosenKey)) {
+                vars.histories.set(i, history);
+                history = null;
+            }
+        }
+        if (history != null)
+            vars.histories.add(history);
+
         if (vars.gameMode != GAME_GOBACK_TO_MAIN)
             vars.gameMode = GAME_PAUSED;
         invalidateTimer.cancel();
@@ -230,3 +232,30 @@ public class ActivityJigsaw extends Activity {
         super.onBackPressed();
     }
 }
+
+//        binding.layoutJigsaw.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.w("paintview onTouch "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
+//                        + " xy= "+event.getX()+"x"+event.getY());
+//                return binding.layoutJigsaw.performClick();
+//            }
+//        });
+//        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View v, DragEvent event) {
+//                if (event.getAction() == DragEvent.ACTION_DROP) {
+//                    int iX = (int) event.getX() - vars.picHSize;
+//                    int iY = (int) event.getY() - vars.picHSize;
+//
+//                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
+//                        jPosX = iX;
+//                        jPosY = iY;
+//                        doNotUpdate = true;
+//                        removeFrmRecycle.sendEmptyMessage(0);
+//                        add2FloatingPiece();
+//                    }
+//                }
+//                return true;
+//            }
+//        });

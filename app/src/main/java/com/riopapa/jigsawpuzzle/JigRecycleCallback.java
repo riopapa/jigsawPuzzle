@@ -137,7 +137,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         fpNow = new FloatPiece();
         fpNow.C = nowC;
         fpNow.R = nowR;
-        fpNow.count = 8;
+        fpNow.count = 3;
         fpNow.mode = ANI_TO_PAINT;
         fpNow.uId = System.currentTimeMillis();    // set Unique uId
         fpNow.anchorId = 0;       // let anchorId to itself

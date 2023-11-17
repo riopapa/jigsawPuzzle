@@ -13,9 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,20 +47,21 @@ public class ActivityMain extends Activity {
     final public static int ANI_TO_PAINT = 10123;
     final public static int ANI_ANCHOR = 10321;
     final public static int GAME_NEW = 0;
-    final public static int GAME_SELECT_IMAGE = 11;
-    final public static int GAME_SELECT_LEVEL = 22;
-    final public static int GAME_STARTED = 33;
-    final public static int GAME_PAUSED = 44;
-    final public static int GAME_GOBACK_TO_MAIN = 47;
-    final public static int GAME_COMPLETED = 55;
-    final public static int GAME_ALL_COMPLETED = 88;
+    final public static int GAME_SELECT_IMAGE = 2011;
+    final public static int GAME_SELECT_LEVEL = 2022;
+    final public static int GAME_STARTED = 2033;
+    final public static int GAME_PAUSED = 2044;
+    final public static int GAME_GOBACK_TO_MAIN = 2047;
+    final public static int GAME_COMPLETED = 2055;
+    final public static int GAME_ALL_COMPLETED = 2088;
 
-    final public static String[] gameLevels= {"Easy", "Normal", "Hard", "Expert"};
+    final public static String[] levelNames = {"Easy", "Normal", "Hard", "Expert"};
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
+
 
 
     @Override
@@ -84,8 +85,11 @@ public class ActivityMain extends Activity {
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         vars = new VarsGetPut().get(this);
-        if (vars == null)
+        if (vars == null) {
             vars = new Vars();
+        }
+        if (vars.histories == null)
+            vars.histories = new ArrayList<>();
 
         // get physical values depend on Phone
         new PhoneMetrics(this);
@@ -116,14 +120,21 @@ public class ActivityMain extends Activity {
         super.onResume();
 
         invalidateTimer = new Timer();
+        RecyclerView recyclerView = findViewById(R.id.imageRecycler);
+        recyclerView.setVisibility(View.VISIBLE);
+        ImageView imageView = findViewById(R.id.chosen_image);
+        imageView.setVisibility(View.GONE);
 
-//        if (vars.gameMode == GAME_PAUSED) {
+        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
+            imageSelAdapter.notifyItemChanged(vars.chosenNumber);
+        }
 //            // todo: ask whether to continue
 //            Intent intent = new Intent(this, ActivitySelLevel.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(intent);
 //        } else
             vars.gameMode = GAME_SELECT_IMAGE;
+
 
     }
 

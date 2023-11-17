@@ -16,7 +16,7 @@ public class CalcCOLUMN_ROW {
 
     public CalcCOLUMN_ROW(int level) {
 
-        int [] sizes = {15, 20, 30, 40};
+        int [] sizes = {10, 20, 30, 40};
         if (chosenImageWidth > chosenImageHeight) {
             vars.jigCOLs = sizes[level];
             vars.jigROWs = vars.jigCOLs * chosenImageHeight / chosenImageWidth;  // to avoid over y size
