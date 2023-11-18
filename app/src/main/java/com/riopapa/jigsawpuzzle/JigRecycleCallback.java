@@ -12,7 +12,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
+import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
 import android.graphics.Canvas;
@@ -100,7 +100,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     }
 
     private void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
-        fpNow = null;
+        nowFp = null;
         jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
         nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
         nowC = nowCR / 10000;
@@ -115,16 +115,16 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //        vars.jigTables[nowC][nowR].posX = dragX;
 //        vars.jigTables[nowC][nowR].posY = dragY; // - vars.picOSize;
 
-        fpNow = new FloatPiece();
-        fpNow.C = nowC;
-        fpNow.R = nowR;
-        fpNow.posX = dragX;
-        fpNow.posY = dragY;
-        fpNow.count = 2;
-        fpNow.mode = ANI_TO_FPS;
-        fpNow.uId = System.currentTimeMillis();    // set Unique uId
-        fpNow.anchorId = 0;       // let anchorId to itself
-        vars.fps.add(fpNow);
+        nowFp = new FloatPiece();
+        nowFp.C = nowC;
+        nowFp.R = nowR;
+        nowFp.posX = dragX;
+        nowFp.posY = dragY;
+        nowFp.count = 2;
+        nowFp.mode = ANI_TO_FPS;
+        nowFp.uId = System.currentTimeMillis();    // set Unique uId
+        nowFp.anchorId = 0;       // let anchorId to itself
+        vars.fps.add(nowFp);
         nowIdx = vars.fps.size() - 1;
 //        Log.w("FPS xy"," info size="+vars.fps.size());
 //        for (int i = 0; i < vars.fps.size(); i++) {
@@ -204,9 +204,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         if (dX != 0 && dY != 0 && nowDragging) {
             dragX = (int) pieceView.getX();
             dragY = screenBottom + (int) pieceView.getY();
-            if (fpNow != null) {
-                fpNow.posX = dragX;
-                fpNow.posY = dragY;
+            if (nowFp != null) {
+                nowFp.posX = dragX;
+                nowFp.posY = dragY;
             }
             String txt = "dxDy "+dX+" x "+dY
                     + "\n vars.jPos "+dragX+" x "+dragY;

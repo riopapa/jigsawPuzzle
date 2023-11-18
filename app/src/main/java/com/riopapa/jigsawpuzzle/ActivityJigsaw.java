@@ -24,7 +24,6 @@ import com.riopapa.jigsawpuzzle.func.SettleJigTableWall;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
-import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -55,7 +54,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap [][] jigPic, jigBright, jigWhite, jigOLine;
     public static int jigRecyclePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
-    public static int jPosX, jPosY, dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
+    public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
     public static History history;
 
     @Override
@@ -112,7 +111,6 @@ public class ActivityJigsaw extends Activity {
         pieceImage = new PieceImage(this, vars.imgOutSize, vars.imgInSize);
 
 
-        vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
         jigPic = new Bitmap[vars.jigCOLs][vars.jigROWs];
         jigOLine = new Bitmap[vars.jigCOLs][vars.jigROWs];
         jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];

@@ -83,6 +83,21 @@ public class ActivityMain extends Activity {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        new PhoneMetrics(this);
+
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        invalidateTimer = new Timer();
+        RecyclerView recyclerView = findViewById(R.id.imageRecycler);
+        recyclerView.setVisibility(View.VISIBLE);
+        ImageView imageView = findViewById(R.id.chosen_image);
+        imageView.setVisibility(View.GONE);
 
         vars = new VarsGetPut().get(this);
         if (vars == null) {
@@ -92,7 +107,6 @@ public class ActivityMain extends Activity {
             vars.histories = new ArrayList<>();
 
         // get physical values depend on Phone
-        new PhoneMetrics(this);
         // then set picXSizes
         new SetPicSizes(screenX);
 
@@ -112,18 +126,7 @@ public class ActivityMain extends Activity {
         uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-    }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        invalidateTimer = new Timer();
-        RecyclerView recyclerView = findViewById(R.id.imageRecycler);
-        recyclerView.setVisibility(View.VISIBLE);
-        ImageView imageView = findViewById(R.id.chosen_image);
-        imageView.setVisibility(View.GONE);
 
         if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
             imageSelAdapter.notifyItemChanged(vars.chosenNumber);

@@ -2,8 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
@@ -41,7 +40,7 @@ public class PaintView extends View {
     NearPieceBind nearPieceBind;
     PieceSelection pieceSelection;
 
-    public static FloatPiece fpNow;
+    public static FloatPiece nowFp;
 
     public PaintView(Context context) {
         this(context, null);
@@ -54,7 +53,7 @@ public class PaintView extends View {
     public void init(Activity activity){
         this.paintActivity = activity;
         vars.fps = new ArrayList<>();
-        fpNow = null;
+        nowFp = null;
 
         piecePosition = new PiecePosition(activity);
         pieceDraw = new PieceDraw();
@@ -90,6 +89,7 @@ public class PaintView extends View {
         return true;
     }
     long nextOKTime = 0, nowTime;
+    static int xOld, yOld;
     public boolean onTouchEvent(MotionEvent event) {
         if (doNotUpdate)
             return false;
@@ -101,32 +101,33 @@ public class PaintView extends View {
         int x = (int) event.getX() - vars.picHSize;
         int y = (int) event.getY() - vars.picHSize;
 
+        Log.w("px on", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-//                Log.w("px on ACTION_DOWN", x+"x"+y);
                 pieceSelection.check(x, y);
                 break;
 
             case MotionEvent.ACTION_MOVE:
 
                 final float MOVING = 30;
-                if ((Math.abs(x - jPosX) > MOVING || Math.abs(y - jPosY) > MOVING) &&
-                    fpNow != null) {
+                if ((Math.abs(x - xOld) > MOVING || Math.abs(y - yOld) > MOVING) &&
+                    nowFp != null) {
+                    xOld = x; yOld = y;
                     if (wannaBack2Recycler(y)) {
                         doNotUpdate = true;
                         Log.w("pchk Check", "vars.fps size=" + vars.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
                         vars.fps.remove(nowIdx);
                         goBack2Recycler();
-                        fpNow = null;
+                        nowFp = null;
                         dragX = -1;
                     } else if (y < screenBottom) {
-                        fpNow.posX = x;
-                        fpNow.posY = y;
+                        nowFp.posX = x;
+                        nowFp.posY = y;
                         nearPieceBind.check(x, y);
                     } else {
                         y -= vars.picOSize;
-                        fpNow.posX = x;
-                        fpNow.posY = y;
+                        nowFp.posX = x;
+                        nowFp.posY = y;
                     }
                 }
                 break;
@@ -142,7 +143,7 @@ public class PaintView extends View {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         int i = layoutManager.findFirstVisibleItemPosition();
         View v = layoutManager.findViewByPosition(i);
-        jigRecyclePos = i + (jPosX + vars.picOSize - (int) v.getX()) / vars.picOSize;
+        jigRecyclePos = i + (dragX + vars.picOSize - (int) v.getX()) / vars.picOSize;
         vars.jigTables[nowC][nowR].outRecycle = false;
         if (jigRecyclePos < vars.activeRecyclerJigs.size()-1) {
             vars.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
@@ -157,8 +158,8 @@ public class PaintView extends View {
     public boolean wannaBack2Recycler(int moveY) {
 
         // if sole piece then can go back to recycler
-        if (fpNow.anchorId == 0 && moveY > screenBottom && vars.fps.size() > 0) {
-            fpNow = null;
+        if (nowFp.anchorId == 0 && moveY > screenBottom && vars.fps.size() > 0) {
+            nowFp = null;
             dragX = -1;
             return true;
         }

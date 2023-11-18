@@ -5,7 +5,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
-import static com.riopapa.jigsawpuzzle.PaintView.fpNow;
+import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
 import static com.riopapa.jigsawpuzzle.PaintView.piecePosition;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
@@ -19,24 +19,24 @@ public class NearPieceBind {
             return;
 
         // move anchored pieces too
-        if (fpNow.anchorId > 0) {
+        if (nowFp.anchorId > 0) {
             for (int i = 0; i < vars.fps.size(); i++) {
                 FloatPiece fpT = vars.fps.get(i);
-                if (fpT.anchorId == fpNow.anchorId) {
-                    fpT.posX = fpNow.posX - (nowC - fpT.C) * vars.picISize;
-                    fpT.posY = fpNow.posY - (nowR - fpT.R) * vars.picISize;
+                if (fpT.anchorId == nowFp.anchorId) {
+                    fpT.posX = nowFp.posX - (nowC - fpT.C) * vars.picISize;
+                    fpT.posY = nowFp.posY - (nowR - fpT.R) * vars.picISize;
                     vars.fps.set(i, fpT);
                 }
             }
         }
         if (nowIdx < vars.fps.size() && nowIdx != vars.fps.size() - 1) {
-            new MoveThisOnTop(fpNow, nowIdx);
+            new MoveThisOnTop(nowFp, nowIdx);
             nowIdx = vars.fps.size() - 1;
         }
 
         // check whether each pieces are in lockable position
         boolean lockable = false;
-        long anchorId = fpNow.anchorId;
+        long anchorId = nowFp.anchorId;
 
         for (int i = 0; i < vars.fps.size(); i++) {
             FloatPiece fpTo = vars.fps.get(i);
@@ -120,12 +120,12 @@ public class NearPieceBind {
             }
 
             // move anchored pieces too
-            if (fpNow.anchorId > 0) {
+            if (nowFp.anchorId > 0) {
                 for (int i = 0; i < vars.fps.size(); i++) {
                     FloatPiece fpT = vars.fps.get(i);
-                    if (fpT.anchorId == fpNow.anchorId) {
-                        fpT.posX = fpNow.posX - (nowC - fpT.C) * vars.picISize;
-                        fpT.posY = fpNow.posY - (nowR - fpT.R) * vars.picISize;
+                    if (fpT.anchorId == nowFp.anchorId) {
+                        fpT.posX = nowFp.posX - (nowC - fpT.C) * vars.picISize;
+                        fpT.posY = nowFp.posY - (nowR - fpT.R) * vars.picISize;
 
                     }
                 }

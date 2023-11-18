@@ -11,6 +11,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,9 +31,11 @@ public class ActivitySelLevel extends AppCompatActivity {
 
     ActivitySelLevelBinding binding;
     AlertDialog alertDialog;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
 
         if (vars.gameMode == GAME_PAUSED) {
             vars.gameMode = GAME_STARTED; // target Image, level has been set
@@ -115,8 +118,9 @@ public class ActivitySelLevel extends AppCompatActivity {
     private void edit_table(View view) {
         alertDialog.dismiss();
         vars.gameLevel = Integer.parseInt(view.getTag().toString());
-        vars.gameMode = GAME_STARTED; // target Image, level has been set
         new CalcCOLUMN_ROW(vars.gameLevel);
+
+        vars.gameMode = GAME_STARTED; // target Image, level has been set
         new SetPicSizes(screenX * (12 - vars.gameLevel) / 12);
         Log.w("sel level", "Game Level="+vars.gameLevel);
         Intent intent = new Intent(this, ActivityJigsaw.class);
