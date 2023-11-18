@@ -19,6 +19,7 @@ public class Vars {
     // pieceISize: one PieceSize for slicing images
     // pieceOSize: one Outer for slicing images
 
+    public boolean debugMode = false;
     public int gameMode;
     // gameMode 0: newly installed;
     public ArrayList<History> histories;

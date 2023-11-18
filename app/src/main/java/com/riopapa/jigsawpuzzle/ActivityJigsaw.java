@@ -52,9 +52,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static String chosenKey;
-    public static Bitmap [][] jigPic;
-    public static Bitmap [][] jigBright;
-    public static Bitmap [][] jigOLine;
+    public static Bitmap [][] jigPic, jigBright, jigWhite, jigOLine;
     public static int jigRecyclePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int jPosX, jPosY, dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
@@ -116,8 +114,9 @@ public class ActivityJigsaw extends Activity {
 
         vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
         jigPic = new Bitmap[vars.jigCOLs][vars.jigROWs];
-        jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
         jigOLine = new Bitmap[vars.jigCOLs][vars.jigROWs];
+        jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
+        jigWhite = new Bitmap[vars.jigCOLs][vars.jigROWs];
 
         new SettleJigTableWall(vars.jigTables);
 

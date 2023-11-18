@@ -24,7 +24,7 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 public class PieceImage {
     int outerSize, innerSize;
     float out2Scale = 1.05f;
-    Paint paintIN, paintOUT, paintBright, paintOutATop, paintOutOver;
+    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutOver;
 
     int outLineColor, out2LineColor;
     Matrix matrixOutLine;
@@ -52,17 +52,29 @@ public class PieceImage {
         paintOutOver = new Paint();
         paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
-        final float contrast  = 1;
-        final int brightness = 50;  // positive is bright
-        ColorMatrix colorMatrix = new ColorMatrix(new float[]
+        final float brightContrast  = 1;
+        final int BrightBrightness = 50;  // positive is bright
+        ColorMatrix brightMatrix = new ColorMatrix(new float[]
                 {
-                        contrast, 0, 0, 0, brightness,  // Red
-                        0, contrast, 0, 0, brightness,  // Green
-                        0, 0, contrast, 0, brightness,  // Blue
+                        brightContrast, 0, 0, 0, BrightBrightness,  // Red
+                        0, brightContrast, 0, 0, BrightBrightness,  // Green
+                        0, 0, brightContrast, 0, BrightBrightness,  // Blue
                         0, 0, 0, 1, 0                   // Alpha
                 });
         paintBright = new Paint();
-        paintBright.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+        paintBright.setColorFilter(new ColorMatrixColorFilter(brightMatrix));
+
+        final float whiteContrast  = 1.5f;
+        final int whiteBrightness = 250;  // positive is bright
+        ColorMatrix whiteMatrix = new ColorMatrix(new float[]
+                {
+                        whiteContrast, 0, 0, 0, whiteBrightness,  // Red
+                        0, whiteContrast, 0, 0, whiteBrightness,  // Green
+                        0, 0, whiteContrast, 0, whiteBrightness,  // Blue
+                        0, 0, 0, 1, 0                   // Alpha
+                });
+        paintWhite = new Paint();
+        paintWhite.setColorFilter(new ColorMatrixColorFilter(whiteMatrix));
 
     }
 
@@ -161,6 +173,13 @@ public class PieceImage {
         Bitmap bMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
         canvasBright.drawBitmap(inMap, 0, 0, paintBright);
+        return bMap;
+    }
+
+    public Bitmap makeWhite(Bitmap inMap) {
+        Bitmap bMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
+        Canvas canvasBright = new Canvas(bMap);
+        canvasBright.drawBitmap(inMap, 0, 0, paintWhite);
         return bMap;
     }
 

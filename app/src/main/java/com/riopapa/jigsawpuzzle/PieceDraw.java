@@ -5,6 +5,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
@@ -15,6 +16,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -35,8 +37,8 @@ public class PieceDraw {
                 final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
                 if (jigOLine[cc][rr] == null)
                     pieceImage.buildOline(c+vars.offsetC, r+vars.offsetR);
-                if (jigBright[cc][rr] == null)
-                    jigBright[cc][rr] = pieceImage.makeBright(jigOLine[cc][rr]);
+                if (jigWhite[cc][rr] == null)
+                    jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
                 if (vars.jigTables[cc][rr].locked) {
                     if (vars.jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigOLine[cc][rr],
@@ -44,10 +46,10 @@ public class PieceDraw {
                     else {
                         vars.jigTables[cc][rr].count--;
                         canvas.drawBitmap((vars.jigTables[cc][rr].count % 2 == 0) ?
-                                        jigBright[cc][rr] : jigOLine[cc][rr],
+                                        jigWhite[cc][rr] : jigOLine[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                         if (vars.jigTables[cc][rr].count == 0) {
-                            jigBright[cc][rr] = null;
+                            jigWhite[cc][rr] = null;
                         }
                     }
                 }
@@ -71,6 +73,8 @@ public class PieceDraw {
             int c = fp.C;
             int r = fp.R;
             JigTable jt = vars.jigTables[c][r];
+            if (vars.debugMode)
+                Log.w("fps "+cnt, "CR="+fp.C+"x"+fp.R+" pos="+jt.posX+"x"+jt.posY);
             if (fp.count == 0) { // normal pieceImage
                 canvas.drawBitmap(jigOLine[c][r], jt.posX, jt.posY, null);
                 continue;

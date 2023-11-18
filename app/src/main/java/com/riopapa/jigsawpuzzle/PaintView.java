@@ -92,7 +92,7 @@ public class PaintView extends View {
     long nextOKTime = 0, nowTime;
     public boolean onTouchEvent(MotionEvent event) {
         if (doNotUpdate)
-            return true;
+            return false;
         nowTime = System.currentTimeMillis();
         if (nextOKTime > nowTime)
             return true;
@@ -157,8 +157,7 @@ public class PaintView extends View {
     public boolean wannaBack2Recycler(int moveY) {
 
         // if sole piece then can go back to recycler
-        if (fpNow.anchorId == 0 && moveY > (screenBottom - vars.picHSize) &&
-                vars.fps.size() > 0) {
+        if (fpNow.anchorId == 0 && moveY > screenBottom && vars.fps.size() > 0) {
             fpNow = null;
             dragX = -1;
             return true;

@@ -43,15 +43,13 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     private final ActivityJigsawBinding binding;
 
-    private NearByFloatPiece nearByFloatPiece;
     private NearPieceBind nearPieceBind;
 
-    private static boolean clearRecycler = false;
+    public static boolean nowDragging;
 
     public JigRecycleCallback(ZItemTouchHelperListener listener, ActivityJigsawBinding binding) {
         this.listener = listener;
         this.binding = binding;
-        nearByFloatPiece = new NearByFloatPiece();
         nearPieceBind = new NearPieceBind();
     }
 
@@ -83,21 +81,25 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
 
+            nowDragging = true;
             // Piece is selected and begun dragging
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
+            nowDragging = false;
             if (dragY < screenBottom - vars.picHSize) {
-                jPosX = dragX;
-                dragX = -1; // no more dragging piece drawing
-                jPosY = dragY;
+                jPosX = dragX; dragX = -1; // no more dragging piece drawing
+                jPosY = dragY; dragY = -1;
                 Log.w("idle ", "ACTION_STATE_IDLE =" + jPosX + " x " + jPosY);
+                doNotUpdate = true;
+                vars.debugMode = true;
                 removeFromRecycle();
                 add2FloatingPiece();
-                nearPieceBind.check(jPosX, jPosY);
                 doNotUpdate = false;
+                nearPieceBind.check(jPosX, jPosY);
+//                vars.debugMode = false;
             } else {
                 dragX = -1;
             }
@@ -105,19 +107,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     }
 
-    private void removeFromRecycle() {
-        doNotUpdate = true;
-        Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+jPosX+"x"+jPosY);
-        if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
-            vars.jigTables[nowC][nowR].outRecycle = true;
-            vars.activeRecyclerJigs.remove(jigRecyclePos);
-            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-            Log.w("r2m move R"+nowCR,"removed from recycler jPos="+jPosX+"x"+jPosY);
-        }
-    }
-
     private static void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
-        doNotUpdate = true;
         fpNow = null;
         jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
         nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
@@ -125,11 +115,10 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowR = nowCR - nowC * 10000;
         dragY = screenBottom + vars.picHSize;
         dragX = viewHolder.itemView.getLeft() + vars.picGap;
-        Log.w("selected", " CR"+nowCR+ " piece // x="+dragX+ " nowPos="+jigRecyclePos
+        Log.w("selected", " CR"+nowCR+ " drag x="+dragX+ " y="+dragY+ " nowPos="+jigRecyclePos
         + " H="+vars.picHSize+" O="+vars.picOSize);
-        doNotUpdate = true;
     }
-    void add2FloatingPiece() {
+    private void add2FloatingPiece() {
 
         vars.jigTables[nowC][nowR].posX = jPosX;
         vars.jigTables[nowC][nowR].posY = jPosY; // - vars.picOSize;
@@ -143,12 +132,21 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         fpNow.anchorId = 0;       // let anchorId to itself
         vars.fps.add(fpNow);
         nowIdx = vars.fps.size() - 1;
-        doNotUpdate = false;
-//        Log.w("FPS xy"," info");
-//        for (int i = 0; i < vars.fps.size(); i++) {
-//            Log.w(vars.picGap+" gap "+i, (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posX-jPosX)
-//                    + " x "+ (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posY-jPosY));
-//        }
+        Log.w("FPS xy"," info size="+vars.fps.size());
+        for (int i = 0; i < vars.fps.size(); i++) {
+            Log.w(vars.picGap+" gap "+i, (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posX-jPosX)
+                    + " x "+ (vars.jigTables[vars.fps.get(i).C][vars.fps.get(i).R].posY-jPosY));
+        }
+    }
+
+    private void removeFromRecycle() {
+        Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+jPosX+"x"+jPosY);
+        if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
+            vars.jigTables[nowC][nowR].outRecycle = true;
+            vars.activeRecyclerJigs.remove(jigRecyclePos);
+            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+            Log.w("r2m move R"+nowCR,"removed from recycler jPos="+jPosX+"x"+jPosY);
+        }
     }
 
 
@@ -209,7 +207,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //        nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
 //        nowC = nowCR / 10000;
 //        nowR = nowCR - nowC * 10000;
-        if (dX != 0 && dY != 0) {
+        if (dX != 0 && dY != 0 && nowDragging) {
             dragX = (int) pieceView.getX();
             dragY = screenBottom + (int) pieceView.getY();
             vars.jigTables[nowC][nowR].posX = dragX;
