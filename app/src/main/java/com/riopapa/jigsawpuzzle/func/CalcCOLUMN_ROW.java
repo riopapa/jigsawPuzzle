@@ -8,8 +8,7 @@ public class CalcCOLUMN_ROW {
 
     /**
      * calculate jigCOLUMNs, jigROWs initially by level info
-     * @param selectedHeight, selectedWidth : image Height
-     * @param showMaxX, showMaxY : physical phone max showing
+     * @param chosenImageHeight, chosenImageWidth : image Height
      * @return jigCOLUMNs, jigROWs
      **/
 

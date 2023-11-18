@@ -11,21 +11,21 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
-import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_PAINT;
+import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
-import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceDraw {
     Paint pGrayed;
     public PieceDraw() {
         pGrayed = new Paint();
-        pGrayed.setAlpha(100);
+        pGrayed.setAlpha(50);
     }
 
     public void draw(Canvas canvas){
@@ -41,7 +41,7 @@ public class PieceDraw {
                     jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
                 if (vars.jigTables[cc][rr].locked) {
                     if (vars.jigTables[cc][rr].count == 0)
-                        canvas.drawBitmap(jigOLine[cc][rr],
+                        canvas.drawBitmap(jigPic[cc][rr],
                                 vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
                     else {
                         vars.jigTables[cc][rr].count--;
@@ -72,11 +72,8 @@ public class PieceDraw {
             FloatPiece fp = vars.fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
-            JigTable jt = vars.jigTables[c][r];
-            if (vars.debugMode)
-                Log.w("fps "+cnt, "CR="+fp.C+"x"+fp.R+" pos="+jt.posX+"x"+jt.posY);
             if (fp.count == 0) { // normal pieceImage
-                canvas.drawBitmap(jigOLine[c][r], jt.posX, jt.posY, null);
+                canvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
                 continue;
             }
             // animate just anchored
@@ -85,9 +82,9 @@ public class PieceDraw {
                 if (jigBright[c][r] == null)
                     jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
                 canvas.drawBitmap((fp.count % 2 == 0) ?
-                        jigBright[c][r] : jigPic[c][r],
-                        jt.posX + rnd.nextInt(10) - 5,
-                        jt.posY + rnd.nextInt(10) - 5, null);
+                        jigBright[c][r] : jigOLine[c][r],
+                        fp.posX + rnd.nextInt(4) - 2,
+                        fp.posY + rnd.nextInt(4) - 2, null);
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
@@ -95,14 +92,14 @@ public class PieceDraw {
                 continue;
             }
             // animate recycler to paint
-            if (fp.count > 0 && fp.mode == ANI_TO_PAINT) {  // animate from recycle to paintView
+            if (fp.count > 0 && fp.mode == ANI_TO_FPS) {  // animate from recycle to paintView
                 fp.count--;
                 if (jigBright[c][r] == null)
                     jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
                 canvas.drawBitmap((fp.count % 2 == 0) ?
-                        jigBright[c][r] : jigPic[c][r],
-                        jt.posX + rnd.nextInt(10) - 5,
-                        jt.posY + rnd.nextInt(10) - 5, null);
+                        jigBright[c][r] : jigOLine[c][r],
+                        fp.posX + rnd.nextInt(4) - 2,
+                        fp.posY + rnd.nextInt(4) - 2, null);
 //                vars.jigTables[c][r].posY -= vars.picISize / 4;
                 if (fp.count == 0) {
                     fp.mode = 0;
@@ -110,8 +107,9 @@ public class PieceDraw {
                 vars.fps.set(cnt, fp);
             }
         }
-        if (dragX > 0) {
+        if (nowDragging) {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
+            Log.w("nowDragging", "piece "+dragX+"x"+dragY);
         }
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+vars.offsetC + " x " + vars.offsetR+"\n calc " + calcC +" x "+ calcR+"\n vars.fps "+vars.fps.size();

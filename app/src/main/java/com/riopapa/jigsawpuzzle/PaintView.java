@@ -120,13 +120,13 @@ public class PaintView extends View {
                         fpNow = null;
                         dragX = -1;
                     } else if (y < screenBottom) {
-                        vars.jigTables[nowC][nowR].posX = x;
-                        vars.jigTables[nowC][nowR].posY = y;
+                        fpNow.posX = x;
+                        fpNow.posY = y;
                         nearPieceBind.check(x, y);
                     } else {
                         y -= vars.picOSize;
-                        vars.jigTables[nowC][nowR].posX = x;
-                        vars.jigTables[nowC][nowR].posY = y;
+                        fpNow.posX = x;
+                        fpNow.posY = y;
                     }
                 }
                 break;

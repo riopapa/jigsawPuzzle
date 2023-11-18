@@ -11,7 +11,7 @@ public class NearByFloatPiece {
      * return fps idx if anchorable else return -1
      */
     public NearByFloatPiece() {}
-    public int check(int thisIdx, FloatPiece fpThis) {
+    public int isNear(int thisIdx, FloatPiece fpThis) {
 
         long anchorId = fpThis.anchorId;
         int cc = fpThis.C;
@@ -29,10 +29,10 @@ public class NearByFloatPiece {
                     continue;
                 if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)
                     continue;
-                int delX = Math.abs(vars.jigTables[cc][rr].posX - vars.jigTables[fpWork.C][fpWork.R].posX - cDelta*vars.picISize);
+                int delX = Math.abs(fpThis.posX - fpWork.posX - cDelta*vars.picISize);
                 if (delX > vars.picGap)    // around near
                     continue;
-                int delY = Math.abs(vars.jigTables[cc][rr].posY - vars.jigTables[fpWork.C][fpWork.R].posY - rDelta*vars.picISize);
+                int delY = Math.abs(fpThis.posY - fpWork.posY - rDelta*vars.picISize);
                 if (delY > vars.picGap)
                     continue;
                 return i;   // anchored with i's floatPiece

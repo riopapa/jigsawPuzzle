@@ -27,6 +27,7 @@ import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -114,7 +115,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         holder.iVImage.setImageBitmap(bitmap);
         String key = new ImageStorage().getStr(position).substring(0,3);
         String histStr = "";
-        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd");
+        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
         for (int i = 0; i < vars.histories.size(); i++) {
             History hist = vars.histories.get(i);
             if (key.equals(hist.key)) {

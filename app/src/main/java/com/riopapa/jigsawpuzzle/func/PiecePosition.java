@@ -10,16 +10,16 @@ public class PiecePosition {
     public PiecePosition(Activity activity) {
         this.activity = activity;
     }
-    public boolean isHere(int cc, int rr, int posX, int posY) {
+    public boolean isLockable(int cc, int rr, int posX, int posY) {
 
-        if (lockable(cc, rr)) {
+        if (isNearLocked(cc, rr)) {
             int x = vars.baseX + (cc - vars.offsetC) * vars.picISize;
             int y = vars.baseY + (rr - vars.offsetR) * vars.picISize;
             return Math.abs(posX - x) <= vars.picGap && Math.abs(posY - y) <= vars.picGap;
         } else
             return false;
     }
-    boolean lockable(int cc, int rr) {
+    boolean isNearLocked(int cc, int rr) {
 
         // return true if near by pieces are already locked
 

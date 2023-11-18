@@ -23,15 +23,14 @@ public class NearPieceBind {
             for (int i = 0; i < vars.fps.size(); i++) {
                 FloatPiece fpT = vars.fps.get(i);
                 if (fpT.anchorId == fpNow.anchorId) {
-                    vars.jigTables[fpT.C][fpT.R].posX =
-                            vars.jigTables[nowC][nowR].posX - (nowC - fpT.C) * vars.picISize;
-                    vars.jigTables[fpT.C][fpT.R].posY =
-                            vars.jigTables[nowC][nowR].posY - (nowR - fpT.R) * vars.picISize;
+                    fpT.posX = fpNow.posX - (nowC - fpT.C) * vars.picISize;
+                    fpT.posY = fpNow.posY - (nowR - fpT.R) * vars.picISize;
+                    vars.fps.set(i, fpT);
                 }
             }
         }
         if (nowIdx < vars.fps.size() && nowIdx != vars.fps.size() - 1) {
-            new RearrangePieces(fpNow, nowIdx);
+            new MoveThisOnTop(fpNow, nowIdx);
             nowIdx = vars.fps.size() - 1;
         }
 
@@ -41,8 +40,7 @@ public class NearPieceBind {
 
         for (int i = 0; i < vars.fps.size(); i++) {
             FloatPiece fpTo = vars.fps.get(i);
-            if (piecePosition.isHere(fpTo.C, fpTo.R,
-                            vars.jigTables[fpTo.C][fpTo.R].posX, vars.jigTables[fpTo.C][fpTo.R].posY)) {
+            if (piecePosition.isLockable(fpTo.C, fpTo.R, fpTo.posX, fpTo.posY)) {
                 if (fpTo.anchorId == 0) {
                     fpTo.anchorId = -1;
                     vars.fps.set(i, fpTo);
@@ -77,7 +75,7 @@ public class NearPieceBind {
 
         for (int iA = vars.fps.size()-1; iA >= 0;  iA--) {
             fpThis = vars.fps.get(iA);
-            ancBase = nearByFloatPiece.check(iA, fpThis);
+            ancBase = nearByFloatPiece.isNear(iA, fpThis);
             if (ancBase != -1) {
                 ancThis = iA;
                 fpBase = vars.fps.get(ancBase);
@@ -86,7 +84,6 @@ public class NearPieceBind {
         }
 
         if (ancBase != -1) {
-            doNotUpdate = true;
 
             if (fpBase.anchorId == 0) {
                 fpBase.anchorId = fpBase.uId;
@@ -107,17 +104,17 @@ public class NearPieceBind {
             for (int i = 0; i < vars.fps.size(); i++) {
                 FloatPiece fpW = vars.fps.get(i);
                 if (fpW.anchorId == anchorThis) {
-//                    vars.jigTables[fpW.C][fpW.R].posX -= (fpW.C - fpBase.C) * vars.picISize;
-//                    vars.jigTables[fpW.C][fpW.R].posY -= (fpW.R - fpBase.R) * vars.picISize;
+                    fpW.posX = fpThis.posX - (fpW.C - fpThis.C) * vars.picISize;
+                    fpW.posY = fpThis.posY - (fpW.R - fpThis.R) * vars.picISize;
                     fpW.anchorId = anchorBase;
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 7;
+                    fpW.count = 3;
                     vars.fps.set(i, fpW);
 //                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
 //                            vars.jigTables[fpW.C][fpW.R].posX +"x"+vars.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 7;
+                    fpW.count = 3;
                     vars.fps.set(i, fpW);
                 }
             }
@@ -127,14 +124,12 @@ public class NearPieceBind {
                 for (int i = 0; i < vars.fps.size(); i++) {
                     FloatPiece fpT = vars.fps.get(i);
                     if (fpT.anchorId == fpNow.anchorId) {
-                        vars.jigTables[fpT.C][fpT.R].posX =
-                                vars.jigTables[nowC][nowR].posX - (nowC - fpT.C) * vars.picISize;
-                        vars.jigTables[fpT.C][fpT.R].posY =
-                                vars.jigTables[nowC][nowR].posY - (nowR - fpT.R) * vars.picISize;
+                        fpT.posX = fpNow.posX - (nowC - fpT.C) * vars.picISize;
+                        fpT.posY = fpNow.posY - (nowR - fpT.R) * vars.picISize;
+
                     }
                 }
             }
-            doNotUpdate = false;
         }
     }
 

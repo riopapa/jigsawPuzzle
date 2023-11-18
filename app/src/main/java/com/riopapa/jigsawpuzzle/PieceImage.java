@@ -23,8 +23,8 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
     int outerSize, innerSize;
-    float out2Scale = 1.05f;
-    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutOver;
+//    float out2Scale = 1.05f;
+    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutLine;
 
     int outLineColor, out2LineColor;
     Matrix matrixOutLine;
@@ -35,8 +35,8 @@ public class PieceImage {
         this.context = context;
         this.outerSize = outerSize;
         this.innerSize = innerSize;
-        matrixOutLine = new Matrix();
-        matrixOutLine.setScale(out2Scale, out2Scale);
+//        matrixOutLine = new Matrix();
+//        matrixOutLine.setScale(out2Scale, out2Scale);
 
         paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
         outLineColor = context.getColor(R.color.out_line);
@@ -49,8 +49,8 @@ public class PieceImage {
         paintOutATop = new Paint();
         paintOutATop.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
 
-        paintOutOver = new Paint();
-        paintOutOver.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        paintOutLine = new Paint();
+        paintOutLine.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
         final float brightContrast  = 1;
         final int BrightBrightness = 50;  // positive is bright
@@ -64,7 +64,7 @@ public class PieceImage {
         paintBright = new Paint();
         paintBright.setColorFilter(new ColorMatrixColorFilter(brightMatrix));
 
-        final float whiteContrast  = 1.5f;
+        final float whiteContrast  = 0.5f;
         final int whiteBrightness = 250;  // positive is bright
         ColorMatrix whiteMatrix = new ColorMatrix(new float[]
                 {
@@ -118,15 +118,15 @@ public class PieceImage {
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
         Paint p = new Paint();
         p.setColor(Color.BLACK);
-        p.setTextSize(outerSize*4/18);
-        p.setStrokeWidth(outerSize/15);
+        p.setTextSize(outerSize*4f/18f);
+        p.setStrokeWidth(outerSize/15f);
         p.setTextAlign(Paint.Align.CENTER);
         p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/2, outerSize*3/6, p);
+        tCanvas.drawText(c+"."+r, outerSize/2f, outerSize*3f/6f, p);
         p.setStrokeWidth(0);
         p.setColor(Color.WHITE);
         p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/2, outerSize*3/6, p);
+        tCanvas.drawText(c+"."+r, outerSize/2f, outerSize*3f/6f, p);
         return cropped;
     }
 
@@ -134,7 +134,7 @@ public class PieceImage {
      * create picOSized outline oLine from jig.src (outerSize)
      * @param srcMap input oLine with outerSize
      * @param outMask outline Mask
-     * @return outlined bitmawp with picOSize
+     * @return outlined bitmap with picOSize
      */
     public Bitmap makeOutline(Bitmap srcMap, Bitmap outMask) {
 
@@ -142,7 +142,7 @@ public class PieceImage {
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(outMask, 0,0, paintOutATop);
         Matrix matrix = new Matrix();
-        canvas.drawBitmap(srcMap, matrix, paintOutOver);
+        canvas.drawBitmap(srcMap, matrix, paintOutLine);
         return Bitmap.createScaledBitmap(outMap, vars.picOSize, vars.picOSize, true);
 
     }
@@ -150,7 +150,7 @@ public class PieceImage {
     /**
      * create masked Map using L,R,U,D masks
      * @param maskL, maskR, maskU, maskD predefined with outerSize
-     * @return merged bitmawp with outerSize
+     * @return merged bitmap with outerSize
      */
 
     public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
@@ -166,7 +166,7 @@ public class PieceImage {
     /**
      * create white Map for brighter map using ColorMatrix
      * @param inMap positioned picMap
-     * @return merged bitmawp with outerSize
+     * @return merged bitmap with outerSize
      */
 
     public Bitmap makeBright(Bitmap inMap) {

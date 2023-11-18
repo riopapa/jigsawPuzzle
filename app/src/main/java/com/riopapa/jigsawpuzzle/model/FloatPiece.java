@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle.model;
 
 public class FloatPiece {
     public int R, C;
+    public int posX, posY;
     public int count;
     public int mode;
     public long uId;

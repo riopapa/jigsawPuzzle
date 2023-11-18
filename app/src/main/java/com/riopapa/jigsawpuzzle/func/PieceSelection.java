@@ -28,43 +28,43 @@ public class PieceSelection {
             return;
 
         for (int i = vars.fps.size() - 1; i >= 0; i--) {
-            int c = vars.fps.get(i).C;
-            int r = vars.fps.get(i).R;
-            JigTable jt = vars.jigTables[c][r];
-            Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r+" jtPos="+jt.posX+"x"+jt.posY);
-            if (Math.abs(jt.posX - iX) > vars.picHSize)
+            FloatPiece fp = vars.fps.get(i);
+            int c = fp.C;
+            int r = fp.R;
+            Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r
+                    +" pos="+fp.posX+"x"+fp.posY);
+            if (Math.abs(fp.posX - iX) > vars.picHSize)
                 continue;
-            if (Math.abs(jt.posY - iY) > vars.picHSize)
+            if (Math.abs(fp.posY - iY) > vars.picHSize)
                 continue;
             Log.w("mached cr="+c+"x"+r,
-                    " jt Pos="+jt.posX+"x"+jt.posY+" hSize="+vars.picHSize+
-                    ", gap "+Math.abs(jt.posX - iX)+"x"+Math.abs(jt.posY - iY));
+                    " fp Pos="+fp.posX+"x"+fp.posY+" hSize="+vars.picHSize+
+                    ", gap "+Math.abs(fp.posX - iX)+"x"+Math.abs(fp.posY - iY));
+            fpNow = fp;
             nowR = r; nowC = c;
             nowIdx = i;
-            if (nowIdx != vars.fps.size()-1) { // move current puzzle to top
-                Collections.swap(vars.fps, nowIdx, vars.fps.size() - 1);
-                nowIdx = vars.fps.size() - 1;
-            }
-            fpNow = vars.fps.get(nowIdx);
-            jPosX = jt.posX; jPosY = jt.posY;
-
-            // move current pieces with anchored to Top position
-            for (int ii = 0; ii < vars.fps.size(); ii++) {
-                if (vars.fps.get(ii).anchorId == fpNow.anchorId) {
-                    Collections.swap(vars.fps, ii, vars.fps.size() - 1);
-                }
-            }
-
-            // reset nowIdx to top pieceImage
-            for (int ii = 0; i < vars.fps.size(); ii++) {
-                FloatPiece fpAnchor = vars.fps.get(ii);
-                if (fpAnchor.C == fpNow.C && fpAnchor.R == fpNow.R) {
-                    Collections.swap(vars.fps, ii, vars.fps.size() - 1);
-                    nowIdx = vars.fps.size() - 1;
-                    break;
-                }
-            }
-            fpNow = vars.fps.get(nowIdx);
+//
+//            // move current pieces with anchored to Top position
+//            for (int ii = 0; ii < vars.fps.size(); ii++) {
+//                if (vars.fps.get(ii).anchorId == fp.anchorId) {
+//                    Collections.swap(vars.fps, ii, vars.fps.size() - 1);
+//                }
+//            }
+//            if (nowIdx != vars.fps.size()-1) { // move current puzzle to top
+//                Collections.swap(vars.fps, nowIdx, vars.fps.size() - 1);
+//                nowIdx = vars.fps.size() - 1;
+//            }
+//
+//            // reset nowIdx to top pieceImage
+//            for (int ii = 0; i < vars.fps.size(); ii++) {
+//                FloatPiece fpAnchor = vars.fps.get(ii);
+//                if (fpAnchor.C == fpNow.C && fpAnchor.R == fpNow.R) {
+//                    Collections.swap(vars.fps, ii, vars.fps.size() - 1);
+//                    nowIdx = vars.fps.size() - 1;
+//                    break;
+//                }
+//            }
+//            fpNow = vars.fps.get(nowIdx);
             break;
         }
     }

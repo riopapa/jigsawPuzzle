@@ -7,12 +7,12 @@ import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class RearrangePieces {
+public class MoveThisOnTop {
 
-    ArrayList<FloatPiece> fp2;
+
 
     // function to re-arrange pieces so touched pieces go to top layer
-    public RearrangePieces (FloatPiece fpNow, int nowIdx) {
+    public MoveThisOnTop(FloatPiece fpNow, int nowIdx) {
 
         int fpSize = vars.fps.size() - 1;
         long ancId = fpNow.anchorId;
@@ -20,8 +20,7 @@ public class RearrangePieces {
             Collections.swap(vars.fps, nowIdx, fpSize);
             return;
         }
-
-        fp2 = new ArrayList<>();
+        ArrayList<FloatPiece> fp2 = new ArrayList<>();
         vars.fps.remove(nowIdx);
         for (int i = 0; i < vars.fps.size() - 1;) {
             if (vars.fps.get(i).anchorId == ancId) {
@@ -34,8 +33,6 @@ public class RearrangePieces {
         }
         vars.fps.addAll(fp2);
         vars.fps.add(fpNow);
-        fp2 = null;
-
     }
 
 }

@@ -1,22 +1,10 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosX;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jPosY;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -27,7 +15,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
@@ -79,7 +66,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
-//            Log.w("rq ontouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
+//            Log.w("rq onTouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
             return v.performClick();
         }
 

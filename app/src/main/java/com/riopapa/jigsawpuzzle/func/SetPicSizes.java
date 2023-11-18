@@ -1,7 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
