@@ -37,7 +37,6 @@ public class ShowThumbnail {
         Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
         Canvas canvas = new Canvas(thumb);
 
-
         Paint pBox = new Paint();
         pBox.setColor(0x7fBBBBBB);
 

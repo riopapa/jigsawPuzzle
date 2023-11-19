@@ -9,6 +9,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
@@ -86,12 +87,13 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
             if (dragY < screenBottom - vars.picHSize) {
-//                dragX = dragX; dragX = -1; // no more dragging piece drawing
-//                dragY = dragY; dragY = -1;
+                // make visibility to gone for no remaining shadow if tablet
+                if (fPhoneInchX > 3f)
+                    svViewHolder.itemView.setVisibility(View.GONE);
                 Log.w("idle ", "ACTION_STATE_IDLE =" + dragX + " x " + dragY);
                 doNotUpdate = true;
                 vars.debugMode = true;
-                removeFromRecycle(svViewHolder);
+                removeFromRecycle();
                 add2FloatingPiece();
                 doNotUpdate = false;
                 nearPieceBind.check(dragX, dragY);
@@ -114,9 +116,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     }
     private void add2FloatingPiece() {
 
-//        vars.jigTables[nowC][nowR].posX = dragX;
-//        vars.jigTables[nowC][nowR].posY = dragY; // - vars.picOSize;
-
         nowFp = new FloatPiece();
         nowFp.C = nowC;
         nowFp.R = nowR;
@@ -135,12 +134,11 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //        }
     }
 
-    private void removeFromRecycle(RecyclerView.ViewHolder viewHolder) {
-        viewHolder.itemView.setAlpha(0);  // let this piece GONE first
-        vars.activeRecyclerJigs.remove(jigRecyclePos);
-        jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+    private void removeFromRecycle() {
         vars.jigTables[nowC][nowR].outRecycle = true;
-        Log.w("r2m move R"+nowCR,"removed from recycler jPos="+dragX+"x"+dragY);
+        jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+        vars.activeRecyclerJigs.remove(jigRecyclePos);
+        Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY);
     }
 
 

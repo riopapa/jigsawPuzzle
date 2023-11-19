@@ -4,6 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 
@@ -67,6 +68,7 @@ public class ActivityJigsaw extends Activity {
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
+        binding.paintview.getLayoutParams().height = screenBottom;
 
         rnd = new Random(System.currentTimeMillis() & 0xfffff);
 
