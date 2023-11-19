@@ -63,7 +63,6 @@ public class ActivityMain extends Activity {
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -84,7 +83,6 @@ public class ActivityMain extends Activity {
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new PhoneMetrics(this);
-
 
     }
 

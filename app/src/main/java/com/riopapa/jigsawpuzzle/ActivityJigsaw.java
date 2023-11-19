@@ -24,6 +24,7 @@ import com.riopapa.jigsawpuzzle.func.SettleJigTableWall;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.VarsGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
+import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -116,11 +117,11 @@ public class ActivityJigsaw extends Activity {
         jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
         jigWhite = new Bitmap[vars.jigCOLs][vars.jigROWs];
 
+        vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
         new SettleJigTableWall(vars.jigTables);
 
         srcMaskMaps = new Masks().make(mContext, vars.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, vars.imgOutSize);
-
 
         new FullRecyclePiece();
 
@@ -181,10 +182,10 @@ public class ActivityJigsaw extends Activity {
         vars.activeRecyclerJigs = new ArrayList<>();
         for (int i = 0; i < vars.allPossibleJigs.size(); i++) {
             int cr = vars.allPossibleJigs.get(i);
-            int c = cr / 10000;
-            int r = cr - c * 10000;
-            if (!vars.jigTables[c][r].locked && !vars.jigTables[c][r].outRecycle &&
-                    c >= vars.offsetC && c < vars.offsetC + vars.showMaxX && r >= vars.offsetR && r < vars.offsetR + vars.showMaxY) {
+            int cc = cr / 10000;
+            int rr = cr - cc * 10000;
+            if (!vars.jigTables[cc][rr].locked && !vars.jigTables[cc][rr].outRecycle &&
+                    cc >= vars.offsetC && cc < vars.offsetC + vars.showMaxX && rr >= vars.offsetR && rr < vars.offsetR + vars.showMaxY) {
                 vars.activeRecyclerJigs.add(cr);
             }
         }

@@ -12,20 +12,26 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
 import static com.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceDraw {
-    Paint pGrayed;
+    Paint pGrayed, lPaint;
+
     public PieceDraw() {
         pGrayed = new Paint();
         pGrayed.setAlpha(50);
+        lPaint = new Paint();
+        lPaint.setColor(Color.RED);
     }
 
     public void draw(Canvas canvas){
@@ -72,6 +78,7 @@ public class PieceDraw {
             FloatPiece fp = vars.fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
+
             if (fp.count == 0) { // normal pieceImage
                 canvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
                 continue;
@@ -109,8 +116,12 @@ public class PieceDraw {
         }
         if (nowDragging) {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
-            Log.w("nowDragging", "piece "+dragX+"x"+dragY);
+            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
+
+        canvas.drawLine(vars.picHSize, screenBottom, screenX- vars.picHSize, screenBottom, lPaint);
+
+
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+vars.offsetC + " x " + vars.offsetR+"\n calc " + calcC +" x "+ calcR+"\n vars.fps "+vars.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));

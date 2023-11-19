@@ -37,7 +37,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     private final ActivityJigsawBinding binding;
 
-    private NearPieceBind nearPieceBind;
+    private final NearPieceBind nearPieceBind;
 
     public static boolean nowDragging;
 
@@ -59,6 +59,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
+        viewHolder.itemView.setBackgroundColor(0x000FFFF);
+
 //        int pos = viewHolder.getAbsoluteAdapterPosition();
 //        if (pos < 0)
 //            return;
@@ -67,9 +69,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //        int c = cr /10000;
 //        int r = cr - c * 10000;
 
-//        viewHolder.itemView.setBackgroundColor(0x000FFFF);
     }
 
+    RecyclerView.ViewHolder svViewHolder;
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
@@ -77,23 +79,24 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
             nowDragging = true;
             // Piece is selected and begun dragging
+            svViewHolder = viewHolder;
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
-            nowDragging = false;
             if (dragY < screenBottom - vars.picHSize) {
 //                dragX = dragX; dragX = -1; // no more dragging piece drawing
 //                dragY = dragY; dragY = -1;
                 Log.w("idle ", "ACTION_STATE_IDLE =" + dragX + " x " + dragY);
                 doNotUpdate = true;
                 vars.debugMode = true;
-                removeFromRecycle();
+                removeFromRecycle(svViewHolder);
                 add2FloatingPiece();
                 doNotUpdate = false;
                 nearPieceBind.check(dragX, dragY);
 //                vars.debugMode = false;
+                nowDragging = false;
             }
         }
 
@@ -105,10 +108,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowCR = vars.activeRecyclerJigs.get(jigRecyclePos);
         nowC = nowCR / 10000;
         nowR = nowCR - nowC * 10000;
-        dragY = screenBottom + vars.picHSize;
-        dragX = viewHolder.itemView.getLeft() + vars.picGap;
-        Log.w("selected", " CR"+nowCR+ " drag x="+dragX+ " y="+dragY+ " nowPos="+jigRecyclePos
-        + " H="+vars.picHSize+" O="+vars.picOSize);
+        dragY = screenBottom;
+        dragX = viewHolder.itemView.getLeft();
+        Log.w("selected "+jigRecyclePos, " CR"+nowCR+ " drag x="+dragX+ " y="+dragY);
     }
     private void add2FloatingPiece() {
 
@@ -133,14 +135,12 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //        }
     }
 
-    private void removeFromRecycle() {
-        Log.w("r2moveCR"+nowCR,"removing from recycler jPos="+dragX+"x"+dragY);
-        if (jigRecyclePos < vars.activeRecyclerJigs.size()) {
-            vars.jigTables[nowC][nowR].outRecycle = true;
-            vars.activeRecyclerJigs.remove(jigRecyclePos);
-            jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-            Log.w("r2m move R"+nowCR,"removed from recycler jPos="+dragX+"x"+dragY);
-        }
+    private void removeFromRecycle(RecyclerView.ViewHolder viewHolder) {
+        viewHolder.itemView.setAlpha(0);  // let this piece GONE first
+        vars.activeRecyclerJigs.remove(jigRecyclePos);
+        jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
+        vars.jigTables[nowC][nowR].outRecycle = true;
+        Log.w("r2m move R"+nowCR,"removed from recycler jPos="+dragX+"x"+dragY);
     }
 
 
