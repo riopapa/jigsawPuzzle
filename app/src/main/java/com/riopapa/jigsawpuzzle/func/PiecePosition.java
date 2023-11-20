@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.app.Activity;
 
@@ -13,9 +13,9 @@ public class PiecePosition {
     public boolean isLockable(int cc, int rr, int posX, int posY) {
 
         if (isNearLocked(cc, rr)) {
-            int x = vars.baseX + (cc - vars.offsetC) * vars.picISize;
-            int y = vars.baseY + (rr - vars.offsetR) * vars.picISize;
-            return Math.abs(posX - x) <= vars.picGap && Math.abs(posY - y) <= vars.picGap;
+            int x = GVal.baseX + (cc - GVal.offsetC) * GVal.picISize;
+            int y = GVal.baseY + (rr - GVal.offsetR) * GVal.picISize;
+            return Math.abs(posX - x) <= GVal.picGap && Math.abs(posY - y) <= GVal.picGap;
         } else
             return false;
     }
@@ -25,14 +25,14 @@ public class PiecePosition {
 
         boolean left, right = false, up, down = false;
 
-        if (cc == 0 || rr == 0 || cc == vars.jigCOLs - 1 || rr == vars.jigROWs - 1)
+        if (cc == 0 || rr == 0 || cc == GVal.jigCOLs - 1 || rr == GVal.jigROWs - 1)
             return true;
-        left = vars.jigTables[cc-1][rr].locked;
-        if (cc != vars.jigCOLs -1)
-            right = vars.jigTables[cc+1][rr].locked;
-        up = vars.jigTables[cc][rr-1].locked;
-        if (rr != vars.jigROWs-1)
-            down = vars.jigTables[cc][rr+1].locked;
+        left = GVal.jigTables[cc-1][rr].locked;
+        if (cc != GVal.jigCOLs -1)
+            right = GVal.jigTables[cc+1][rr].locked;
+        up = GVal.jigTables[cc][rr-1].locked;
+        if (rr != GVal.jigROWs-1)
+            down = GVal.jigTables[cc][rr+1].locked;
 
         return left | right | up | down;
     }

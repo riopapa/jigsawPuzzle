@@ -8,7 +8,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,9 +46,9 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
             iVImage = itemView.findViewById(R.id.image);
             iVImage.setOnClickListener(view -> {
-                vars.chosenNumber = getBindingAdapterPosition();
-                vars.gameMode = GAME_SELECT_LEVEL;
-                chosenImageMap = new ImageStorage().getMap(vars.chosenNumber);
+                GVal.chosenNumber = getBindingAdapterPosition();
+                GVal.gameMode = GAME_SELECT_LEVEL;
+                chosenImageMap = new ImageStorage().getMap(GVal.chosenNumber);
                 chosenImageWidth = chosenImageMap.getWidth();
                 chosenImageHeight = chosenImageMap.getHeight();
                 chosenKey = itemView.getTag().toString();
@@ -77,7 +77,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public int getItemCount() {
         context = mContext;
-        return vars.maxImageCount;
+        return GVal.maxImageCount;
     }
 
     @Override
@@ -116,8 +116,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         String key = new ImageStorage().getStr(position).substring(0,3);
         String histStr = "";
         final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
-        for (int i = 0; i < vars.histories.size(); i++) {
-            History hist = vars.histories.get(i);
+        for (int i = 0; i < GVal.histories.size(); i++) {
+            History hist = GVal.histories.get(i);
             if (key.equals(hist.key)) {
                 for (int j = 0; j < 4; j++) {
                     if (hist.time[j] > 0) {

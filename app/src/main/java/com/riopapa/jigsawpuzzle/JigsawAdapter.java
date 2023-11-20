@@ -3,7 +3,7 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -25,11 +25,11 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycle_jigsaw, viewGroup, false);
-        view.getLayoutParams().width = vars.recSize;
-        view.getLayoutParams().height = vars.recSize;
+        view.getLayoutParams().width = GVal.recSize;
+        view.getLayoutParams().height = GVal.recSize;
         ImageView iv = view.findViewById(R.id.recycle_jigsaw);
-        iv.getLayoutParams().height = vars.picOSize;
-        iv.getLayoutParams().width = vars.picOSize;
+        iv.getLayoutParams().height = GVal.picOSize;
+        iv.getLayoutParams().width = GVal.picOSize;
         iv.requestLayout();
         return new ViewHolder(view);
     }
@@ -126,7 +126,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
-        nowCR = vars.activeRecyclerJigs.get(position);
+        nowCR = GVal.activeRecyclerJigs.get(position);
         int jigC = nowCR / 10000;
         int jigR = nowCR - jigC * 10000;
 //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
@@ -140,7 +140,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return (vars.activeRecyclerJigs.size());
+        return (GVal.activeRecyclerJigs.size());
     }
 
 

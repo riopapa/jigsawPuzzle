@@ -3,7 +3,7 @@ package com.riopapa.jigsawpuzzle.func;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
@@ -22,18 +22,18 @@ public class PieceSelection {
         if (doNotUpdate)
             return;
 
-        for (int i = vars.fps.size() - 1; i >= 0; i--) {
-            FloatPiece fp = vars.fps.get(i);
+        for (int i = GVal.fps.size() - 1; i >= 0; i--) {
+            FloatPiece fp = GVal.fps.get(i);
             int c = fp.C;
             int r = fp.R;
             Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r
                     +" pos="+fp.posX+"x"+fp.posY);
-            if (Math.abs(fp.posX - iX) > vars.picHSize)
+            if (Math.abs(fp.posX - iX) > GVal.picHSize)
                 continue;
-            if (Math.abs(fp.posY - iY) > vars.picHSize)
+            if (Math.abs(fp.posY - iY) > GVal.picHSize)
                 continue;
             Log.w("mached cr="+c+"x"+r,
-                    " fp Pos="+fp.posX+"x"+fp.posY+" hSize="+vars.picHSize+
+                    " fp Pos="+fp.posX+"x"+fp.posY+" hSize="+ GVal.picHSize+
                     ", gap "+Math.abs(fp.posX - iX)+"x"+Math.abs(fp.posY - iY));
             nowFp = fp;
             nowR = r; nowC = c;

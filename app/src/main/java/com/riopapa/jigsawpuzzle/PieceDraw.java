@@ -14,13 +14,12 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 import static com.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -38,23 +37,23 @@ public class PieceDraw {
         canvas.save();
 
         // draw locked pieces first with .pic
-        for (int c = 0; c < vars.showMaxX; c++) {
-            for (int r = 0; r < vars.showMaxY; r++) {
-                final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
+        for (int c = 0; c < GVal.showMaxX; c++) {
+            for (int r = 0; r < GVal.showMaxY; r++) {
+                final int cc = c+ GVal.offsetC; final int rr = r+ GVal.offsetR;
                 if (jigOLine[cc][rr] == null)
-                    pieceImage.buildOline(c+vars.offsetC, r+vars.offsetR);
+                    pieceImage.buildOline(c+ GVal.offsetC, r+ GVal.offsetR);
                 if (jigWhite[cc][rr] == null)
                     jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
-                if (vars.jigTables[cc][rr].locked) {
-                    if (vars.jigTables[cc][rr].count == 0)
+                if (GVal.jigTables[cc][rr].locked) {
+                    if (GVal.jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigPic[cc][rr],
-                                vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
+                                GVal.baseX + c * GVal.picISize, GVal.baseY + r * GVal.picISize, null);
                     else {
-                        vars.jigTables[cc][rr].count--;
-                        canvas.drawBitmap((vars.jigTables[cc][rr].count % 2 == 0) ?
-                                        jigWhite[cc][rr] : jigOLine[cc][rr],
-                                vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize, null);
-                        if (vars.jigTables[cc][rr].count == 0) {
+                        GVal.jigTables[cc][rr].count--;
+                        canvas.drawBitmap((GVal.jigTables[cc][rr].count % 2 == 0) ?
+                                        jigWhite[cc][rr] : jigPic[cc][rr],
+                                GVal.baseX + c * GVal.picISize, GVal.baseY + r * GVal.picISize, null);
+                        if (GVal.jigTables[cc][rr].count == 0) {
                             jigWhite[cc][rr] = null;
                         }
                     }
@@ -62,20 +61,20 @@ public class PieceDraw {
             }
         }
         // then empty pieces with .oline
-        for (int c = 0; c < vars.showMaxX; c++) {
-            for (int r = 0; r < vars.showMaxY; r++) {
-                final int cc = c+vars.offsetC; final int rr = r+vars.offsetR;
-                if (!vars.jigTables[cc][rr].locked) {
+        for (int c = 0; c < GVal.showMaxX; c++) {
+            for (int r = 0; r < GVal.showMaxY; r++) {
+                final int cc = c+ GVal.offsetC; final int rr = r+ GVal.offsetR;
+                if (!GVal.jigTables[cc][rr].locked) {
                     canvas.drawBitmap(jigOLine[cc][rr],
-                            vars.baseX + c * vars.picISize, vars.baseY + r * vars.picISize,
+                            GVal.baseX + c * GVal.picISize, GVal.baseY + r * GVal.picISize,
                             pGrayed);
                 }
             }
         }
 
         // drawing floating pieces
-        for (int cnt = 0; cnt < vars.fps.size(); cnt++) {
-            FloatPiece fp = vars.fps.get(cnt);
+        for (int cnt = 0; cnt < GVal.fps.size(); cnt++) {
+            FloatPiece fp = GVal.fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
 
@@ -95,7 +94,7 @@ public class PieceDraw {
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
-                vars.fps.set(cnt, fp);
+                GVal.fps.set(cnt, fp);
                 continue;
             }
             // animate recycler to paint
@@ -107,23 +106,23 @@ public class PieceDraw {
                         jigBright[c][r] : jigOLine[c][r],
                         fp.posX + rnd.nextInt(4) - 2,
                         fp.posY + rnd.nextInt(4) - 2, null);
-//                vars.jigTables[c][r].posY -= vars.picISize / 4;
+//                GVal.jigTables[c][r].posY -= GVal.picISize / 4;
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
-                vars.fps.set(cnt, fp);
+                GVal.fps.set(cnt, fp);
             }
         }
         if (nowDragging) {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
-            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
+//            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
 
-        canvas.drawLine(vars.picHSize, screenBottom, screenX- vars.picHSize, screenBottom, lPaint);
+        canvas.drawLine(GVal.picHSize, screenBottom, screenX- GVal.picHSize, screenBottom, lPaint);
 
 
         canvas.restore();
-//        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+vars.offsetC + " x " + vars.offsetR+"\n calc " + calcC +" x "+ calcR+"\n vars.fps "+vars.fps.size();
+//        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));
 
     }

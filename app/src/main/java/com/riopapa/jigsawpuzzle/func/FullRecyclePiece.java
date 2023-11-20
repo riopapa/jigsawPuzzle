@@ -1,7 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,8 @@ public class FullRecyclePiece {
          */
     public  FullRecyclePiece() {
 
-        int mxSize = vars.jigCOLs * vars.jigROWs;
-        vars.allPossibleJigs = new ArrayList<>();
+        int mxSize = GVal.jigCOLs * GVal.jigROWs;
+        GVal.allPossibleJigs = new ArrayList<>();
         int []temp = new int[mxSize];
         int wkIdx = rnd.nextInt(mxSize/2);
         int r,c;
@@ -29,14 +29,14 @@ public class FullRecyclePiece {
                         tmp = 0;
                 }
             }
-            if (vars.jigCOLs > vars.jigROWs) {
-                r = tmp / vars.jigCOLs;
-                c = tmp - r * vars.jigCOLs;
+            if (GVal.jigCOLs > GVal.jigROWs) {
+                r = tmp / GVal.jigCOLs;
+                c = tmp - r * GVal.jigCOLs;
             } else {
-                c = tmp / vars.jigROWs;
-                r = tmp - c * vars.jigROWs;
+                c = tmp / GVal.jigROWs;
+                r = tmp - c * GVal.jigROWs;
             }
-            vars.allPossibleJigs.add(c*10000+r);
+            GVal.allPossibleJigs.add(c*10000+r);
             temp[tmp] = 1;
             wkIdx = tmp;
         }

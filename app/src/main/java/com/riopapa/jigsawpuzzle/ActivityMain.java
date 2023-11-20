@@ -41,7 +41,7 @@ public class ActivityMain extends Activity {
     RecyclerView imageRecyclers;
     ImageSelAdapter imageSelAdapter;
 
-    public static Vars vars;
+    public static GVal GVal;
 
 
     final public static int ANI_TO_FPS = 10123;
@@ -82,6 +82,11 @@ public class ActivityMain extends Activity {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        View decorView = getWindow().getDecorView();
+//        int uiOptions = decorView.getSystemUiVisibility();
+//        uiOptions |= SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
+
         new PhoneMetrics(this);
 
     }
@@ -97,18 +102,18 @@ public class ActivityMain extends Activity {
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 
-        vars = new VarsGetPut().get(this);
-        if (vars == null) {
-            vars = new Vars();
+        GVal = new VarsGetPut().get(this);
+        if (GVal == null) {
+            GVal = new GVal();
         }
-        if (vars.histories == null)
-            vars.histories = new ArrayList<>();
+        if (GVal.histories == null)
+            GVal.histories = new ArrayList<>();
 
         // get physical values depend on Phone
         // then set picXSizes
         new SetPicSizes(screenX);
 
-        vars.maxImageCount = new ImageStorage().count();
+        GVal.maxImageCount = new ImageStorage().count();
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
@@ -119,22 +124,17 @@ public class ActivityMain extends Activity {
         StaggeredGridLayoutManager staggeredGridLayoutManager
                 = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
-        View decorView = getWindow().getDecorView();
-        int uiOptions = decorView.getSystemUiVisibility();
-        uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
 
 
-
-        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
-            imageSelAdapter.notifyItemChanged(vars.chosenNumber);
+        if (GVal.gameMode == GAME_GOBACK_TO_MAIN) {
+            imageSelAdapter.notifyItemChanged(GVal.chosenNumber);
         }
 //            // todo: ask whether to continue
 //            Intent intent = new Intent(this, ActivitySelLevel.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(intent);
 //        } else
-            vars.gameMode = GAME_SELECT_IMAGE;
+            GVal.gameMode = GAME_SELECT_IMAGE;
 
 
     }
@@ -142,13 +142,9 @@ public class ActivityMain extends Activity {
 
     @Override
     protected void onPause() {
-        new VarsGetPut().put(vars, this);
+        new VarsGetPut().put(GVal, this);
         super.onPause();
     }
-
-    // make recycler list with random jigsaws
-
-
 
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓

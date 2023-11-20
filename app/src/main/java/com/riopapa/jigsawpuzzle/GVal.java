@@ -6,7 +6,7 @@ import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
 
-public class Vars {
+public class GVal {
 
     public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 

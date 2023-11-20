@@ -2,7 +2,7 @@
 <resources>
 
 <!--    <style name = "Theme.JigsawPuzzle" parent = "android:Theme.Material.Light" />-->
-    <style name="Theme.JigsawPuzzle" parent="@style/Theme.AppCompat.Light">
+    <style name="Theme.JigsawPuzzle" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>

@@ -5,7 +5,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -64,8 +64,8 @@ public class PieceImage {
         paintBright = new Paint();
         paintBright.setColorFilter(new ColorMatrixColorFilter(brightMatrix));
 
-        final float whiteContrast  = 0.5f;
-        final int whiteBrightness = 250;  // positive is bright
+        final float whiteContrast  = 2f;
+        final int whiteBrightness = 200;  // positive is bright
         ColorMatrix whiteMatrix = new ColorMatrix(new float[]
                 {
                         whiteContrast, 0, 0, 0, whiteBrightness,  // Red
@@ -87,16 +87,16 @@ public class PieceImage {
      */
 
     public void buildOline(int col, int row) {
-        JigTable z = vars.jigTables[col][row];
+        JigTable z = GVal.jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * innerSize, row * innerSize, outerSize, outerSize);
         Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
                 srcMaskMaps[2][z.uType], srcMaskMaps[3][z.dType]);
         Bitmap src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
-        jigPic[col][row] = Bitmap.createScaledBitmap(src, vars.picOSize, vars.picOSize, true);
+        jigPic[col][row] = Bitmap.createScaledBitmap(src, GVal.picOSize, GVal.picOSize, true);
         mask = maskMerge(outMaskMaps[0][z.lType], outMaskMaps[1][z.rType],
                 outMaskMaps[2][z.uType], outMaskMaps[3][z.dType]);
         jigOLine[col][row] = makeOutline(src, mask);
-        vars.jigTables[col][row] = z;
+        GVal.jigTables[col][row] = z;
     }
 
 
@@ -143,7 +143,7 @@ public class PieceImage {
         canvas.drawBitmap(outMask, 0,0, paintOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(srcMap, matrix, paintOutLine);
-        return Bitmap.createScaledBitmap(outMap, vars.picOSize, vars.picOSize, true);
+        return Bitmap.createScaledBitmap(outMap, GVal.picOSize, GVal.picOSize, true);
 
     }
 
@@ -170,14 +170,14 @@ public class PieceImage {
      */
 
     public Bitmap makeBright(Bitmap inMap) {
-        Bitmap bMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
+        Bitmap bMap = Bitmap.createBitmap(GVal.picOSize, GVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
         canvasBright.drawBitmap(inMap, 0, 0, paintBright);
         return bMap;
     }
 
     public Bitmap makeWhite(Bitmap inMap) {
-        Bitmap bMap = Bitmap.createBitmap(vars.picOSize, vars.picOSize, Bitmap.Config.ARGB_8888);
+        Bitmap bMap = Bitmap.createBitmap(GVal.picOSize, GVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
         canvasBright.drawBitmap(inMap, 0, 0, paintWhite);
         return bMap;

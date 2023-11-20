@@ -8,7 +8,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -37,9 +37,9 @@ public class ActivitySelLevel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        if (vars.gameMode == GAME_PAUSED) {
-            vars.gameMode = GAME_STARTED; // target Image, level has been set
-            new CalcCOLUMN_ROW(vars.gameLevel);
+        if (GVal.gameMode == GAME_PAUSED) {
+            GVal.gameMode = GAME_STARTED; // target Image, level has been set
+            new CalcCOLUMN_ROW(GVal.gameLevel);
             Intent intent = new Intent(this, ActivityJigsaw.class);
             startActivity(intent);
         }
@@ -54,13 +54,13 @@ public class ActivitySelLevel extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (vars.gameMode == GAME_GOBACK_TO_MAIN) {
+        if (GVal.gameMode == GAME_GOBACK_TO_MAIN) {
             Log.w("SelLevel"," go back to main");
             finish();
             return;
         }
         Log.w("sl1 selectLevel","onResume");
-//        chosenImageMap = new ImageStorage().getMap(vars.selectedImageNbr);
+//        chosenImageMap = new ImageStorage().getMap(GVal.selectedImageNbr);
 //        new ImageChosen();
 //        int width = screenX * 8 / 10;
 //        int height = width * chosenImageHeight / chosenImageWidth;
@@ -98,31 +98,31 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         TextView tv;
         String s;
-        s = levelNames[0]; new CalcCOLUMN_ROW(0); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
+        s = levelNames[0]; new CalcCOLUMN_ROW(0); s += "\n" + GVal.jigCOLs +" x "+ GVal.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_easy); tv.setText(s);
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
 
-        s = levelNames[1]; new CalcCOLUMN_ROW(1); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
+        s = levelNames[1]; new CalcCOLUMN_ROW(1); s += "\n" + GVal.jigCOLs +" x "+ GVal.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_normal); tv.setText(s);
         dialogView.findViewById(R.id.lvl_normal).setOnClickListener(this::edit_table);
 
-        s = levelNames[2]; new CalcCOLUMN_ROW(2); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
+        s = levelNames[2]; new CalcCOLUMN_ROW(2); s += "\n" + GVal.jigCOLs +" x "+ GVal.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_hard); tv.setText(s);
         dialogView.findViewById(R.id.lvl_hard).setOnClickListener(this::edit_table);
 
-        s = levelNames[3]; new CalcCOLUMN_ROW(3); s += "\n" + vars.jigCOLs +" x "+vars.jigROWs;
+        s = levelNames[3]; new CalcCOLUMN_ROW(3); s += "\n" + GVal.jigCOLs +" x "+ GVal.jigROWs;
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
         dialogView.findViewById(R.id.lvl_expert).setOnClickListener(this::edit_table);
     }
 
     private void edit_table(View view) {
         alertDialog.dismiss();
-        vars.gameLevel = Integer.parseInt(view.getTag().toString());
-        new CalcCOLUMN_ROW(vars.gameLevel);
+        GVal.gameLevel = Integer.parseInt(view.getTag().toString());
+        new CalcCOLUMN_ROW(GVal.gameLevel);
 
-        vars.gameMode = GAME_STARTED; // target Image, level has been set
-        new SetPicSizes(screenX * (12 - vars.gameLevel) / 12);
-        Log.w("sel level", "Game Level="+vars.gameLevel);
+        GVal.gameMode = GAME_STARTED; // target Image, level has been set
+        new SetPicSizes(screenX * (12 - GVal.gameLevel) / 12);
+        Log.w("sel level", "GVal Level="+ GVal.gameLevel);
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }

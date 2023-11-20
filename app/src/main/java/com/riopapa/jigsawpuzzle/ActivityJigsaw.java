@@ -6,7 +6,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
-import static com.riopapa.jigsawpuzzle.ActivityMain.vars;
+import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -73,35 +73,35 @@ public class ActivityJigsaw extends Activity {
         rnd = new Random(System.currentTimeMillis() & 0xfffff);
 
         binding.moveLeft.setOnClickListener(v -> {
-            vars.offsetC -= vars.showShiftX;
-            if (vars.offsetC < 0)
-                vars.offsetC = 0;
+            GVal.offsetC -= GVal.showShiftX;
+            if (GVal.offsetC < 0)
+                GVal.offsetC = 0;
             copy2RecyclerPieces();
         });
         binding.moveRight.setOnClickListener(v -> {
-            vars.offsetC += vars.showShiftX;
-            if (vars.offsetC >= vars.jigCOLs - vars.showMaxX)
-                vars.offsetC = vars.jigCOLs - vars.showMaxX;
+            GVal.offsetC += GVal.showShiftX;
+            if (GVal.offsetC >= GVal.jigCOLs - GVal.showMaxX)
+                GVal.offsetC = GVal.jigCOLs - GVal.showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
-            vars.offsetR -= vars.showShiftY;
-            if (vars.offsetR < 0)
-                vars.offsetR = 0;
+            GVal.offsetR -= GVal.showShiftY;
+            if (GVal.offsetR < 0)
+                GVal.offsetR = 0;
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
-            vars.offsetR += vars.showShiftY;
-            if (vars.offsetR >= vars.jigROWs - vars.showMaxY)
-                vars.offsetR = vars.jigROWs - vars.showMaxY;
+            GVal.offsetR += GVal.showShiftY;
+            if (GVal.offsetR >= GVal.jigROWs - GVal.showMaxY)
+                GVal.offsetR = GVal.jigROWs - GVal.showMaxY;
             copy2RecyclerPieces();
         });
 
         defineImgSize();
 
         chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,
-                vars.imgInSize * vars.jigCOLs + vars.imgGapSize + vars.imgGapSize,
-                vars.imgInSize * vars.jigROWs  + vars.imgGapSize + vars.imgGapSize);
+                GVal.imgInSize * GVal.jigCOLs + GVal.imgGapSize + GVal.imgGapSize,
+                GVal.imgInSize * GVal.jigROWs  + GVal.imgGapSize + GVal.imgGapSize);
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
         Log.w("jigsaw Info", " size="+chosenImageWidth+"x"+chosenImageHeight);
@@ -111,25 +111,25 @@ public class ActivityJigsaw extends Activity {
         // decide jigsaw pieces numbers
 
 
-        pieceImage = new PieceImage(this, vars.imgOutSize, vars.imgInSize);
+        pieceImage = new PieceImage(this, GVal.imgOutSize, GVal.imgInSize);
 
 
-        jigPic = new Bitmap[vars.jigCOLs][vars.jigROWs];
-        jigOLine = new Bitmap[vars.jigCOLs][vars.jigROWs];
-        jigBright = new Bitmap[vars.jigCOLs][vars.jigROWs];
-        jigWhite = new Bitmap[vars.jigCOLs][vars.jigROWs];
+        jigPic = new Bitmap[GVal.jigCOLs][GVal.jigROWs];
+        jigOLine = new Bitmap[GVal.jigCOLs][GVal.jigROWs];
+        jigBright = new Bitmap[GVal.jigCOLs][GVal.jigROWs];
+        jigWhite = new Bitmap[GVal.jigCOLs][GVal.jigROWs];
 
-        vars.jigTables = new JigTable[vars.jigCOLs][vars.jigROWs];
-        new SettleJigTableWall(vars.jigTables);
+        GVal.jigTables = new JigTable[GVal.jigCOLs][GVal.jigROWs];
+        new SettleJigTableWall(GVal.jigTables);
 
-        srcMaskMaps = new Masks().make(mContext, vars.imgOutSize);
-        outMaskMaps = new Masks().makeOut(mContext, vars.imgOutSize);
+        srcMaskMaps = new Masks().make(mContext, GVal.imgOutSize);
+        outMaskMaps = new Masks().makeOut(mContext, GVal.imgOutSize);
 
         new FullRecyclePiece();
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        jigRecyclerView.getLayoutParams().height = vars.recSize;
+        jigRecyclerView.getLayoutParams().height = GVal.recSize;
         jigRecycleAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
@@ -143,7 +143,7 @@ public class ActivityJigsaw extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding, vars.recSize * 3 / 4);
+        new AdjustControl(binding, GVal.recSize * 3 / 4);
         copy2RecyclerPieces();
 
         if (paintView != null) {
@@ -159,9 +159,9 @@ public class ActivityJigsaw extends Activity {
 
         history = new History();
         history.key = chosenKey;
-        for (int i = 0; i <  vars.histories.size(); i++) {
-            if (chosenKey.equals(vars.histories.get(i).key)) {
-                history = vars.histories.get(i);
+        for (int i = 0; i <  GVal.histories.size(); i++) {
+            if (chosenKey.equals(GVal.histories.get(i).key)) {
+                history = GVal.histories.get(i);
                 break;
             }
         }
@@ -170,25 +170,25 @@ public class ActivityJigsaw extends Activity {
 
 
     private static void defineImgSize() {
-        float szW = (float) chosenImageWidth / (float) (vars.jigCOLs+1);
-        float szH = (float) chosenImageHeight / (float) (vars.jigROWs+1);
-        vars.imgInSize = (szH > szW) ? (int) szW : (int) szH;
-        vars.imgGapSize = vars.imgInSize * 5 / 24;
-        vars.imgOutSize = vars.imgInSize + vars.imgGapSize + vars.imgGapSize;
+        float szW = (float) chosenImageWidth / (float) (GVal.jigCOLs+1);
+        float szH = (float) chosenImageHeight / (float) (GVal.jigROWs+1);
+        GVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
+        GVal.imgGapSize = GVal.imgInSize * 5 / 24;
+        GVal.imgOutSize = GVal.imgInSize + GVal.imgGapSize + GVal.imgGapSize;
 
     }
 
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
-        vars.activeRecyclerJigs = new ArrayList<>();
-        for (int i = 0; i < vars.allPossibleJigs.size(); i++) {
-            int cr = vars.allPossibleJigs.get(i);
+        GVal.activeRecyclerJigs = new ArrayList<>();
+        for (int i = 0; i < GVal.allPossibleJigs.size(); i++) {
+            int cr = GVal.allPossibleJigs.get(i);
             int cc = cr / 10000;
             int rr = cr - cc * 10000;
-            if (!vars.jigTables[cc][rr].locked && !vars.jigTables[cc][rr].outRecycle &&
-                    cc >= vars.offsetC && cc < vars.offsetC + vars.showMaxX && rr >= vars.offsetR && rr < vars.offsetR + vars.showMaxY) {
-                vars.activeRecyclerJigs.add(cr);
+            if (!GVal.jigTables[cc][rr].locked && !GVal.jigTables[cc][rr].outRecycle &&
+                    cc >= GVal.offsetC && cc < GVal.offsetC + GVal.showMaxX && rr >= GVal.offsetR && rr < GVal.offsetR + GVal.showMaxY) {
+                GVal.activeRecyclerJigs.add(cr);
             }
         }
 
@@ -199,36 +199,36 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     protected void onPause() {
-        Log.w("jigsaw","Activityjigsaw onPause "+vars.gameMode);
-        history.time[vars.gameLevel] = System.currentTimeMillis();
+        Log.w("jigsaw","Activityjigsaw onPause "+ GVal.gameMode);
+        history.time[GVal.gameLevel] = System.currentTimeMillis();
         int locked = 1;
-        for (int cc = 0; cc < vars.jigCOLs; cc++) {
-            for (int rr = 0; rr < vars.jigROWs; rr++) {
-                if (vars.jigTables[cc][rr].locked)
+        for (int cc = 0; cc < GVal.jigCOLs; cc++) {
+            for (int rr = 0; rr < GVal.jigROWs; rr++) {
+                if (GVal.jigTables[cc][rr].locked)
                     locked++;
             }
         }
-        history.percent[vars.gameLevel] = locked * 100 / (vars.jigCOLs * vars.jigROWs);
-        for (int i = 0; i < vars.histories.size(); i++) {
-            if (vars.histories.get(i).key.equals(chosenKey)) {
-                vars.histories.set(i, history);
+        history.percent[GVal.gameLevel] = locked * 100 / (GVal.jigCOLs * GVal.jigROWs);
+        for (int i = 0; i < GVal.histories.size(); i++) {
+            if (GVal.histories.get(i).key.equals(chosenKey)) {
+                GVal.histories.set(i, history);
                 history = null;
             }
         }
         if (history != null)
-            vars.histories.add(history);
+            GVal.histories.add(history);
 
-        if (vars.gameMode != GAME_GOBACK_TO_MAIN)
-            vars.gameMode = GAME_PAUSED;
+        if (GVal.gameMode != GAME_GOBACK_TO_MAIN)
+            GVal.gameMode = GAME_PAUSED;
         invalidateTimer.cancel();
-        new VarsGetPut().put(vars, this);
+        new VarsGetPut().put(GVal, this);
         super.onPause();
     }
 
     @Override
     public void onBackPressed() {
         Log.w("jigsaw","Activityjigsaw onBackPressed");
-        vars.gameMode = GAME_GOBACK_TO_MAIN;
+        GVal.gameMode = GAME_GOBACK_TO_MAIN;
         super.onBackPressed();
     }
 }
@@ -245,10 +245,10 @@ public class ActivityJigsaw extends Activity {
 //            @Override
 //            public boolean onDrag(View v, DragEvent event) {
 //                if (event.getAction() == DragEvent.ACTION_DROP) {
-//                    int iX = (int) event.getX() - vars.picHSize;
-//                    int iY = (int) event.getY() - vars.picHSize;
+//                    int iX = (int) event.getX() - GVal.picHSize;
+//                    int iY = (int) event.getY() - GVal.picHSize;
 //
-//                    if (iY < screenY - vars.recSize - vars.recSize - vars.picOSize) {
+//                    if (iY < screenY - GVal.recSize - GVal.recSize - GVal.picOSize) {
 //                        jPosX = iX;
 //                        jPosY = iY;
 //                        doNotUpdate = true;
