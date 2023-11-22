@@ -3,7 +3,7 @@ package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.util.Log;
 
@@ -26,27 +26,25 @@ public class ClearGlobalValues {
 
 //        Log.w("r25 "+Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
 
-        GVal.showMaxX = screenX / GVal.picISize - 2;
-        if (GVal.showMaxX > GVal.jigCOLs)
-            GVal.showMaxX = GVal.jigCOLs;
+        gVal.showMaxX = screenX / gVal.picISize - 2;
+        if (gVal.showMaxX > gVal.jigCOLs)
+            gVal.showMaxX = gVal.jigCOLs;
 
-        GVal.showMaxY = screenY / GVal.picISize - 8;
-        if (GVal.showMaxY > GVal.jigROWs)
-            GVal.showMaxY = GVal.jigROWs;
+        gVal.showMaxY = screenY / gVal.picISize - 8;
+        if (gVal.showMaxY > gVal.jigROWs)
+            gVal.showMaxY = gVal.jigROWs;
 
-        GVal.showShiftX = GVal.showMaxX * 3 / 4;
-        GVal.showShiftY = GVal.showMaxY * 3 / 4;
+        gVal.showShiftX = gVal.showMaxX * 3 / 4;
+        gVal.showShiftY = gVal.showMaxY * 3 / 4;
 
-        GVal.offsetC = 0; GVal.offsetR = 0;
+        gVal.offsetC = 0; gVal.offsetR = 0;
 
-        GVal.fps = new ArrayList<>();
+        gVal.allLocked = false;
+        gVal.baseX = (screenX - gVal.showMaxX * gVal.picISize) / 2 - gVal.picGap - gVal.picGap;
+        gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) / 2 - gVal.picISize - gVal.picISize;
 
-        GVal.allLocked = false;
-        GVal.baseX = (screenX - GVal.showMaxX * GVal.picISize) / 2 - GVal.picGap - GVal.picGap;
-        GVal.baseY = (screenY - GVal.showMaxY * GVal.picISize) / 2 - GVal.picISize - GVal.picISize;
-
-        Log.w("r23 ClearGlobalValues", "Jig Cnt="+ GVal.jigCOLs +" x "+ GVal.jigROWs+", showShift "+ GVal.showShiftX+"x"+ GVal.showShiftY +
-                ", showMax "+ GVal.showMaxX+"x"+ GVal.showMaxY);
+        Log.w("r23 ClearGlobalValues", "Jig Cnt="+ gVal.jigCOLs +" x "+ gVal.jigROWs+", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
+                ", showMax "+ gVal.showMaxX+"x"+ gVal.showMaxY);
 
     }
 

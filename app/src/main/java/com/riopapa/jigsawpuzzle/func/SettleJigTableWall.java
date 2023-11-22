@@ -1,8 +1,8 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.rnd;
-
 import com.riopapa.jigsawpuzzle.model.JigTable;
+
+import java.util.Random;
 
 public class SettleJigTableWall {
 
@@ -15,7 +15,7 @@ public class SettleJigTableWall {
 
         int columns = zz.length;
         int rows = zz[0].length;
-
+        Random rnd = new Random(System.currentTimeMillis() & 0xffffff);
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 JigTable z = new JigTable();

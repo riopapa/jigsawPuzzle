@@ -1,6 +1,6 @@
 package com.riopapa.jigsawpuzzle.func;
 
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -12,25 +12,25 @@ public class MoveThisOnTop {
     // function to re-arrange pieces so touched pieces go to top layer
     public MoveThisOnTop(FloatPiece fpNow, int nowIdx) {
 
-        int fpSize = GVal.fps.size() - 1;
+        int fpSize = gVal.fps.size() - 1;
         long ancId = fpNow.anchorId;
         if (ancId == 0) {
-            Collections.swap(GVal.fps, nowIdx, fpSize);
+            Collections.swap(gVal.fps, nowIdx, fpSize);
             return;
         }
         ArrayList<FloatPiece> fp2 = new ArrayList<>();
-        GVal.fps.remove(nowIdx);
-        for (int i = 0; i < GVal.fps.size() - 1;) {
-            if (GVal.fps.get(i).anchorId == ancId) {
-                fp2.add(GVal.fps.get(i));
-                GVal.fps.remove(i);
-                if (GVal.fps.size() == 0)
+        gVal.fps.remove(nowIdx);
+        for (int i = 0; i < gVal.fps.size() - 1;) {
+            if (gVal.fps.get(i).anchorId == ancId) {
+                fp2.add(gVal.fps.get(i));
+                gVal.fps.remove(i);
+                if (gVal.fps.size() == 0)
                     break;
             } else
                 i++;
         }
-        GVal.fps.addAll(fp2);
-        GVal.fps.add(fpNow);
+        gVal.fps.addAll(fp2);
+        gVal.fps.add(fpNow);
     }
 
 }

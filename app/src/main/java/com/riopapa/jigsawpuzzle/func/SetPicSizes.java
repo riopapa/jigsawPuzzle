@@ -4,7 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 public class SetPicSizes {
     public SetPicSizes(int phoneSizeX) {
@@ -13,20 +13,20 @@ public class SetPicSizes {
         ** calculate picOSize, picISize, picHSize, picGap by phoneSize
          */
 
-        GVal.recSize =  (int) (phoneSizeX / fPhoneInchX / ((fPhoneInchX > 3f)? 1.1f:1.5f));
+        gVal.recSize =  (int) (phoneSizeX / fPhoneInchX / ((fPhoneInchX > 3f)? 1.1f:1.5f));
 
 //        GVal.recSize = GVal.recSize * 9 / 7;   // while testing only
 
-        GVal.picOSize = GVal.recSize;
-        GVal.picISize = GVal.picOSize * 14 / (14+5+5);
-        GVal.picHSize = GVal.picOSize / 2;
-        GVal.picGap = GVal.picISize * 5 / 24;
+        gVal.picOSize = gVal.recSize;
+        gVal.picISize = gVal.picOSize * 14 / (14+5+5);
+        gVal.picHSize = gVal.picOSize / 2;
+        gVal.picGap = gVal.picISize * 5 / 24;
 
-        GVal.showMaxX = screenX / GVal.picISize - 2;
-        GVal.showMaxY = GVal.showMaxX * screenY / screenX;
+        gVal.showMaxX = screenX / gVal.picISize - 2;
+        gVal.showMaxY = gVal.showMaxX * screenY / screenX;
 
-        screenBottom = screenY - GVal.recSize - GVal.recSize + GVal.picGap;
+        screenBottom = screenY - gVal.recSize - gVal.recSize + gVal.picGap;
         if (fPhoneInchX > 3f)
-            screenBottom += GVal.picHSize;
+            screenBottom += gVal.picHSize;
     }
 }

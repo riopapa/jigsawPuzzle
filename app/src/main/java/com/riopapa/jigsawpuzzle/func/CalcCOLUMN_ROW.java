@@ -2,7 +2,7 @@ package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 public class CalcCOLUMN_ROW {
 
@@ -17,11 +17,11 @@ public class CalcCOLUMN_ROW {
 
         int [] sizes = {10, 20, 30, 40};
         if (chosenImageWidth > chosenImageHeight) {
-            GVal.jigCOLs = sizes[level];
-            GVal.jigROWs = GVal.jigCOLs * chosenImageHeight / chosenImageWidth;  // to avoid over y size
+            gVal.jigCOLs = sizes[level];
+            gVal.jigROWs = gVal.jigCOLs * chosenImageHeight / chosenImageWidth;  // to avoid over y size
         } else {
-            GVal.jigROWs = sizes[level];
-            GVal.jigCOLs = GVal.jigROWs * chosenImageWidth / chosenImageHeight;  // to avoid over y size
+            gVal.jigROWs = sizes[level];
+            gVal.jigCOLs = gVal.jigROWs * chosenImageWidth / chosenImageHeight;  // to avoid over y size
         }
 
     }

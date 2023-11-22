@@ -10,6 +10,5 @@ public class JigTable {
     public boolean locked;  // pieceImage is on right position
 
     public int count;   // for animation
-    public JigTable() {}
 
 }

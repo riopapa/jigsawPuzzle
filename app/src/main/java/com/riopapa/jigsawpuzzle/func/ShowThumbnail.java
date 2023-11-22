@@ -4,7 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -21,17 +21,17 @@ public class ShowThumbnail {
         if (chosenImageHeight > chosenImageWidth) {
             h = 1000;
             w = h * chosenImageWidth / chosenImageHeight;
-            oneSize = GVal.imgInSize  * 1000f / chosenImageHeight;
+            oneSize = gVal.imgInSize  * 1000f / chosenImageHeight;
         } else {
             w = 1000;
             h = w * chosenImageHeight / chosenImageWidth;
-            oneSize = GVal.imgInSize  * 1000f / chosenImageWidth;
+            oneSize = gVal.imgInSize  * 1000f / chosenImageWidth;
         }
 
-        rectW = oneSize * ((float) (GVal.showMaxX)+0.05f);    // 24 to GVal.show line boundary
-        rectH = oneSize * ((float) (GVal.showMaxY)+0.05f);
-        xOff = oneSize * (float) GVal.offsetC;
-        yOff = oneSize * (float) GVal.offsetR;
+        rectW = oneSize * ((float) (gVal.showMaxX)+0.05f);    // 24 to GVal.show line boundary
+        rectH = oneSize * ((float) (gVal.showMaxY)+0.05f);
+        xOff = oneSize * (float) gVal.offsetC;
+        yOff = oneSize * (float) gVal.offsetR;
 
 
         Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
@@ -56,10 +56,10 @@ public class ShowThumbnail {
         canvas.drawLine(xOff, yOff, xOff, yOff+rectH, (xOff == 0)? pLine : pDot);
         // right line
         canvas.drawLine(xOff+rectW, yOff, xOff+rectW, yOff+rectH,
-                (GVal.offsetC+ GVal.showMaxX == GVal.jigCOLs)? pLine : pDot);
+                (gVal.offsetC+ gVal.showMaxX == gVal.jigCOLs)? pLine : pDot);
         // bottom line
         canvas.drawLine(xOff, yOff+rectH, xOff+rectW, yOff+rectH,
-                (GVal.offsetR+ GVal.showMaxY == GVal.jigROWs) ? pLine : pDot);
+                (gVal.offsetR+ gVal.showMaxY == gVal.jigROWs) ? pLine : pDot);
 
         binding.thumbnail.setImageBitmap(thumb);
 

@@ -12,7 +12,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static com.riopapa.jigsawpuzzle.ActivityMain.GVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
@@ -89,13 +89,13 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
-            if (dragY < screenBottom - GVal.picHSize) {
+            if (dragY < screenBottom - gVal.picHSize) {
                 // make visibility to gone for no remaining shadow if tablet
                 if (fPhoneInchX > 3f)
                     svViewHolder.itemView.setVisibility(View.GONE);
                 Log.w("idle ", "ACTION_STATE_IDLE =" + dragX + " x " + dragY);
                 doNotUpdate = true;
-                GVal.debugMode = true;
+                gVal.debugMode = true;
                 removeFromRecycle();
                 add2FloatingPiece();
                 doNotUpdate = false;
@@ -111,7 +111,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     private void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
         nowFp = null;
         jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-        nowCR = GVal.activeRecyclerJigs.get(jigRecyclePos);
+        nowCR = gVal.activeRecyclerJigs.get(jigRecyclePos);
         nowC = nowCR / 10000;
         nowR = nowCR - nowC * 10000;
         dragY = screenBottom;
@@ -129,8 +129,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowFp.mode = ANI_TO_FPS;
         nowFp.uId = System.currentTimeMillis();    // set Unique uId
         nowFp.anchorId = 0;       // let anchorId to itself
-        GVal.fps.add(nowFp);
-        nowIdx = GVal.fps.size() - 1;
+        gVal.fps.add(nowFp);
+        nowIdx = gVal.fps.size() - 1;
 //        Log.w("FPS xy"," info size="+GVal.fps.size());
 //        for (int i = 0; i < GVal.fps.size(); i++) {
 //            Log.w(GVal.picGap+" gap "+i, (GVal.fps.get(i).posX-dragX)
@@ -139,9 +139,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     }
 
     private void removeFromRecycle() {
-        GVal.jigTables[nowC][nowR].outRecycle = true;
+        gVal.jigTables[nowC][nowR].outRecycle = true;
         jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-        GVal.activeRecyclerJigs.remove(jigRecyclePos);
+        gVal.activeRecyclerJigs.remove(jigRecyclePos);
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY);
     }
 
@@ -174,7 +174,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         int holderIdx = viewHolder.getAbsoluteAdapterPosition();
         int tgtIdx = target.getAbsoluteAdapterPosition();
         Log.w("p27 onMove","from "+holderIdx+" to "+tgtIdx);
-        Collections.swap(GVal.activeRecyclerJigs, holderIdx, tgtIdx);
+        Collections.swap(gVal.activeRecyclerJigs, holderIdx, tgtIdx);
         jigRecycleAdapter.notifyItemMoved(holderIdx, tgtIdx);
 //        listener.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
         return true;
@@ -191,9 +191,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //
 //        helperDrawTime = nowTime;
 
-        if (GVal.activeRecyclerJigs.size() == 0)
+        if (gVal.activeRecyclerJigs.size() == 0)
             return;
-        if (jigRecyclePos == GVal.activeRecyclerJigs.size()) {
+        if (jigRecyclePos == gVal.activeRecyclerJigs.size()) {
 //            Log.e("r tag","activeSize="+GVal.activeRecyclerJigs.size()+" GVal.jigRecyclePos="+GVal.jigRecyclePos);
 //            for (int i = 0; i < GVal.activeRecyclerJigs.size(); i++)
 //                Log.w("active "+i, "pos "+GVal.activeRecyclerJigs.get(i));

@@ -7,12 +7,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -22,10 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 import com.riopapa.jigsawpuzzle.func.ImageStorage;
-import com.riopapa.jigsawpuzzle.func.VarsGetPut;
+import com.riopapa.jigsawpuzzle.func.GValGetPut;
+import com.riopapa.jigsawpuzzle.model.History;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -38,11 +42,19 @@ public class ActivityMain extends Activity {
 
     public static Timer invalidateTimer;
     ActivityMainBinding binding;
+
+//    public static int maxImageCount;
     RecyclerView imageRecyclers;
     ImageSelAdapter imageSelAdapter;
 
-    public static GVal GVal;
+    public static int gameMode;
+    public static int appVersion;
 
+    public static int chosenNumber;
+    public static String currGame, currGameLevel;
+    public static int currLevel;
+    public static GVal gVal;
+    public static ArrayList<History> histories = null;
 
     final public static int ANI_TO_FPS = 10123;
     final public static int ANI_ANCHOR = 10321;
@@ -65,6 +77,7 @@ public class ActivityMain extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.w("Main","onCreate gameMode="+gameMode);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         super.onCreate(savedInstanceState);
@@ -95,25 +108,30 @@ public class ActivityMain extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.w("Main ","onResume "+gameMode+" currGame="+currGame);
         invalidateTimer = new Timer();
         RecyclerView recyclerView = findViewById(R.id.imageRecycler);
         recyclerView.setVisibility(View.VISIBLE);
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
-
-        GVal = new VarsGetPut().get(this);
-        if (GVal == null) {
-            GVal = new GVal();
+        // if newly restarted then read gVal
+        if (gameMode == 0) {
+            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+            String prevGame = sharedPref.getString("prevGame", "");
+            if (prevGame.equals("")) {
+                gameMode = GAME_NEW;
+                initiateGame();
+            }
         }
-        if (GVal.histories == null)
-            GVal.histories = new ArrayList<>();
+
+        if (histories == null)
+            histories = new HistoryGetPut().get(this);
 
         // get physical values depend on Phone
         // then set picXSizes
-        new SetPicSizes(screenX);
+//        new SetPicSizes(screenX);
 
-        GVal.maxImageCount = new ImageStorage().count();
+//        maxImageCount = new ImageStorage().count();
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
@@ -125,24 +143,22 @@ public class ActivityMain extends Activity {
                 = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
 
-
-        if (GVal.gameMode == GAME_GOBACK_TO_MAIN) {
-            imageSelAdapter.notifyItemChanged(GVal.chosenNumber);
+        if (gameMode == GAME_GOBACK_TO_MAIN) {
+            imageSelAdapter.notifyItemChanged(chosenNumber);
         }
-//            // todo: ask whether to continue
-//            Intent intent = new Intent(this, ActivitySelLevel.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//        } else
-            GVal.gameMode = GAME_SELECT_IMAGE;
-
+        gameMode = GAME_SELECT_IMAGE;
 
     }
 
+    void initiateGame() {
+        gVal = new GVal();
+        histories = new ArrayList<>();
+
+    }
 
     @Override
     protected void onPause() {
-        new VarsGetPut().put(GVal, this);
+//        new GValGetPut().put(currGameLevel, gVal, this);
         super.onPause();
     }
 
