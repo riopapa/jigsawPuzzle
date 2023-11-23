@@ -71,9 +71,15 @@ public class ActivityMain extends Activity {
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
+
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
 
+    /*
+    ** Following will be handled with Set Menu
+     */
+    public static boolean vibrate = true;
+    public static boolean showBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +107,6 @@ public class ActivityMain extends Activity {
 //        decorView.setSystemUiVisibility(uiOptions);
 
         new PhoneMetrics(this);
-
     }
 
 
@@ -114,15 +119,17 @@ public class ActivityMain extends Activity {
         recyclerView.setVisibility(View.VISIBLE);
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
+
+
         // if newly restarted then read gVal
-        if (gameMode == 0) {
-            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-            String prevGame = sharedPref.getString("prevGame", "");
-            if (prevGame.equals("")) {
-                gameMode = GAME_NEW;
-                initiateGame();
-            }
-        }
+//        if (gameMode == 0) {
+//            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+//            String prevGame = sharedPref.getString("prevGame", "");
+//            if (prevGame.equals("")) {
+//                gameMode = GAME_NEW;
+//                initiateGame();
+//            }
+//        }
 
         if (histories == null)
             histories = new HistoryGetPut().get(this);
@@ -152,6 +159,7 @@ public class ActivityMain extends Activity {
 
     void initiateGame() {
         gVal = new GVal();
+//        new GValGetPut().set(gVal);
         histories = new ArrayList<>();
 
     }

@@ -126,7 +126,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
-        nowCR = gVal.activeRecyclerJigs.get(position);
+        nowCR = gVal.activeJigs.get(position);
         int jigC = nowCR / 10000;
         int jigR = nowCR - jigC * 10000;
 //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
@@ -140,7 +140,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return (gVal.activeRecyclerJigs.size());
+        return (gVal.activeJigs.size());
     }
 
 

@@ -23,6 +23,6 @@ public class PhoneMetrics {
         // Calculate the physical screen size in inches.
         fPhoneInchX = screenX / metrics.xdpi;       // 2.9 x 6.22 for note 20
         fPhoneInchY = screenY / metrics.ydpi;
-        Log.w("DPI info ", metrics.xdpi/metrics.ydpi+" x ="+metrics.xdpi+" y="+metrics.ydpi);
+//        Log.w("DPI info ", metrics.xdpi/metrics.ydpi+" x ="+metrics.xdpi+" y="+metrics.ydpi);
     }
 }

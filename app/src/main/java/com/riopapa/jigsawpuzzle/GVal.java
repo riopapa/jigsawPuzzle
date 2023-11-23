@@ -1,8 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
-import com.riopapa.jigsawpuzzle.func.CalcCOLUMN_ROW;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
-import com.riopapa.jigsawpuzzle.model.History;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
@@ -25,11 +23,11 @@ public class GVal {
     // gameMode 0: newly installed;
     public JigTable[][] jigTables;
 
-    public int jigCOLs, jigROWs; // jigsaw slices column by row
+    public int colNbr, rowNbr; // jigsaw slices column by row
 
     public int baseX, baseY; // puzzle view x, y offset
 
-    public ArrayList<Integer> allPossibleJigs, activeRecyclerJigs;
+    public ArrayList<Integer> allPossibleJigs, activeJigs;
     // allRandomJigs contains jigsaws id which is not moved to floatingPiece
     // activeRecyclerJigs contains available jigsaws currently
 

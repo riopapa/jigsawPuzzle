@@ -4,7 +4,6 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
-import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.riopapa.jigsawpuzzle.GVal;
-import com.riopapa.jigsawpuzzle.PieceImage;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.lang.reflect.Type;
@@ -41,29 +39,30 @@ public class GValGetPut {
         sharedEditor.putString("gVal", json);
         sharedEditor.apply();
     }
-    public void set(GVal gVal) {
+    public void set(GVal gVal, int col, int row) {
         gVal.gameLevel =  currLevel;
         gVal.fps = new ArrayList<>();
-
+        gVal.colNbr = col;
+        gVal.rowNbr = row;
         new SetPicSizes(screenX * (12 - currLevel) / 12);
-        new CalcCOLUMN_ROW(currLevel);
 
-        float szW = (float) chosenImageWidth / (float) (gVal.jigCOLs+1);
-        float szH = (float) chosenImageHeight / (float) (gVal.jigROWs+1);
+        float szW = (float) chosenImageWidth / (float) (gVal.colNbr +1);
+        float szH = (float) chosenImageHeight / (float) (gVal.rowNbr +1);
         gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         gVal.imgGapSize = gVal.imgInSize * 5 / 24;
         gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
 
         chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,
-                gVal.imgInSize * gVal.jigCOLs + gVal.imgGapSize + gVal.imgGapSize,
-                gVal.imgInSize * gVal.jigROWs  + gVal.imgGapSize + gVal.imgGapSize);
+                gVal.imgInSize * gVal.colNbr + gVal.imgGapSize + gVal.imgGapSize,
+                gVal.imgInSize * gVal.rowNbr + gVal.imgGapSize + gVal.imgGapSize);
         // refine map size
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
         Log.w("set", " size="+chosenImageWidth+"x"+chosenImageHeight);
-        gVal.jigTables = new JigTable[gVal.jigCOLs][gVal.jigROWs];
+        gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
         new SettleJigTableWall(gVal.jigTables);
-        new ClearGlobalValues();
+        new ClearGValValues();
+        new FullRecyclePiece();
 
     }
 

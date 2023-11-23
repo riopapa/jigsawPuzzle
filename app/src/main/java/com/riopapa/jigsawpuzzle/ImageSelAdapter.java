@@ -11,7 +11,6 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.riopapa.jigsawpuzzle.func.ImageChosen;
 import com.riopapa.jigsawpuzzle.func.ImageStorage;
 import com.riopapa.jigsawpuzzle.model.History;
 
@@ -123,12 +121,15 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
-            if (hist.gameLevel.contains(game)) {
-                int j = Integer.parseInt(hist.gameLevel.substring(3));
-                if (histStr.length() > 0)
-                    histStr += "\n";
-                histStr += levelNames[j]+" : "+ sdf.format(hist.time[j])
-                        +" "+((hist.percent[j] == 100) ? "Done":hist.percent[j]+"%");
+            if (hist.game.equals(game)) {
+                for (int j = 0; j < 4; j++) {
+                    if (hist.time[j] != 0) {
+                        if (histStr.length() > 0)
+                            histStr += "\n";
+                        histStr += levelNames[j] + " : " + sdf.format(hist.time[j])
+                                + " " + ((hist.percent[j] == 100) ? "Done" : hist.percent[j] + "%");
+                    }
+                }
                 break;
             }
         }

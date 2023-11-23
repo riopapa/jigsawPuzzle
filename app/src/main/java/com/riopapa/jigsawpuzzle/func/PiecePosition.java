@@ -25,13 +25,13 @@ public class PiecePosition {
 
         boolean left, right = false, up, down = false;
 
-        if (cc == 0 || rr == 0 || cc == gVal.jigCOLs - 1 || rr == gVal.jigROWs - 1)
+        if (cc == 0 || rr == 0 || cc == gVal.colNbr - 1 || rr == gVal.rowNbr - 1)
             return true;
         left = gVal.jigTables[cc-1][rr].locked;
-        if (cc != gVal.jigCOLs -1)
+        if (cc != gVal.colNbr -1)
             right = gVal.jigTables[cc+1][rr].locked;
         up = gVal.jigTables[cc][rr-1].locked;
-        if (rr != gVal.jigROWs-1)
+        if (rr != gVal.rowNbr -1)
             down = gVal.jigTables[cc][rr+1].locked;
 
         return left | right | up | down;

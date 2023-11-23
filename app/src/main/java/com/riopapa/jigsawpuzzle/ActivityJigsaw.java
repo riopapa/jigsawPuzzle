@@ -4,11 +4,13 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
+import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
@@ -23,17 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
-import com.riopapa.jigsawpuzzle.func.ClearGlobalValues;
-import com.riopapa.jigsawpuzzle.func.FullRecyclePiece;
+import com.riopapa.jigsawpuzzle.func.ClearGValValues;
 import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
-import com.riopapa.jigsawpuzzle.func.SettleJigTableWall;
+import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
-import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,7 +47,7 @@ public class ActivityJigsaw extends Activity {
 
     public static PaintView paintView;
 
-    public static JigsawAdapter jigRecycleAdapter;
+    public static JigsawAdapter activeAdapter;
 
     public static boolean doNotUpdate; // wait while one action completed
 ;
@@ -57,7 +56,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigBright, jigWhite, jigOLine;
-    public static int jigRecyclePos; // jigsaw slide x, y count
+    public static int activePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
     public static History history;
@@ -82,8 +81,8 @@ public class ActivityJigsaw extends Activity {
         });
         binding.moveRight.setOnClickListener(v -> {
             gVal.offsetC += gVal.showShiftX;
-            if (gVal.offsetC >= gVal.jigCOLs - gVal.showMaxX)
-                gVal.offsetC = gVal.jigCOLs - gVal.showMaxX;
+            if (gVal.offsetC >= gVal.colNbr - gVal.showMaxX)
+                gVal.offsetC = gVal.colNbr - gVal.showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
@@ -94,37 +93,33 @@ public class ActivityJigsaw extends Activity {
         });
         binding.moveDown.setOnClickListener(v -> {
             gVal.offsetR += gVal.showShiftY;
-            if (gVal.offsetR >= gVal.jigROWs - gVal.showMaxY)
-                gVal.offsetR = gVal.jigROWs - gVal.showMaxY;
+            if (gVal.offsetR >= gVal.rowNbr - gVal.showMaxY)
+                gVal.offsetR = gVal.rowNbr - gVal.showMaxY;
             copy2RecyclerPieces();
         });
 
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
-
-        jigPic = new Bitmap[gVal.jigCOLs][gVal.jigROWs];
-        jigOLine = new Bitmap[gVal.jigCOLs][gVal.jigROWs];
-        jigBright = new Bitmap[gVal.jigCOLs][gVal.jigROWs];
-        jigWhite = new Bitmap[gVal.jigCOLs][gVal.jigROWs];
-
+        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigBright = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
 
-        new FullRecyclePiece();
-
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = gVal.recSize;
-        jigRecycleAdapter = new JigsawAdapter();
+        activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
         ItemTouchHelper helper = new ItemTouchHelper(
-                new JigRecycleCallback(jigRecycleAdapter, binding));
+                new JigRecycleCallback(activeAdapter, binding));
 
         helper.attachToRecyclerView(jigRecyclerView);
 
-        jigRecyclerView.setAdapter(jigRecycleAdapter);
+        jigRecyclerView.setAdapter(activeAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -142,34 +137,36 @@ public class ActivityJigsaw extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
+        String info = currGameLevel+"\n" + gVal.colNbr+"x"+gVal.rowNbr;
 
-        history = new History();
-        history.gameLevel = currGameLevel;
-        for (int i = 0; i <  histories.size(); i++) {
-            if (currGameLevel.equals(histories.get(i).gameLevel)) {
-                history = histories.get(i);
-                break;
-            }
-        }
+        binding.pieceInfo.setText(info);
+
+//        history = new History();
+//        history.game = currGameLevel;
+//        for (int i = 0; i <  histories.size(); i++) {
+//            if (currGameLevel.equals(histories.get(i).game)) {
+//                history = histories.get(i);
+//                break;
+//            }
+//        }
 
     }
 
 
-
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
-        gVal.activeRecyclerJigs = new ArrayList<>();
+        gVal.activeJigs = new ArrayList<>();
         for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
             int cr = gVal.allPossibleJigs.get(i);
             int cc = cr / 10000;
             int rr = cr - cc * 10000;
             if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
                     cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                gVal.activeRecyclerJigs.add(cr);
+                gVal.activeJigs.add(cr);
             }
         }
 
-        jigRecycleAdapter.notifyDataSetChanged();
+        activeAdapter.notifyDataSetChanged();
         new ShowThumbnail(binding);
 
     }
@@ -177,28 +174,37 @@ public class ActivityJigsaw extends Activity {
     @Override
     protected void onPause() {
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
+        invalidateTimer.cancel();
+        if (gameMode != GAME_GOBACK_TO_MAIN)
+            gameMode = GAME_PAUSED;
+        new GValGetPut().put(currGameLevel, gVal, this);
+        history = null;
+        int hisIdx = -1;
+        for (int i = 0; i < histories.size(); i++) {
+            if (histories.get(i).game.equals(currGame)) {
+                history = histories.get(i);
+                hisIdx = i;
+            }
+        }
+        if (hisIdx == -1) {
+            history = new History();
+            history.game = currGame;
+        }
+
         history.time[gVal.gameLevel] = System.currentTimeMillis();
         int locked = 1;
-        for (int cc = 0; cc < gVal.jigCOLs; cc++) {
-            for (int rr = 0; rr < gVal.jigROWs; rr++) {
+        for (int cc = 0; cc < gVal.colNbr; cc++) {
+            for (int rr = 0; rr < gVal.rowNbr; rr++) {
                 if (gVal.jigTables[cc][rr].locked)
                     locked++;
             }
         }
-        history.percent[gVal.gameLevel] = locked * 100 / (gVal.jigCOLs * gVal.jigROWs);
-        for (int i = 0; i < histories.size(); i++) {
-            if (histories.get(i).gameLevel.equals(currGameLevel)) {
-                histories.set(i, history);
-                history = null;
-            }
-        }
-        if (history != null)
-            histories.add(history);
+        history.percent[gVal.gameLevel] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
 
-        if (gameMode != GAME_GOBACK_TO_MAIN)
-            gameMode = GAME_PAUSED;
-        invalidateTimer.cancel();
-        new GValGetPut().put(currGameLevel, gVal, this);
+        if (hisIdx != -1) {
+                histories.set(hisIdx, history);
+        } else
+            histories.add(history);
         new HistoryGetPut().put(histories, this);
         super.onPause();
     }

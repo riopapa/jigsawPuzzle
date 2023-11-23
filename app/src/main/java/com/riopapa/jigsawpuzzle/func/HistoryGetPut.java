@@ -10,17 +10,24 @@ import com.riopapa.jigsawpuzzle.model.History;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class HistoryGetPut {
 
     final String hist = "history";
     public ArrayList<History> get(Context context) {
+        ArrayList<History> list;
         SharedPreferences sharedPref = context.getSharedPreferences(hist,Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPref.getString(hist, "");
-        Type type = new TypeToken<History>() {}.getType();
-        return gson.fromJson(json, type);
+        if (json.isEmpty()) {
+            list = new ArrayList<>();
+        } else {
+            Type type = new TypeToken<List<History>>() {}.getType();
+            list = gson.fromJson(json, type);
+        }
+        return list;
     }
 
     public void put(ArrayList<History> histories, Context context) {

@@ -2,8 +2,8 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -27,8 +27,6 @@ import com.riopapa.jigsawpuzzle.func.PiecePosition;
 import com.riopapa.jigsawpuzzle.func.NearPieceBind;
 import com.riopapa.jigsawpuzzle.func.PieceSelection;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
-
-import java.util.ArrayList;
 
 public class PaintView extends View {
 
@@ -77,11 +75,11 @@ public class PaintView extends View {
     }
 
     boolean isPiecesAllLocked() {
-        if (gVal.activeRecyclerJigs.size() > 0 || gVal.fps.size() > 0) {
+        if (gVal.activeJigs.size() > 0 || gVal.fps.size() > 0) {
             return false;
         }
-        for (int c = 0; c < gVal.jigCOLs; c++) {
-            for (int r = 0; r < gVal.jigROWs; r++) {
+        for (int c = 0; c < gVal.colNbr; c++) {
+            for (int r = 0; r < gVal.rowNbr; r++) {
                 if (!gVal.jigTables[c][r].locked)
                     return false;
             }
@@ -116,9 +114,10 @@ public class PaintView extends View {
                     if (wannaBack2Recycler(y)) {
                         doNotUpdate = true;
                         Log.w("pchk Check", "GVal.fps size=" + gVal.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
-                        gVal.fps.remove(nowIdx);
                         goBack2Recycler();
+                        gVal.fps.remove(nowIdx);
                         nowFp = null;
+                        doNotUpdate = false;
                         dragX = -1;
                     } else if (y < screenBottom) {
                         nowFp.posX = x;
@@ -144,24 +143,22 @@ public class PaintView extends View {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         int i = layoutManager.findFirstVisibleItemPosition();
         View v = layoutManager.findViewByPosition(i);
-        jigRecyclePos = i + (dragX + gVal.picOSize - (int) v.getX()) / gVal.picOSize;
+        activePos = i + (dragX - (int) v.getX()) / gVal.picOSize;
         gVal.jigTables[nowC][nowR].outRecycle = false;
-        if (jigRecyclePos < gVal.activeRecyclerJigs.size()-1) {
-            gVal.activeRecyclerJigs.add(jigRecyclePos, nowC * 10000 + nowR);
-            jigRecycleAdapter.notifyItemInserted(jigRecyclePos);
+        if (activePos < gVal.activeJigs.size()-1) {
+            gVal.activeJigs.add(activePos, nowC * 10000 + nowR);
+            activeAdapter.notifyItemInserted(activePos);
         } else {
-            gVal.activeRecyclerJigs.add(nowC * 10000 + nowR);
-            jigRecycleAdapter.notifyItemInserted(gVal.activeRecyclerJigs.size()-1);
+            gVal.activeJigs.add(nowC * 10000 + nowR);
+            activeAdapter.notifyItemInserted(gVal.activeJigs.size()-1);
         }
-        doNotUpdate = false;
     }
 
     public boolean wannaBack2Recycler(int moveY) {
 
         // if sole piece then can go back to recycler
-        if (nowFp.anchorId == 0 && moveY > screenBottom && gVal.fps.size() > 0) {
+        if (nowFp.anchorId == 0 && moveY > screenBottom - gVal.picHSize && gVal.fps.size() > 0) {
             nowFp = null;
-            dragX = -1;
             return true;
         }
         return false;

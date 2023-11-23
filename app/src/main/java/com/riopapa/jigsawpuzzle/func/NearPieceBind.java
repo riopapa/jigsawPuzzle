@@ -97,13 +97,13 @@ public class NearPieceBind {
                     fpW.posY = fpBase.posY + (fpW.R - fpBase.R) * gVal.picISize;
                     fpW.anchorId = anchorBase;
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 3;
+                    fpW.count = 7;
                     gVal.fps.set(i, fpW);
 //                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
 //                            GVal.jigTables[fpW.C][fpW.R].posX +"x"+GVal.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
                     fpW.mode = ANI_ANCHOR; // make it not zero
-                    fpW.count = 3;
+                    fpW.count = 7;
                     gVal.fps.set(i, fpW);
                 }
             }

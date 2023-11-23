@@ -11,14 +11,19 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static com.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -37,6 +42,7 @@ public class PieceDraw {
 
     public void draw(Canvas canvas){
         canvas.save();
+        canvas.drawLine(gVal.picHSize, screenBottom, screenX- gVal.picHSize, screenBottom, lPaint);
 
         // draw locked pieces first with .pic
         for (int c = 0; c < gVal.showMaxX; c++) {
@@ -52,7 +58,7 @@ public class PieceDraw {
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                     else {
                         gVal.jigTables[cc][rr].count--;
-                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 2 == 0) ?
+                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 3 != 0) ?
                                         jigWhite[cc][rr] : jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                         if (gVal.jigTables[cc][rr].count == 0) {
@@ -63,15 +69,35 @@ public class PieceDraw {
             }
         }
         // then empty pieces with .oline
-        for (int c = 0; c < gVal.showMaxX; c++) {
-            for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c+ gVal.offsetC; final int rr = r+ gVal.offsetR;
-                if (!gVal.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(jigOLine[cc][rr],
-                            gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize,
-                            pGrayed);
+        if (showBack) {
+            for (int c = 0; c < gVal.showMaxX; c++) {
+                for (int r = 0; r < gVal.showMaxY; r++) {
+                    final int cc = c + gVal.offsetC;
+                    final int rr = r + gVal.offsetR;
+                    if (!gVal.jigTables[cc][rr].locked) {
+                        canvas.drawBitmap(jigOLine[cc][rr],
+                                gVal.baseX + c * gVal.picISize,
+                                gVal.baseY + r * gVal.picISize,
+                                pGrayed);
+                    }
                 }
             }
+        } else {
+            int xSz = gVal.picISize * gVal.showMaxX;
+            int ySz = gVal.picISize * gVal.showMaxY;
+            int xBase = gVal.baseX + gVal.picGap + gVal.picGap/2;
+            int yBase = gVal.baseY + gVal.picGap + gVal.picGap/2;
+            Paint pBox = new Paint();
+            pBox.setColor(mContext.getColor(R.color.jigsaw_background));
+            pBox.setStrokeWidth(5);
+            canvas.drawLine(xBase, yBase,
+                    xBase+xSz, yBase, pBox);
+            canvas.drawLine(xBase, yBase,
+                    xBase, yBase+ySz, pBox);
+            canvas.drawLine(xBase+xSz, yBase,
+                    xBase+xSz, yBase+ySz, pBox);
+            canvas.drawLine(xBase, yBase+ySz,
+                    xBase+xSz, yBase+ySz, pBox);
         }
 
         // drawing floating pieces
@@ -87,12 +113,12 @@ public class PieceDraw {
             // animate just anchored
             if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
                 fp.count--;
-                if (jigBright[c][r] == null)
-                    jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
-                canvas.drawBitmap((fp.count % 2 == 0) ?
-                        jigBright[c][r] : jigOLine[c][r],
-                        fp.posX + rnd.nextInt(4) - 2,
-                        fp.posY + rnd.nextInt(4) - 2, null);
+                Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
+                Matrix matrix = new Matrix();
+                matrix.postRotate(3 * fp.count);
+                Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
+                        gVal.picOSize, gVal.picOSize, matrix, true);
+                canvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
@@ -102,13 +128,12 @@ public class PieceDraw {
             // animate recycler to paint
             if (fp.count > 0 && fp.mode == ANI_TO_FPS) {  // animate from recycle to paintView
                 fp.count--;
-                if (jigBright[c][r] == null)
-                    jigBright[c][r] = pieceImage.makeBright(jigOLine[c][r]);
-                canvas.drawBitmap((fp.count % 2 == 0) ?
-                        jigBright[c][r] : jigOLine[c][r],
-                        fp.posX + rnd.nextInt(4) - 2,
-                        fp.posY + rnd.nextInt(4) - 2, null);
-//                GVal.jigTables[c][r].posY -= GVal.picISize / 4;
+                Matrix matrix = new Matrix();
+                matrix.postRotate(3 * (fp.count - 8));
+                Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
+                        gVal.picOSize, gVal.picOSize, matrix, true);
+                canvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
+
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
@@ -119,8 +144,6 @@ public class PieceDraw {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
 //            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
-
-        canvas.drawLine(gVal.picHSize, screenBottom, screenX- gVal.picHSize, screenBottom, lPaint);
 
 
         canvas.restore();

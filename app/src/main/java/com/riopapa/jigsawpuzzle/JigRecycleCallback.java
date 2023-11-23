@@ -3,16 +3,17 @@ package com.riopapa.jigsawpuzzle;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecycleAdapter;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclePos;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
-import static com.riopapa.jigsawpuzzle.ActivityMain.mActivity;
+import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
@@ -28,9 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AnchorPiece;
 import com.riopapa.jigsawpuzzle.func.NearPieceBind;
+import com.riopapa.jigsawpuzzle.func.VibratePhone;
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
-
-import java.util.Collections;
 
 public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
@@ -43,6 +43,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     private final NearPieceBind nearPieceBind;
 
     public static boolean nowDragging;
+
 
     public JigRecycleCallback(ZItemTouchHelperListener listener, ActivityJigsawBinding binding) {
         this.listener = listener;
@@ -80,7 +81,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-
             nowDragging = true;
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
@@ -110,13 +110,16 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     private void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
         nowFp = null;
-        jigRecyclePos = viewHolder.getAbsoluteAdapterPosition();
-        nowCR = gVal.activeRecyclerJigs.get(jigRecyclePos);
+        activePos = viewHolder.getAbsoluteAdapterPosition();
+        nowCR = gVal.activeJigs.get(activePos);
         nowC = nowCR / 10000;
         nowR = nowCR - nowC * 10000;
         dragY = screenBottom;
         dragX = viewHolder.itemView.getLeft();
-        Log.w("selected "+jigRecyclePos, " CR"+nowCR+ " drag x="+dragX+ " y="+dragY);
+        Log.w("selected "+ activePos, " CR"+nowCR+ " drag x="+dragX+ " y="+dragY
+                +" pieceSz="+gVal.activeJigs.size());
+        if (vibrate)
+            new VibratePhone(mContext);
     }
     private void add2FloatingPiece() {
 
@@ -125,7 +128,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowFp.R = nowR;
         nowFp.posX = dragX;
         nowFp.posY = dragY;
-        nowFp.count = 2;
+        nowFp.count = 7;
         nowFp.mode = ANI_TO_FPS;
         nowFp.uId = System.currentTimeMillis();    // set Unique uId
         nowFp.anchorId = 0;       // let anchorId to itself
@@ -140,9 +143,10 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     private void removeFromRecycle() {
         gVal.jigTables[nowC][nowR].outRecycle = true;
-        jigRecycleAdapter.notifyItemRemoved(jigRecyclePos);
-        gVal.activeRecyclerJigs.remove(jigRecyclePos);
-        Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY);
+        gVal.activeJigs.remove(activePos);
+        activeAdapter.notifyItemRemoved(activePos);
+        Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
+        + " pieSZ="+gVal.activeJigs.size());
     }
 
 
@@ -163,22 +167,27 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+        return false;
+    }
+
+    @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         Log.w("p28 onSwiped", "Swiped rightPosition "+viewHolder.getBindingAdapterPosition());
         listener.onItemSwiped(viewHolder.getBindingAdapterPosition());
     }
 
 
-    @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        int holderIdx = viewHolder.getAbsoluteAdapterPosition();
-        int tgtIdx = target.getAbsoluteAdapterPosition();
-        Log.w("p27 onMove","from "+holderIdx+" to "+tgtIdx);
-        Collections.swap(gVal.activeRecyclerJigs, holderIdx, tgtIdx);
-        jigRecycleAdapter.notifyItemMoved(holderIdx, tgtIdx);
-//        listener.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
-        return true;
-    }
+//    @Override
+//    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//        int holderIdx = viewHolder.getAbsoluteAdapterPosition();
+//        int tgtIdx = target.getAbsoluteAdapterPosition();
+//        Log.w("p27 onMove","from "+holderIdx+" to "+tgtIdx);
+//        Collections.swap(gVal.activeRecyclerJigs, holderIdx, tgtIdx);
+//        jigRecycleAdapter.notifyItemMoved(holderIdx, tgtIdx);
+////        listener.onItemMove(viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+//        return true;
+//    }
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -191,14 +200,16 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //
 //        helperDrawTime = nowTime;
 
-        if (gVal.activeRecyclerJigs.size() == 0)
+        if (gVal.activeJigs.size() == 0)
             return;
-        if (jigRecyclePos == gVal.activeRecyclerJigs.size()) {
+        if (activePos == gVal.activeJigs.size()) {
 //            Log.e("r tag","activeSize="+GVal.activeRecyclerJigs.size()+" GVal.jigRecyclePos="+GVal.jigRecyclePos);
 //            for (int i = 0; i < GVal.activeRecyclerJigs.size(); i++)
 //                Log.w("active "+i, "pos "+GVal.activeRecyclerJigs.get(i));
             return;
         }
+
+        // dX, dY is valuable only when piece is dragged from recycler view
         View pieceView = viewHolder.itemView;
 //        nowCR = GVal.activeRecyclerJigs.get(jigRecyclePos);
 //        nowC = nowCR / 10000;
@@ -210,9 +221,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 nowFp.posX = dragX;
                 nowFp.posY = dragY;
             }
-            String txt = "dxDy "+dX+" x "+dY
-                    + "\n GVal.jPos "+dragX+" x "+dragY;
-            mActivity.runOnUiThread(() -> binding.debugLeft.setText(txt));
+//            String txt = "dxDy "+dX+" x "+dY
+//                    + "\n GVal.jPos "+dragX+" x "+dragY + "fps size="+ gVal.fps.size();
+//            Log.w("screenbottom", txt);
         }
 
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;
@@ -226,8 +237,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     }
 
 
-    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
-        c.drawRect(left, top, right, bottom, nullPaint);
-        Log.w("p recycleTouchHelper","clearCanvas L"+left+" R"+right+" T"+top+" B"+bottom);
-    }
+//    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
+//        c.drawRect(left, top, right, bottom, nullPaint);
+//        Log.w("p recycleTouchHelper","clearCanvas L"+left+" R"+right+" T"+top+" B"+bottom);
+//    }
 }

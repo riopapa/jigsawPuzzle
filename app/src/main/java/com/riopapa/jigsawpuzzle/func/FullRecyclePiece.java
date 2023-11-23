@@ -13,7 +13,7 @@ public class FullRecyclePiece {
     public  FullRecyclePiece() {
 
         Random rnd = new Random(System.currentTimeMillis() & 0xfffff);
-        int mxSize = gVal.jigCOLs * gVal.jigROWs;
+        int mxSize = gVal.colNbr * gVal.rowNbr;
         gVal.allPossibleJigs = new ArrayList<>();
         int []temp = new int[mxSize];
         int wkIdx = rnd.nextInt(mxSize/2);
@@ -30,12 +30,12 @@ public class FullRecyclePiece {
                         tmp = 0;
                 }
             }
-            if (gVal.jigCOLs > gVal.jigROWs) {
-                r = tmp / gVal.jigCOLs;
-                c = tmp - r * gVal.jigCOLs;
+            if (gVal.colNbr > gVal.rowNbr) {
+                r = tmp / gVal.colNbr;
+                c = tmp - r * gVal.colNbr;
             } else {
-                c = tmp / gVal.jigROWs;
-                r = tmp - c * gVal.jigROWs;
+                c = tmp / gVal.rowNbr;
+                r = tmp - c * gVal.rowNbr;
             }
             gVal.allPossibleJigs.add(c*10000+r);
             temp[tmp] = 1;

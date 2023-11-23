@@ -10,7 +10,6 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
-import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -18,7 +17,6 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,7 +28,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
-import com.riopapa.jigsawpuzzle.func.CalcCOLUMN_ROW;
+import com.riopapa.jigsawpuzzle.func.ClearGValValues;
+import com.riopapa.jigsawpuzzle.func.DefineColsRows;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 
@@ -39,13 +38,14 @@ public class ActivitySelLevel extends AppCompatActivity {
     ActivitySelLevelBinding binding;
     AlertDialog alertDialog;
     Context context;
+    DefineColsRows jigColumnRow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
 
         if (gameMode == GAME_PAUSED) {
-//            new CalcCOLUMN_ROW(gVal.gameLevel);
+//            new DefineColsRows(gVal.gameLevel);
             Intent intent = new Intent(this, ActivityJigsaw.class);
             startActivity(intent);
         }
@@ -63,8 +63,9 @@ public class ActivitySelLevel extends AppCompatActivity {
             finish();
             return;
         }
+        jigColumnRow = new DefineColsRows();
 //        chosenImageMap = new ImageStorage().getMap(GVal.selectedImageNbr);
-//        new ImageChosen();
+//        new calcImageColor();
 //        int width = screenX * 8 / 10;
 //        int height = width * chosenImageHeight / chosenImageWidth;
 //        if (height > screenY * 7 /10)
@@ -101,33 +102,71 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         TextView tv;
         String s;
-        s = levelNames[0]; new CalcCOLUMN_ROW(0); s += "\n" + gVal.jigCOLs +" x "+ gVal.jigROWs;
+        
+        
+        s = levelNames[0]; jigColumnRow.calc(0);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
         tv = dialogView.findViewById(R.id.lvl_easy); tv.setText(s);
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
 
-        s = levelNames[1]; new CalcCOLUMN_ROW(1); s += "\n" + gVal.jigCOLs +" x "+ gVal.jigROWs;
+        s = levelNames[1]; jigColumnRow.calc(1);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
         tv = dialogView.findViewById(R.id.lvl_normal); tv.setText(s);
         dialogView.findViewById(R.id.lvl_normal).setOnClickListener(this::edit_table);
 
-        s = levelNames[2]; new CalcCOLUMN_ROW(2); s += "\n" + gVal.jigCOLs +" x "+ gVal.jigROWs;
+        s = levelNames[2]; jigColumnRow.calc(2);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
         tv = dialogView.findViewById(R.id.lvl_hard); tv.setText(s);
         dialogView.findViewById(R.id.lvl_hard).setOnClickListener(this::edit_table);
 
-        s = levelNames[3]; new CalcCOLUMN_ROW(3); s += "\n" + gVal.jigCOLs +" x "+ gVal.jigROWs;
+        s = levelNames[3]; jigColumnRow.calc(3);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
         dialogView.findViewById(R.id.lvl_expert).setOnClickListener(this::edit_table);
+
+
+        s = levelNames[0] + "\nNew"; jigColumnRow.calc(0);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        tv = dialogView.findViewById(R.id.lvl_easyn); tv.setText(s);
+        dialogView.findViewById(R.id.lvl_easyn).setOnClickListener(this::edit_table);
+
+        s = levelNames[1] + "\nNew"; jigColumnRow.calc(1);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        tv = dialogView.findViewById(R.id.lvl_normaln); tv.setText(s);
+        dialogView.findViewById(R.id.lvl_normaln).setOnClickListener(this::edit_table);
+
+        s = levelNames[2] + "\nNew"; jigColumnRow.calc(2);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        tv = dialogView.findViewById(R.id.lvl_hardn); tv.setText(s);
+        dialogView.findViewById(R.id.lvl_hardn).setOnClickListener(this::edit_table);
+
+        s = levelNames[3] + "\nNew"; jigColumnRow.calc(3);
+        s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        tv = dialogView.findViewById(R.id.lvl_expertn); tv.setText(s);
+        dialogView.findViewById(R.id.lvl_expertn).setOnClickListener(this::edit_table);
+
     }
 
     private void edit_table(View view) {
         alertDialog.dismiss();
         gameMode = GAME_STARTED; // target Image, level has been set
-        currLevel = Integer.parseInt(view.getTag().toString());
+        int level = Integer.parseInt(view.getTag().toString());
+        // if level > 9 then it means play new game
+        currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
         gVal = new GValGetPut().get(currGameLevel, this);
-        if (gVal == null) {
+        if (gVal == null || level > 9) {
             Log.w("gVal","new "+currGameLevel);
             gVal = new GVal();
-            new GValGetPut().set(gVal);
+            jigColumnRow.calc(currLevel);
+            new GValGetPut().set(gVal, jigColumnRow.col, jigColumnRow.row);
+            int sz = screenX * (10 - currLevel) / 10;
+            new SetPicSizes(sz);
+            new ClearGValValues();
+//            if (gVal.picISize * gVal.rowNbr < screenBottom * 2/3) {
+//                new SetPicSizes(sz * 4 / 3);
+//                new ClearGValValues();
+//            }
         }
 
         Log.w("sel level", "GVal Level="+ currLevel);

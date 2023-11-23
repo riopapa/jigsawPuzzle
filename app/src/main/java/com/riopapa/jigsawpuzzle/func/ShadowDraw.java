@@ -30,8 +30,8 @@ public class ShadowDraw extends View.DragShadowBuilder{
 //        Paint p = new Paint();
 //        p.setAlpha(255);
         Log.w("start "+nowCR, "onDrawShadow start");
-        for (int i = 0; i < gVal.activeRecyclerJigs.size(); i++) {
-            int cr = gVal.activeRecyclerJigs.get(i);
+        for (int i = 0; i < gVal.activeJigs.size(); i++) {
+            int cr = gVal.activeJigs.get(i);
             if (cr == nowCR) {
                 nowC = nowCR / 10000;
                 nowR = nowCR - nowC * 10000;

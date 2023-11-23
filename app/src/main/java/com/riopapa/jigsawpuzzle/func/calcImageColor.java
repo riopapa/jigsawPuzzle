@@ -6,10 +6,9 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 
 import android.graphics.Color;
-import android.util.Log;
 
-public class ImageChosen {
-    public ImageChosen() {
+public class calcImageColor {
+    public calcImageColor() {
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
         long r = 0, g = 0, b = 0;
