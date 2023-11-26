@@ -22,7 +22,7 @@ import android.graphics.PorterDuffXfermode;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
-    int outerSize, innerSize;
+    int imgOutSize, imgInSize;
 //    float out2Scale = 1.05f;
     Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutLine;
 
@@ -31,12 +31,10 @@ public class PieceImage {
 
     Context context;
 
-    public PieceImage(Context context, int outerSize, int innerSize) {
+    public PieceImage(Context context, int imgOutSize, int imgInSize) {
         this.context = context;
-        this.outerSize = outerSize;
-        this.innerSize = innerSize;
-//        matrixOutLine = new Matrix();
-//        matrixOutLine.setScale(out2Scale, out2Scale);
+        this.imgOutSize = imgOutSize;
+        this.imgInSize = imgInSize;
 
         paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
         outLineColor = context.getColor(R.color.out_line);
@@ -88,7 +86,7 @@ public class PieceImage {
 
     public void buildOline(int col, int row) {
         JigTable z = gVal.jigTables[col][row];
-        Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * innerSize, row * innerSize, outerSize, outerSize);
+        Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * imgInSize, row * imgInSize, imgOutSize, imgOutSize);
         Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
                 srcMaskMaps[2][z.uType], srcMaskMaps[3][z.dType]);
         Bitmap src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
@@ -103,7 +101,7 @@ public class PieceImage {
 
     public Bitmap maskSrcMap(Bitmap srcImage, Bitmap mask) {
 
-        Bitmap maskMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Bitmap maskMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(maskMap);
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(mask, 0, 0, paintIN);
@@ -112,21 +110,21 @@ public class PieceImage {
 
     public Bitmap cropSrc(Bitmap srcImage, Bitmap maskOut, int c, int r) {
 
-        Bitmap cropped = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Bitmap cropped = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(cropped);
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
         Paint p = new Paint();
         p.setColor(Color.BLACK);
-        p.setTextSize(outerSize*4f/18f);
-        p.setStrokeWidth(outerSize/15f);
+        p.setTextSize(imgOutSize *4f/18f);
+        p.setStrokeWidth(imgOutSize /15f);
         p.setTextAlign(Paint.Align.CENTER);
         p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/2f, outerSize*3f/6f, p);
+        tCanvas.drawText(c+"."+r, imgOutSize /2f, imgOutSize *3f/6f, p);
         p.setStrokeWidth(0);
         p.setColor(Color.WHITE);
         p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"."+r, outerSize/2f, outerSize*3f/6f, p);
+        tCanvas.drawText(c+"."+r, imgOutSize /2f, imgOutSize *3f/6f, p);
         return cropped;
     }
 
@@ -138,7 +136,7 @@ public class PieceImage {
      */
     public Bitmap makeOutline(Bitmap srcMap, Bitmap outMask) {
 
-        Bitmap outMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Bitmap outMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(outMask, 0,0, paintOutATop);
         Matrix matrix = new Matrix();
@@ -154,7 +152,7 @@ public class PieceImage {
      */
 
     public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
-        Bitmap tMap = Bitmap.createBitmap(outerSize, outerSize, Bitmap.Config.ARGB_8888);
+        Bitmap tMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tMap);
         canvas.drawBitmap(maskL, 0,0, null);
         canvas.drawBitmap(maskR, 0,0, null);

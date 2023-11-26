@@ -25,8 +25,5 @@ public class SetPicSizes {
         gVal.showMaxX = screenX / gVal.picISize - 2;
         gVal.showMaxY = gVal.showMaxX * screenY / screenX;
 
-        screenBottom = screenY - gVal.recSize - gVal.recSize + gVal.picGap;
-        if (fPhoneInchX > 3f)
-            screenBottom += gVal.picHSize;
     }
 }

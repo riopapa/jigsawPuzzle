@@ -2,6 +2,8 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
@@ -9,6 +11,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
+import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
@@ -32,6 +35,7 @@ import com.riopapa.jigsawpuzzle.func.ClearGValValues;
 import com.riopapa.jigsawpuzzle.func.DefineColsRows;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
+import com.riopapa.jigsawpuzzle.model.History;
 
 public class ActivitySelLevel extends AppCompatActivity {
 
@@ -102,25 +106,41 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         TextView tv;
         String s;
-        
-        
+
+        history = null;
+        historyIdx = -1;
+        for (int i = 0; i < histories.size(); i++) {
+            if (histories.get(i).game.equals(currGame)) {
+                history = histories.get(i);
+                historyIdx = i;
+            }
+        }
+        if (historyIdx == -1) {
+            history = new History();
+            history.game = currGame;
+        }
+
         s = levelNames[0]; jigColumnRow.calc(0);
         s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        s += "\n" + ((history.percent[0] > 99) ? "Done" : history.percent[0] + "%");
         tv = dialogView.findViewById(R.id.lvl_easy); tv.setText(s);
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
 
         s = levelNames[1]; jigColumnRow.calc(1);
         s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        s += "\n" + ((history.percent[1] > 99) ? "Done" : history.percent[1] + "%");
         tv = dialogView.findViewById(R.id.lvl_normal); tv.setText(s);
         dialogView.findViewById(R.id.lvl_normal).setOnClickListener(this::edit_table);
 
         s = levelNames[2]; jigColumnRow.calc(2);
         s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        s += "\n" + ((history.percent[2] > 99) ? "Done" : history.percent[2] + "%");
         tv = dialogView.findViewById(R.id.lvl_hard); tv.setText(s);
         dialogView.findViewById(R.id.lvl_hard).setOnClickListener(this::edit_table);
 
         s = levelNames[3]; jigColumnRow.calc(3);
         s += "\n" + jigColumnRow.col +" x "+ jigColumnRow.row;
+        s += "\n" + ((history.percent[3] > 99) ? "Done" : history.percent[3] + "%");
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
         dialogView.findViewById(R.id.lvl_expert).setOnClickListener(this::edit_table);
 
@@ -155,7 +175,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
         gVal = new GValGetPut().get(currGameLevel, this);
-        if (gVal == null || level > 9) {
+        if (gVal == null || level > 9) {    // over 9 means clear and new game
             Log.w("gVal","new "+currGameLevel);
             gVal = new GVal();
             jigColumnRow.calc(currLevel);

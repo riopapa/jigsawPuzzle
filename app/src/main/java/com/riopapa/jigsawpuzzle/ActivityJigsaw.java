@@ -5,12 +5,15 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
+import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
+import static com.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
@@ -18,6 +21,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,9 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
-import com.riopapa.jigsawpuzzle.func.ClearGValValues;
 import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
-import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
@@ -60,6 +62,7 @@ public class ActivityJigsaw extends Activity {
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
     public static History history;
+    public static int historyIdx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,9 @@ public class ActivityJigsaw extends Activity {
 
         setContentView(binding.getRoot());
         Log.w("jSaw","onCreate gameMode="+gameMode);
+        screenBottom = screenY - gVal.recSize - gVal.recSize + gVal.picGap;
+        if (fPhoneInchX > 3f)
+            screenBottom += gVal.picHSize;
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
@@ -98,6 +104,11 @@ public class ActivityJigsaw extends Activity {
             copy2RecyclerPieces();
         });
 
+        binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
+        binding.showBack.setOnClickListener(v -> { showBack = !showBack;
+            binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
+
+        });
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
@@ -137,18 +148,10 @@ public class ActivityJigsaw extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
-        String info = currGameLevel+"\n" + gVal.colNbr+"x"+gVal.rowNbr;
+        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
 
         binding.pieceInfo.setText(info);
-
-//        history = new History();
-//        history.game = currGameLevel;
-//        for (int i = 0; i <  histories.size(); i++) {
-//            if (currGameLevel.equals(histories.get(i).game)) {
-//                history = histories.get(i);
-//                break;
-//            }
-//        }
+        doNotUpdate = false;
 
     }
 
@@ -166,7 +169,9 @@ public class ActivityJigsaw extends Activity {
             }
         }
 
-        activeAdapter.notifyDataSetChanged();
+        jigRecyclerView.setAdapter(activeAdapter);
+//        activeAdapter.
+//        activeAdapter.notifyDataSetChanged();
         new ShowThumbnail(binding);
 
     }
@@ -178,18 +183,6 @@ public class ActivityJigsaw extends Activity {
         if (gameMode != GAME_GOBACK_TO_MAIN)
             gameMode = GAME_PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
-        history = null;
-        int hisIdx = -1;
-        for (int i = 0; i < histories.size(); i++) {
-            if (histories.get(i).game.equals(currGame)) {
-                history = histories.get(i);
-                hisIdx = i;
-            }
-        }
-        if (hisIdx == -1) {
-            history = new History();
-            history.game = currGame;
-        }
 
         history.time[gVal.gameLevel] = System.currentTimeMillis();
         int locked = 1;
@@ -201,8 +194,8 @@ public class ActivityJigsaw extends Activity {
         }
         history.percent[gVal.gameLevel] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
 
-        if (hisIdx != -1) {
-                histories.set(hisIdx, history);
+        if (historyIdx != -1) {
+                histories.set(historyIdx, history);
         } else
             histories.add(history);
         new HistoryGetPut().put(histories, this);

@@ -67,7 +67,7 @@ public class ActivityMain extends Activity {
     final public static int GAME_COMPLETED = 2055;
     final public static int GAME_ALL_COMPLETED = 2088;
 
-    final public static String[] levelNames = {"Easy", "Normal", "Hard", "Expert"};
+    final public static String[] levelNames = {"Easy", "Norm", "Hard", "Expert"};
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 

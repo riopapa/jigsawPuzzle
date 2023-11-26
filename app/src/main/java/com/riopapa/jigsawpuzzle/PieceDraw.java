@@ -115,7 +115,7 @@ public class PieceDraw {
                 fp.count--;
                 Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
                 Matrix matrix = new Matrix();
-                matrix.postRotate(3 * fp.count);
+                matrix.postRotate(2 * (2 - fp.count + rnd.nextInt(4)));
                 Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
                         gVal.picOSize, gVal.picOSize, matrix, true);
                 canvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
@@ -129,7 +129,7 @@ public class PieceDraw {
             if (fp.count > 0 && fp.mode == ANI_TO_FPS) {  // animate from recycle to paintView
                 fp.count--;
                 Matrix matrix = new Matrix();
-                matrix.postRotate(3 * (fp.count - 8));
+                matrix.postRotate(3 * (fp.count - 4));
                 Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
                         gVal.picOSize, gVal.picOSize, matrix, true);
                 canvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);

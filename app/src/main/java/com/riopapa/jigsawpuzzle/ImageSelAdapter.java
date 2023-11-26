@@ -6,6 +6,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static com.riopapa.jigsawpuzzle.ActivityMain.chosenNumber;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
@@ -41,7 +42,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
         ImageView iVImage;
         TextView tVInfo;
-
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -113,21 +113,21 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             width = width * 8/10;
             height = height * 8/10;
         }
+        if (fPhoneInchX > 3f && width > height)   // tablet height should be shortened
+            height = height * 9 / 10;
         params.width = width; params.height = height;
         holder.iVImage.setLayoutParams(params);
         holder.iVImage.setImageBitmap(bitmap);
         String game = new ImageStorage().getStr(position).substring(0,3);
-        String histStr = "";
+        String histStr = game;
         final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
             if (hist.game.equals(game)) {
                 for (int j = 0; j < 4; j++) {
                     if (hist.time[j] != 0) {
-                        if (histStr.length() > 0)
-                            histStr += "\n";
-                        histStr += levelNames[j] + " : " + sdf.format(hist.time[j])
-                                + " " + ((hist.percent[j] == 100) ? "Done" : hist.percent[j] + "%");
+                        histStr += "\n"+levelNames[j] + " : " + sdf.format(hist.time[j])
+                                + " " + ((hist.percent[j] > 99) ? "Done" : hist.percent[j] + "%");
                     }
                 }
                 break;

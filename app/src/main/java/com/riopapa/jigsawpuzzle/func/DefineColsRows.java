@@ -15,7 +15,7 @@ public class DefineColsRows {
 
     public void calc(int level) {
 
-        int [] sizes = {10, 15, 20, 30};
+        int [] sizes = {6, 10, 15, 30};
         if (chosenImageWidth > chosenImageHeight) {
             row = sizes[level];
             col = row * chosenImageWidth / chosenImageHeight;  // to avoid over y size

@@ -34,7 +34,8 @@ public class ShowThumbnail {
         xOff = oneSize * (float) gVal.offsetC;
         yOff = oneSize * (float) gVal.offsetR;
 
-        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
+//        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
+        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, w, h, true);
         Canvas canvas = new Canvas(thumb);
 
         new calcImageColor();
@@ -47,20 +48,33 @@ public class ShowThumbnail {
         pDot.setColor(chosenImageColor);
         pDot.setStrokeWidth(20f);
         pDot.setPathEffect(new DashPathEffect(new float[] {50, 50}, 0));
+
+        int color = chosenImageColor ^ 0xCCCCCC;
+        Paint pDot2 = new Paint();
+        pDot2.setColor(color);
+        pDot2.setStrokeWidth(20f);
+        pDot2.setPathEffect(new DashPathEffect(new float[] {25, 250}, 0));
+
         Paint pLine = new Paint();
         pLine.setColor(chosenImageColor);
         pLine.setStrokeWidth(20f);
 
         // top line
         canvas.drawLine(xOff, yOff, xOff+rectW, yOff, (yOff == 0)? pLine : pDot);
+        canvas.drawLine(xOff, yOff, xOff+rectW, yOff, (yOff == 0)? pLine : pDot2);
         // left line
         canvas.drawLine(xOff, yOff, xOff, yOff+rectH, (xOff == 0)? pLine : pDot);
+        canvas.drawLine(xOff, yOff, xOff, yOff+rectH, (xOff == 0)? pLine : pDot2);
         // right line
         canvas.drawLine(xOff+rectW, yOff, xOff+rectW, yOff+rectH,
                 (gVal.offsetC+ gVal.showMaxX == gVal.colNbr)? pLine : pDot);
+        canvas.drawLine(xOff+rectW, yOff, xOff+rectW, yOff+rectH,
+                (gVal.offsetC+ gVal.showMaxX == gVal.colNbr)? pLine : pDot2);
         // bottom line
         canvas.drawLine(xOff, yOff+rectH, xOff+rectW, yOff+rectH,
                 (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDot);
+        canvas.drawLine(xOff, yOff+rectH, xOff+rectW, yOff+rectH,
+                (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDot2);
 
         binding.thumbnail.setImageBitmap(thumb);
 

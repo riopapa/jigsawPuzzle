@@ -23,7 +23,6 @@
         android:layout_margin="8dp"
         />
 
-
     <TextView
         android:id="@+id/debug_left"
         android:layout_width="wrap_content"
@@ -32,7 +31,7 @@
         android:background="#22667f"
         android:gravity="center"
         android:text="info"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/show_back"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/debug_right"
         android:layout_margin="8dp"
@@ -40,15 +39,17 @@
 
 
 
-    <ImageView
-        android:id = "@+id/image_answer"
-        android:layout_width = "match_parent"
-        android:layout_height = "360dp"
-        android:background = "#00aaaaaa"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/debug_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="#22667f"
+        android:gravity="center"
+        android:text=" Val "
+        app:layout_constraintLeft_toRightOf="@id/debug_left"
+        app:layout_constraintTop_toBottomOf="@id/show_back"
+        android:layout_margin="8dp"
         />
 
     <com.riopapa.jigsawpuzzle.PaintView
@@ -73,21 +74,6 @@
 
         />
 
-
-
-
-    <TextView
-        android:id="@+id/debug_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:background="#22667f"
-        android:gravity="center"
-        android:text=" Val "
-        app:layout_constraintLeft_toRightOf="@id/debug_left"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="8dp"
-        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/move_thumbnail"
@@ -164,5 +150,15 @@
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id = "@+id/show_back"
+        android:layout_width = "32dp"
+        android:layout_height = "32dp"
+        android:layout_margin = "16dp"
+        android:src="@drawable/eye_opened"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

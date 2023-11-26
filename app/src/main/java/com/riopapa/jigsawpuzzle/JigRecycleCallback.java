@@ -128,7 +128,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowFp.R = nowR;
         nowFp.posX = dragX;
         nowFp.posY = dragY;
-        nowFp.count = 7;
+        nowFp.count = 5;
         nowFp.mode = ANI_TO_FPS;
         nowFp.uId = System.currentTimeMillis();    // set Unique uId
         nowFp.anchorId = 0;       // let anchorId to itself
