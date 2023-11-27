@@ -26,9 +26,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
 import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import com.riopapa.jigsawpuzzle.func.PhoneMetrics;
-import com.riopapa.jigsawpuzzle.func.SetPicSizes;
-import com.riopapa.jigsawpuzzle.func.ImageStorage;
-import com.riopapa.jigsawpuzzle.func.GValGetPut;
+import com.riopapa.jigsawpuzzle.model.GVal;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static int appVersion;
+    public static int appVersion = 000500;
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -74,12 +72,15 @@ public class ActivityMain extends Activity {
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
+    public static Bitmap[] fireWorks;
 
     /*
     ** Following will be handled with Set Menu
      */
     public static boolean vibrate = true;
-    public static boolean showBack = false;
+    public static boolean showBack = true;
+    public static boolean sound = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,12 @@ public class ActivityMain extends Activity {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
+        showBack = sharedPref.getBoolean("showBack", true);
+        vibrate = sharedPref.getBoolean("vibrate", true);
+        sound = sharedPref.getBoolean("sound", true);
+
 //        View decorView = getWindow().getDecorView();
 //        int uiOptions = decorView.getSystemUiVisibility();
 //        uiOptions |= SYSTEM_UI_FLAG_FULLSCREEN;
@@ -154,13 +161,6 @@ public class ActivityMain extends Activity {
             imageSelAdapter.notifyItemChanged(chosenNumber);
         }
         gameMode = GAME_SELECT_IMAGE;
-
-    }
-
-    void initiateGame() {
-        gVal = new GVal();
-//        new GValGetPut().set(gVal);
-        histories = new ArrayList<>();
 
     }
 

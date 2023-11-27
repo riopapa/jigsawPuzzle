@@ -7,6 +7,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
+import static com.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
@@ -35,6 +36,7 @@ import com.riopapa.jigsawpuzzle.func.ClearGValValues;
 import com.riopapa.jigsawpuzzle.func.DefineColsRows;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
+import com.riopapa.jigsawpuzzle.model.GVal;
 import com.riopapa.jigsawpuzzle.model.History;
 
 public class ActivitySelLevel extends AppCompatActivity {
@@ -175,7 +177,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
         gVal = new GValGetPut().get(currGameLevel, this);
-        if (gVal == null || level > 9) {    // over 9 means clear and new game
+        if (gVal == null || level > 9 || gVal.version < appVersion) {    // over 9 means clear and new game
             Log.w("gVal","new "+currGameLevel);
             gVal = new GVal();
             jigColumnRow.calc(currLevel);

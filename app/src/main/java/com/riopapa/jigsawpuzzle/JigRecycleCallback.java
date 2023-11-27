@@ -35,10 +35,7 @@ import com.riopapa.jigsawpuzzle.model.FloatPiece;
 public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     private final ZItemTouchHelperListener listener;
-    private final Paint nullPaint = new Paint();
-
     private final ActivityJigsawBinding binding;
-
     private final AnchorPiece anchorPiece;
     private final NearPieceBind nearPieceBind;
 
@@ -104,6 +101,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //                GVal.debugMode = false;
                 nowDragging = false;
             }
+        } else {
+            Log.w("onSelectedChanged", "ItemTouchHelper "+actionState);
         }
 
     }

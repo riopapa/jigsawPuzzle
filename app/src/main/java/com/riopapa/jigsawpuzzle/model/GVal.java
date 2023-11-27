@@ -1,4 +1,4 @@
-package com.riopapa.jigsawpuzzle;
+package com.riopapa.jigsawpuzzle.model;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 import com.riopapa.jigsawpuzzle.model.JigTable;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class GVal {
 
-    public int version;
+    public int version; // vvrrxx
     public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
     public int recSize, picOSize, picISize, picGap, picHSize;

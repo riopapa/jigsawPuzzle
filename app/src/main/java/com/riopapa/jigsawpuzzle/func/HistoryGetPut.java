@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.riopapa.jigsawpuzzle.GVal;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.lang.reflect.Type;

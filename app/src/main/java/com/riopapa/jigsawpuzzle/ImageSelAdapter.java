@@ -16,6 +16,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 chosenImageMap = new ImageStorage().getMap(chosenNumber);
                 chosenImageWidth = chosenImageMap.getWidth();
                 chosenImageHeight = chosenImageMap.getHeight();
+
                 currGame = itemView.getTag().toString();
                 ImageView imageView = iVImage.getRootView().findViewById(R.id.chosen_image);
                 imageView.setVisibility(View.VISIBLE);
@@ -63,12 +65,11 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
                 new Timer().schedule(new TimerTask() {
                     public void run() {
-
                     Intent intent = new Intent(context, ActivitySelLevel.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                     }
-                }, 500);
+                }, 300);
 
 
             });
@@ -105,7 +106,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         Bitmap oMap = new ImageStorage().getMap(position);
 
         Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/2, oMap.getHeight()/2, true);
-
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
         int height = width*bitmap.getHeight()/bitmap.getWidth();
@@ -114,7 +114,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             height = height * 8/10;
         }
         if (fPhoneInchX > 3f && width > height)   // tablet height should be shortened
-            height = height * 9 / 10;
+            height = height * 8 / 10;
         params.width = width; params.height = height;
         holder.iVImage.setLayoutParams(params);
         holder.iVImage.setImageBitmap(bitmap);

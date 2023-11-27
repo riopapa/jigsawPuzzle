@@ -17,8 +17,8 @@ import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 public class ShowThumbnail {
     public ShowThumbnail(ActivityJigsawBinding binding) {
 
-        int h, w;
-        float oneSize, rectW, rectH, xOff, yOff;
+        float h, w, oneSize, rectW, rectH, xOff, yOff;
+
         if (chosenImageHeight > chosenImageWidth) {
             h = 1000;
             w = h * chosenImageWidth / chosenImageHeight;
@@ -35,7 +35,7 @@ public class ShowThumbnail {
         yOff = oneSize * (float) gVal.offsetR;
 
 //        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
-        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, w, h, true);
+        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
         Canvas canvas = new Canvas(thumb);
 
         new calcImageColor();

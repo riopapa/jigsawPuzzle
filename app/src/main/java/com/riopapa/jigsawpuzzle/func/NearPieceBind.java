@@ -4,6 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static com.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
@@ -46,14 +47,13 @@ public class NearPieceBind {
                 FloatPiece fpT = gVal.fps.get(i);
                 if (fpT.anchorId == anchorId) {
                     gVal.jigTables[fpT.C][fpT.R].locked = true;
-                    gVal.jigTables[fpT.C][fpT.R].count = 7;
+                    gVal.jigTables[fpT.C][fpT.R].count = fireWorks.length;
                     gVal.fps.remove(i);
                 } else
                     i++;
             }
             return;
         }
-
 
         // check whether can be anchored to near by pieceImage
 

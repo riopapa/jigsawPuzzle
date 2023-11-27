@@ -3,17 +3,17 @@ package com.riopapa.jigsawpuzzle.func;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static com.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.riopapa.jigsawpuzzle.GVal;
+import com.riopapa.jigsawpuzzle.model.GVal;
 import com.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.lang.reflect.Type;
@@ -40,6 +40,7 @@ public class GValGetPut {
         sharedEditor.apply();
     }
     public void set(GVal gVal, int col, int row) {
+        gVal.version = appVersion;
         gVal.gameLevel =  currLevel;
         gVal.fps = new ArrayList<>();
         gVal.colNbr = col;
@@ -58,7 +59,6 @@ public class GValGetPut {
         // refine map size
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
-        Log.w("set", " size="+chosenImageWidth+"x"+chosenImageHeight);
         gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
         new SettleJigTableWall(gVal.jigTables);
         new ClearGValValues();

@@ -26,8 +26,8 @@ public class PieceSelection {
             FloatPiece fp = gVal.fps.get(i);
             int c = fp.C;
             int r = fp.R;
-            Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r
-                    +" pos="+fp.posX+"x"+fp.posY);
+//            Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r
+//                    +" pos="+fp.posX+"x"+fp.posY);
             if (Math.abs(fp.posX - iX) > gVal.picHSize)
                 continue;
             if (Math.abs(fp.posY - iY) > gVal.picHSize)

@@ -7,7 +7,6 @@
     android:id="@+id/layout_jigsaw"
     tools:context=".ActivityJigsaw">
 
-
     <TextView
         android:id="@+id/piece_info"
         android:layout_width="wrap_content"
@@ -36,7 +35,6 @@
         app:layout_constraintRight_toLeftOf="@id/debug_right"
         android:layout_margin="8dp"
         />
-
 
 
     <TextView
@@ -158,6 +156,27 @@
         android:layout_margin = "16dp"
         android:src="@drawable/eye_opened"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/vibrate"
+        />
+
+    <ImageView
+        android:id = "@+id/vibrate"
+        android:layout_width = "32dp"
+        android:layout_height = "32dp"
+        android:layout_margin = "16dp"
+        android:src="@drawable/vibrate_on"
+        app:layout_constraintLeft_toRightOf="@id/show_back"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id = "@+id/sound"
+        android:layout_width = "32dp"
+        android:layout_height = "32dp"
+        android:layout_margin = "16dp"
+        android:src="@drawable/sound_on"
+        app:layout_constraintLeft_toRightOf="@id/vibrate"
         app:layout_constraintTop_toTopOf="parent"
         />
 

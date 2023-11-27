@@ -1,10 +1,11 @@
-package com.riopapa.jigsawpuzzle;
+package com.riopapa.jigsawpuzzle.func;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.riopapa.jigsawpuzzle.R;
 import com.riopapa.jigsawpuzzle.func.Drawable2bitmap;
 
 public class Masks {

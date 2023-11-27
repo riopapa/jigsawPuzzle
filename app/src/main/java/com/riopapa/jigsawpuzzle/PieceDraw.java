@@ -11,6 +11,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -57,13 +58,18 @@ public class PieceDraw {
                         canvas.drawBitmap(jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                     else {
-                        gVal.jigTables[cc][rr].count--;
-                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 3 != 0) ?
-                                        jigWhite[cc][rr] : jigPic[cc][rr],
+//                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 3 != 0) ?
+//                                        jigWhite[cc][rr] : jigPic[cc][rr],
+//                                gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
+//                        if (gVal.jigTables[cc][rr].count == 0) {
+//                            jigWhite[cc][rr] = null;
+//                        }
+                        canvas.drawBitmap(jigOLine[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-                        if (gVal.jigTables[cc][rr].count == 0) {
-                            jigWhite[cc][rr] = null;
-                        }
+                        canvas.drawBitmap(fireWorks[fireWorks.length-gVal.jigTables[cc][rr].count],
+                                gVal.baseX + c * gVal.picISize - gVal.picHSize,
+                                gVal.baseY + r * gVal.picISize - gVal.picHSize, null);
+                        gVal.jigTables[cc][rr].count--;
                     }
                 }
             }

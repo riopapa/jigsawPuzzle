@@ -6,6 +6,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
+import static com.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static com.riopapa.jigsawpuzzle.ActivityMain.levelNames;
@@ -14,22 +15,28 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.showBack;
+import static com.riopapa.jigsawpuzzle.ActivityMain.sound;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static com.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
+import com.riopapa.jigsawpuzzle.func.FireWork;
 import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
+import com.riopapa.jigsawpuzzle.func.Masks;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
@@ -107,8 +114,21 @@ public class ActivityJigsaw extends Activity {
         binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
         binding.showBack.setOnClickListener(v -> { showBack = !showBack;
             binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
-
+            save_params();
         });
+
+        binding.vibrate.setImageResource((vibrate)? R.drawable.vibrate_on: R.drawable.vibrate_off);
+        binding.vibrate.setOnClickListener(v -> { vibrate = !vibrate;
+            binding.vibrate.setImageResource((vibrate)? R.drawable.vibrate_on: R.drawable.vibrate_off);
+            save_params();
+        });
+
+        binding.sound.setImageResource((sound)? R.drawable.sound_on: R.drawable.sound_off);
+        binding.sound.setOnClickListener(v -> { sound = !sound;
+            binding.sound.setImageResource((sound)? R.drawable.sound_on: R.drawable.sound_off);
+            save_params();
+        });
+
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
@@ -118,6 +138,7 @@ public class ActivityJigsaw extends Activity {
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
+        fireWorks = new FireWork().make(mContext, gVal.picOSize);
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -200,6 +221,15 @@ public class ActivityJigsaw extends Activity {
             histories.add(history);
         new HistoryGetPut().put(histories, this);
         super.onPause();
+    }
+
+    private void save_params() {
+        SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedEditor = sharedPref.edit();
+        sharedEditor.putBoolean("showBack", showBack);
+        sharedEditor.putBoolean("vibrate", vibrate);
+        sharedEditor.putBoolean("sound", sound);
+        sharedEditor.apply();
     }
 
     @Override
