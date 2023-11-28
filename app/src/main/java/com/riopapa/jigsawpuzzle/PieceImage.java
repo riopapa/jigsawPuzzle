@@ -1,8 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static com.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -83,20 +82,43 @@ public class PieceImage {
      *    make .oLine from .pic
      *    output jigTables[col][row] .src, .pic, .oLine
      */
-
-    public void buildOline(int col, int row) {
+    public Bitmap buildPic(int col, int row) {
         JigTable z = gVal.jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * imgInSize, row * imgInSize, imgOutSize, imgOutSize);
         Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
                 srcMaskMaps[2][z.uType], srcMaskMaps[3][z.dType]);
-        Bitmap src = cropSrc(orgPiece, mask, col,row);   // col, row will be removed later
-        jigPic[col][row] = Bitmap.createScaledBitmap(src, gVal.picOSize, gVal.picOSize, true);
-        mask = maskMerge(outMaskMaps[0][z.lType], outMaskMaps[1][z.rType],
-                outMaskMaps[2][z.uType], outMaskMaps[3][z.dType]);
-        jigOLine[col][row] = makeOutline(src, mask);
-        gVal.jigTables[col][row] = z;
+        Bitmap src = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
+        Canvas tCanvas = new Canvas(src);
+        tCanvas.drawBitmap(orgPiece, 0, 0, null);
+        tCanvas.drawBitmap(mask, 0, 0, paintIN);
+        if (debugMode) {
+            Paint p = new Paint();
+            p.setColor(Color.BLACK);
+            p.setTextSize(imgOutSize * 4f / 18f);
+            p.setStrokeWidth(imgOutSize / 15f);
+            p.setTextAlign(Paint.Align.CENTER);
+            p.setStyle(Paint.Style.STROKE);
+            tCanvas.drawText(col + "." + row, imgOutSize / 2f, imgOutSize * 3f / 6f, p);
+            p.setStrokeWidth(0);
+            p.setColor(Color.WHITE);
+            p.setStyle(Paint.Style.FILL_AND_STROKE);
+            tCanvas.drawText(col + "." + row, imgOutSize / 2f, imgOutSize * 3f / 6f, p);
+        }
+        return Bitmap.createScaledBitmap(src, gVal.picOSize, gVal.picOSize, true);
     }
 
+    public Bitmap buildOline(Bitmap pic, int col, int row) {
+        JigTable z = gVal.jigTables[col][row];
+        Bitmap mask = maskMerge(outMaskMaps[0][z.lType], outMaskMaps[1][z.rType],
+                outMaskMaps[2][z.uType], outMaskMaps[3][z.dType]);
+        Bitmap maskScaled = Bitmap.createScaledBitmap(mask, gVal.picOSize, gVal.picOSize, true);
+        Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outMap);
+        canvas.drawBitmap(maskScaled, 0,0, paintOutATop);
+        Matrix matrix = new Matrix();
+        canvas.drawBitmap(pic, matrix, paintOutLine);
+        return outMap;
+    }
 
 
     public Bitmap maskSrcMap(Bitmap srcImage, Bitmap mask) {
@@ -106,43 +128,6 @@ public class PieceImage {
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(mask, 0, 0, paintIN);
         return maskMap;
-    }
-
-    public Bitmap cropSrc(Bitmap srcImage, Bitmap maskOut, int c, int r) {
-
-        Bitmap cropped = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
-        Canvas tCanvas = new Canvas(cropped);
-        tCanvas.drawBitmap(srcImage, 0, 0, null);
-        tCanvas.drawBitmap(maskOut, 0, 0, paintIN);
-        Paint p = new Paint();
-        p.setColor(Color.BLACK);
-        p.setTextSize(imgOutSize *4f/18f);
-        p.setStrokeWidth(imgOutSize /15f);
-        p.setTextAlign(Paint.Align.CENTER);
-        p.setStyle(Paint.Style.STROKE);
-        tCanvas.drawText(c+"."+r, imgOutSize /2f, imgOutSize *3f/6f, p);
-        p.setStrokeWidth(0);
-        p.setColor(Color.WHITE);
-        p.setStyle(Paint.Style.FILL_AND_STROKE);
-        tCanvas.drawText(c+"."+r, imgOutSize /2f, imgOutSize *3f/6f, p);
-        return cropped;
-    }
-
-    /**
-     * create picOSized outline oLine from jig.src (outerSize)
-     * @param srcMap input oLine with outerSize
-     * @param outMask outline Mask
-     * @return outlined bitmap with picOSize
-     */
-    public Bitmap makeOutline(Bitmap srcMap, Bitmap outMask) {
-
-        Bitmap outMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(outMask, 0,0, paintOutATop);
-        Matrix matrix = new Matrix();
-        canvas.drawBitmap(srcMap, matrix, paintOutLine);
-        return Bitmap.createScaledBitmap(outMap, gVal.picOSize, gVal.picOSize, true);
-
     }
 
     /**

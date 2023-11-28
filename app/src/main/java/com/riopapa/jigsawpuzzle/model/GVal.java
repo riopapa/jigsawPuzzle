@@ -19,7 +19,6 @@ public class GVal {
     // pieceISize: one PieceSize for slicing images
     // pieceOSize: one Outer for slicing images
 
-    public boolean debugMode = false;
     // gameMode 0: newly installed;
     public JigTable[][] jigTables;
 

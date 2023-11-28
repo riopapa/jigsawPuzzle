@@ -55,6 +55,7 @@ public class NearPieceBind {
             return;
         }
 
+
         // check whether can be anchored to near by pieceImage
 
         int ancBase = -1;

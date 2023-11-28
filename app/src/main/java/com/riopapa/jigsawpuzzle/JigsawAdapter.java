@@ -1,6 +1,7 @@
 package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -127,12 +128,17 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         nowCR = gVal.activeJigs.get(position);
-        int jigC = nowCR / 10000;
-        int jigR = nowCR - jigC * 10000;
+        int cc = nowCR / 10000;
+        int rr = nowCR - cc * 10000;
 //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
-        if (jigOLine[jigC][jigR] == null)
-            pieceImage.buildOline(jigC, jigR);
-        viewHolder.ivIcon.setImageBitmap(jigOLine[jigC][jigR]);
+        if (jigPic[cc][rr] == null) {
+            jigPic[cc][rr] = pieceImage.buildPic(cc, rr);
+        }
+        if (jigOLine[cc][rr] == null) {
+            jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
+        }
+
+        viewHolder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
         viewHolder.ivIcon.setTag(nowCR);
 //        startPieceMove(viewHolder);
 

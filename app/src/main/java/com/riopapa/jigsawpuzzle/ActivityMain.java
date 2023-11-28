@@ -81,6 +81,7 @@ public class ActivityMain extends Activity {
     public static boolean showBack = true;
     public static boolean sound = false;
 
+    public static boolean debugMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

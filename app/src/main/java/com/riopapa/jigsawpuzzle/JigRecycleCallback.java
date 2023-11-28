@@ -92,7 +92,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                     svViewHolder.itemView.setVisibility(View.GONE);
                 Log.w("idle ", "ACTION_STATE_IDLE =" + dragX + " x " + dragY);
                 doNotUpdate = true;
-                gVal.debugMode = true;
                 removeFromRecycle();
                 add2FloatingPiece();
                 doNotUpdate = false;

@@ -14,7 +14,7 @@ public class FireWork {
      * predefine masks with imgOutSize for maskup to crop image
      * output : masks[][]
      */
-    public Bitmap[] make(Context cxt, int picOSize) {
+    public Bitmap[] make(Context cxt, int fireSize) {
 
         // remember to set com.riopapa.jigsawpuzzle.SettleJigTableWall() nextInt with this value
         // outerSize means puzzle outer size
@@ -30,7 +30,7 @@ public class FireWork {
             Bitmap bitmap = BitmapFactory.decodeResource
                     (mContext.getResources(), maps[i], null);
             fireMaps[i] = Bitmap.createScaledBitmap(bitmap,
-                    picOSize + picOSize, picOSize + picOSize, false);
+                    fireSize , fireSize, false);
         }
         return fireMaps;
     }

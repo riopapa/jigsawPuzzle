@@ -2,7 +2,6 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
-import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
@@ -24,7 +23,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 import com.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -49,10 +47,14 @@ public class PieceDraw {
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
                 final int cc = c+ gVal.offsetC; final int rr = r+ gVal.offsetR;
-                if (jigOLine[cc][rr] == null)
-                    pieceImage.buildOline(c+ gVal.offsetC, r+ gVal.offsetR);
-                if (jigWhite[cc][rr] == null)
-                    jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
+                if (jigPic[cc][rr] == null) {
+                    jigPic[cc][rr] = pieceImage.buildPic(cc, rr);
+                }
+                if (jigOLine[cc][rr] == null) {
+                    jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
+                }
+//                if (jigWhite[cc][rr] == null)
+//                    jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
                 if (gVal.jigTables[cc][rr].locked) {
                     if (gVal.jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigPic[cc][rr],
@@ -67,8 +69,8 @@ public class PieceDraw {
                         canvas.drawBitmap(jigOLine[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                         canvas.drawBitmap(fireWorks[fireWorks.length-gVal.jigTables[cc][rr].count],
-                                gVal.baseX + c * gVal.picISize - gVal.picHSize,
-                                gVal.baseY + r * gVal.picISize - gVal.picHSize, null);
+                                gVal.baseX + c * gVal.picISize - gVal.picGap,
+                                gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                         gVal.jigTables[cc][rr].count--;
                     }
                 }

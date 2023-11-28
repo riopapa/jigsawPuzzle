@@ -42,6 +42,7 @@ import com.riopapa.jigsawpuzzle.func.GValGetPut;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,6 +82,16 @@ public class ActivityJigsaw extends Activity {
         screenBottom = screenY - gVal.recSize - gVal.recSize + gVal.picGap;
         if (fPhoneInchX > 3f)
             screenBottom += gVal.picHSize;
+
+        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
+        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigBright = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
+
+        srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
+        outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
+        fireWorks = new FireWork().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
@@ -129,16 +140,7 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
-        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
-
-        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigBright = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
-
-        srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
-        fireWorks = new FireWork().make(mContext, gVal.picOSize);
+//        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -214,6 +216,7 @@ public class ActivityJigsaw extends Activity {
             }
         }
         history.percent[gVal.gameLevel] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
+        history.latest = gVal.gameLevel;
 
         if (historyIdx != -1) {
                 histories.set(historyIdx, history);
