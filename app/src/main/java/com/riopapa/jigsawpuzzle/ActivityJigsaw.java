@@ -2,6 +2,7 @@ package com.riopapa.jigsawpuzzle;
 
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
+import static com.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
@@ -25,6 +26,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
 import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -34,11 +37,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
+import com.riopapa.jigsawpuzzle.func.Congrat;
 import com.riopapa.jigsawpuzzle.func.FireWork;
 import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import com.riopapa.jigsawpuzzle.func.Masks;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
+import com.riopapa.jigsawpuzzle.func.SnackBar;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.util.ArrayList;
@@ -92,6 +97,7 @@ public class ActivityJigsaw extends Activity {
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
+        congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
@@ -102,23 +108,27 @@ public class ActivityJigsaw extends Activity {
             if (gVal.offsetC < 0)
                 gVal.offsetC = 0;
             copy2RecyclerPieces();
+            new SnackBar().show(this, "Wait a Sec . .", "Show Left");
         });
         binding.moveRight.setOnClickListener(v -> {
             gVal.offsetC += gVal.showShiftX;
             if (gVal.offsetC >= gVal.colNbr - gVal.showMaxX)
                 gVal.offsetC = gVal.colNbr - gVal.showMaxX;
+            new SnackBar().show(this, "Wait a Sec . .", "Show Right");
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
             gVal.offsetR -= gVal.showShiftY;
             if (gVal.offsetR < 0)
                 gVal.offsetR = 0;
+            new SnackBar().show(this, "Wait a Sec . .", "Show Up");
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
             gVal.offsetR += gVal.showShiftY;
             if (gVal.offsetR >= gVal.rowNbr - gVal.showMaxY)
                 gVal.offsetR = gVal.rowNbr - gVal.showMaxY;
+            new SnackBar().show(this, "Wait a Sec . .", "Show Down");
             copy2RecyclerPieces();
         });
 
@@ -191,12 +201,14 @@ public class ActivityJigsaw extends Activity {
                 gVal.activeJigs.add(cr);
             }
         }
-
         jigRecyclerView.setAdapter(activeAdapter);
-//        activeAdapter.
-//        activeAdapter.notifyDataSetChanged();
-        new ShowThumbnail(binding);
+        new Thread(() -> {
+            Bitmap thumb = new ShowThumbnail().make();
+            this.runOnUiThread(() -> {
+                binding.thumbnail.setImageBitmap(thumb);
+            });
 
+        }).start();
     }
 
     @Override

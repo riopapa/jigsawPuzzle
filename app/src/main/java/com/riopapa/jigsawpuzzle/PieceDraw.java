@@ -10,6 +10,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static com.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static com.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
@@ -53,22 +54,14 @@ public class PieceDraw {
                 if (jigOLine[cc][rr] == null) {
                     jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
                 }
-//                if (jigWhite[cc][rr] == null)
-//                    jigWhite[cc][rr] = pieceImage.makeWhite(jigPic[cc][rr]);
                 if (gVal.jigTables[cc][rr].locked) {
                     if (gVal.jigTables[cc][rr].count == 0)
                         canvas.drawBitmap(jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                     else {
-//                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 3 != 0) ?
-//                                        jigWhite[cc][rr] : jigPic[cc][rr],
-//                                gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-//                        if (gVal.jigTables[cc][rr].count == 0) {
-//                            jigWhite[cc][rr] = null;
-//                        }
                         canvas.drawBitmap(jigOLine[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-                        canvas.drawBitmap(fireWorks[fireWorks.length-gVal.jigTables[cc][rr].count],
+                        canvas.drawBitmap(congrats[congrats.length-gVal.jigTables[cc][rr].count],
                                 gVal.baseX + c * gVal.picISize - gVal.picGap,
                                 gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                         gVal.jigTables[cc][rr].count--;
@@ -113,6 +106,8 @@ public class PieceDraw {
             FloatPiece fp = gVal.fps.get(cnt);
             int c = fp.C;
             int r = fp.R;
+            if (jigOLine[c][r] == null)
+                jigOLine[c][r] = pieceImage.buildPic(c,r);
 
             if (fp.count == 0) { // normal pieceImage
                 canvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
@@ -123,7 +118,7 @@ public class PieceDraw {
                 fp.count--;
                 Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
                 Matrix matrix = new Matrix();
-                matrix.postRotate(2 * (2 - fp.count + rnd.nextInt(4)));
+                matrix.postRotate(3 * (3 - fp.count + rnd.nextInt(6)));
                 Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
                         gVal.picOSize, gVal.picOSize, matrix, true);
                 canvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);

@@ -46,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static int appVersion = 000500;
+    public static int appVersion = 000501;
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -72,7 +72,7 @@ public class ActivityMain extends Activity {
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
-    public static Bitmap[] fireWorks;
+    public static Bitmap[] fireWorks, congrats;
 
     /*
     ** Following will be handled with Set Menu
@@ -81,7 +81,7 @@ public class ActivityMain extends Activity {
     public static boolean showBack = true;
     public static boolean sound = false;
 
-    public static boolean debugMode = false;
+    public static boolean debugMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

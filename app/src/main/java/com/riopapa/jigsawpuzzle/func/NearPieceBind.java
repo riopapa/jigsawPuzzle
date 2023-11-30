@@ -4,6 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static com.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
+import static com.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static com.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static com.riopapa.jigsawpuzzle.PaintView.nowFp;
@@ -47,7 +48,7 @@ public class NearPieceBind {
                 FloatPiece fpT = gVal.fps.get(i);
                 if (fpT.anchorId == anchorId) {
                     gVal.jigTables[fpT.C][fpT.R].locked = true;
-                    gVal.jigTables[fpT.C][fpT.R].count = fireWorks.length;
+                    gVal.jigTables[fpT.C][fpT.R].count = congrats.length;
                     gVal.fps.remove(i);
                 } else
                     i++;

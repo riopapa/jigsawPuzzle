@@ -15,7 +15,7 @@ import android.util.Log;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
 public class ShowThumbnail {
-    public ShowThumbnail(ActivityJigsawBinding binding) {
+    public Bitmap make() {
 
         float h, w, oneSize, rectW, rectH, xOff, yOff;
 
@@ -76,7 +76,7 @@ public class ShowThumbnail {
         canvas.drawLine(xOff, yOff+rectH, xOff+rectW, yOff+rectH,
                 (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDot2);
 
-        binding.thumbnail.setImageBitmap(thumb);
+        return thumb;
 
     }
 

@@ -1,6 +1,8 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.history;
@@ -13,6 +15,7 @@ import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static com.riopapa.jigsawpuzzle.ActivityMain.appVersion;
+import static com.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
@@ -45,6 +48,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import com.riopapa.jigsawpuzzle.func.ClearGValValues;
+import com.riopapa.jigsawpuzzle.func.Congrat;
 import com.riopapa.jigsawpuzzle.func.DefineColsRows;
 import com.riopapa.jigsawpuzzle.func.FireWork;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
@@ -124,25 +128,23 @@ public class ActivitySelLevel extends AppCompatActivity {
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
+        congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
 
         if (history.latest != -1) {
-            Bitmap bitmap = Bitmap.createBitmap(screenX, screenY, Bitmap.Config.ARGB_8888,true);
+            int xSize = screenX;
+            int ySize = xSize * chosenImageHeight / chosenImageWidth;
+
+            Bitmap bitmap = Bitmap.createBitmap(xSize, ySize, Bitmap.Config.ARGB_8888,true);
             Canvas canvas = new Canvas(bitmap);
-            Paint paint = new Paint();
-            paint.setAlpha(180);
-//            float szI = (chosenImageWidth > chosenImageHeight) ?
-//                    (screenX / (gVal.colNbr+1)) : (screenY / (gVal.rowNbr+1));
-            float szI = screenX / (gVal.colNbr+1);
+            float szI = xSize / (gVal.colNbr+1);
             float szO = szI * (14+5+5) / 14;
-            Log.w("cc rr", "colNbr "+gVal.colNbr+" row "+gVal.rowNbr);
             for (int cc = 0; cc < gVal.colNbr; cc++) {
                 for (int rr = 0; rr < gVal.rowNbr; rr++) {
                     Bitmap picMap = pieceImage.buildPic(cc, rr);
                     Bitmap oLMap = pieceImage.buildOline(picMap, cc, rr);
                     Bitmap lockMap = Bitmap.createScaledBitmap(
                             (gVal.jigTables[cc][rr].locked) ? oLMap : picMap, (int) szO, (int) szO, true);
-                    canvas.drawBitmap(lockMap, cc * szI, rr * szI,
-                            (gVal.jigTables[cc][rr].locked) ? null: paint);
+                    canvas.drawBitmap(lockMap, cc * szI, rr * szI, null);
                 }
             }
             binding.selImage.setImageBitmap(bitmap);
