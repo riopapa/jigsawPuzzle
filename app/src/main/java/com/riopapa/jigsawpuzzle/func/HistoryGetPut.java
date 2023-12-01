@@ -1,5 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.appVersion;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,8 +18,9 @@ public class HistoryGetPut {
 
     final String hist = "history";
     public ArrayList<History> get(Context context) {
+        String histFile = hist + appVersion;
         ArrayList<History> list;
-        SharedPreferences sharedPref = context.getSharedPreferences(hist,Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(histFile,Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPref.getString(hist, "");
         if (json.isEmpty()) {
@@ -30,7 +33,8 @@ public class HistoryGetPut {
     }
 
     public void put(ArrayList<History> histories, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(hist, Context.MODE_PRIVATE);
+        String histFile = hist + appVersion;
+        SharedPreferences sharedPref = context.getSharedPreferences(histFile, Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(histories);

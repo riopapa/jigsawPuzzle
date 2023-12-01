@@ -9,10 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.riopapa.jigsawpuzzle.ActivityJigsaw;
 import com.riopapa.jigsawpuzzle.R;
+import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
 public class SnackBar {
     public void show(Activity activity, String title, String text) {
+        if (!text.equals("x"))
+            return;
         View  paintView = activity.findViewById(R.id.layout_jigsaw);
         Snackbar snackbar = Snackbar.make(paintView, title, Snackbar.LENGTH_SHORT);
         View sView = activity.getLayoutInflater().inflate(R.layout.snack_message, null);
@@ -32,6 +36,10 @@ public class SnackBar {
         snackBarLayout.addView(sView, 0);
 
         snackbar.show();
+    }
+    public void waitASec(ActivityJigsawBinding binding) {
+        binding.layoutJigsaw.setAlpha(0.5f);
+
     }
 
 }

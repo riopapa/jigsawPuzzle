@@ -186,11 +186,28 @@ public class ActivityJigsaw extends Activity {
         binding.pieceInfo.setText(info);
         doNotUpdate = false;
 
+        readyPieces();
+    }
+
+    private void readyPieces() {
+        new Thread(() -> {
+            for (int cc = 0; cc < gVal.colNbr; cc++) {
+                for (int rr = 0; rr < gVal.rowNbr; rr++) {
+                    if (jigPic[cc][rr] == null)
+                        jigPic[cc][rr] = pieceImage.buildPic(cc, rr);
+                    if (jigOLine[cc][rr] == null)
+                        jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
+                }
+            }
+        }).start();
+
     }
 
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
+        binding.layoutJigsaw.setAlpha(0.5f);
+        doNotUpdate = true;
         gVal.activeJigs = new ArrayList<>();
         for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
             int cr = gVal.allPossibleJigs.get(i);
@@ -206,6 +223,8 @@ public class ActivityJigsaw extends Activity {
             Bitmap thumb = new ShowThumbnail().make();
             this.runOnUiThread(() -> {
                 binding.thumbnail.setImageBitmap(thumb);
+                binding.layoutJigsaw.setAlpha(1f);
+                doNotUpdate = false;
             });
 
         }).start();
@@ -220,13 +239,14 @@ public class ActivityJigsaw extends Activity {
         new GValGetPut().put(currGameLevel, gVal, this);
 
         history.time[gVal.gameLevel] = System.currentTimeMillis();
-        int locked = 1;
+        int locked = 0;
         for (int cc = 0; cc < gVal.colNbr; cc++) {
             for (int rr = 0; rr < gVal.rowNbr; rr++) {
                 if (gVal.jigTables[cc][rr].locked)
                     locked++;
             }
         }
+        history.locked[gVal.gameLevel] = locked;
         history.percent[gVal.gameLevel] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
         history.latest = gVal.gameLevel;
 

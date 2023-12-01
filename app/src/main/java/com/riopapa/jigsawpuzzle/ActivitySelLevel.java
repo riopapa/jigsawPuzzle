@@ -185,6 +185,9 @@ public class ActivitySelLevel extends AppCompatActivity {
         tv = dialogView.findViewById(R.id.lvl_easy); tv.setText(s);
         if (history.latest == 0)
             tv.setBackgroundColor(0xFFCCDDEE);
+        else
+            tv.setAlpha((history.time[0] == 0)? 0.4f: 1f);
+
         dialogView.findViewById(R.id.lvl_easy).setOnClickListener(this::edit_table);
 
         s = levelNames[1]; defineColsRows.calc(1);
@@ -193,6 +196,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         tv = dialogView.findViewById(R.id.lvl_normal); tv.setText(s);
         if (history.latest == 1)
             tv.setBackgroundColor(0xFFCCDDEE);
+        else
+            tv.setAlpha((history.time[1] == 0)? 0.4f: 1f);
         dialogView.findViewById(R.id.lvl_normal).setOnClickListener(this::edit_table);
 
         s = levelNames[2]; defineColsRows.calc(2);
@@ -201,6 +206,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         tv = dialogView.findViewById(R.id.lvl_hard); tv.setText(s);
         if (history.latest == 2)
             tv.setBackgroundColor(0xFFCCDDEE);
+        else
+            tv.setAlpha((history.time[2] == 0)? 0.4f: 1f);
         dialogView.findViewById(R.id.lvl_hard).setOnClickListener(this::edit_table);
 
         s = levelNames[3]; defineColsRows.calc(3);
@@ -209,27 +216,33 @@ public class ActivitySelLevel extends AppCompatActivity {
         tv = dialogView.findViewById(R.id.lvl_expert); tv.setText(s);
         if (history.latest == 3)
             tv.setBackgroundColor(0xFFCCDDEE);
+        else
+            tv.setAlpha((history.time[3] == 0)? 0.4f: 1f);
         dialogView.findViewById(R.id.lvl_expert).setOnClickListener(this::edit_table);
 
 
         s = levelNames[0] + "\nNew"; defineColsRows.calc(0);
         s += "\n" + defineColsRows.col +" x "+ defineColsRows.row;
         tv = dialogView.findViewById(R.id.lvl_easyn); tv.setText(s);
+        tv.setAlpha((history.time[0] == 0)? 1f: 0.5f);
         dialogView.findViewById(R.id.lvl_easyn).setOnClickListener(this::edit_table);
 
         s = levelNames[1] + "\nNew"; defineColsRows.calc(1);
         s += "\n" + defineColsRows.col +" x "+ defineColsRows.row;
         tv = dialogView.findViewById(R.id.lvl_normaln); tv.setText(s);
+        tv.setAlpha((history.time[1] == 0)? 1f: 0.5f);
         dialogView.findViewById(R.id.lvl_normaln).setOnClickListener(this::edit_table);
 
         s = levelNames[2] + "\nNew"; defineColsRows.calc(2);
         s += "\n" + defineColsRows.col +" x "+ defineColsRows.row;
         tv = dialogView.findViewById(R.id.lvl_hardn); tv.setText(s);
+        tv.setAlpha((history.time[2] == 0)? 1f: 0.5f);
         dialogView.findViewById(R.id.lvl_hardn).setOnClickListener(this::edit_table);
 
         s = levelNames[3] + "\nNew"; defineColsRows.calc(3);
         s += "\n" + defineColsRows.col +" x "+ defineColsRows.row;
         tv = dialogView.findViewById(R.id.lvl_expertn); tv.setText(s);
+        tv.setAlpha((history.time[3] == 0)? 1f: 0.5f);
         dialogView.findViewById(R.id.lvl_expertn).setOnClickListener(this::edit_table);
 
         dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);

@@ -7,10 +7,12 @@ public class History {
     public int latest;      // latest level handled;
     public int []percent;    // completed percent
 
+    public int [] locked;   // pieces locked
     public History() {
         game = "";
         latest = -1;
         time = new long[4];
+        locked = new int [4];
         percent = new int[4];
     }
 }
