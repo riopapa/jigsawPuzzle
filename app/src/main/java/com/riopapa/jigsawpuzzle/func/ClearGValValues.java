@@ -1,6 +1,7 @@
 package com.riopapa.jigsawpuzzle.func;
 
 
+import static com.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static com.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -39,7 +40,7 @@ public class ClearGValValues {
 
         gVal.allLocked = false;
         gVal.baseX = (screenX - gVal.showMaxX * gVal.picISize) / 2 - gVal.picGap - gVal.picGap;
-        gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) / 2 - gVal.picISize - gVal.picISize;
+        gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) * 20 / 30 - gVal.picOSize;
 
         Log.w("r23 ClearGValValues", "Jig Cnt="+ gVal.colNbr +" x "+ gVal.rowNbr +", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
                 ", showMax "+ gVal.showMaxX+"x"+ gVal.showMaxY);

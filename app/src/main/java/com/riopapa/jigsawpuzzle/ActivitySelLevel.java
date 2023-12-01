@@ -172,12 +172,12 @@ public class ActivitySelLevel extends AppCompatActivity {
         doNotUpdate = true;
         // give some bottom space on level dialog
         alertDialog.getWindow().getAttributes().height = (int) (screenY * 0.7);
+        alertDialog.getWindow().getAttributes().width = screenX;
         alertDialog.setCancelable(false);
         alertDialog.show();
 
         TextView tv;
         String s;
-
 
         s = levelNames[0]; defineColsRows.calc(0);
         s += "\n" + defineColsRows.col +" x "+ defineColsRows.row;

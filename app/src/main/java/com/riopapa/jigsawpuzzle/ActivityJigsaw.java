@@ -26,15 +26,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Selection;
 import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import com.riopapa.jigsawpuzzle.func.AdjustControl;
 import com.riopapa.jigsawpuzzle.func.Congrat;
@@ -43,11 +40,9 @@ import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import com.riopapa.jigsawpuzzle.func.Masks;
 import com.riopapa.jigsawpuzzle.func.ShowThumbnail;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
-import com.riopapa.jigsawpuzzle.func.SnackBar;
 import com.riopapa.jigsawpuzzle.model.History;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -77,6 +72,8 @@ public class ActivityJigsaw extends Activity {
     public static History history;
     public static int historyIdx;
 
+    ShowThumbnail showThumbnail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,51 +99,50 @@ public class ActivityJigsaw extends Activity {
         paintView = findViewById(R.id.paintview);
         paintView.init(this);
         binding.paintview.getLayoutParams().height = screenBottom;
+        showThumbnail = new ShowThumbnail();
+
+
 
         binding.moveLeft.setOnClickListener(v -> {
             gVal.offsetC -= gVal.showShiftX;
             if (gVal.offsetC < 0)
                 gVal.offsetC = 0;
             copy2RecyclerPieces();
-            new SnackBar().show(this, "Wait a Sec . .", "Show Left");
         });
         binding.moveRight.setOnClickListener(v -> {
             gVal.offsetC += gVal.showShiftX;
             if (gVal.offsetC >= gVal.colNbr - gVal.showMaxX)
                 gVal.offsetC = gVal.colNbr - gVal.showMaxX;
-            new SnackBar().show(this, "Wait a Sec . .", "Show Right");
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
             gVal.offsetR -= gVal.showShiftY;
             if (gVal.offsetR < 0)
                 gVal.offsetR = 0;
-            new SnackBar().show(this, "Wait a Sec . .", "Show Up");
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
             gVal.offsetR += gVal.showShiftY;
             if (gVal.offsetR >= gVal.rowNbr - gVal.showMaxY)
                 gVal.offsetR = gVal.rowNbr - gVal.showMaxY;
-            new SnackBar().show(this, "Wait a Sec . .", "Show Down");
             copy2RecyclerPieces();
         });
 
-        binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
+        binding.showBack.setImageResource((showBack)? R.drawable.z_eye_opened : R.drawable.z_eye_closed);
         binding.showBack.setOnClickListener(v -> { showBack = !showBack;
-            binding.showBack.setImageResource((showBack)? R.drawable.eye_opened: R.drawable.eye_closed);
+            binding.showBack.setImageResource((showBack)? R.drawable.z_eye_opened : R.drawable.z_eye_closed);
             save_params();
         });
 
-        binding.vibrate.setImageResource((vibrate)? R.drawable.vibrate_on: R.drawable.vibrate_off);
+        binding.vibrate.setImageResource((vibrate)? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
         binding.vibrate.setOnClickListener(v -> { vibrate = !vibrate;
-            binding.vibrate.setImageResource((vibrate)? R.drawable.vibrate_on: R.drawable.vibrate_off);
+            binding.vibrate.setImageResource((vibrate)? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
             save_params();
         });
 
-        binding.sound.setImageResource((sound)? R.drawable.sound_on: R.drawable.sound_off);
+        binding.sound.setImageResource((sound)? R.drawable.z_sound_on : R.drawable.z_sound_off);
         binding.sound.setOnClickListener(v -> { sound = !sound;
-            binding.sound.setImageResource((sound)? R.drawable.sound_on: R.drawable.sound_off);
+            binding.sound.setImageResource((sound)? R.drawable.z_sound_on : R.drawable.z_sound_off);
             save_params();
         });
 
@@ -168,7 +164,7 @@ public class ActivityJigsaw extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding, gVal.recSize * 3 / 4);
+        new AdjustControl(binding);
         copy2RecyclerPieces();
 
         if (paintView != null) {
@@ -199,6 +195,7 @@ public class ActivityJigsaw extends Activity {
                         jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
                 }
             }
+            Log.w("r readyPieces"," completed");
         }).start();
 
     }
@@ -207,26 +204,32 @@ public class ActivityJigsaw extends Activity {
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
         binding.layoutJigsaw.setAlpha(0.5f);
+        binding.thumbnail.setImageResource(R.drawable.z_transparent);
+        binding.thumbnail.invalidate();
         doNotUpdate = true;
-        gVal.activeJigs = new ArrayList<>();
-        for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
-            int cr = gVal.allPossibleJigs.get(i);
-            int cc = cr / 10000;
-            int rr = cr - cc * 10000;
-            if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
-                    cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                gVal.activeJigs.add(cr);
-            }
-        }
-        jigRecyclerView.setAdapter(activeAdapter);
+        Log.w("copy2RecyclerPieces", "activeAdapter");
         new Thread(() -> {
-            Bitmap thumb = new ShowThumbnail().make();
             this.runOnUiThread(() -> {
+                Log.w("copy2RecyclerPieces", "thumbnail");
+                gVal.activeJigs = new ArrayList<>();
+                for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
+                    int cr = gVal.allPossibleJigs.get(i);
+                    int cc = cr / 10000;
+                    int rr = cr - cc * 10000;
+                    if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
+                            cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
+                        gVal.activeJigs.add(cr);
+                    }
+                }
+                Log.w("copy2RecyclerPieces", "activeJigs");
+                jigRecyclerView.setAdapter(activeAdapter);
+                Bitmap thumb = showThumbnail.make();
+                Log.w("copy2RecyclerPieces", "thumb map");
                 binding.thumbnail.setImageBitmap(thumb);
                 binding.layoutJigsaw.setAlpha(1f);
                 doNotUpdate = false;
+                Log.w("copy2RecyclerPieces", "thumb showImage");
             });
-
         }).start();
     }
 

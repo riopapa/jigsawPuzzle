@@ -15,9 +15,10 @@ import android.util.Log;
 import com.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
 public class ShowThumbnail {
-    public Bitmap make() {
 
-        float h, w, oneSize, rectW, rectH, xOff, yOff;
+    float h, w, oneSize, rectW, rectH, xOff, yOff;
+    Bitmap thumb;
+    public ShowThumbnail() {
 
         if (chosenImageHeight > chosenImageWidth) {
             h = 1000;
@@ -29,14 +30,19 @@ public class ShowThumbnail {
             oneSize = gVal.imgInSize  * 1000f / chosenImageWidth;
         }
 
+        thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
+
+    }
+    public Bitmap make() {
+
         rectW = oneSize * ((float) (gVal.showMaxX)+0.05f);    // 24 to GVal.show line boundary
         rectH = oneSize * ((float) (gVal.showMaxY)+0.05f);
         xOff = oneSize * (float) gVal.offsetC;
         yOff = oneSize * (float) gVal.offsetR;
 
-//        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) (w-oneSize/24), (int) (h-oneSize/24), true);
-        Bitmap thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
-        Canvas canvas = new Canvas(thumb);
+
+        Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
+        Canvas canvas = new Canvas(thumb_copy);
 
         new calcImageColor();
         int boxColor = (chosenImageColor | 0x00E0E0E0) & 0x6FFFFFFF;
@@ -76,7 +82,7 @@ public class ShowThumbnail {
         canvas.drawLine(xOff, yOff+rectH, xOff+rectW, yOff+rectH,
                 (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDot2);
 
-        return thumb;
+        return thumb_copy;
 
     }
 

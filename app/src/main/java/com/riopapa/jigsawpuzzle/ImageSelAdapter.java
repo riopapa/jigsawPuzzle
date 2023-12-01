@@ -125,7 +125,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             History hist = histories.get(i);
             if (hist.game.equals(game)) {
                 for (int j = 0; j < 4; j++) {
-                    if (hist.time[j] != 0) {
+                    if (hist.time[j] != 0 && hist.locked[j] != 0) {
                         histStr += "\n"+levelNames[j] + " : " + sdf.format(hist.time[j])
                                 + " " + ((hist.percent[j] > 99) ? "Done" : hist.percent[j] + "%");
                     }

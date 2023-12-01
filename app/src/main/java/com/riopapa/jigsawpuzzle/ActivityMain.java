@@ -128,7 +128,7 @@ public class ActivityMain extends Activity {
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 
-
+ ;
         // if newly restarted then read gVal
 //        if (gameMode == 0) {
 //            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
