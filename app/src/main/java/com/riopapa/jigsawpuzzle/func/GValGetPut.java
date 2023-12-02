@@ -4,6 +4,7 @@ import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static com.riopapa.jigsawpuzzle.ActivityMain.appVersion;
+import static com.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static com.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static com.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
@@ -23,7 +24,8 @@ import java.util.ArrayList;
 public class GValGetPut {
 
     public GVal get(String key, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences("game_" + key,
+                Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPref.getString("gVal", "");
         Type type = new TypeToken<GVal>() {
@@ -32,7 +34,12 @@ public class GValGetPut {
     }
 
     public void put(String key, GVal gVal, Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        gVal.game = currGame;
+        gVal.version = appVersion;
+        gVal.level =  currLevel;
+        gVal.time = System.currentTimeMillis();
+        SharedPreferences sharedPref = context.getSharedPreferences("game_" + key,
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(gVal);
@@ -40,8 +47,10 @@ public class GValGetPut {
         sharedEditor.apply();
     }
     public void set(GVal gVal, int col, int row) {
+        gVal.game = currGame;
         gVal.version = appVersion;
-        gVal.gameLevel =  currLevel;
+        gVal.level =  currLevel;
+        gVal.time = System.currentTimeMillis();
         gVal.fps = new ArrayList<>();
         gVal.colNbr = col;
         gVal.rowNbr = row;
@@ -63,7 +72,6 @@ public class GValGetPut {
         new SettleJigTableWall(gVal.jigTables);
         new ClearGValValues();
         new FullRecyclePiece();
-
     }
 
 

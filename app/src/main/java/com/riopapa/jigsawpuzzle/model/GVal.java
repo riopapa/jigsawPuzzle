@@ -8,6 +8,10 @@ import java.util.ArrayList;
 public class GVal {
 
     public int version; // vvrrxx
+
+    public String game;
+    public  int level;
+    public long time; // last saved time
     public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
     public int recSize, picOSize, picISize, picGap, picHSize;
@@ -33,7 +37,6 @@ public class GVal {
     public ArrayList<FloatPiece> fps;    // floating jigsaws
     public int showMaxX, showMaxY;   // how many pieces can be in columns / rows
     public int showShiftX, showShiftY;
-    public  int gameLevel;
     public boolean allLocked = false;
     public int offsetC, offsetR; // show offset Column, Row;
 

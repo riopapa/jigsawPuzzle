@@ -34,7 +34,7 @@ public class PieceDraw {
     Random rnd;
     public PieceDraw() {
         pGrayed = new Paint();
-        pGrayed.setAlpha(50);
+        pGrayed.setAlpha(100);
         lPaint = new Paint();
         lPaint.setColor(Color.RED);
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
@@ -61,7 +61,7 @@ public class PieceDraw {
                     else {
                         canvas.drawBitmap(jigOLine[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-                        canvas.drawBitmap(congrats[congrats.length-gVal.jigTables[cc][rr].count],
+                        canvas.drawBitmap(fireWorks[fireWorks.length-gVal.jigTables[cc][rr].count],
                                 gVal.baseX + c * gVal.picISize - gVal.picGap,
                                 gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                         gVal.jigTables[cc][rr].count--;
@@ -91,14 +91,10 @@ public class PieceDraw {
             Paint pBox = new Paint();
             pBox.setColor(mContext.getColor(R.color.jigsaw_background));
             pBox.setStrokeWidth(5);
-            canvas.drawLine(xBase, yBase,
-                    xBase+xSz, yBase, pBox);
-            canvas.drawLine(xBase, yBase,
-                    xBase, yBase+ySz, pBox);
-            canvas.drawLine(xBase+xSz, yBase,
-                    xBase+xSz, yBase+ySz, pBox);
-            canvas.drawLine(xBase, yBase+ySz,
-                    xBase+xSz, yBase+ySz, pBox);
+            canvas.drawLine(xBase, yBase, xBase+xSz, yBase, pBox);
+            canvas.drawLine(xBase, yBase, xBase, yBase+ySz, pBox);
+            canvas.drawLine(xBase+xSz, yBase, xBase+xSz, yBase+ySz, pBox);
+            canvas.drawLine(xBase, yBase+ySz, xBase+xSz, yBase+ySz, pBox);
         }
 
         // drawing floating pieces

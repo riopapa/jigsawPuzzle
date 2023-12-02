@@ -81,7 +81,7 @@ public class ActivityMain extends Activity {
     public static boolean showBack = true;
     public static boolean sound = false;
 
-    public static boolean debugMode = true;
+    public static boolean debugMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +139,10 @@ public class ActivityMain extends Activity {
 //            }
 //        }
 
-        if (histories == null)
-            histories = new HistoryGetPut().get(this);
+
+//        if (histories == null)
+//            histories = new HistoryGetPut().get(this);
+        new HistoryGetPut().make(this);
 
         // get physical values depend on Phone
         // then set picXSizes

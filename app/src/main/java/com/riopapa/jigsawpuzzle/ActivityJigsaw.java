@@ -101,8 +101,6 @@ public class ActivityJigsaw extends Activity {
         binding.paintview.getLayoutParams().height = screenBottom;
         showThumbnail = new ShowThumbnail();
 
-
-
         binding.moveLeft.setOnClickListener(v -> {
             gVal.offsetC -= gVal.showShiftX;
             if (gVal.offsetC < 0)
@@ -241,7 +239,7 @@ public class ActivityJigsaw extends Activity {
             gameMode = GAME_PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
 
-        history.time[gVal.gameLevel] = System.currentTimeMillis();
+        history.time[gVal.level] = System.currentTimeMillis();
         int locked = 0;
         for (int cc = 0; cc < gVal.colNbr; cc++) {
             for (int rr = 0; rr < gVal.rowNbr; rr++) {
@@ -249,9 +247,9 @@ public class ActivityJigsaw extends Activity {
                     locked++;
             }
         }
-        history.locked[gVal.gameLevel] = locked;
-        history.percent[gVal.gameLevel] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
-        history.latest = gVal.gameLevel;
+        history.locked[gVal.level] = locked;
+        history.percent[gVal.level] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
+        history.latest = gVal.level;
 
         if (historyIdx != -1) {
                 histories.set(historyIdx, history);

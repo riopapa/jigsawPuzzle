@@ -52,6 +52,7 @@ import com.riopapa.jigsawpuzzle.func.Congrat;
 import com.riopapa.jigsawpuzzle.func.DefineColsRows;
 import com.riopapa.jigsawpuzzle.func.FireWork;
 import com.riopapa.jigsawpuzzle.func.GValGetPut;
+import com.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import com.riopapa.jigsawpuzzle.func.Masks;
 import com.riopapa.jigsawpuzzle.func.SetPicSizes;
 import com.riopapa.jigsawpuzzle.model.GVal;
@@ -88,6 +89,7 @@ public class ActivitySelLevel extends AppCompatActivity {
             return;
         }
         defineColsRows = new DefineColsRows();
+
 //        chosenImageMap = new ImageStorage().getMap(GVal.selectedImageNbr);
 //        new calcImageColor();
 //        int width = screenX * 8 / 10;
@@ -102,6 +104,9 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         history = null;
         historyIdx = -1;
+        if (histories == null || histories.size() == 0) {
+            histories = new HistoryGetPut().get(this);
+        }
         for (int i = 0; i < histories.size(); i++) {
             if (histories.get(i).game.equals(currGame)) {
                 history = histories.get(i);
@@ -267,7 +272,7 @@ public class ActivitySelLevel extends AppCompatActivity {
     private void getGVal(int level, DefineColsRows defineColsRows) {
         currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
-        gVal = new GValGetPut().get(currGameLevel, mContext);
+        gVal = new GValGetPut().get(currGameLevel, this);
         if (gVal == null || level > 9 || gVal.version < appVersion) {    // over 9 means clear and new game
             Log.w("gVal","new "+currGameLevel);
             gVal = new GVal();

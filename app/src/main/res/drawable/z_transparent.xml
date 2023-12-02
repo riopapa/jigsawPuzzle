@@ -5,10 +5,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <path
-        android:strokeColor="#842244FF"
+        android:strokeColor="#E91E63"
         android:strokeWidth=".2"
-        android:fillColor="#33CCFF33"
+        android:fillColor="#33607523"
         android:pathData="
-    M19,5 v14h-14 v-14 z" />
+        M1,1 v12 h12 v-12z
+        M11,11 v12 h12 v-12z
+" />
 
 </vector>

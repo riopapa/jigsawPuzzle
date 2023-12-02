@@ -48,7 +48,7 @@ public class NearPieceBind {
                 FloatPiece fpT = gVal.fps.get(i);
                 if (fpT.anchorId == anchorId) {
                     gVal.jigTables[fpT.C][fpT.R].locked = true;
-                    gVal.jigTables[fpT.C][fpT.R].count = congrats.length;
+                    gVal.jigTables[fpT.C][fpT.R].count = fireWorks.length;
                     gVal.fps.remove(i);
                 } else
                     i++;

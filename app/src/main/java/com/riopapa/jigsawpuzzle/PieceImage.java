@@ -1,5 +1,6 @@
 package com.riopapa.jigsawpuzzle;
 
+import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static com.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static com.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static com.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
@@ -25,8 +26,7 @@ public class PieceImage {
 //    float out2Scale = 1.05f;
     Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutLine;
 
-    int outLineColor, out2LineColor;
-    Matrix matrixOutLine;
+    int outLineColor;
 
     Context context;
 
@@ -36,8 +36,8 @@ public class PieceImage {
         this.imgInSize = imgInSize;
 
         paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
-        outLineColor = context.getColor(R.color.out_line);
-        out2LineColor = context.getColor(R.color.out2_line);
+//        outLineColor = context.getColor(R.color.out_line);
+        outLineColor = chosenImageColor;
         paintIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
         paintOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
