@@ -25,11 +25,11 @@ public class ShowThumbnail {
         if (chosenImageHeight > chosenImageWidth) {
             h = 1000;
             w = h * chosenImageWidth / chosenImageHeight;
-            oneSize = 1000f / gVal.colNbr;
+            oneSize = 1000f / (gVal.rowNbr);
         } else {
             w = 1000;
             h = w * chosenImageHeight / chosenImageWidth;
-            oneSize = 1000 / gVal.rowNbr;
+            oneSize = 1000 / (gVal.colNbr);
         }
 
         thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
@@ -45,7 +45,6 @@ public class ShowThumbnail {
 
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);
-        Log.w("x map","thumb "+thumb.getWidth()+" copy "+thumb_copy.getWidth());
         Paint pBox = new Paint();
         pBox.setColor(0x8fBBBBBB);
         canvas.drawRect(xBeg, yBeg, xBeg + rectW, yBeg + rectH, pBox);

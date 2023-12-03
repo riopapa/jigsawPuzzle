@@ -15,7 +15,7 @@ public class ImageStorage {
             R.mipmap.a02_boat,
             R.mipmap.a03_birds,
             R.mipmap.a09_cafe,
-            R.mipmap.g01_builging,
+            R.mipmap.b01_builging,
             R.mipmap.a10_cat_dog,
             R.mipmap.b15_city3,
             R.mipmap.b26_tajimahal,
@@ -29,8 +29,7 @@ public class ImageStorage {
             R.mipmap.c10_golf_yard,
             R.mipmap.c15_horse,
             R.mipmap.c20_house2,
-            R.mipmap.c25_house_mountain,
-            R.mipmap.c30_korean_house
+            R.mipmap.c25_house_mountain
 
     };
 //    R.mipmap.c35_korean_party1,

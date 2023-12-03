@@ -46,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static String appVersion = "000100";
+    public static String appVersion = "000101";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -56,19 +56,15 @@ public class ActivityMain extends Activity {
 
     final public static int ANI_TO_FPS = 10123;
     final public static int ANI_ANCHOR = 10321;
-    final public static int GAME_NEW = 0;
     final public static int GAME_SELECT_IMAGE = 2011;
     final public static int GAME_SELECT_LEVEL = 2022;
     final public static int GAME_STARTED = 2033;
     final public static int GAME_PAUSED = 2044;
     final public static int GAME_GOBACK_TO_MAIN = 2047;
-    final public static int GAME_COMPLETED = 2055;
-    final public static int GAME_ALL_COMPLETED = 2088;
 
     final public static String[] levelNames = {"Easy", "Norm", "Hard", "Guru"};
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
-
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
@@ -129,7 +125,7 @@ public class ActivityMain extends Activity {
 
         if (histories == null)
             new HistoryGetPut().set(this);
-        Log.w("History","size ="+histories.size());
+
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
         imageSelAdapter = new ImageSelAdapter();

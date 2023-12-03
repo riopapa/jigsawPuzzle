@@ -105,7 +105,7 @@ public class ActivityJigsaw extends Activity {
 
         binding.moveLeft.setOnClickListener(v -> {
             gVal.offsetC -= gVal.showShiftX;
-            if (gVal.offsetC < 0)
+            if (gVal.offsetC < 0 || gVal.offsetC == 1)
                 gVal.offsetC = 0;
             copy2RecyclerPieces();
         });
@@ -113,17 +113,21 @@ public class ActivityJigsaw extends Activity {
             gVal.offsetC += gVal.showShiftX;
             if (gVal.offsetC >= gVal.colNbr - gVal.showMaxX)
                 gVal.offsetC = gVal.colNbr - gVal.showMaxX;
+            if (gVal.offsetC + gVal.showMaxX == gVal.colNbr - 1)
+                gVal.offsetC = gVal.colNbr - gVal.showMaxX;
             copy2RecyclerPieces();
         });
         binding.moveUp.setOnClickListener(v -> {
             gVal.offsetR -= gVal.showShiftY;
-            if (gVal.offsetR < 0)
+            if (gVal.offsetR < 0 || gVal.offsetR == 1)
                 gVal.offsetR = 0;
             copy2RecyclerPieces();
         });
         binding.moveDown.setOnClickListener(v -> {
             gVal.offsetR += gVal.showShiftY;
             if (gVal.offsetR >= gVal.rowNbr - gVal.showMaxY)
+                gVal.offsetR = gVal.rowNbr - gVal.showMaxY;
+            if (gVal.offsetR + gVal.showMaxY == gVal.rowNbr - 1)
                 gVal.offsetR = gVal.rowNbr - gVal.showMaxY;
             copy2RecyclerPieces();
         });
@@ -204,11 +208,9 @@ public class ActivityJigsaw extends Activity {
         binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
-        doNotUpdate = true;
-        Log.w("copy2RecyclerPieces", "activeAdapter");
+//        doNotUpdate = true;
         new Thread(() -> {
             this.runOnUiThread(() -> {
-                Log.w("copy2RecyclerPieces", "thumbnail");
                 gVal.activeJigs = new ArrayList<>();
                 for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
                     int cr = gVal.allPossibleJigs.get(i);
@@ -219,16 +221,13 @@ public class ActivityJigsaw extends Activity {
                         gVal.activeJigs.add(cr);
                     }
                 }
-                Log.w("copy2RecyclerPieces", "activeJigs");
                 jigRecyclerView.setAdapter(activeAdapter);
                 Bitmap thumb = showThumbnail.make();
-                Log.w("copy2RecyclerPieces", "thumb map");
                 binding.thumbnail.setImageBitmap(thumb);
                 binding.layoutJigsaw.setAlpha(1f);
-                if (debugMode)
-                    binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
+                binding.layoutJigsaw.invalidate();
+                binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
                 doNotUpdate = false;
-                Log.w("copy2RecyclerPieces", "thumb showImage");
             });
         }).start();
     }
