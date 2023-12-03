@@ -22,22 +22,26 @@ import android.graphics.PorterDuffXfermode;
 import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
-    int imgOutSize, imgInSize;
+    int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintOutLine;
-
-    int outLineColor;
+    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintLockedATop, paintOutLine;
+    int outLineColor, lockedColor;
 
     Context context;
 
-    public PieceImage(Context context, int imgOutSize, int imgInSize) {
+    public PieceImage(Context context, int orgSizeOut, int orgSizeIn) {
         this.context = context;
-        this.imgOutSize = imgOutSize;
-        this.imgInSize = imgInSize;
+        this.orgSizeOut = orgSizeOut;
+        this.orgSizeIn = orgSizeIn;
 
         paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
-//        outLineColor = context.getColor(R.color.out_line);
         outLineColor = chosenImageColor;
+
+        int r = 255 - Color.red(outLineColor);
+        int g = 255 - Color.green(outLineColor);
+        int b = 255 - Color.blue(outLineColor);
+        lockedColor = Color.rgb(r, g, b);
+
         paintIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
         paintOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -45,6 +49,9 @@ public class PieceImage {
 
         paintOutATop = new Paint();
         paintOutATop.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
+
+        paintLockedATop = new Paint();
+        paintLockedATop.setColorFilter(new PorterDuffColorFilter(lockedColor, PorterDuff.Mode.SRC_ATOP));
 
         paintOutLine = new Paint();
         paintOutLine.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
@@ -82,48 +89,48 @@ public class PieceImage {
      *    make .oLine from .pic
      *    output jigTables[col][row] .src, .pic, .oLine
      */
-    public Bitmap buildPic(int col, int row) {
-        JigTable z = gVal.jigTables[col][row];
-        Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap, col * imgInSize, row * imgInSize, imgOutSize, imgOutSize);
-        Bitmap mask = maskMerge(srcMaskMaps[0][z.lType], srcMaskMaps[1][z.rType],
-                srcMaskMaps[2][z.uType], srcMaskMaps[3][z.dType]);
-        Bitmap src = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
-        Canvas tCanvas = new Canvas(src);
-        tCanvas.drawBitmap(orgPiece, 0, 0, null);
-        tCanvas.drawBitmap(mask, 0, 0, paintIN);
+    public Bitmap makePic(int col, int row) {
+        JigTable jig = gVal.jigTables[col][row];
+        Bitmap orgPiece = Bitmap.createBitmap(chosenImageMap,
+                col * orgSizeIn, row * orgSizeIn, orgSizeOut, orgSizeOut, null, false);
+        Bitmap mask = maskMerge(srcMaskMaps[0][jig.lType], srcMaskMaps[1][jig.rType],
+                srcMaskMaps[2][jig.uType], srcMaskMaps[3][jig.dType]);
+        Bitmap src = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(src);
+        canvas.drawBitmap(orgPiece, 0, 0, null);
+        canvas.drawBitmap(mask, 0, 0, paintIN);
         if (debugMode) {
             Paint p = new Paint();
             p.setColor(Color.BLACK);
-            p.setTextSize(imgOutSize * 4f / 18f);
-            p.setStrokeWidth(imgOutSize / 15f);
+            p.setTextSize(orgSizeOut * 4f / 18f);
+            p.setStrokeWidth(orgSizeOut / 15f);
             p.setTextAlign(Paint.Align.CENTER);
             p.setStyle(Paint.Style.STROKE);
-            tCanvas.drawText(col + "." + row, imgOutSize / 2f, imgOutSize * 3f / 6f, p);
+            canvas.drawText(col + "." + row, orgSizeOut / 2f, orgSizeOut * 3f / 6f, p);
             p.setStrokeWidth(0);
             p.setColor(Color.WHITE);
             p.setStyle(Paint.Style.FILL_AND_STROKE);
-            tCanvas.drawText(col + "." + row, imgOutSize / 2f, imgOutSize * 3f / 6f, p);
+            canvas.drawText(col + "." + row, orgSizeOut / 2f, orgSizeOut * 3f / 6f, p);
         }
-        return Bitmap.createScaledBitmap(src, gVal.picOSize, gVal.picOSize, true);
+        return Bitmap.createScaledBitmap(src, gVal.picOSize, gVal.picOSize, false);
     }
 
-    public Bitmap buildOline(Bitmap pic, int col, int row) {
-        JigTable z = gVal.jigTables[col][row];
-        Bitmap mask = maskMerge(outMaskMaps[0][z.lType], outMaskMaps[1][z.rType],
-                outMaskMaps[2][z.uType], outMaskMaps[3][z.dType]);
+    public Bitmap makeOline(Bitmap pic, int col, int row) {
+        JigTable jig = gVal.jigTables[col][row];
+        Bitmap mask = maskMerge(outMaskMaps[0][jig.lType], outMaskMaps[1][jig.rType],
+                outMaskMaps[2][jig.uType], outMaskMaps[3][jig.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask, gVal.picOSize, gVal.picOSize, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScaled, 0,0, paintOutATop);
+        canvas.drawBitmap(maskScaled,0,0,  (jig.locked) ? paintLockedATop : paintOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(pic, matrix, paintOutLine);
         return outMap;
     }
 
-
     public Bitmap maskSrcMap(Bitmap srcImage, Bitmap mask) {
 
-        Bitmap maskMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
+        Bitmap maskMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(maskMap);
         tCanvas.drawBitmap(srcImage, 0, 0, null);
         tCanvas.drawBitmap(mask, 0, 0, paintIN);
@@ -137,7 +144,7 @@ public class PieceImage {
      */
 
     public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
-        Bitmap tMap = Bitmap.createBitmap(imgOutSize, imgOutSize, Bitmap.Config.ARGB_8888);
+        Bitmap tMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tMap);
         canvas.drawBitmap(maskL, 0,0, null);
         canvas.drawBitmap(maskR, 0,0, null);

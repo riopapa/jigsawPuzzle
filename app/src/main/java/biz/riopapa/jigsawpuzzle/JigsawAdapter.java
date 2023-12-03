@@ -132,15 +132,14 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         int rr = nowCR - cc * 10000;
 //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
         if (jigPic[cc][rr] == null) {
-            jigPic[cc][rr] = pieceImage.buildPic(cc, rr);
+            jigPic[cc][rr] = pieceImage.makePic(cc, rr);
         }
         if (jigOLine[cc][rr] == null) {
-            jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
+            jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
         }
 
         viewHolder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
         viewHolder.ivIcon.setTag(nowCR);
-//        startPieceMove(viewHolder);
 
     }
 

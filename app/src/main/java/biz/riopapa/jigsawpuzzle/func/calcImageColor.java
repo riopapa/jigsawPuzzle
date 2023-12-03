@@ -6,12 +6,15 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 
 import android.graphics.Color;
+import android.util.Log;
 
 public class calcImageColor {
     public calcImageColor() {
-        chosenImageWidth = chosenImageMap.getWidth();
-        chosenImageHeight = chosenImageMap.getHeight();
+//        chosenImageWidth = chosenImageMap.getWidth();
+//        chosenImageHeight = chosenImageMap.getHeight();
         long r = 0, g = 0, b = 0;
+        if (chosenImageMap == null)
+            Log.e("No", "chosenImageMap is null");
 
         for (int x = 0; x < chosenImageMap.getWidth(); x++) {
             for (int y = 0; y < chosenImageMap.getHeight(); y++) {

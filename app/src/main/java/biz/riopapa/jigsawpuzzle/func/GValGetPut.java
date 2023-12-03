@@ -59,7 +59,7 @@ public class GValGetPut {
         float szW = (float) chosenImageWidth / (float) (gVal.colNbr +1);
         float szH = (float) chosenImageHeight / (float) (gVal.rowNbr +1);
         gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
-        gVal.imgGapSize = gVal.imgInSize * 5 / 24;
+        gVal.imgGapSize = gVal.imgInSize * 5 / 14;
         gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
 
         chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,

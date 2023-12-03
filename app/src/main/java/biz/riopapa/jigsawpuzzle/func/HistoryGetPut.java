@@ -5,9 +5,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,7 +45,7 @@ public class HistoryGetPut {
         sharedEditor.apply();
     }
 
-    public void make(Context context) {
+    public void set(Context context) {
 
         histories = new ArrayList<>();
 
@@ -56,13 +53,12 @@ public class HistoryGetPut {
 
         if (prefsDir.exists() && prefsDir.isDirectory()) {
             String[] list = prefsDir.list();
-            Log.w("ile", "list size = " + list.length);
             GValGetPut gValGetPut = new GValGetPut();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].startsWith("game_")) {
-                    GVal gval = gValGetPut.get(list[i].substring(0, list[i].length() - 4), context);
-                    if (gval.version >= appVersion)
-                        add2History(list[i].substring(5, 8), gval);
+                    GVal gval = gValGetPut.get(list[i].substring(5, list[i].length() - 4), context);
+                    if (gval.version.equals(appVersion))
+                        add2History(list[i].substring(5, 9), gval);
                 }
             }
             for (int i = 0; i < histories.size(); i++) {
@@ -103,7 +99,7 @@ public class HistoryGetPut {
             }
         }
         h.locked[level] = locked;
-        h.percent[level] = locked / (gVal.colNbr * gVal.rowNbr);
+        h.percent[level] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
         if (hIdx == -1)
             histories.add(h);
         else

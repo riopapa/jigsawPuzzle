@@ -46,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static int appVersion = 000100;
+    public static String appVersion = "000100";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -65,7 +65,7 @@ public class ActivityMain extends Activity {
     final public static int GAME_COMPLETED = 2055;
     final public static int GAME_ALL_COMPLETED = 2088;
 
-    final public static String[] levelNames = {"Easy", "Norm", "Hard", "Expert"};
+    final public static String[] levelNames = {"Easy", "Norm", "Hard", "Guru"};
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
@@ -78,7 +78,7 @@ public class ActivityMain extends Activity {
     ** Following will be handled with Set Menu
      */
     public static boolean vibrate = true;
-    public static boolean showBack = true;
+    public static int showBack = 0;
     public static boolean sound = false;
 
     public static boolean debugMode = false;
@@ -105,7 +105,7 @@ public class ActivityMain extends Activity {
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
-        showBack = sharedPref.getBoolean("showBack", true);
+        showBack = sharedPref.getInt("showBack", 0);
         vibrate = sharedPref.getBoolean("vibrate", true);
         sound = sharedPref.getBoolean("sound", true);
 
@@ -117,7 +117,6 @@ public class ActivityMain extends Activity {
         new PhoneMetrics(this);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -128,28 +127,9 @@ public class ActivityMain extends Activity {
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 
- ;
-        // if newly restarted then read gVal
-//        if (gameMode == 0) {
-//            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-//            String prevGame = sharedPref.getString("prevGame", "");
-//            if (prevGame.equals("")) {
-//                gameMode = GAME_NEW;
-//                initiateGame();
-//            }
-//        }
-
-
-//        if (histories == null)
-//            histories = new HistoryGetPut().get(this);
-        new HistoryGetPut().make(this);
-
-        // get physical values depend on Phone
-        // then set picXSizes
-//        new SetPicSizes(screenX);
-
-//        maxImageCount = new ImageStorage().count();
-
+        if (histories == null)
+            new HistoryGetPut().set(this);
+        Log.w("History","size ="+histories.size());
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
         imageSelAdapter = new ImageSelAdapter();

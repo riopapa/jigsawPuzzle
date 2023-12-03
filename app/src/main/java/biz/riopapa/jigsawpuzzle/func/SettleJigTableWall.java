@@ -1,8 +1,8 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import biz.riopapa.jigsawpuzzle.model.JigTable;
-
 import java.util.Random;
+
+import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class SettleJigTableWall {
 

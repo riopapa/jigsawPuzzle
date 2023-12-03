@@ -3,6 +3,8 @@ package biz.riopapa.jigsawpuzzle.func;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 
+import android.util.Log;
+
 public class DefineColsRows {
 
     /**

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class GVal {
 
-    public int version; // vvrrxx
+    public String version; // vvrrxx
 
     public String game;
     public  int level;

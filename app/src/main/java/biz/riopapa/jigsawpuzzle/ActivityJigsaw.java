@@ -6,6 +6,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
@@ -72,6 +73,7 @@ public class ActivityJigsaw extends Activity {
     public static History history;
     public static int historyIdx;
 
+    int [] eyes = {R.drawable.z_eye_opened, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
 
     @Override
@@ -126,9 +128,9 @@ public class ActivityJigsaw extends Activity {
             copy2RecyclerPieces();
         });
 
-        binding.showBack.setImageResource((showBack)? R.drawable.z_eye_opened : R.drawable.z_eye_closed);
-        binding.showBack.setOnClickListener(v -> { showBack = !showBack;
-            binding.showBack.setImageResource((showBack)? R.drawable.z_eye_opened : R.drawable.z_eye_closed);
+        binding.showBack.setImageResource(eyes[showBack]);
+        binding.showBack.setOnClickListener(v -> { showBack = (showBack + 1) % 3;
+            binding.showBack.setImageResource(eyes[showBack]);
             save_params();
         });
 
@@ -143,8 +145,6 @@ public class ActivityJigsaw extends Activity {
             binding.sound.setImageResource((sound)? R.drawable.z_sound_on : R.drawable.z_sound_off);
             save_params();
         });
-
-//        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
@@ -188,9 +188,9 @@ public class ActivityJigsaw extends Activity {
             for (int cc = 0; cc < gVal.colNbr; cc++) {
                 for (int rr = 0; rr < gVal.rowNbr; rr++) {
                     if (jigPic[cc][rr] == null)
-                        jigPic[cc][rr] = pieceImage.buildPic(cc, rr);
+                        jigPic[cc][rr] = pieceImage.makePic(cc, rr);
                     if (jigOLine[cc][rr] == null)
-                        jigOLine[cc][rr] = pieceImage.buildOline(jigPic[cc][rr], cc, rr);
+                        jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                 }
             }
             Log.w("r readyPieces"," completed");
@@ -225,6 +225,8 @@ public class ActivityJigsaw extends Activity {
                 Log.w("copy2RecyclerPieces", "thumb map");
                 binding.thumbnail.setImageBitmap(thumb);
                 binding.layoutJigsaw.setAlpha(1f);
+                if (debugMode)
+                    binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
                 doNotUpdate = false;
                 Log.w("copy2RecyclerPieces", "thumb showImage");
             });
@@ -262,7 +264,7 @@ public class ActivityJigsaw extends Activity {
     private void save_params() {
         SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
-        sharedEditor.putBoolean("showBack", showBack);
+        sharedEditor.putInt("showBack", showBack);
         sharedEditor.putBoolean("vibrate", vibrate);
         sharedEditor.putBoolean("sound", sound);
         sharedEditor.apply();

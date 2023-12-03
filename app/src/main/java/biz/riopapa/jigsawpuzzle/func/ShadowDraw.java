@@ -1,7 +1,6 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -36,8 +35,6 @@ public class ShadowDraw extends View.DragShadowBuilder{
                 nowC = nowCR / 10000;
                 nowR = nowCR - nowC * 10000;
                 Log.w("found "+nowCR, "onDrawShadow");
-                if (jigBright[nowC][nowR] == null)
-                    jigBright[nowC][nowR] = pieceImage.makeBright(jigOLine[nowC][nowR]);
                 canvas.drawBitmap(jigBright[nowC][nowR], 0, 0, null);
                 break;
             }
