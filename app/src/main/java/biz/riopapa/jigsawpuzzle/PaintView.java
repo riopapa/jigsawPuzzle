@@ -112,12 +112,11 @@ public class PaintView extends View {
                     nowFp != null) {
                     xOld = x; yOld = y;
                     if (wannaBack2Recycler(y)) {
-                        doNotUpdate = true;
-                        Log.w("pchk Check", "GVal.fps size=" + gVal.fps.size() + " fPIdx=" + nowIdx + " now CR " + nowC + "x" + nowR);
+//                        doNotUpdate = true;
                         goBack2Recycler();
                         gVal.fps.remove(nowIdx);
                         nowFp = null;
-                        doNotUpdate = false;
+//                        doNotUpdate = false;
                         dragX = -1;
                     } else if (y < screenBottom) {
                         nowFp.posX = x;

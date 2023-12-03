@@ -177,7 +177,7 @@ public class ActivityJigsaw extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 100, 50);
+            invalidateTimer.schedule(tt, 100, 30);
         }
         String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
 
