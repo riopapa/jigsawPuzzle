@@ -16,28 +16,28 @@ import android.util.Log;
 
 public class ShowThumbnail {
 
-    static float h, w, oneSize, rectW, rectH, xBeg, yBeg;
+    static float h, w, oneSize, rectW, rectH, xBeg, yBeg, gap;
     static Bitmap thumb;
     public ShowThumbnail() {
     }
     public Bitmap make() {
 
         if (chosenImageHeight > chosenImageWidth) {
-            h = 1000;
+            h = 1000f;
             w = h * chosenImageWidth / chosenImageHeight;
-            oneSize = 1000f / (gVal.rowNbr);
+            oneSize = 1000f / ((float) gVal.rowNbr+ 0.5f);
         } else {
-            w = 1000;
+            w = 1000f;
             h = w * chosenImageHeight / chosenImageWidth;
-            oneSize = 1000 / (gVal.colNbr);
+            oneSize = 1000f / ((float) gVal.colNbr + 0.5f);
         }
-
+        gap = oneSize * 5/ 24;
         thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
 
         rectW = oneSize * (float) gVal.showMaxX;    // 24 to GVal.show line boundary
         rectH = oneSize * (float) gVal.showMaxY;
-        xBeg = oneSize * (float) gVal.offsetC;
-        yBeg = oneSize * (float) gVal.offsetR;
+        xBeg = oneSize * (float) gVal.offsetC + gap;
+        yBeg = oneSize * (float) gVal.offsetR + gap;
         if (xBeg + rectW > thumb.getWidth())
             xBeg = thumb.getWidth() - rectW;
         if (yBeg + rectH > thumb.getHeight())
@@ -49,7 +49,7 @@ public class ShowThumbnail {
         pBox.setColor(0x8fBBBBBB);
         canvas.drawRect(xBeg, yBeg, xBeg + rectW, yBeg + rectH, pBox);
         Bitmap boxMap = Bitmap.createBitmap(thumb_copy, (int) xBeg, (int) yBeg,
-                (int) rectW,(int) rectH);
+                (int) rectW, (int) rectH);
         pBox.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));
         canvas.drawBitmap(boxMap, xBeg, yBeg, pBox);
 
@@ -57,34 +57,21 @@ public class ShowThumbnail {
         pLine.setColor(chosenImageColor);
         pLine.setStrokeWidth(20f);
 
-        Paint pDot = new Paint();
-        pDot.setColor(chosenImageColor ^ 0xCCCCCC);
-        pDot.setStrokeWidth(20f);
-        pDot.setPathEffect(new DashPathEffect(new float[] {50, 50}, 0));
-
-        Paint pDot2 = new Paint();
-        pDot2.setColor(chosenImageColor);
-        pDot2.setStrokeWidth(20f);
-        pDot2.setPathEffect(new DashPathEffect(new float[] {50, 50}, 0));
+        Paint pDash = new Paint();
+        pDash.setColor(chosenImageColor);
+        pDash.setStrokeWidth(20f);
+        pDash.setPathEffect(new DashPathEffect(new float[] {40, 40}, 0));
 
         // top line
-        canvas.drawLine(xBeg, yBeg, xBeg + rectW, yBeg, (yBeg == 0)? pLine : pDot);
-        if (yBeg != 0)
-           canvas.drawLine(xBeg, yBeg, xBeg + rectW, yBeg, pDot2);
+        canvas.drawLine(xBeg, yBeg, xBeg + rectW, yBeg, (gVal.offsetR == 0)? pLine : pDash);
         // left line
-        canvas.drawLine(xBeg, yBeg, xBeg, yBeg + rectH, (xBeg == 0)? pLine : pDot);
-        if (xBeg != 0)
-            canvas.drawLine(xBeg, yBeg, xBeg, yBeg + rectH, pDot2);
+        canvas.drawLine(xBeg, yBeg, xBeg, yBeg + rectH, (gVal.offsetC == 0)? pLine : pDash);
         // right line
         canvas.drawLine(xBeg + rectW, yBeg, xBeg + rectW, yBeg + rectH,
-                (gVal.offsetC+ gVal.showMaxX == gVal.colNbr)? pLine : pDot);
-        if (gVal.offsetC+ gVal.showMaxX != gVal.colNbr)
-            canvas.drawLine(xBeg + rectW, yBeg, xBeg + rectW, yBeg + rectH, pDot2);
+                (gVal.offsetC+ gVal.showMaxX == gVal.colNbr)? pLine : pDash);
         // bottom line
         canvas.drawLine(xBeg, yBeg + rectH, xBeg + rectW, yBeg + rectH,
-                (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDot);
-        if (gVal.offsetR+ gVal.showMaxY != gVal.rowNbr)
-            canvas.drawLine(xBeg, yBeg + rectH, xBeg + rectW, yBeg + rectH, pDot2);
+                (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDash);
 
         return thumb_copy;
 

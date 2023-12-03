@@ -10,7 +10,10 @@ public class NearByFloatPiece {
      * check all Fps to check whether this fp is anchorable
      * return fps idx if anchorable else return -1
      */
-    public NearByFloatPiece() {}
+    int gapAllowed;
+    public NearByFloatPiece() {
+        gapAllowed = gVal.picGap + gVal.picGap;
+    }
     public int isNear(int thisIdx, FloatPiece fpThis) {
 
         long anchorId = fpThis.anchorId;
@@ -30,10 +33,10 @@ public class NearByFloatPiece {
                 if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)
                     continue;
                 int delX = Math.abs(fpThis.posX - fpWork.posX - cDelta* gVal.picISize);
-                if (delX > gVal.picGap)    // around near
+                if (delX > gapAllowed)    // around near
                     continue;
                 int delY = Math.abs(fpThis.posY - fpWork.posY - rDelta* gVal.picISize);
-                if (delY > gVal.picGap)
+                if (delY > gapAllowed)
                     continue;
                 return i;   // anchored with i's floatPiece
             }

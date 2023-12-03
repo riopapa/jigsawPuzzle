@@ -107,7 +107,7 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float MOVING = 30;
+                final float MOVING = 10;
                 if ((Math.abs(x - xOld) > MOVING || Math.abs(y - yOld) > MOVING) &&
                     nowFp != null) {
                     xOld = x; yOld = y;

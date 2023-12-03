@@ -32,8 +32,6 @@ public class PieceSelection {
                 continue;
             if (Math.abs(fp.posY - iY) > gVal.picHSize)
                 continue;
-            Log.w("mached cr="+c+"x"+r,
-                    " fp Pos="+fp.posX+"x"+fp.posY+", gap "+Math.abs(fp.posX - iX)+"x"+Math.abs(fp.posY - iY));
             nowFp = fp;
             nowR = r; nowC = c;
             nowIdx = i;

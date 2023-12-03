@@ -7,15 +7,17 @@ import android.app.Activity;
 public class PiecePosition {
 
     Activity activity;
+    int gapAllowed;
     public PiecePosition(Activity activity) {
         this.activity = activity;
+        gapAllowed = gVal.picGap + gVal.picGap;
     }
     public boolean isLockable(int cc, int rr, int posX, int posY) {
 
         if (isNearLocked(cc, rr)) {
             int x = gVal.baseX + (cc - gVal.offsetC) * gVal.picISize;
             int y = gVal.baseY + (rr - gVal.offsetR) * gVal.picISize;
-            return Math.abs(posX - x) <= gVal.picGap && Math.abs(posY - y) <= gVal.picGap;
+            return Math.abs(posX - x) <= gapAllowed && Math.abs(posY - y) <= gapAllowed;
         } else
             return false;
     }

@@ -1,5 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
@@ -23,20 +24,28 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 import java.util.Random;
 
 public class PieceDraw {
-    Paint pGrayed, lPaint;
+    Paint pGrayed, lPaint, pathPaint;
     Random rnd;
+    int gapSmall, gapTwo;
     public PieceDraw() {
         pGrayed = new Paint();
         pGrayed.setAlpha(100);
         lPaint = new Paint();
         lPaint.setColor(Color.RED);
+
+        pathPaint = new Paint();
+        pathPaint.setColor(chosenImageColor);
+        gapSmall = gVal.picGap / 3;
+        gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
+
     }
 
     public void draw(Canvas canvas){
@@ -115,8 +124,23 @@ public class PieceDraw {
             canvas.drawLine(xBase+xSz, yBase, xBase+xSz, yBase+ySz, pBox);
             canvas.drawLine(xBase, yBase+ySz, xBase+xSz, yBase+ySz, pBox);
         }
-
-        // drawing floating pieces
+        if (showBack == 0) {
+            for (int c = 1; c < gVal.showMaxX; c++) {
+                for (int r = 1; r < gVal.showMaxY; r++) {
+                    Path path = new Path();
+                    path.moveTo(gVal.baseX + gapTwo + c * gVal.picISize,
+                            gVal.baseY + gapTwo + r * gVal.picISize - gapSmall);
+                    path.lineTo(gVal.baseX + gVal.picGap + c * gVal.picISize + gapSmall,
+                            gVal.baseY + gapTwo + r * gVal.picISize);
+                    path.lineTo(gVal.baseX + gapTwo + c * gVal.picISize,
+                            gVal.baseY + gapTwo + r * gVal.picISize + gapSmall);
+                    path.lineTo(gVal.baseX + gapTwo + c * gVal.picISize - gapSmall,
+                            gVal.baseY + gapTwo + r * gVal.picISize);
+                    canvas.drawPath(path, pathPaint);
+                }
+            }
+        }
+                // drawing floating pieces
         for (int cnt = 0; cnt < gVal.fps.size(); cnt++) {
             FloatPiece fp = gVal.fps.get(cnt);
             int c = fp.C;
