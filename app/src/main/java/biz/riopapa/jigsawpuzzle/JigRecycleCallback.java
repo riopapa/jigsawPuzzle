@@ -49,28 +49,12 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         anchorPiece = new AnchorPiece();
     }
 
-
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isItemViewSwipeEnabled() {return true; }
-
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        viewHolder.itemView.setBackgroundColor(0x000FFFF);
-
-//        int pos = viewHolder.getAbsoluteAdapterPosition();
-//        if (pos < 0)
-//            return;
-//        Log.w("pc clearView","pos "+pos);
-//        int cr = GVal.activeRecyclerJigs.get(pos);
-//        int c = cr /10000;
-//        int r = cr - c * 10000;
-
+        int pos = viewHolder.getAbsoluteAdapterPosition();
+        Log.w("ClearView", "pos = "+pos);
+        viewHolder.itemView.setBackgroundColor(0xFF0FFFF);
     }
 
     RecyclerView.ViewHolder svViewHolder;

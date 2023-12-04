@@ -42,7 +42,7 @@ public class ClearGValValues {
         gVal.baseX = (screenX - gVal.showMaxX * gVal.picISize) / 2 - gVal.picGap - gVal.picGap;
         gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) * 20 / 30 - gVal.picOSize;
 
-        Log.w("r23 ClearGValValues", "Jig Cnt="+ gVal.colNbr +" x "+ gVal.rowNbr +", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
+        Log.w("r23GValValues", "Jig Cnt="+ gVal.colNbr +"x"+ gVal.rowNbr +", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
                 ", showMax "+ gVal.showMaxX+"x"+ gVal.showMaxY);
 
     }

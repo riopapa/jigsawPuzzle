@@ -23,9 +23,9 @@ public class ShowThumbnail {
     public Bitmap make() {
 
         if (chosenImageHeight > chosenImageWidth) {
-            h = 1000f;
+            h = 800f;
             w = h * chosenImageWidth / chosenImageHeight;
-            oneSize = 1000f / ((float) gVal.rowNbr+ 0.5f);
+            oneSize = 1000f / ((float) gVal.rowNbr + 0.5f);
         } else {
             w = 1000f;
             h = w * chosenImageHeight / chosenImageWidth;
@@ -33,16 +33,18 @@ public class ShowThumbnail {
         }
         gap = oneSize * 5/ 24;
         thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
-
-        rectW = oneSize * (float) gVal.showMaxX;    // 24 to GVal.show line boundary
-        rectH = oneSize * (float) gVal.showMaxY;
-        xBeg = oneSize * (float) gVal.offsetC + gap;
-        yBeg = oneSize * (float) gVal.offsetR + gap;
+        rectW = oneSize * (float) gVal.showMaxX - gap;    // 24 to GVal.show line boundary
+        rectH = oneSize * (float) gVal.showMaxY - gap;
+        xBeg = oneSize * (float) gVal.offsetC;
+        yBeg = oneSize * (float) gVal.offsetR;
         if (xBeg + rectW > thumb.getWidth())
             xBeg = thumb.getWidth() - rectW;
         if (yBeg + rectH > thumb.getHeight())
             yBeg = thumb.getHeight() - rectH;
-
+        if (xBeg < gap)
+            xBeg = gap;
+        if (yBeg < gap)
+            yBeg = gap;
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);
         Paint pBox = new Paint();

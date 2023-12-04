@@ -3,7 +3,6 @@ package biz.riopapa.jigsawpuzzle;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
@@ -12,10 +11,10 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
@@ -26,9 +25,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-import biz.riopapa.jigsawpuzzle.model.FloatPiece;
-
 import java.util.Random;
+
+import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceDraw {
     Paint pGrayed, lPaint, pathPaint;
@@ -45,7 +44,6 @@ public class PieceDraw {
         gapSmall = gVal.picGap / 3;
         gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
-
     }
 
     public void draw(Canvas canvas){
@@ -67,16 +65,15 @@ public class PieceDraw {
                         canvas.drawBitmap((showBack == 0) ? jigOLine[cc][rr] : jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                     else {
-                        if (jigBright[cc][rr] == null) {
-                            jigBright[cc][rr] = pieceImage.makeBright(jigOLine[cc][rr]);
-                        }
-                        canvas.drawBitmap((gVal.jigTables[cc][rr].count % 2 == 0) ?
-                                jigOLine[cc][rr] : jigBright[cc][rr],
+                        canvas.drawBitmap(jigOLine[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-                        canvas.drawBitmap(fireWorks[fireWorks.length-gVal.jigTables[cc][rr].count],
+                        canvas.drawBitmap(fireWorks[gVal.jigTables[cc][rr].count-1],
                                 gVal.baseX + c * gVal.picISize - gVal.picGap,
                                 gVal.baseY + r * gVal.picISize - gVal.picGap, null);
-                        gVal.jigTables[cc][rr].count--;
+                        int dec = 3 - rnd.nextInt(4);
+                        gVal.jigTables[cc][rr].count -= dec;
+                        if (gVal.jigTables[cc][rr].count < 0)
+                            gVal.jigTables[cc][rr].count = 0;
                         if (gVal.jigTables[cc][rr].count == 0)
                             jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                     }
@@ -186,7 +183,6 @@ public class PieceDraw {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
 //            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
-
 
         canvas.restore();
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();

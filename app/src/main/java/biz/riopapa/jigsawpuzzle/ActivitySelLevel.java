@@ -5,20 +5,16 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigBright;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
@@ -47,15 +43,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
+import biz.riopapa.jigsawpuzzle.func.CalcImageColor;
 import biz.riopapa.jigsawpuzzle.func.ClearGValValues;
-import biz.riopapa.jigsawpuzzle.func.Congrat;
 import biz.riopapa.jigsawpuzzle.func.DefineColsRows;
-import biz.riopapa.jigsawpuzzle.func.FireWork;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.Masks;
 import biz.riopapa.jigsawpuzzle.func.SetPicSizes;
-import biz.riopapa.jigsawpuzzle.func.calcImageColor;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
 
@@ -91,19 +85,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         }
         defineColsRows = new DefineColsRows();
 
-        new calcImageColor();
-
-//        chosenImageMap = new ImageStorage().getMap(GVal.selectedImageNbr);
-//        new calcImageColor();
-//        int width = screenX * 8 / 10;
-//        int height = width * chosenImageHeight / chosenImageWidth;
-//        if (height > screenY * 7 /10)
-//            height = screenY * 7 / 10;
-//        Bitmap selected = Bitmap.createScaledBitmap(chosenImageMap,
-//                chosenImageWidth /2, chosenImageHeight /2, true);
-
-//        binding.selImage.getLayoutParams().width = width;
-//        binding.selImage.getLayoutParams().height = height;
+        new CalcImageColor();
 
         history = null;
         historyIdx = -1;
@@ -129,8 +111,6 @@ public class ActivitySelLevel extends AppCompatActivity {
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigBright = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
@@ -168,7 +148,6 @@ public class ActivitySelLevel extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
     void select_level() {
@@ -225,11 +204,11 @@ public class ActivitySelLevel extends AppCompatActivity {
         // if level > 9 then it means play new game
         getGVal(level, defineColsRows);
 
-        Log.w("sel level", "GVal Level="+ currLevel);
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }
     private void go_back(View view) {
+        alertDialog.dismiss();
         finish();
     }
 

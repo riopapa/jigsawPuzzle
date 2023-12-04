@@ -1,15 +1,13 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 
 import android.graphics.Color;
 import android.util.Log;
 
-public class calcImageColor {
-    public calcImageColor() {
+public class CalcImageColor {
+    public CalcImageColor() {
 //        chosenImageWidth = chosenImageMap.getWidth();
 //        chosenImageHeight = chosenImageMap.getHeight();
         long r = 0, g = 0, b = 0;

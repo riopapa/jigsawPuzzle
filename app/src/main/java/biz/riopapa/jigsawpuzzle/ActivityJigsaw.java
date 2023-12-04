@@ -6,9 +6,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
@@ -19,7 +19,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 
 import android.app.Activity;
@@ -33,19 +32,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.AdjustControl;
 import biz.riopapa.jigsawpuzzle.func.Congrat;
 import biz.riopapa.jigsawpuzzle.func.FireWork;
+import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.Masks;
 import biz.riopapa.jigsawpuzzle.func.ShowThumbnail;
-import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.model.History;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ActivityJigsaw extends Activity {
 
@@ -61,12 +60,12 @@ public class ActivityJigsaw extends Activity {
     public static JigsawAdapter activeAdapter;
 
     public static boolean doNotUpdate; // wait while one action completed
-;
+
     public static Timer invalidateTimer;
 
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
-    public static Bitmap [][] jigPic, jigBright, jigWhite, jigOLine;
+    public static Bitmap [][] jigPic, jigOLine;
     public static int activePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
@@ -90,8 +89,6 @@ public class ActivityJigsaw extends Activity {
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigBright = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
@@ -208,28 +205,26 @@ public class ActivityJigsaw extends Activity {
         binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
-//        doNotUpdate = true;
-        new Thread(() -> {
-            this.runOnUiThread(() -> {
-                gVal.activeJigs = new ArrayList<>();
-                for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
-                    int cr = gVal.allPossibleJigs.get(i);
-                    int cc = cr / 10000;
-                    int rr = cr - cc * 10000;
-                    if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
-                            cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                        gVal.activeJigs.add(cr);
-                    }
+        doNotUpdate = true;
+        new Thread(() -> this.runOnUiThread(() -> {
+            gVal.activeJigs = new ArrayList<>();
+            for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
+                int cr = gVal.allPossibleJigs.get(i);
+                int cc = cr / 10000;
+                int rr = cr - cc * 10000;
+                if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
+                        cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
+                    gVal.activeJigs.add(cr);
                 }
-                jigRecyclerView.setAdapter(activeAdapter);
-                Bitmap thumb = showThumbnail.make();
-                binding.thumbnail.setImageBitmap(thumb);
-                binding.layoutJigsaw.setAlpha(1f);
-                binding.layoutJigsaw.invalidate();
-                binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
-                doNotUpdate = false;
-            });
-        }).start();
+            }
+            jigRecyclerView.setAdapter(activeAdapter);
+            Bitmap thumb = showThumbnail.make();
+            binding.thumbnail.setImageBitmap(thumb);
+            binding.layoutJigsaw.setAlpha(1f);
+            binding.layoutJigsaw.invalidate();
+            binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
+            doNotUpdate = false;
+        })).start();
     }
 
     @Override

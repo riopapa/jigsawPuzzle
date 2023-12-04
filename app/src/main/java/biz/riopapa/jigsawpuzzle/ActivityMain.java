@@ -46,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static String appVersion = "000101";
+    public static String appVersion = "000102";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
