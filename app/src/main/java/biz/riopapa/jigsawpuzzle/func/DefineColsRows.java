@@ -18,13 +18,14 @@ public class DefineColsRows {
     public void calc(int level) {
 
         int [] sizes = {5, 12, 17, 21};
+        double sz = Math.sqrt(Math.sqrt(chosenImageWidth * chosenImageHeight));
         if (chosenImageWidth > chosenImageHeight) {
             row = sizes[level];
-            row = (int) Math.sqrt(row * row + Math.sqrt(chosenImageWidth + chosenImageHeight));
+            row = (int) Math.sqrt(row * row + sz*(level+1));
             col = row * chosenImageWidth / chosenImageHeight;  // to avoid over y size
         } else {
             col = sizes[level];
-            col = (int) Math.sqrt(col * col + Math.sqrt(chosenImageHeight + chosenImageHeight));
+            col = (int) Math.sqrt(col * col + sz*(level+1));
             row = col * chosenImageHeight / chosenImageWidth;  // to avoid over y size
         }
 

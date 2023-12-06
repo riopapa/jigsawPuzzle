@@ -16,42 +16,50 @@ import android.util.Log;
 
 public class ShowThumbnail {
 
-    static float h, w, oneSize, rectW, rectH, xBeg, yBeg, gap;
+    static float thumbHeight, thumbWidth, oneSize, rectWidth, rectHeight, xBeg, yBeg, gap;
     static Bitmap thumb;
     public ShowThumbnail() {
     }
     public Bitmap make() {
 
         if (chosenImageHeight > chosenImageWidth) {
-            h = 800f;
-            w = h * chosenImageWidth / chosenImageHeight;
-            oneSize = 1000f / ((float) gVal.rowNbr + 0.5f);
+            thumbHeight = 800f;
+            thumbWidth = thumbHeight * chosenImageWidth / chosenImageHeight;
+            oneSize = thumbWidth / ((float) gVal.colNbr + 0.5f);
         } else {
-            w = 1000f;
-            h = w * chosenImageHeight / chosenImageWidth;
-            oneSize = 1000f / ((float) gVal.colNbr + 0.5f);
+            thumbWidth = 1000f;
+            thumbHeight = thumbWidth * chosenImageHeight / chosenImageWidth;
+            oneSize = thumbHeight / ((float) gVal.rowNbr + 0.5f);
         }
         gap = oneSize * 5/ 24;
-        thumb = Bitmap.createScaledBitmap(chosenImageMap, (int)w, (int)h, true);
-        rectW = oneSize * (float) gVal.showMaxX - gap;    // 24 to GVal.show line boundary
-        rectH = oneSize * (float) gVal.showMaxY - gap;
-        xBeg = oneSize * (float) gVal.offsetC;
-        yBeg = oneSize * (float) gVal.offsetR;
-        if (xBeg + rectW > thumb.getWidth())
-            xBeg = thumb.getWidth() - rectW;
-        if (yBeg + rectH > thumb.getHeight())
-            yBeg = thumb.getHeight() - rectH;
-        if (xBeg < gap)
-            xBeg = gap;
-        if (yBeg < gap)
-            yBeg = gap;
+        thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) thumbWidth, (int) thumbHeight, true);
+        rectWidth = oneSize * (float) gVal.showMaxX;
+        rectHeight = oneSize * (float) gVal.showMaxY;
+        xBeg = oneSize * (float) gVal.offsetC + gap;
+        yBeg = oneSize * (float) gVal.offsetR + gap;
+        Log.w("Dump","xBeg="+xBeg+" yBeg="+yBeg+" wi="+rectWidth+" hi="+rectHeight+
+                " sz="+thumbWidth+"x"+thumbHeight+" vs "+thumb.getWidth()+"x"+thumb.getHeight()
+                + " beg+w="+(xBeg+rectWidth)+" beg+h="+(yBeg+rectHeight));
+//        if (xBeg + rectWidth > thumbWidth)
+//            xBeg = thumbWidth - rectWidth;
+//        if (yBeg + rectHeight > thumbHeight)
+//            yBeg = thumbHeight - rectHeight;
+//        if (xBeg < gap)
+//            xBeg = gap;
+//        if (yBeg < gap)
+//            yBeg = gap;
+//        if (xBeg + rectWidth > thumbWidth)
+//            rectWidth = thumbWidth - xBeg;
+//        if (yBeg + rectHeight > thumbHeight)
+//            rectHeight = thumbHeight - yBeg;
+
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);
         Paint pBox = new Paint();
         pBox.setColor(0x8fBBBBBB);
-        canvas.drawRect(xBeg, yBeg, xBeg + rectW, yBeg + rectH, pBox);
+        canvas.drawRect(xBeg, yBeg, xBeg + rectWidth, yBeg + rectHeight, pBox);
         Bitmap boxMap = Bitmap.createBitmap(thumb_copy, (int) xBeg, (int) yBeg,
-                (int) rectW, (int) rectH);
+                (int) rectWidth, (int) rectHeight);
         pBox.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));
         canvas.drawBitmap(boxMap, xBeg, yBeg, pBox);
 
@@ -65,14 +73,14 @@ public class ShowThumbnail {
         pDash.setPathEffect(new DashPathEffect(new float[] {40, 40}, 0));
 
         // top line
-        canvas.drawLine(xBeg, yBeg, xBeg + rectW, yBeg, (gVal.offsetR == 0)? pLine : pDash);
+        canvas.drawLine(xBeg, yBeg, xBeg + rectWidth, yBeg, (gVal.offsetR == 0)? pLine : pDash);
         // left line
-        canvas.drawLine(xBeg, yBeg, xBeg, yBeg + rectH, (gVal.offsetC == 0)? pLine : pDash);
+        canvas.drawLine(xBeg, yBeg, xBeg, yBeg + rectHeight, (gVal.offsetC == 0)? pLine : pDash);
         // right line
-        canvas.drawLine(xBeg + rectW, yBeg, xBeg + rectW, yBeg + rectH,
+        canvas.drawLine(xBeg + rectWidth, yBeg, xBeg + rectWidth, yBeg + rectHeight,
                 (gVal.offsetC+ gVal.showMaxX == gVal.colNbr)? pLine : pDash);
         // bottom line
-        canvas.drawLine(xBeg, yBeg + rectH, xBeg + rectW, yBeg + rectH,
+        canvas.drawLine(xBeg, yBeg + rectHeight, xBeg + rectWidth, yBeg + rectHeight,
                 (gVal.offsetR+ gVal.showMaxY == gVal.rowNbr) ? pLine : pDash);
 
         return thumb_copy;

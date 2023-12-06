@@ -7,6 +7,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
@@ -111,6 +112,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);

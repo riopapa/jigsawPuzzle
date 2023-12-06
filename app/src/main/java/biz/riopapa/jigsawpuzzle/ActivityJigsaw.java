@@ -65,7 +65,7 @@ public class ActivityJigsaw extends Activity {
 
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
-    public static Bitmap [][] jigPic, jigOLine;
+    public static Bitmap [][] jigPic, jigOLine, jigWhite;
     public static int activePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
@@ -82,13 +82,14 @@ public class ActivityJigsaw extends Activity {
 
         setContentView(binding.getRoot());
         Log.w("jSaw","onCreate gameMode="+gameMode);
-        screenBottom = screenY - gVal.recSize - gVal.recSize + gVal.picGap;
+        screenBottom = screenY - gVal.recSize - gVal.recSize;
         if (fPhoneInchX > 3f)
             screenBottom += gVal.picHSize;
 
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
@@ -154,7 +155,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView.setHasFixedSize(true);
 
         ItemTouchHelper helper = new ItemTouchHelper(
-                new JigRecycleCallback(activeAdapter, binding));
+                new JigRecycleCallback(activeAdapter));
 
         helper.attachToRecyclerView(jigRecyclerView);
 
@@ -174,7 +175,7 @@ public class ActivityJigsaw extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 100, 30);
+            invalidateTimer.schedule(tt, 100, 50);
         }
         String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
 
@@ -194,11 +195,8 @@ public class ActivityJigsaw extends Activity {
                         jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                 }
             }
-            Log.w("r readyPieces"," completed");
         }).start();
-
     }
-
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {

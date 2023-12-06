@@ -5,6 +5,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
@@ -30,12 +31,14 @@ import java.util.Random;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceDraw {
-    Paint pGrayed, lPaint, pathPaint;
+    Paint pGrayed0, pGrayed1, lPaint, pathPaint;
     Random rnd;
     int gapSmall, gapTwo;
     public PieceDraw() {
-        pGrayed = new Paint();
-        pGrayed.setAlpha(100);
+        pGrayed0 = new Paint();
+        pGrayed0.setAlpha(160);
+        pGrayed1 = new Paint();
+        pGrayed1.setAlpha(100);
         lPaint = new Paint();
         lPaint.setColor(Color.RED);
 
@@ -65,17 +68,25 @@ public class PieceDraw {
                         canvas.drawBitmap((showBack == 0) ? jigOLine[cc][rr] : jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
                     else {
-                        canvas.drawBitmap(jigOLine[cc][rr],
-                                gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
-                        canvas.drawBitmap(fireWorks[gVal.jigTables[cc][rr].count-1],
-                                gVal.baseX + c * gVal.picISize - gVal.picGap,
-                                gVal.baseY + r * gVal.picISize - gVal.picGap, null);
-                        int dec = 3 - rnd.nextInt(4);
-                        gVal.jigTables[cc][rr].count -= dec;
+                        if (jigWhite[cc][rr] == null)
+                            jigWhite[cc][rr] = pieceImage.makeWhite(jigOLine[cc][rr]);
+                        gVal.jigTables[cc][rr].count -= 1 + rnd.nextInt(4);
                         if (gVal.jigTables[cc][rr].count < 0)
                             gVal.jigTables[cc][rr].count = 0;
-                        if (gVal.jigTables[cc][rr].count == 0)
+                        if (gVal.jigTables[cc][rr].count % 2 == 0)
+                            canvas.drawBitmap(jigOLine[cc][rr],
+                                    gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
+                        else
+                            canvas.drawBitmap(jigWhite[cc][rr],
+                                    gVal.baseX + c * gVal.picISize, gVal.baseY + r * gVal.picISize, null);
+                        if (gVal.jigTables[cc][rr].count % 3 == 0)
+                            canvas.drawBitmap(fireWorks[gVal.jigTables[cc][rr].count],
+                                    gVal.baseX + c * gVal.picISize - gVal.picGap,
+                                    gVal.baseY + r * gVal.picISize - gVal.picGap, null);
+                        if (gVal.jigTables[cc][rr].count == 0) {
                             jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
+                            jigWhite[cc][rr] = null;
+                        }
                     }
                 }
             }
@@ -91,7 +102,7 @@ public class PieceDraw {
                         canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                                 gVal.baseX + c * gVal.picISize,
                                 gVal.baseY + r * gVal.picISize,
-                                pGrayed);
+                                pGrayed0);
                     }
                 }
             }
@@ -104,7 +115,7 @@ public class PieceDraw {
                         canvas.drawBitmap(jigPic[cc][rr],
                                 gVal.baseX + c * gVal.picISize,
                                 gVal.baseY + r * gVal.picISize,
-                                pGrayed);
+                                pGrayed1);
                     }
                 }
             }

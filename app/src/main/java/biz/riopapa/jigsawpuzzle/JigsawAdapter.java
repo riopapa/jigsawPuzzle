@@ -35,6 +35,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+
         @Override
         public boolean onItemMove(int fromPosition, int toPosition) {
             return false;
@@ -75,22 +76,26 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         public boolean onDown(@NonNull MotionEvent e) {return false;}
 
         @Override
-        public void onShowPress(@NonNull MotionEvent e) {}
+        public void onShowPress(@NonNull MotionEvent e) {
+            Log.w("jigsawAdapter","onShowPress "+e.getAction());
+        }
 
         @Override
         public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
 
         @Override
         public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+            Log.w("jigsawAdapter","onScroll "+e1.getAction());
             return false;
         }
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
-
+            Log.w("jigsawAdapter","onLongPress "+e.getAction());
         }
         @Override
         public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
+            Log.w("jigsawAdapter","onFling "+e1.getAction());
             return false;
         }
     }

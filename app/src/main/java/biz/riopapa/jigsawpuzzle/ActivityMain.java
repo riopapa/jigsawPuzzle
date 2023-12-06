@@ -77,7 +77,7 @@ public class ActivityMain extends Activity {
     public static int showBack = 0;
     public static boolean sound = false;
 
-    public static boolean debugMode = false;
+    public static boolean debugMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

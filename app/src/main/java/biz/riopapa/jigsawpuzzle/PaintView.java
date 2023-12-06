@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -60,15 +61,9 @@ public class PaintView extends View {
         pieceSelection = new PieceSelection();
     }
 
-    //  screenXY 1080 x 2316
-    //  image 11232 x 7488, outerSize=802, gapSize=167, innerSize=468
-    // picOSize=178, picISize=103 base XY =32 x 537
-    // left top corner 121 x 624 ( 85 x  92)
-
-    protected void onDraw(Canvas canvas){
+    protected void onDraw(@NonNull Canvas canvas){
         pieceDraw.draw(canvas);
     }
-
 
     private void paintTouchUp(){
         gVal.allLocked = isPiecesAllLocked();
@@ -94,7 +89,7 @@ public class PaintView extends View {
         nowTime = System.currentTimeMillis();
         if (nextOKTime > nowTime)
             return true;
-        nextOKTime = nowTime + 100;
+        nextOKTime = nowTime + 50;
 
         int x = (int) event.getX() - gVal.picHSize;
         int y = (int) event.getY() - gVal.picHSize;
@@ -107,9 +102,10 @@ public class PaintView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-                final float MOVING = 10;
-                if ((Math.abs(x - xOld) > MOVING || Math.abs(y - yOld) > MOVING) &&
-                    nowFp != null) {
+                final float MOVE_ALLOWANCE = 20;
+                if ((Math.abs(x - xOld) > MOVE_ALLOWANCE ||
+                        Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
+                        nowFp != null) {
                     xOld = x; yOld = y;
                     if (wannaBack2Recycler(y)) {
 //                        doNotUpdate = true;
@@ -132,16 +128,25 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 paintTouchUp();
+                performClick();
                 break;
         }
 
         return true;
     }
 
+    @Override
+    public boolean performClick() {
+        Log.w("perform","Click");
+        return super.performClick();
+    }
+
     public void goBack2Recycler() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
+        assert layoutManager != null;
         int i = layoutManager.findFirstVisibleItemPosition();
         View v = layoutManager.findViewByPosition(i);
+        assert v != null;
         activePos = i + (dragX - (int) v.getX()) / gVal.picOSize;
         gVal.jigTables[nowC][nowR].outRecycle = false;
         if (activePos < gVal.activeJigs.size()-1) {
