@@ -1,5 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
@@ -10,11 +11,14 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
+import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
+import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -28,10 +32,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
+import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.func.VibratePhone;
+import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
             implements ZItemTouchHelperListener {
+
+    AnchorPiece anchorPiece;
+    NearPieceBind nearPieceBind;
 
     @NonNull
     @Override
@@ -44,6 +54,9 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         iv.getLayoutParams().height = gVal.picOSize;
         iv.getLayoutParams().width = gVal.picOSize;
         iv.requestLayout();
+        anchorPiece = new AnchorPiece();
+        nearPieceBind = new NearPieceBind();
+
         return new ViewHolder(view);
     }
 
@@ -110,35 +123,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
             return false;
         }
     }
-//
-//        @Override
-//        public boolean onDown(@NonNull MotionEvent e) {
-//            Log.w("onDown"," pos "+e.getX()+"x"+e.getY()+" raw "+e.getRawX()+"x"+e.getRawY()
-//
-//            );
-//
-//            return false;   // true or false?
-//        }
-//
-//
-//        @Override
-//        public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-//
-////            Log.w("r14", " onScroll d="+distanceX+":"+distanceY+ " e1="+
-////                    e1.getX()+"x"+e1.getY()+" e2="+e2.getX()+"x"+e2.getY());
-//            return false;
-//        }
-//
-//
-//        @Override
-//        public void onLongPress(@NonNull MotionEvent e) {
-//            Log.w("r2l long","long press Event="+e);
-//
-//            doNotUpdate = true;
-//            // Todo: resolve jigRecyclePos
-//            removeFrmRecycle.sendEmptyMessage(0);
-//            add2FloatingPiece();
-//        }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
@@ -156,14 +140,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         viewHolder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
         viewHolder.ivIcon.setTag(nowCR);
-        viewHolder.ivIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nowDragging = true;
-
-            }
-        });
-
     }
 
     @Override
@@ -171,34 +147,5 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         return (gVal.activeJigs.size());
     }
 
-
 }
 
-//    private static void pieceMove(@NonNull View viewP) {
-//        viewP.setOnTouchListener((view, evt) -> {
-//            float fromX = evt.getX();
-//            float fromY = evt.getY();
-//            Log.w("onTouch "+evt.getAction(), "DOWN "+fromX+"x"+fromY);
-//            int action = evt.getAction();
-//            switch (action) {
-//                case MotionEvent.ACTION_DOWN:
-//                    if (view != null) {
-//                        String tag = view.getTag().toString();
-//                        nowCR = Integer.parseInt(tag);
-//                        nowC = nowCR / 10000;
-//                        nowR = nowCR - nowC * 10000;
-////                        jigRecyclePos = viewP.getAbsoluteAdapterPosition();
-//                        Log.w("onTouch"," DOWN "+jigRecyclePos+" tag="+tag);
-////                            ClipData.Item item = new ClipData.Item((CharSequence) view.getTag());
-//                        ClipData.Item item = new ClipData.Item(tag);
-//                        String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-//                        ClipData data = new ClipData(tag, mimeTypes, item);
-////                        View.DragShadowBuilder builder = new View.DragShadowBuilder(view);
-////                        view.startDragAndDrop(data, new ShadowDraw(), null, 0);
-//                        view.startDrag(data, new ShadowDraw(view), view, DRAG_FLAG_GLOBAL);
-//                    }
-//                    break;
-//            }
-//            return view.performClick();
-//        });
-//    }
