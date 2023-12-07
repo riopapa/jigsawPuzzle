@@ -9,14 +9,15 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import biz.riopapa.jigsawpuzzle.func.ImageStorage;
-import biz.riopapa.jigsawpuzzle.model.History;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import biz.riopapa.jigsawpuzzle.func.ImageStorage;
+import biz.riopapa.jigsawpuzzle.model.History;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
 
@@ -41,7 +40,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iVImage;
+        ImageView iVImage, iVStatus;
         TextView tVInfo;
 
         ViewHolder(final View itemView) {
@@ -74,6 +73,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
             });
             tVInfo = itemView.findViewById(R.id.info);
+            iVStatus = itemView.findViewById(R.id.status);
         }
 
     }
@@ -119,23 +119,48 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         holder.iVImage.setLayoutParams(params);
         holder.iVImage.setImageBitmap(bitmap);
         String game = new ImageStorage().getStr(position).substring(0,3);
-        String histStr = game;
-        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
+        holder.itemView.setTag(game);
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
             if (hist.game.equals(game)) {
-                for (int j = 0; j < 4; j++) {
-                    if (hist.time[j] != 0 && hist.locked[j] != 0) {
-                        histStr += "\n"+levelNames[j] + " : " + sdf.format(hist.time[j])
-                                + " " + ((hist.percent[j] > 99) ? "Done" : hist.percent[j] + "%");
-                    }
+                int histLocked = 0;
+                for (int j = 0; j < 4; j++)
+                    histLocked += hist.locked[j];
+                if (histLocked > 0) {   // if any pieces are locked then show status
+                    showHistoryStatus(holder, hist);
+                    break;
                 }
-                break;
             }
         }
+    }
 
-        holder.itemView.setTag(game);
-        holder.tVInfo.setText(histStr);
-
+    private static void showHistoryStatus(@NonNull ViewHolder holder, History hist) {
+        int w = 1000;
+        float w4 = (float) w / 4;
+        int h = 250;
+        float delta = 10;
+        int [] boxColors = { Color.GREEN, Color.DKGRAY, Color.CYAN, Color.RED};
+        Paint boxPaint = new Paint();
+        boxPaint.setColor(Color.BLACK);
+        boxPaint.setStrokeWidth(delta);
+        Paint [] paint = new Paint[4];
+        for (int i = 0; i < 4; i++) {
+            paint[i] = new Paint();
+            paint[i].setAlpha(120);
+            paint[i].setColor(boxColors[i]);
+        }
+        Bitmap statusMap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(statusMap);
+        if (hist == null)
+            hist = new History();
+        for (int i = 0; i < 4; i++) {
+            canvas.drawLine(w4*i, 0, w4*i + w4, 0, boxPaint);   // top
+            canvas.drawLine(w4*i, h, w4*i + w4, h, boxPaint);   // bottom
+            canvas.drawLine(w4*i, 0, w4*i, h, boxPaint);    // left
+            canvas.drawLine(w4*i+w4, 0, w4*i+w4, h, boxPaint);    // right
+            canvas.drawRect(w4*i+delta, h-delta - w4 * hist.percent[i] / 100 ,
+                    w4*i + w4, h - delta, paint[i]);
+        }
+        holder.iVStatus.setImageBitmap(statusMap);
     }
 }

@@ -16,7 +16,7 @@
         android:background="#22667f"
         android:gravity="center"
         android:text="info"
-        app:layout_constraintTop_toBottomOf="@id/show_back"
+        app:layout_constraintTop_toBottomOf="@id/flags"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/debug_right"
         android:layout_margin="8dp"
@@ -31,7 +31,7 @@
         android:gravity="center"
         android:text=" Val "
         app:layout_constraintLeft_toRightOf="@id/debug_left"
-        app:layout_constraintTop_toBottomOf="@id/show_back"
+        app:layout_constraintTop_toBottomOf="@id/flags"
         android:layout_margin="8dp"
         />
 
@@ -148,35 +148,47 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id = "@+id/show_back"
-        android:layout_width = "32dp"
-        android:layout_height = "32dp"
-        android:layout_margin = "16dp"
-        android:src="@drawable/z_eye_opened"
+    <LinearLayout
+        android:id="@+id/flags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/vibrate"
-        />
+        >
+        <ImageView
+            android:id = "@+id/show_back"
+            android:layout_width = "32dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:src="@drawable/z_eye_opened"
+            />
 
-    <ImageView
-        android:id = "@+id/vibrate"
-        android:layout_width = "32dp"
-        android:layout_height = "32dp"
-        android:layout_margin = "16dp"
-        android:src="@drawable/z_vibrate_on"
-        app:layout_constraintLeft_toRightOf="@id/show_back"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        <ImageView
+            android:id = "@+id/vibrate"
+            android:layout_width = "32dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:src="@drawable/z_vibrate_on"
+            />
 
-    <ImageView
-        android:id = "@+id/sound"
-        android:layout_width = "32dp"
-        android:layout_height = "32dp"
-        android:layout_margin = "16dp"
-        android:src="@drawable/z_sound_on"
-        app:layout_constraintLeft_toRightOf="@id/vibrate"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        <ImageView
+            android:id = "@+id/sound"
+            android:layout_width = "32dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:src="@drawable/z_sound_on"
+            />
+
+        <ImageView
+            android:id = "@+id/backcolor"
+            android:layout_width = "32dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:src="@drawable/background_color"
+            />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

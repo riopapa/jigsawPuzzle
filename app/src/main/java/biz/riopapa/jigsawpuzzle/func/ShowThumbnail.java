@@ -37,21 +37,6 @@ public class ShowThumbnail {
         rectHeight = oneSize * (float) gVal.showMaxY;
         xBeg = oneSize * (float) gVal.offsetC + gap;
         yBeg = oneSize * (float) gVal.offsetR + gap;
-        Log.w("Dump","xBeg="+xBeg+" yBeg="+yBeg+" wi="+rectWidth+" hi="+rectHeight+
-                " sz="+thumbWidth+"x"+thumbHeight+" vs "+thumb.getWidth()+"x"+thumb.getHeight()
-                + " beg+w="+(xBeg+rectWidth)+" beg+h="+(yBeg+rectHeight));
-//        if (xBeg + rectWidth > thumbWidth)
-//            xBeg = thumbWidth - rectWidth;
-//        if (yBeg + rectHeight > thumbHeight)
-//            yBeg = thumbHeight - rectHeight;
-//        if (xBeg < gap)
-//            xBeg = gap;
-//        if (yBeg < gap)
-//            yBeg = gap;
-//        if (xBeg + rectWidth > thumbWidth)
-//            rectWidth = thumbWidth - xBeg;
-//        if (yBeg + rectHeight > thumbHeight)
-//            rectHeight = thumbHeight - yBeg;
 
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);

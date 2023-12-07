@@ -76,6 +76,7 @@ public class ActivityMain extends Activity {
     public static boolean vibrate = true;
     public static int showBack = 0;
     public static boolean sound = false;
+    public static int backColor = 0;
 
     public static boolean debugMode = true;
 
@@ -104,8 +105,9 @@ public class ActivityMain extends Activity {
         showBack = sharedPref.getInt("showBack", 0);
         vibrate = sharedPref.getBoolean("vibrate", true);
         sound = sharedPref.getBoolean("sound", true);
+        backColor = sharedPref.getInt("backColor", 0);
 
-//        View decorView = getWindow().getDecorView();
+        //        View decorView = getWindow().getDecorView();
 //        int uiOptions = decorView.getSystemUiVisibility();
 //        uiOptions |= SYSTEM_UI_FLAG_FULLSCREEN;
 //        decorView.setSystemUiVisibility(uiOptions);

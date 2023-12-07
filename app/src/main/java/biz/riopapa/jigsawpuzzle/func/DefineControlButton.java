@@ -6,12 +6,12 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 
-public class AdjustControl {
-    public AdjustControl(ActivityJigsawBinding binding) {
+public class DefineControlButton {
+    public DefineControlButton(ActivityJigsawBinding binding) {
 
-        int sizeHeight = gVal.picISize * 20 / 10;
-        if (sizeHeight > gVal.baseY * 6 / 10)
-            sizeHeight = gVal.baseY * 6 / 10;
+        int sizeHeight = gVal.picISize * 16 / 10;
+        if (sizeHeight > gVal.baseY * 5 / 10)
+            sizeHeight = gVal.baseY * 5 / 10;
         int sizeWidth = sizeHeight * chosenImageWidth / chosenImageHeight;
 
         int gap = (sizeHeight > sizeWidth) ? sizeWidth /4: sizeHeight / 4;

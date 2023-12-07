@@ -2,6 +2,7 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
@@ -27,6 +28,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
-import biz.riopapa.jigsawpuzzle.func.AdjustControl;
+import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.func.Congrat;
 import biz.riopapa.jigsawpuzzle.func.FireWork;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
@@ -148,6 +150,14 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
+        int [] backColors = { getResources().getColor(R.color.backColor0),
+                getResources().getColor(R.color.backColor1), getResources().getColor(R.color.backColor2)};
+        binding.backcolor.setOnClickListener(v -> {
+            backColor = (backColor + 1) % 3;
+            binding.layoutJigsaw.setBackgroundColor(backColors[backColor]);
+            save_params();
+        });
+
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = gVal.recSize;
@@ -164,9 +174,19 @@ public class ActivityJigsaw extends Activity {
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        new AdjustControl(binding);
+        new DefineControlButton(binding);
         copy2RecyclerPieces();
 
+        readyInvalidate();
+        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
+
+        binding.pieceInfo.setText(info);
+        doNotUpdate = false;
+
+        readyPieces();
+    }
+
+    private static void readyInvalidate() {
         if (paintView != null) {
             TimerTask tt = new TimerTask() {
                 @Override
@@ -177,12 +197,6 @@ public class ActivityJigsaw extends Activity {
             invalidateTimer = new Timer();
             invalidateTimer.schedule(tt, 100, 50);
         }
-        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
-
-        binding.pieceInfo.setText(info);
-        doNotUpdate = false;
-
-        readyPieces();
     }
 
     private void readyPieces() {
@@ -200,6 +214,11 @@ public class ActivityJigsaw extends Activity {
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
+        binding.moveLeft.setVisibility ((gVal.offsetC == 0) ? View.INVISIBLE: View.VISIBLE);
+        binding.moveRight.setVisibility ((gVal.offsetC == gVal.colNbr-gVal.showMaxX) ? View.INVISIBLE: View.VISIBLE);
+        binding.moveUp.setVisibility((gVal.offsetR == 0)? View.INVISIBLE: View.VISIBLE);
+        binding.moveDown.setVisibility((gVal.offsetR == gVal.rowNbr-gVal.showMaxY)? View.INVISIBLE: View.VISIBLE);
+
         binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
@@ -222,6 +241,7 @@ public class ActivityJigsaw extends Activity {
             binding.layoutJigsaw.invalidate();
             binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
             doNotUpdate = false;
+            System.gc();
         })).start();
     }
 
@@ -250,6 +270,8 @@ public class ActivityJigsaw extends Activity {
         } else
             histories.add(history);
         new HistoryGetPut().put(histories, this);
+        if (gameMode == GAME_PAUSED)
+            finish();
         super.onPause();
     }
 
@@ -259,6 +281,7 @@ public class ActivityJigsaw extends Activity {
         sharedEditor.putInt("showBack", showBack);
         sharedEditor.putBoolean("vibrate", vibrate);
         sharedEditor.putBoolean("sound", sound);
+        sharedEditor.putInt("backColor", backColor);
         sharedEditor.apply();
     }
 

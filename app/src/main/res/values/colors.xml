@@ -14,7 +14,10 @@
 
     <color name="snackBarBack">#838E1F</color>
     <color name="snackBarTitle">#801237</color>
-    <color name="snackBarText">#192675</color>
+    <color name="snackBarText">#5B6BCF</color>
 
+    <color name="backColor0">#D8C6B4</color>
+    <color name="backColor1">#97C199</color>
+    <color name="backColor2">#886FB5</color>
 
 </resources>

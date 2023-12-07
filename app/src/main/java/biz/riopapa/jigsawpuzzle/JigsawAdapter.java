@@ -1,10 +1,20 @@
 package biz.riopapa.jigsawpuzzle;
 
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
+import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -17,6 +27,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import biz.riopapa.jigsawpuzzle.func.VibratePhone;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
             implements ZItemTouchHelperListener {
@@ -45,7 +57,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         public void onItemSwiped(int position) {
 
         }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
@@ -77,7 +88,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         @Override
         public void onShowPress(@NonNull MotionEvent e) {
-            Log.w("jigsawAdapter","onShowPress "+e.getAction());
+//            Log.w("jigsawAdapter","onShowPress "+e.getAction());
         }
 
         @Override
@@ -91,7 +102,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         @Override
         public void onLongPress(@NonNull MotionEvent e) {
-            Log.w("jigsawAdapter","onLongPress "+e.getAction());
+//            Log.w("jigsawAdapter","onLongPress "+e.getAction());
         }
         @Override
         public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
@@ -145,6 +156,13 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         viewHolder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
         viewHolder.ivIcon.setTag(nowCR);
+        viewHolder.ivIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nowDragging = true;
+
+            }
+        });
 
     }
 

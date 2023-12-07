@@ -28,7 +28,17 @@
         android:padding="2dp"
         android:layout_height="200dp"
         android:scaleType="fitXY"
-        android:clipToOutline="true"
         />
+    <ImageView
+        android:id="@+id/status"
+        android:layout_below="@id/info"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:layout_height="32dp"
+        android:scaleType="fitXY"
+        />
+
 
 </RelativeLayout>
