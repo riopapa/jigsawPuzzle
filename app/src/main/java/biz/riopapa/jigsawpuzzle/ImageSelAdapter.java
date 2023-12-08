@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     }
                 }, 300);
 
-
             });
             tVInfo = itemView.findViewById(R.id.info);
             iVStatus = itemView.findViewById(R.id.status);
@@ -106,7 +106,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         Bitmap oMap = new ImageStorage().getMap(position);
 
         Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/2, oMap.getHeight()/2, true);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
+        RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
         int height = width*bitmap.getHeight()/bitmap.getWidth();
         if (width < height) {
@@ -115,9 +115,14 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         }
         if (fPhoneInchX > 3f && width > height)   // tablet height should be shortened
             height = height * 8 / 10;
-        params.width = width; params.height = height;
-        holder.iVImage.setLayoutParams(params);
+        parImage.width = width; parImage.height = height;
+        holder.iVImage.setLayoutParams(parImage);
         holder.iVImage.setImageBitmap(bitmap);
+
+        RelativeLayout.LayoutParams parStatus = (RelativeLayout.LayoutParams) holder.iVStatus.getLayoutParams();
+        parStatus.width = width; parStatus.height = height;
+        holder.iVStatus.setLayoutParams(parStatus);
+
         String game = new ImageStorage().getStr(position).substring(0,3);
         holder.itemView.setTag(game);
         for (int i = 0; i < histories.size(); i++) {
@@ -127,40 +132,64 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 for (int j = 0; j < 4; j++)
                     histLocked += hist.locked[j];
                 if (histLocked > 0) {   // if any pieces are locked then show status
-                    showHistoryStatus(holder, hist);
+                    showHistoryStatus(holder, hist, width, height);
                     break;
                 }
             }
         }
     }
 
-    private static void showHistoryStatus(@NonNull ViewHolder holder, History hist) {
-        int w = 1000;
-        float w4 = (float) w / 4;
-        int h = 250;
-        float delta = 10;
-        int [] boxColors = { Color.GREEN, Color.DKGRAY, Color.CYAN, Color.RED};
-        Paint boxPaint = new Paint();
-        boxPaint.setColor(Color.BLACK);
-        boxPaint.setStrokeWidth(delta);
-        Paint [] paint = new Paint[4];
-        for (int i = 0; i < 4; i++) {
-            paint[i] = new Paint();
-            paint[i].setAlpha(120);
-            paint[i].setColor(boxColors[i]);
-        }
-        Bitmap statusMap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+    private static void showHistoryStatus(@NonNull ViewHolder holder, History hist,
+                                          int width, int height) {
+
+//        Paint boxPaint = new Paint();
+//        boxPaint.setColor(Color.BLACK);
+//        boxPaint.setStrokeWidth(4);
+//        Paint [] paint = new Paint[4];
+//        for (int i = 0; i < 4; i++) {
+//            paint[i] = new Paint();
+//            paint[i].setColor(boxColors[i]);
+//        }
+        Bitmap statusMap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(statusMap);
         if (hist == null)
             hist = new History();
         for (int i = 0; i < 4; i++) {
-            canvas.drawLine(w4*i, 0, w4*i + w4, 0, boxPaint);   // top
-            canvas.drawLine(w4*i, h, w4*i + w4, h, boxPaint);   // bottom
-            canvas.drawLine(w4*i, 0, w4*i, h, boxPaint);    // left
-            canvas.drawLine(w4*i+w4, 0, w4*i+w4, h, boxPaint);    // right
-            canvas.drawRect(w4*i+delta, h-delta - w4 * hist.percent[i] / 100 ,
-                    w4*i + w4, h - delta, paint[i]);
+            if (hist.locked[i] > 0) {
+                drawStatusCircle(canvas, width, height, i, hist.percent[i]);
+
+//                canvas.drawLine(w4 * i + d, d, w4 * i + w4 - d, d, boxPaint);   // top
+//                canvas.drawLine(w4 * i + d , h, w4 * i + w4 - d, h, boxPaint);   // bottom
+//                canvas.drawLine(w4 * i + d, d, w4 * i, h-d, boxPaint);    // left
+//                canvas.drawLine(w4 * i + w4 - d, d, w4 * i + w4-d, h-d, boxPaint);    // right
+//                canvas.drawRect(w4 * i + d, h - (float) (h * hist.percent[i]) / 100,
+//                        w4 * i + w4-d, h-d, paint[i]);
+            }
         }
         holder.iVStatus.setImageBitmap(statusMap);
     }
+
+    static void drawStatusCircle(Canvas canvas, int width, int height, int i, int pct) {
+        Paint paint = new Paint();
+        RectF rect = new RectF();
+        int [] boxColors = { 0x5f00FF00, 0x5fAAFF00, 0x5fCC00FF, 0x5FFF0000};
+        float offX = (i == 0 || i == 2) ? 0: width/2f;
+        float offY = (i == 0 || i == 1) ? 0: height/2f;
+        float d = 30;
+        rect.set(offX + d, offY + d, offX + width/2f - d, offY + height/2f - d);
+        paint.setColor(boxColors[i]);
+        paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+//        canvas.drawArc(rect, 90f- (pct*180f/100f), pct*360f/100f , false, paint);
+        canvas.drawArc(rect, -90, pct*360f/100f , true, paint);
+
+        paint.setColor(0xFF000000);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
+        canvas.drawArc(rect, -90, pct*360f/100f , true, paint);
+
+    }
+
+
 }

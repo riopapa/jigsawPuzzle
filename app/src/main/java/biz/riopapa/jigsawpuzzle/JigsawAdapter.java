@@ -1,24 +1,10 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
-import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -34,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
-import biz.riopapa.jigsawpuzzle.func.VibratePhone;
-import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
             implements ZItemTouchHelperListener {
@@ -89,40 +73,40 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
     }
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            mGestureDetector.onTouchEvent(event);
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        mGestureDetector.onTouchEvent(event);
 //            Log.w("rq onTouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
-            return v.performClick();
-        }
-
-        @Override
-        public boolean onDown(@NonNull MotionEvent e) {return false;}
-
-        @Override
-        public void onShowPress(@NonNull MotionEvent e) {
-//            Log.w("jigsawAdapter","onShowPress "+e.getAction());
-        }
-
-        @Override
-        public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
-
-        @Override
-        public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-            Log.w("jigsawAdapter","onScroll "+e1.getAction());
-            return false;
-        }
-
-        @Override
-        public void onLongPress(@NonNull MotionEvent e) {
-//            Log.w("jigsawAdapter","onLongPress "+e.getAction());
-        }
-        @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
-            Log.w("jigsawAdapter","onFling "+e1.getAction());
-            return false;
-        }
+        return v.performClick();
     }
+
+    @Override
+    public boolean onDown(@NonNull MotionEvent e) {return false;}
+
+    @Override
+    public void onShowPress(@NonNull MotionEvent e) {
+//            Log.w("jigsawAdapter","onShowPress "+e.getAction());
+    }
+
+    @Override
+    public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
+
+    @Override
+    public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+        Log.w("jigsawAdapter","onScroll "+e1.getAction());
+        return false;
+    }
+
+    @Override
+    public void onLongPress(@NonNull MotionEvent e) {
+//            Log.w("jigsawAdapter","onLongPress "+e.getAction());
+    }
+    @Override
+    public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
+        Log.w("jigsawAdapter","onFling "+e1.getAction());
+        return false;
+    }
+}
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
@@ -130,7 +114,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         nowCR = gVal.activeJigs.get(position);
         int cc = nowCR / 10000;
         int rr = nowCR - cc * 10000;
-//        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
+    //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
         if (jigPic[cc][rr] == null) {
             jigPic[cc][rr] = pieceImage.makePic(cc, rr);
         }

@@ -46,15 +46,13 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     }
 
+    // this clearView removes piece shadow
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-//        int pos = viewHolder.getAbsoluteAdapterPosition();
-        Log.w("ClearView", "pos = ");
         viewHolder.itemView.setAlpha(0);
 
     }
-
 
     RecyclerView.ViewHolder svViewHolder;
     @Override
