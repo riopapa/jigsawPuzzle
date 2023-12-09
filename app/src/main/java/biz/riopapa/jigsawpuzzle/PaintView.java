@@ -7,8 +7,11 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import biz.riopapa.jigsawpuzzle.func.PiecePosition;
@@ -49,19 +53,29 @@ public class PaintView extends View {
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
+    public static long invalidateTime;
 
-    public void init(Activity activity){
+    ActivityJigsawBinding binding;
+    public void init(Activity activity, ActivityJigsawBinding binding){
         this.paintActivity = activity;
+        this.binding = binding;
         nowFp = null;
         piecePosition = new PiecePosition(activity);
-        pieceDraw = new PieceDraw();
+        pieceDraw = new PieceDraw(binding);
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
+        invalidateTime = System.currentTimeMillis() + INVALIDATE_INTERVAL;
+        if (showBack == 0)
+            showBackCount = 250 * 10;
     }
 
     protected void onDraw(@NonNull Canvas canvas){
+        long nowTime = System.currentTimeMillis();
+        if (nowTime < invalidateTime)
+            return;
+        invalidateTime = nowTime + INVALIDATE_INTERVAL / 2;
         pieceDraw.draw(canvas);
     }
 

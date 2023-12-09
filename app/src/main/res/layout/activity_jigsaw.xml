@@ -93,7 +93,7 @@
             app:layout_constraintBottom_toTopOf="@id/move_down"
             android:clipToOutline="true"
             android:scaleType="fitCenter"
-            />
+            android:contentDescription="TODO" />
         <!--            android:background="@drawable/round_thumbnail"-->
         <ImageView
             android:id="@+id/move_up"
@@ -106,7 +106,7 @@
             app:layout_constraintLeft_toLeftOf="@id/thumbnail"
             app:layout_constraintRight_toRightOf="@id/thumbnail"
             app:layout_constraintBottom_toTopOf="@id/thumbnail"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/move_down"
@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@id/thumbnail"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_gravity="bottom"
-            />
+            android:contentDescription="TODO" />
         <ImageView
             android:id="@+id/move_left"
             android:layout_width = "20dp"
@@ -132,7 +132,7 @@
             app:layout_constraintRight_toLeftOf="@id/thumbnail"
             app:layout_constraintTop_toTopOf="@id/thumbnail"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
-            />
+            android:contentDescription="TODO" />
         <ImageView
             android:id="@+id/move_right"
             android:layout_width = "20dp"
@@ -144,7 +144,7 @@
             app:layout_constraintLeft_toRightOf="@id/thumbnail"
             app:layout_constraintTop_toTopOf="@id/thumbnail"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
-            />
+            android:contentDescription="TODO" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,8 +162,8 @@
             android:layout_width = "32dp"
             android:layout_height = "32dp"
             android:layout_margin = "4dp"
-            android:src="@drawable/z_eye_opened"
-            />
+            android:src="@drawable/z_eye_open"
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id = "@+id/vibrate"
@@ -171,7 +171,7 @@
             android:layout_height = "32dp"
             android:layout_margin = "4dp"
             android:src="@drawable/z_vibrate_on"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id = "@+id/sound"
@@ -179,7 +179,7 @@
             android:layout_height = "32dp"
             android:layout_margin = "4dp"
             android:src="@drawable/z_sound_on"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id = "@+id/backcolor"

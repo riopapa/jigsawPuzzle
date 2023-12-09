@@ -46,7 +46,7 @@ public class ActivityMain extends Activity {
     ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
-    public static String appVersion = "000102";
+    public static String appVersion = "000101";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -74,11 +74,12 @@ public class ActivityMain extends Activity {
     ** Following will be handled with Set Menu
      */
     public static boolean vibrate = true;
-    public static int showBack = 0;
+    public static int showBack = 0, showBackCount = 0;
     public static boolean sound = false;
     public static int backColor = 0;
 
-    public static boolean debugMode = true;
+    public static boolean debugMode = false;
+    public final static long INVALIDATE_INTERVAL = 40;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

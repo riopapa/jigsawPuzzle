@@ -38,7 +38,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     public static boolean nowDragging;
 
-
     public JigRecycleCallback(ZItemTouchHelperListener listener) {
         this.listener = listener;
         nearPieceBind = new NearPieceBind();
@@ -50,8 +49,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        viewHolder.itemView.setAlpha(0);
-
+        if (dragY < screenBottom - gVal.picHSize)
+            viewHolder.itemView.setAlpha(0);
     }
 
     RecyclerView.ViewHolder svViewHolder;
@@ -61,7 +60,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         Log.w("idle "+actionState, "onSelectedChanged =" + dragX + " x " + dragY);
 
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            Log.w("state is "+actionState, "START DRAG =");
+//            Log.w("state is "+actionState, "START DRAG =");
             nowDragging = true;
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
@@ -86,7 +85,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //                doNotUpdate = false;
             }
         } else {
-            Log.w("onSelectedChanged", "ItemTouchHelper "+actionState);
+            Log.e("xx onSelec", "Helper "+actionState);
         }
         super.onSelectedChanged(viewHolder, actionState);
 
@@ -119,11 +118,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowFp.anchorId = 0;       // let anchorId to itself
         gVal.fps.add(nowFp);
         nowIdx = gVal.fps.size() - 1;
-//        Log.w("FPS xy"," info size="+GVal.fps.size());
-//        for (int i = 0; i < GVal.fps.size(); i++) {
-//            Log.w(GVal.picGap+" gap "+i, (GVal.fps.get(i).posX-dragX)
-//                    + " x "+ (GVal.fps.get(i).posY-dragY));
-//        }
     }
 
     private void removeFromRecycle() {

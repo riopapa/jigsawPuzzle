@@ -2,6 +2,7 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
@@ -18,6 +19,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
@@ -74,7 +76,7 @@ public class ActivityJigsaw extends Activity {
     public static History history;
     public static int historyIdx;
 
-    int [] eyes = {R.drawable.z_eye_opened, R.drawable.z_eye_half, R.drawable.z_eye_closed};
+    int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
 
     @Override
@@ -99,7 +101,7 @@ public class ActivityJigsaw extends Activity {
         congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
 
         paintView = findViewById(R.id.paintview);
-        paintView.init(this);
+        paintView.init(this, binding);
         binding.paintview.getLayoutParams().height = screenBottom;
         showThumbnail = new ShowThumbnail();
 
@@ -133,8 +135,11 @@ public class ActivityJigsaw extends Activity {
         });
 
         binding.showBack.setImageResource(eyes[showBack]);
-        binding.showBack.setOnClickListener(v -> { showBack = (showBack + 1) % 3;
+        binding.showBack.setOnClickListener(v -> {
+            showBack = (showBack + 1) % 3;
             binding.showBack.setImageResource(eyes[showBack]);
+            if (showBack == 0)
+                showBackCount = 250 * 10;
             save_params();
         });
 
@@ -177,16 +182,6 @@ public class ActivityJigsaw extends Activity {
         new DefineControlButton(binding);
         copy2RecyclerPieces();
 
-        readyInvalidate();
-        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
-
-        binding.pieceInfo.setText(info);
-        doNotUpdate = false;
-
-        readyPieces();
-    }
-
-    private static void readyInvalidate() {
         if (paintView != null) {
             TimerTask tt = new TimerTask() {
                 @Override
@@ -195,8 +190,15 @@ public class ActivityJigsaw extends Activity {
                 }
             };
             invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 100, 50);
+            invalidateTimer.schedule(tt, 100, INVALIDATE_INTERVAL);
         }
+
+        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
+
+        binding.pieceInfo.setText(info);
+        doNotUpdate = false;
+
+        readyPieces();
     }
 
     private void readyPieces() {

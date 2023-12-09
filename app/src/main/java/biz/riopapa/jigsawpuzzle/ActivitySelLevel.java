@@ -42,6 +42,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import biz.riopapa.jigsawpuzzle.func.CalcImageColor;
@@ -117,15 +118,15 @@ public class ActivitySelLevel extends AppCompatActivity {
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
 
-        if (history.latest != -1) {
-            int xSize = screenX;
-            int ySize = xSize * chosenImageHeight / chosenImageWidth;
-
-            Bitmap bitmap = Bitmap.createBitmap(xSize, ySize, Bitmap.Config.ARGB_8888,true);
-            showLocked(binding, xSize, bitmap);
-            binding.selImage.setImageBitmap(bitmap);
-
-        } else
+//        if (history.latest != -1) {
+//            int xSize = screenX;
+//            int ySize = xSize * chosenImageHeight / chosenImageWidth;
+//
+//            Bitmap bitmap = Bitmap.createBitmap(xSize, ySize, Bitmap.Config.ARGB_8888,true);
+//            showLocked(binding, xSize, bitmap);
+//            binding.selImage.setImageBitmap(bitmap);
+//
+//        } else
             binding.selImage.setImageBitmap(chosenImageMap);
 
         select_level();
@@ -135,18 +136,31 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         new Thread(() -> {
             Canvas canvas = new Canvas(bitmap);
-            float szI = xSize / (gVal.colNbr+1);
+            float szI = (float) xSize / (gVal.colNbr+1);
             float szO = szI * 24 / 14;
             for (int rr = 0; rr < gVal.rowNbr; rr++) {
                 for (int cc = 0; cc < gVal.colNbr; cc++) {
-                    Bitmap picMap = pieceImage.makePic(cc, rr);
-                    Bitmap oLMap = pieceImage.makeOline(picMap, cc, rr);
-                    Bitmap sMap = Bitmap.createScaledBitmap(
-                            ((gVal.jigTables[cc][rr].locked) ? oLMap : picMap),
-                            (int) szO, (int) szO, false);
-                    canvas.drawBitmap(sMap, cc * szI, rr * szI, null);
-                    binding.selImage.setImageBitmap(bitmap);
-                    binding.selImage.invalidate();
+                    if (!gVal.jigTables[cc][rr].locked) {
+                        Bitmap picMap = pieceImage.makePic(cc, rr);
+                        Bitmap sMap = Bitmap.createScaledBitmap(picMap,
+                                (int) szO, (int) szO, false);
+                        canvas.drawBitmap(sMap, cc * szI, rr * szI, null);
+                        binding.selImage.setImageBitmap(bitmap);
+                        binding.selImage.invalidate();
+                    }
+                }
+            }
+            for (int rr = 0; rr < gVal.rowNbr; rr++) {
+                for (int cc = 0; cc < gVal.colNbr; cc++) {
+                    if (gVal.jigTables[cc][rr].locked) {
+                        Bitmap picMap = pieceImage.makePic(cc, rr);
+                        Bitmap oLMap = pieceImage.makeOline(picMap, cc, rr);
+                        Bitmap sMap = Bitmap.createScaledBitmap(oLMap,
+                                (int) szO, (int) szO, false);
+                        canvas.drawBitmap(sMap, cc * szI, rr * szI, null);
+                        binding.selImage.setImageBitmap(bitmap);
+                        binding.selImage.invalidate();
+                    }
                 }
             }
         }).start();
@@ -161,6 +175,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         alertDialog = builder.create();
         // show this dialog at the bottom
         Window window = alertDialog.getWindow();
+        assert window != null;
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
@@ -183,7 +198,7 @@ public class ActivitySelLevel extends AppCompatActivity {
     private void setDialogInfo(View dialogView, int lvl, int activeId, int infoId, int newId) {
         String s;
         TextView tv;
-        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd");
+        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
         defineColsRows.calc(lvl);
         tv = dialogView.findViewById(infoId);
         s  = levelNames[lvl] + "\n" + defineColsRows.col +"x"+ defineColsRows.row;

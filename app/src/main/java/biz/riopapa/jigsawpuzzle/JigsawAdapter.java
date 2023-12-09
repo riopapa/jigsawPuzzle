@@ -59,54 +59,54 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
             GestureDetector.OnGestureListener {
 //        public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    ImageView ivIcon;
-    View viewLine;
-    GestureDetector mGestureDetector;
+        ImageView ivIcon;
+        View viewLine;
+        GestureDetector mGestureDetector;
 
-    public ViewHolder(View view) {
-        super(view);
-        this.viewLine = itemView.findViewById(R.id.piece_layout);
-        this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
+        public ViewHolder(View view) {
+            super(view);
+            this.viewLine = itemView.findViewById(R.id.piece_layout);
+            this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
 
-        mGestureDetector = new GestureDetector(itemView.getContext(), this);
-        itemView.setOnTouchListener(this);
+            mGestureDetector = new GestureDetector(itemView.getContext(), this);
+            itemView.setOnTouchListener(this);
 
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mGestureDetector.onTouchEvent(event);
+    //            Log.w("rq onTouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
+            return v.performClick();
+        }
+
+        @Override
+        public boolean onDown(@NonNull MotionEvent e) {return false;}
+
+        @Override
+        public void onShowPress(@NonNull MotionEvent e) {
+    //            Log.w("jigsawAdapter","onShowPress "+e.getAction());
+        }
+
+        @Override
+        public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
+
+        @Override
+        public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+            Log.w("jigsawAdapter","onScroll "+e1.getAction());
+            return false;
+        }
+
+        @Override
+        public void onLongPress(@NonNull MotionEvent e) {
+    //            Log.w("jigsawAdapter","onLongPress "+e.getAction());
+        }
+        @Override
+        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
+            Log.w("jigsawAdapter","onFling "+e1.getAction());
+            return false;
+        }
     }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        mGestureDetector.onTouchEvent(event);
-//            Log.w("rq onTouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
-        return v.performClick();
-    }
-
-    @Override
-    public boolean onDown(@NonNull MotionEvent e) {return false;}
-
-    @Override
-    public void onShowPress(@NonNull MotionEvent e) {
-//            Log.w("jigsawAdapter","onShowPress "+e.getAction());
-    }
-
-    @Override
-    public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
-
-    @Override
-    public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-        Log.w("jigsawAdapter","onScroll "+e1.getAction());
-        return false;
-    }
-
-    @Override
-    public void onLongPress(@NonNull MotionEvent e) {
-//            Log.w("jigsawAdapter","onLongPress "+e.getAction());
-    }
-    @Override
-    public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
-        Log.w("jigsawAdapter","onFling "+e1.getAction());
-        return false;
-    }
-}
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {

@@ -34,7 +34,7 @@ public class PieceImage {
         this.orgSizeOut = orgSizeOut;
         this.orgSizeIn = orgSizeIn;
 
-        paintIN = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
         outLineColor = chosenImageColor;
 
         int r = 255 - Color.red(outLineColor);
