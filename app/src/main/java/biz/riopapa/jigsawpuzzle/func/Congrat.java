@@ -16,7 +16,7 @@ public class Congrat {
      */
     public Bitmap[] make(Context cxt, int fireSize) {
 
-        // remember to set biz.riopapa.jigsawpuzzle.SettleJigTableWall() nextInt with this value
+        // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
         // outerSize means puzzle outer size
 //        int[] maps = {R.mipmap.fireworks_a, R.mipmap.fireworks_c, R.mipmap.fireworks_f,
 //                R.mipmap.fireworks_h, R.mipmap.fireworks_m, R.mipmap.fireworks_q, R.mipmap.fireworks_x

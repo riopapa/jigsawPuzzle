@@ -61,7 +61,6 @@ public class GValGetPut {
         gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         gVal.imgGapSize = gVal.imgInSize * 5 / 14;
         gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
-
         chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,
                 gVal.imgInSize * gVal.colNbr + gVal.imgGapSize + gVal.imgGapSize,
                 gVal.imgInSize * gVal.rowNbr + gVal.imgGapSize + gVal.imgGapSize);
@@ -69,9 +68,9 @@ public class GValGetPut {
         chosenImageWidth = chosenImageMap.getWidth();
         chosenImageHeight = chosenImageMap.getHeight();
         gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
-        new SettleJigTableWall(gVal.jigTables);
+        new DefineTableWalls(gVal.jigTables);
         new ClearGValValues();
-        new FullRecyclePiece();
+        new DefineFullRecyclePieces();
     }
 
 

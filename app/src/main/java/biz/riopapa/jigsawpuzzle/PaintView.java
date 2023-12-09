@@ -66,7 +66,7 @@ public class PaintView extends View {
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
-        invalidateTime = System.currentTimeMillis() + INVALIDATE_INTERVAL;
+        invalidateTime = System.currentTimeMillis();
         if (showBack == 0)
             showBackCount = 250 * 10;
     }
@@ -77,6 +77,7 @@ public class PaintView extends View {
             return;
         invalidateTime = nowTime + INVALIDATE_INTERVAL / 2;
         pieceDraw.draw(canvas);
+
     }
 
     private void paintTouchUp(){

@@ -172,7 +172,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     static void drawStatusCircle(Canvas canvas, int width, int height, int i, int pct) {
         Paint paint = new Paint();
         RectF rect = new RectF();
-        int [] boxColors = { 0x4f00FF00, 0x4f3AAFC0, 0x4fCC44FF, 0x4FFF3333};
+        int [] boxColors = { 0x7f00FF00, 0x7f3AAFC0, 0x7fCC44FF, 0x7FFF3333};
         float offX = (i == 0 || i == 2) ? 0: width/2f;
         float offY = (i == 0 || i == 1) ? 0: height/2f;
         float d = 30;

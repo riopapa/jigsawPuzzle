@@ -78,7 +78,7 @@ public class ActivityMain extends Activity {
     public static boolean sound = false;
     public static int backColor = 0;
 
-    public static boolean debugMode = false;
+    public static boolean debugMode = true;
     public final static long INVALIDATE_INTERVAL = 40;
 
     @Override

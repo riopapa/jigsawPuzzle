@@ -16,7 +16,6 @@ public class DefineColsRows {
     public int col, row;    // return values
 
     public void calc(int level) {
-
         int [] sizes = {5, 12, 17, 21};
         double sz = Math.sqrt(Math.sqrt(chosenImageWidth * chosenImageHeight));
         if (chosenImageWidth > chosenImageHeight) {

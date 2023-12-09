@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,7 +68,7 @@ public class ActivityJigsaw extends Activity {
 
     public static Timer invalidateTimer;
 
-    public static Bitmap chosenImageMap;
+    public static Bitmap chosenImageMap, areaMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite;
     public static int activePos; // jigsaw slide x, y count
@@ -75,6 +76,7 @@ public class ActivityJigsaw extends Activity {
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
     public static History history;
     public static int historyIdx;
+    public static int allLockedMode = 0, allLockedCount = 0;
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
@@ -98,7 +100,7 @@ public class ActivityJigsaw extends Activity {
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
-        congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
+        congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picOSize + gVal.picGap);
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this, binding);
@@ -138,6 +140,7 @@ public class ActivityJigsaw extends Activity {
         binding.showBack.setOnClickListener(v -> {
             showBack = (showBack + 1) % 3;
             binding.showBack.setImageResource(eyes[showBack]);
+            Log.w("showBack"," val="+showBack);
             if (showBack == 0)
                 showBackCount = 250 * 10;
             save_params();
@@ -182,16 +185,14 @@ public class ActivityJigsaw extends Activity {
         new DefineControlButton(binding);
         copy2RecyclerPieces();
 
-        if (paintView != null) {
-            TimerTask tt = new TimerTask() {
-                @Override
-                public void run() {
-                    paintView.invalidate();
-                }
-            };
-            invalidateTimer = new Timer();
-            invalidateTimer.schedule(tt, 100, INVALIDATE_INTERVAL);
-        }
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                paintView.invalidate();
+            }
+        };
+        invalidateTimer = new Timer();
+        invalidateTimer.schedule(tt, 100, INVALIDATE_INTERVAL);
 
         String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
 
@@ -199,6 +200,15 @@ public class ActivityJigsaw extends Activity {
         doNotUpdate = false;
 
         readyPieces();
+
+        // followings are to test congrats
+        for (int cc = 0; cc < gVal.colNbr; cc++) {
+            for (int rr = 0; rr < gVal.rowNbr; rr++) {
+                if (new Random().nextInt(19) > 1)
+                    gVal.jigTables[cc][rr].locked = true;
+            }
+        }
+
     }
 
     private void readyPieces() {
@@ -243,7 +253,18 @@ public class ActivityJigsaw extends Activity {
             binding.layoutJigsaw.invalidate();
             binding.debugLeft.setText(gVal.offsetC+"x"+gVal.offsetR);
             doNotUpdate = false;
-            System.gc();
+            areaMap = Bitmap.createBitmap(chosenImageMap,
+                    gVal.offsetC * gVal.imgInSize + gVal.imgGapSize,
+                    gVal.offsetR * gVal.imgInSize + gVal.imgGapSize,
+                    gVal.showMaxX * gVal.imgInSize,
+                    gVal.showMaxY * gVal.imgInSize, null, false);
+
+            areaMap = Bitmap.createScaledBitmap(areaMap,
+                    gVal.showMaxX * gVal.picISize, gVal.showMaxY * gVal.picISize,
+                    false);
+            allLockedMode = 0;
+            allLockedCount = 0;
+
         })).start();
     }
 

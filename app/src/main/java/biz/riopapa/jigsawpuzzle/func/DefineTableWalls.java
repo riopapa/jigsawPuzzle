@@ -4,14 +4,14 @@ import java.util.Random;
 
 import biz.riopapa.jigsawpuzzle.model.JigTable;
 
-public class SettleJigTableWall {
+public class DefineTableWalls {
 
     /**
      * generate random types of each piece L, R, U, D of each pieces
      * JigTable column, row counts has be settled already
      **/
 
-    public SettleJigTableWall(JigTable[][] zz) {
+    public DefineTableWalls(JigTable[][] zz) {
 
         int columns = zz.length;
         int rows = zz[0].length;
