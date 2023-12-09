@@ -1,5 +1,6 @@
 package biz.riopapa.jigsawpuzzle.func;
 
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -53,6 +54,7 @@ public class NearPieceBind {
                 } else
                     i++;
             }
+            allLockedMode = 10;
             return;
         }
 

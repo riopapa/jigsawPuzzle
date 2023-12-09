@@ -11,9 +11,9 @@ import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
-public class ShadowDraw extends View.DragShadowBuilder{
+public class ShadowDrawUnUsed extends View.DragShadowBuilder{
 
-    public ShadowDraw(View view) {
+    public ShadowDrawUnUsed(View view) {
         super(view);
     }
     public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint){

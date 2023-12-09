@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.LayoutInflater;
@@ -32,7 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import biz.riopapa.jigsawpuzzle.func.ImageStorage;
+import biz.riopapa.jigsawpuzzle.adaptors.ActivitySelLevel;
+import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.History;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {

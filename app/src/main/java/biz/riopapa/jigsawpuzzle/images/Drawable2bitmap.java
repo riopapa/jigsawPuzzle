@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle.func;
+package biz.riopapa.jigsawpuzzle.images;
 
 import android.content.Context;
 import android.graphics.Bitmap;

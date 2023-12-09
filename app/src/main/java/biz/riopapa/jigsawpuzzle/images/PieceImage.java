@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle;
+package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;

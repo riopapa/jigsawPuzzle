@@ -1,7 +1,7 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedCount;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
@@ -73,7 +73,7 @@ public class PieceDraw {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
 //            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
-        if (allLockedMode == 1 && allLockedCount > 0)
+        if (congCount > 0)
             showCongrats(canvas);
 
         canvas.restore();
@@ -208,9 +208,9 @@ public class PieceDraw {
                 }
             }
         }
-        if (allLockedMode == 0  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            allLockedMode = 1;
-            allLockedCount = congrats.length * 10;
+        if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
+            congCount = congrats.length * 3;
+            allLockedMode = 20;
         }
 
     }
@@ -278,13 +278,14 @@ public class PieceDraw {
     }
 
     private void showCongrats(Canvas canvas) {
-        allLockedCount--;
-        for (int i = 0; i < 10; i++) {
-            int x = screenX / 8 + rnd.nextInt(screenX * 5 / 8);
+        congCount--;
+        for (int i = 0; i < 6; i++) {
+            int x = rnd.nextInt(screenX * 5 / 8);
             int y = screenY / 8 + rnd.nextInt(screenY * 5 / 8);
-            canvas.drawBitmap(congrats[allLockedCount/10], x, y, null);
+            int idx = rnd.nextInt(congrats.length-1);
+            canvas.drawBitmap(congrats[idx], x, y, null);
         }
-        if (allLockedCount == 0)
+        if (congCount == 0)
             allLockedMode = 2;
     }
 }

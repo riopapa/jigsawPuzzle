@@ -41,14 +41,16 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
-import biz.riopapa.jigsawpuzzle.func.Congrat;
-import biz.riopapa.jigsawpuzzle.func.FireWork;
+import biz.riopapa.jigsawpuzzle.images.Congrat;
+import biz.riopapa.jigsawpuzzle.images.FireWork;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
-import biz.riopapa.jigsawpuzzle.func.Masks;
-import biz.riopapa.jigsawpuzzle.func.ShowThumbnail;
+import biz.riopapa.jigsawpuzzle.images.Masks;
+import biz.riopapa.jigsawpuzzle.images.ShowThumbnail;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.History;
 
 public class ActivityJigsaw extends Activity {
@@ -76,7 +78,8 @@ public class ActivityJigsaw extends Activity {
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
     public static History history;
     public static int historyIdx;
-    public static int allLockedMode = 0, allLockedCount = 0;
+    public static int allLockedMode = 0;    // 10: just all locked, 20: after all locked
+    public static int congCount = 0;
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
@@ -140,7 +143,6 @@ public class ActivityJigsaw extends Activity {
         binding.showBack.setOnClickListener(v -> {
             showBack = (showBack + 1) % 3;
             binding.showBack.setImageResource(eyes[showBack]);
-            Log.w("showBack"," val="+showBack);
             if (showBack == 0)
                 showBackCount = 250 * 10;
             save_params();
@@ -263,7 +265,7 @@ public class ActivityJigsaw extends Activity {
                     gVal.showMaxX * gVal.picISize, gVal.showMaxY * gVal.picISize,
                     false);
             allLockedMode = 0;
-            allLockedCount = 0;
+            congCount = 0;
 
         })).start();
     }

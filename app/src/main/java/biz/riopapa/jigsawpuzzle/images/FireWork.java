@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle.func;
+package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;

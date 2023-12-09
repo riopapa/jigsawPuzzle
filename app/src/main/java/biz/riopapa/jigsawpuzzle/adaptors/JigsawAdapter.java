@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle;
+package biz.riopapa.jigsawpuzzle.adaptors;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import biz.riopapa.jigsawpuzzle.R;
+import biz.riopapa.jigsawpuzzle.ZItemTouchHelperListener;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 

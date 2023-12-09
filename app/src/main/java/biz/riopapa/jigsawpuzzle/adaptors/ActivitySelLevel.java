@@ -1,8 +1,6 @@
-package biz.riopapa.jigsawpuzzle;
+package biz.riopapa.jigsawpuzzle.adaptors;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
@@ -44,13 +42,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import biz.riopapa.jigsawpuzzle.ActivityJigsaw;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
+import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import biz.riopapa.jigsawpuzzle.func.CalcImageColor;
 import biz.riopapa.jigsawpuzzle.func.ClearGValValues;
 import biz.riopapa.jigsawpuzzle.func.DefineColsRows;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
-import biz.riopapa.jigsawpuzzle.func.Masks;
+import biz.riopapa.jigsawpuzzle.images.Masks;
 import biz.riopapa.jigsawpuzzle.func.SetPicSizes;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
