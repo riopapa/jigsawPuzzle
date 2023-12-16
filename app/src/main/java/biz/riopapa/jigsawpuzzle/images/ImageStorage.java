@@ -42,7 +42,7 @@ public class ImageStorage {
     public String getGame(int i) {
         String []ids = mContext.getString(images[i]).split("/");
         String s = ids[ids.length-1];
-        s = s.substring(0, 4);
+        s = s.substring(0, 3);
         return  s;
     }
 

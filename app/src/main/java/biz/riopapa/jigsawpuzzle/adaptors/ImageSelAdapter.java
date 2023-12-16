@@ -9,7 +9,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFile;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
@@ -55,9 +57,15 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage = itemView.findViewById(R.id.image);
             iVImage.setOnClickListener(view -> {
 
-                chosenNumber = getBindingAdapterPosition();
                 gameMode = GAME_SELECT_LEVEL;
-                chosenImageMap = new ImageStorage().getFullMap(chosenNumber);
+                chosenNumber = getBindingAdapterPosition();
+                jigFile = jigFiles.get(chosenNumber);
+                if (jigFile.game.startsWith("_"))
+                    chosenImageMap = new ImageStorage().getFullMap(chosenNumber);
+                else
+                    chosenImageMap = FileIO.getJPGFile(context, jpgFolder, jigFile.game+".jpg");
+
+                assert chosenImageMap != null;
                 chosenImageWidth = chosenImageMap.getWidth();
                 chosenImageHeight = chosenImageMap.getHeight();
 
@@ -115,16 +123,16 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         JigFile jigFile = jigFiles.get(position);
         Bitmap bMap;
         if (jigFile.thumbnailMap == null) {
-            bMap = FileIO.getJPGFile(context, "", jigFile.game);
+            bMap = FileIO.getJPGFile(context, jpgFolder, jigFile.game);
             if (bMap != null) {
-                jigFile.thumbnailMap = Bitmap.createScaledBitmap(bMap,
+                bMap = Bitmap.createScaledBitmap(bMap,
                         (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
                 jigFiles.set(position, jigFile);
-                bMap = jigFile.thumbnailMap;
+                jigFile.thumbnailMap = FileIO.bitmap2string(bMap);
             } else
                 bMap = new Drawable2bitmap(mContext, 500).make(R.mipmap.zjigsaw_app);
         } else
-            bMap = jigFile.thumbnailMap;
+            bMap = FileIO.string2bitmap(jigFile.thumbnailMap);
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
                 holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
@@ -158,6 +166,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 }
             }
         }
+        holder.tVInfo.setText(jigFile.game);
         holder.newInfo.setVisibility((jigFile.newFlag) ? View.VISIBLE: View.GONE);
         holder.iVDownload.setVisibility((jigFile.downloaded) ? View.VISIBLE: View.GONE);
     }

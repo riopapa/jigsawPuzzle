@@ -5,6 +5,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,6 +54,7 @@ public class HistoryGetPut {
 
         if (prefsDir.exists() && prefsDir.isDirectory()) {
             String[] list = prefsDir.list();
+            Log.w("prefsDir"," list len="+list.length);
             GValGetPut gValGetPut = new GValGetPut();
             for (int i = 0; i < list.length; i++) {
                 if (list[i].startsWith("game_")) {
@@ -72,9 +74,11 @@ public class HistoryGetPut {
                 }
                 histories.set(i, h);
             }
+            Log.w("history","history size="+histories.size());
         }
     }
     void add2History(String gameLevel, GVal gVal) {
+        Log.w("add2History", "gamelvl="+gameLevel);
         String game = gameLevel.substring(0,3);
         int level = Integer.parseInt(gameLevel.substring(3,4));
         History h;

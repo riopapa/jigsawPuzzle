@@ -5,6 +5,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -59,12 +62,24 @@ public class FileIO {
     }
 
     public static File existJPGFile(Context context, String dir, String fileName) {
-        File mydir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
-        File file = new File(mydir, fileName); //Getting a file within the dir.
+        File myDir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
+        File file = new File(myDir, fileName); //Getting a file within the dir.
         // Check if the file exists
         if (!file.exists())
             return null;
         return file;
+    }
+
+    public static String bitmap2string(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream); // Adjust quality as needed
+        byte[] bitmapBytes = outputStream.toByteArray();
+        return Base64.encodeToString(bitmapBytes, Base64.NO_WRAP);
+    }
+
+    public static Bitmap string2bitmap (String base64String) {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.NO_WRAP);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     void writeFile(File targetFolder, String fileName, String outText) {

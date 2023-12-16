@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,6 +30,7 @@ import biz.riopapa.jigsawpuzzle.func.BuildJigFiles;
 import biz.riopapa.jigsawpuzzle.func.DownloadTask;
 import biz.riopapa.jigsawpuzzle.func.FileIO;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
+import biz.riopapa.jigsawpuzzle.func.Permission;
 import biz.riopapa.jigsawpuzzle.func.PhoneMetrics;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
@@ -49,7 +51,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
 //    public static int maxImageCount;
     RecyclerView imageRecyclers;
-    ImageSelAdapter imageSelAdapter;
+    public static ImageSelAdapter imageSelAdapter;
 
     public static int gameMode;
     public static String appVersion = "000101";
@@ -97,24 +99,30 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
+    public static JigFile jigFile = null;
     public static String jpgFolder = "jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.w("Main","onCreate gameMode="+gameMode);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        askPermission();
 
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-
-        if (!Environment.isExternalStorageManager()){
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-            intent.setData(uri);
-            startActivity(intent);
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), PackageManager.GET_PERMISSIONS);
+            Permission.ask(this, this, info);
+        } catch (Exception e) {
+            Log.e("Permission", "No Permission " + e);
         }
+
+//        if (!Environment.isExternalStorageManager()){
+//            Intent intent = new Intent();
+//            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+//            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+//            intent.setData(uri);
+//            startActivity(intent);
+//        }
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -177,7 +185,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         Toast.makeText(this, "Download completed! sz="+downloadSize, Toast.LENGTH_SHORT).show();
 
-        Log.w("download","onDownloadComplete " + downloadFileName);
+        Log.w("downPos "+downloadPosition,"onDownloadComplete " + downloadFileName);
 
         // if download if completed
         // downloadFile name = .jpg, downloadPosition > 0  then update thumbnail
@@ -191,12 +199,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             String[] ss = str.split("\n");
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
-                JigFile jigFile = new JigFile();
-                jigFile.game = imgInfo[0].trim();
-                jigFile.imageId = imgInfo[1].trim();
-                jigFile.keywords = imgInfo[2].trim();
-                jigFile.timeStamp = imgInfo[3].trim();
-                jigFiles.add(jigFile);
+                JigFile jf = new JigFile();
+                jf.game = imgInfo[0].trim();
+                jf.imageId = imgInfo[1].trim();
+                jf.keywords = imgInfo[2].trim();
+                jf.timeStamp = imgInfo[3].trim();
+                jigFiles.add(jf);
             }
             downloadNewJpg();
         }
@@ -206,13 +214,13 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         // at least one jpg has been done
         Log.w("begin","downloadNewJpg ");
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
-            JigFile jigFile = jigFiles.get(i);
-            if (jigFile.thumbnailMap == null &&
-                FileIO.existJPGFile(mContext, jpgFolder, jigFile.game) == null) {
-                downloadFileName = jigFile.game + ".jpg";
+            JigFile jf = jigFiles.get(i);
+            if (jf.thumbnailMap == null &&
+                FileIO.existJPGFile(mContext, jpgFolder, jf.game+".jpg") == null) {
+                downloadFileName = jf.game + ".jpg";
                 downloadPosition = i;
                 Log.w("pos="+i,"downloadNewJpg "+downloadFileName);
-                DownloadTask task = new DownloadTask(this, jigFile.imageId, jpgFolder, downloadFileName);
+                DownloadTask task = new DownloadTask(this, jf.imageId, jpgFolder, downloadFileName);
                 task.execute();
                 return;
             }

@@ -3,6 +3,7 @@ package biz.riopapa.jigsawpuzzle.func;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadFileName;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadPosition;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadSize;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.imageSelAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mActivity;
@@ -94,8 +95,9 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
             Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
                     (int) (jigImage.getWidth()/4f), (int) (jigImage.getHeight()/4f), true);
             JigFile jf = jigFiles.get(downloadPosition);
-            jf.thumbnailMap = thumb;
+            jf.thumbnailMap = FileIO.bitmap2string(thumb);
             jigFiles.set(downloadPosition, jf);
+            imageSelAdapter.notifyItemChanged(downloadPosition);
             downloadFileName = null;
         }
 
