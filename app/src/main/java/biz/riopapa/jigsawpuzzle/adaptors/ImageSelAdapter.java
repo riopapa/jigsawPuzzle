@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle;
+package biz.riopapa.jigsawpuzzle.adaptors;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
@@ -9,6 +9,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
@@ -31,9 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import biz.riopapa.jigsawpuzzle.adaptors.ActivitySelLevel;
+import biz.riopapa.jigsawpuzzle.ActivitySelLevel;
+import biz.riopapa.jigsawpuzzle.R;
+import biz.riopapa.jigsawpuzzle.func.FileIO;
+import biz.riopapa.jigsawpuzzle.images.Drawable2bitmap;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.History;
+import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
 
@@ -41,8 +46,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iVImage, iVStatus;
-        TextView tVInfo;
+        ImageView iVImage, iVStatus, iVDownload;
+        TextView tVInfo, newInfo;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -52,7 +57,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
                 chosenNumber = getBindingAdapterPosition();
                 gameMode = GAME_SELECT_LEVEL;
-                chosenImageMap = new ImageStorage().getMap(chosenNumber);
+                chosenImageMap = new ImageStorage().getFullMap(chosenNumber);
                 chosenImageWidth = chosenImageMap.getWidth();
                 chosenImageHeight = chosenImageMap.getHeight();
 
@@ -74,6 +79,9 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             });
             tVInfo = itemView.findViewById(R.id.info);
             iVStatus = itemView.findViewById(R.id.status);
+            newInfo = itemView.findViewById(R.id.new_info);
+            iVDownload = itemView.findViewById(R.id.download);
+
         }
 
     }
@@ -81,7 +89,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public int getItemCount() {
         context = mContext;
-        return new ImageStorage().count();
+        return jigFiles.size();
     }
 
     @Override
@@ -103,31 +111,44 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Bitmap oMap = new ImageStorage().getMap(position);
 
-        Bitmap bitmap = Bitmap.createScaledBitmap(oMap, oMap.getWidth()/2, oMap.getHeight()/2, true);
-        RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams) holder.iVImage.getLayoutParams();
+        JigFile jigFile = jigFiles.get(position);
+        Bitmap bMap;
+        if (jigFile.thumbnailMap == null) {
+            bMap = FileIO.getJPGFile(context, "", jigFile.game);
+            if (bMap != null) {
+                jigFile.thumbnailMap = Bitmap.createScaledBitmap(bMap,
+                        (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
+                jigFiles.set(position, jigFile);
+                bMap = jigFile.thumbnailMap;
+            } else
+                bMap = new Drawable2bitmap(mContext, 500).make(R.mipmap.zjigsaw_app);
+        } else
+            bMap = jigFile.thumbnailMap;
+        RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
+                holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
-        int height = width*bitmap.getHeight()/bitmap.getWidth();
+        int height = width * bMap.getHeight() / bMap.getWidth();
         if (width < height) {
-            width = width * 8/10;
-            height = height * 8/10;
+            width = width * 8 / 10;
+            height = height * 8 / 10;
         }
         if (fPhoneInchX > 3f && width > height)   // tablet height should be shortened
             height = height * 8 / 10;
-        parImage.width = width; parImage.height = height;
+        parImage.width = width;
+        parImage.height = height;
         holder.iVImage.setLayoutParams(parImage);
-        holder.iVImage.setImageBitmap(bitmap);
+        holder.iVImage.setImageBitmap(bMap);
 
         RelativeLayout.LayoutParams parStatus = (RelativeLayout.LayoutParams) holder.iVStatus.getLayoutParams();
         parStatus.width = width; parStatus.height = height;
         holder.iVStatus.setLayoutParams(parStatus);
 
-        String game = new ImageStorage().getStr(position).substring(0,3);
-        holder.itemView.setTag(game);
+        holder.itemView.setTag(jigFile.game);
+
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
-            if (hist.game.equals(game)) {
+            if (hist.game.equals(jigFile.game)) {
                 int histLocked = 0;
                 for (int j = 0; j < 4; j++)
                     histLocked += hist.locked[j];
@@ -137,6 +158,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 }
             }
         }
+        holder.newInfo.setVisibility((jigFile.newFlag) ? View.VISIBLE: View.GONE);
+        holder.iVDownload.setVisibility((jigFile.downloaded) ? View.VISIBLE: View.GONE);
     }
 
     private static void showHistoryStatus(@NonNull ViewHolder holder, History hist,

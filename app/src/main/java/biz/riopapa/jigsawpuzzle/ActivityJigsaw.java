@@ -17,6 +17,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
@@ -45,6 +46,7 @@ import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.images.Congrat;
+import biz.riopapa.jigsawpuzzle.images.Congratulation;
 import biz.riopapa.jigsawpuzzle.images.FireWork;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
@@ -103,7 +105,8 @@ public class ActivityJigsaw extends Activity {
         srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(mContext, gVal.picOSize + gVal.picGap + gVal.picGap);
-        congrats = new Congrat().make(mContext, gVal.picOSize + gVal.picOSize + gVal.picGap);
+        congrats = new Congratulation().make(mContext, screenX * 7/10);
+
 
         paintView = findViewById(R.id.paintview);
         paintView.init(this, binding);

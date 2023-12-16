@@ -209,7 +209,7 @@ public class PieceDraw {
             }
         }
         if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            congCount = congrats.length * 3;
+            congCount = congrats.length * 4;
             allLockedMode = 20;
         }
 
@@ -277,12 +277,25 @@ public class PieceDraw {
         }
     }
 
-    private void showCongrats(Canvas canvas) {
+    private void showCongratsX(Canvas canvas) {
         congCount--;
         for (int i = 0; i < 6; i++) {
             int x = rnd.nextInt(screenX * 5 / 8);
             int y = screenY / 8 + rnd.nextInt(screenY * 5 / 8);
             int idx = rnd.nextInt(congrats.length-1);
+            canvas.drawBitmap(congrats[idx], x, y, null);
+        }
+        if (congCount == 0)
+            allLockedMode = 2;
+    }
+
+    private void showCongrats(Canvas canvas) {
+        congCount--;
+
+        int x = screenX / 8;
+        int y = screenY / 3;
+        for (int i = 0; i < congrats.length; i++) {
+            int idx = congCount % congrats.length;
             canvas.drawBitmap(congrats[idx], x, y, null);
         }
         if (congCount == 0)

@@ -5,6 +5,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -49,15 +50,15 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        if (dragY < screenBottom - gVal.picHSize)
+        if (dragY < screenBottom - gVal.picHSize) {
             viewHolder.itemView.setAlpha(0);
+        }
+
     }
 
     RecyclerView.ViewHolder svViewHolder;
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-
-        Log.w("idle "+actionState, "onSelectedChanged =" + dragX + " x " + dragY);
 
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
 //            Log.w("state is "+actionState, "START DRAG =");
@@ -126,9 +127,12 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         gVal.activeJigs.remove(activePos);
         activeAdapter.notifyItemRemoved(activePos);
         svViewHolder.itemView.setAlpha(0);
-        System.gc();
+//        System.gc();
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
         + " pieSZ="+gVal.activeJigs.size());
+//        ItemTouchHelper helper = new ItemTouchHelper(
+//                new JigRecycleCallback(activeAdapter));
+//        helper.attachToRecyclerView(jigRecyclerView);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package biz.riopapa.jigsawpuzzle.adaptors;
+package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;

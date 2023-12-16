@@ -23,16 +23,22 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import biz.riopapa.jigsawpuzzle.adaptors.ImageSelAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
+import biz.riopapa.jigsawpuzzle.func.BuildJigFiles;
+import biz.riopapa.jigsawpuzzle.func.DownloadTask;
+import biz.riopapa.jigsawpuzzle.func.FileIO;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.PhoneMetrics;
+import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
+import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 import java.util.ArrayList;
 import java.util.Timer;
 
-public class ActivityMain extends Activity {
+public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public static Activity mActivity;
 
@@ -81,23 +87,34 @@ public class ActivityMain extends Activity {
     public static boolean debugMode = true;
     public final static long INVALIDATE_INTERVAL = 40;
 
+    // Google Drive related variables
+    final String imageListId = "1HoO4s3dv4i8GAG5s5Nsl6HzMzF5TQ9Hf";
+
+    final String imageListOnDrive = "_imageList.txt";
+
+    public static String downloadFileName = "";
+    public static int downloadPosition = -1;
+    public static long downloadSize = 0;
+
+    public static ArrayList<JigFile> jigFiles = null;
+    public static String jpgFolder = "jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.w("Main","onCreate gameMode="+gameMode);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+//        askPermission();
 
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()){
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-            }
-//        }
+        if (!Environment.isExternalStorageManager()){
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -108,12 +125,22 @@ public class ActivityMain extends Activity {
         sound = sharedPref.getBoolean("sound", true);
         backColor = sharedPref.getInt("backColor", 0);
 
-        //        View decorView = getWindow().getDecorView();
-//        int uiOptions = decorView.getSystemUiVisibility();
-//        uiOptions |= SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
-
         new PhoneMetrics(this);
+
+        // create jigFiles with existing files
+        new BuildJigFiles(this);
+
+        /* fileName, position status
+            1) file = text, pos = -1; download jigsaw.txt
+            2) file = .jpg, pos = n ; downloading jpg start @ onDownloadCompleted
+            3) file = null, pos = n ; downloading & thumbnail created @ downloadTask
+            4) continue to 2)       ; find next items @ onDownloadCompleted
+         */
+        downloadFileName = imageListOnDrive;
+        downloadPosition = -1;
+        DownloadTask task = new DownloadTask( this, imageListId, "", downloadFileName);
+        task.execute();
+
     }
 
     @Override
@@ -121,8 +148,6 @@ public class ActivityMain extends Activity {
         super.onResume();
         Log.w("Main ","onResume "+gameMode+" currGame="+currGame);
         invalidateTimer = new Timer();
-        RecyclerView recyclerView = findViewById(R.id.imageRecycler);
-        recyclerView.setVisibility(View.VISIBLE);
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 
@@ -131,6 +156,7 @@ public class ActivityMain extends Activity {
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
+        imageRecyclers.setVisibility(View.VISIBLE);
         imageSelAdapter = new ImageSelAdapter();
         imageRecyclers.setAdapter(imageSelAdapter);
 
@@ -147,6 +173,55 @@ public class ActivityMain extends Activity {
     }
 
     @Override
+    public void onDownloadComplete() {
+
+        Toast.makeText(this, "Download completed! sz="+downloadSize, Toast.LENGTH_SHORT).show();
+
+        Log.w("download","onDownloadComplete " + downloadFileName);
+
+        // if download if completed
+        // downloadFile name = .jpg, downloadPosition > 0  then update thumbnail
+        // downloadFile name =
+        if (downloadPosition > 0) {
+            downloadNewJpg();
+        }
+
+        if (downloadFileName != null && downloadFileName.equals(imageListOnDrive)) {
+            String str = FileIO.readTextFile("", imageListOnDrive); // no dir for list
+            String[] ss = str.split("\n");
+            for (int i = 1; i < ss.length; i++) {
+                String[] imgInfo = ss[i].split(";");
+                JigFile jigFile = new JigFile();
+                jigFile.game = imgInfo[0].trim();
+                jigFile.imageId = imgInfo[1].trim();
+                jigFile.keywords = imgInfo[2].trim();
+                jigFile.timeStamp = imgInfo[3].trim();
+                jigFiles.add(jigFile);
+            }
+            downloadNewJpg();
+        }
+    }
+
+    private void downloadNewJpg() {
+        // at least one jpg has been done
+        Log.w("begin","downloadNewJpg ");
+        for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
+            JigFile jigFile = jigFiles.get(i);
+            if (jigFile.thumbnailMap == null &&
+                FileIO.existJPGFile(mContext, jpgFolder, jigFile.game) == null) {
+                downloadFileName = jigFile.game + ".jpg";
+                downloadPosition = i;
+                Log.w("pos="+i,"downloadNewJpg "+downloadFileName);
+                DownloadTask task = new DownloadTask(this, jigFile.imageId, jpgFolder, downloadFileName);
+                task.execute();
+                return;
+            }
+        }
+        downloadPosition = -1;
+    }
+
+
+    @Override
     protected void onPause() {
 //        new GValGetPut().put(currGameLevel, gVal, this);
         super.onPause();
@@ -159,16 +234,16 @@ public class ActivityMain extends Activity {
     ArrayList<String> permissionsToRequest;
     ArrayList<String> permissionsRejected = new ArrayList<>();
 
-    private void askPermission() {
-//        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        permissionsToRequest = findUnAskedPermissions(permissions);
-        if (permissionsToRequest.size() != 0) {
-            requestPermissions(permissionsToRequest.toArray(new String[0]),
-//            requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    ALL_PERMISSIONS_RESULT);
-        }
-    }
+//    private void askPermission() {
+////        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+//        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        permissionsToRequest = findUnAskedPermissions(permissions);
+//        if (permissionsToRequest.size() != 0) {
+//            requestPermissions(permissionsToRequest.toArray(new String[0]),
+////            requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
+//                    ALL_PERMISSIONS_RESULT);
+//        }
+//    }
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
         ArrayList <String> result = new ArrayList<>();
