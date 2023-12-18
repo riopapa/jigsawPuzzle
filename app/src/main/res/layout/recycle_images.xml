@@ -48,22 +48,10 @@
         android:textColor="#FFF"
         android:text="NEW"
         android:background="#F00"
-        android:textSize="11sp"
+        android:textSize="8sp"
         android:padding="2sp"
         android:layout_margin="4sp"
         android:layout_below="@id/info"
         />
-    <ImageView
-        android:id="@+id/download"
-        android:layout_alignBottom="@id/image"
-        android:layout_alignEnd="@id/image"
-        android:layout_centerHorizontal="true"
-        android:layout_width="32sp"
-        android:layout_height="32dp"
-        android:layout_margin="4dp"
-        android:scaleType="fitXY"
-        />
-
-
 
 </RelativeLayout>

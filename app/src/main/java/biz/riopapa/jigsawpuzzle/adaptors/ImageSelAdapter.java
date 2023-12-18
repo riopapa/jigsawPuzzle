@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iVImage, iVStatus, iVDownload;
+        ImageView iVImage, iVStatus;
         TextView tVInfo, newInfo;
 
         ViewHolder(final View itemView) {
@@ -82,14 +83,12 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                     }
-                }, 300);
+                }, 30);
 
             });
             tVInfo = itemView.findViewById(R.id.info);
             iVStatus = itemView.findViewById(R.id.status);
             newInfo = itemView.findViewById(R.id.new_info);
-            iVDownload = itemView.findViewById(R.id.download);
-
         }
 
     }
@@ -121,22 +120,26 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         JigFile jigFile = jigFiles.get(position);
-        Bitmap bMap;
+        Bitmap tMap;
         if (jigFile.thumbnailMap == null) {
-            bMap = FileIO.getJPGFile(jpgFolder, jigFile.game);
-            if (bMap != null) {
-                bMap = Bitmap.createScaledBitmap(bMap,
-                        (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
-                jigFiles.set(position, jigFile);
-                jigFile.thumbnailMap = FileIO.bitmap2string(bMap);
+            tMap = FileIO.getJPGFile(jpgFolder, jigFile.game+"T.jpg");
+            if (tMap == null) { // no thumbnail map then create thumbnail map
+                Bitmap bMap = FileIO.getJPGFile(jpgFolder, jigFile.game);
+                if (bMap != null) {
+                    tMap = Bitmap.createScaledBitmap(bMap,
+                            (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
+                    jigFile.thumbnailMap = tMap;
+                    jigFiles.set(position, jigFile);
+                } else
+                    tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
             } else
-                bMap = new Drawable2bitmap(mContext, 500).make(R.mipmap.zjigsaw_app);
+                tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
         } else
-            bMap = FileIO.string2bitmap(jigFile.thumbnailMap);
+            tMap = jigFile.thumbnailMap;
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
                 holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
-        int height = width * bMap.getHeight() / bMap.getWidth();
+        int height = width * tMap.getHeight() / tMap.getWidth();
         if (width < height) {
             width = width * 8 / 10;
             height = height * 8 / 10;
@@ -146,14 +149,13 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         parImage.width = width;
         parImage.height = height;
         holder.iVImage.setLayoutParams(parImage);
-        holder.iVImage.setImageBitmap(bMap);
+        holder.iVImage.setImageBitmap(tMap);
 
         RelativeLayout.LayoutParams parStatus = (RelativeLayout.LayoutParams) holder.iVStatus.getLayoutParams();
-        parStatus.width = width; parStatus.height = height;
+        parStatus.width = width;
+        parStatus.height = height;
         holder.iVStatus.setLayoutParams(parStatus);
-
         holder.itemView.setTag(jigFile.game);
-
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
             if (hist.game.equals(jigFile.game)) {
@@ -168,7 +170,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         }
         holder.tVInfo.setText(jigFile.game);
         holder.newInfo.setVisibility((jigFile.newFlag) ? View.VISIBLE: View.GONE);
-        holder.iVDownload.setVisibility((jigFile.downloaded) ? View.VISIBLE: View.GONE);
     }
 
     private static void showHistoryStatus(@NonNull ViewHolder holder, History hist,

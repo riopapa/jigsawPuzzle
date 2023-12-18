@@ -2,6 +2,7 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.areaMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.backMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
@@ -11,6 +12,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.paintView;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
@@ -48,6 +50,7 @@ public class PieceDraw {
 
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
+    Paint backPaint;
     public PieceDraw(ActivityJigsawBinding binding) {
         this.binding = binding;
         pGrayed0 = new Paint();
@@ -58,6 +61,9 @@ public class PieceDraw {
 
         pathPaint = new Paint();
         pathPaint.setColor(chosenImageColor);
+        backPaint = new Paint();
+        backPaint.setAlpha(100);
+
         gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
@@ -67,9 +73,8 @@ public class PieceDraw {
         canvas.save();
         canvas.drawLine(gVal.picHSize, screenBottom, screenX- gVal.picHSize, screenBottom, lPaint);
 
-        readyPieceImages();
-        showPieceImage(canvas);
-//        showUnlockedImages(canvas);
+//        showPieceImage(canvas);
+        showUnlockedImages(canvas);
         showLockedPieces(canvas);
         showPieceDiamondPoint(canvas);
         showFloatingPieces(canvas);
@@ -85,22 +90,6 @@ public class PieceDraw {
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));
 
-    }
-
-
-    private void readyPieceImages() {
-        // draw locked pieces first with .pic
-        for (int c = 0; c < gVal.showMaxX; c++) {
-            for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (jigPic[cc][rr] == null)
-                    jigPic[cc][rr] = pieceImage.makePic(cc, rr);
-                if (jigOLine[cc][rr] == null) {
-                    jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                }
-            }
-        }
     }
 
     private void showPieceImage(Canvas canvas) {

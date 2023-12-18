@@ -1,8 +1,10 @@
 package biz.riopapa.jigsawpuzzle.model;
 
+import android.graphics.Bitmap;
+
 public class JigFile {
     public String game; // _00 ~ _xx : internal mipmap else from google drive
-    public String thumbnailMap; // if thumbnailMap is null then should be get from google Drive
+    public Bitmap thumbnailMap = null; // if thumbnailMap is null then should be get from google Drive
     public String imageId, keywords;
     public String timeStamp;
     public int latest;      // latest level handled;

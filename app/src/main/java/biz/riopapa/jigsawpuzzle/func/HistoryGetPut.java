@@ -1,7 +1,7 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,20 +9,21 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import biz.riopapa.jigsawpuzzle.model.GVal;
-import biz.riopapa.jigsawpuzzle.model.History;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import biz.riopapa.jigsawpuzzle.model.GVal;
+import biz.riopapa.jigsawpuzzle.model.History;
+
 
 public class HistoryGetPut {
 
     final String hist = "history";
     public ArrayList<History> get(Context context) {
-        String histFile = hist + appVersion;
+        String histFile = hist + nowVersion;
         ArrayList<History> list;
         SharedPreferences sharedPref = context.getSharedPreferences(histFile,Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -37,7 +38,7 @@ public class HistoryGetPut {
     }
 
     public void put(ArrayList<History> histories, Context context) {
-        String histFile = hist + appVersion;
+        String histFile = hist + nowVersion;
         SharedPreferences sharedPref = context.getSharedPreferences(histFile, Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         Gson gson = new Gson();
@@ -59,7 +60,7 @@ public class HistoryGetPut {
             for (String s : list) {
                 if (s.startsWith("game_")) {
                     GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
-                    if (gval.version.equals(appVersion))
+                    if (gval.version.equals(nowVersion))
                         add2History(s.substring(5, 9), gval);
                 }
             }

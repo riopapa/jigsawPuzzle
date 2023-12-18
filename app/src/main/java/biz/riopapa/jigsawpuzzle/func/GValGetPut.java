@@ -3,9 +3,9 @@ package biz.riopapa.jigsawpuzzle.func;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
 import android.content.Context;
@@ -14,11 +14,12 @@ import android.graphics.Bitmap;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import biz.riopapa.jigsawpuzzle.model.GVal;
-import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import biz.riopapa.jigsawpuzzle.model.GVal;
+import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 
 public class GValGetPut {
@@ -35,7 +36,7 @@ public class GValGetPut {
 
     public void put(String key, GVal gVal, Context context) {
         gVal.game = currGame;
-        gVal.version = appVersion;
+        gVal.version = nowVersion;
         gVal.level =  currLevel;
         gVal.time = System.currentTimeMillis();
         SharedPreferences sharedPref = context.getSharedPreferences("game_" + key,
@@ -48,7 +49,7 @@ public class GValGetPut {
     }
     public void set(GVal gVal, int col, int row) {
         gVal.game = currGame;
-        gVal.version = appVersion;
+        gVal.version = nowVersion;
         gVal.level =  currLevel;
         gVal.time = System.currentTimeMillis();
         gVal.fps = new ArrayList<>();

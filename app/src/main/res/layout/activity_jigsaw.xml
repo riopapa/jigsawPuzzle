@@ -51,6 +51,15 @@
         />
 
     <biz.riopapa.jigsawpuzzle.PaintView
+        android:id="@+id/backview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/piece_recycler"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
+
+    <biz.riopapa.jigsawpuzzle.PaintView
         android:id="@+id/paintview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

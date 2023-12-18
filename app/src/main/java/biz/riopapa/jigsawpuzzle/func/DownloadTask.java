@@ -59,7 +59,6 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
                 out.write(buffer, 0, bytesRead);
                 downloadSize += bytesRead;
             }
-
             out.flush();
             out.close();
             inputStream.close();
@@ -85,17 +84,19 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
         super.onPostExecute(result);
         if (fileName.endsWith(".jpg")) {
             // if jpg file downloaded, update to jigFiles.thumbnailMap;
-            Log.w("postDownload", fileName + "jpgFiles="+jigFiles.size());
+            Log.w("postDownload", fileName + ", jpgFiles="+jigFiles.size());
             Bitmap jigImage = FileIO.getJPGFile(jpgFolder, fileName);
-            assert jigImage != null;
-            Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
-                    (int) (jigImage.getWidth()/4f), (int) (jigImage.getHeight()/4f), true);
-            JigFile jf = jigFiles.get(downloadPosition);
-            jf.thumbnailMap = FileIO.bitmap2string(thumb);
-
-            jigFiles.set(downloadPosition, jf);
-            imageSelAdapter.notifyItemChanged(downloadPosition);
-            downloadFileName = null;
+            if (jigImage != null) {
+                Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
+                        (int) (jigImage.getWidth() / 5f), (int) (jigImage.getHeight() / 5f), true);
+                FileIO.thumbnail2File(thumb, fileName);
+                JigFile jf = jigFiles.get(downloadPosition);
+                jf.thumbnailMap = thumb;
+                jf.newFlag = true;
+                jigFiles.set(downloadPosition, jf);
+                imageSelAdapter.notifyItemChanged(downloadPosition);
+                downloadFileName = null;
+            }
         }
 
         if (listener != null) {
@@ -110,4 +111,5 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
 //        }
     }
 }
+//        jf.thumbnailMap = FileIO.bitmap2string(thumb);
 

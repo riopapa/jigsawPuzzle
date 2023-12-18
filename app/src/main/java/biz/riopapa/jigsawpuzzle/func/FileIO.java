@@ -1,11 +1,13 @@
 package biz.riopapa.jigsawpuzzle.func;
 
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -14,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -96,4 +99,19 @@ public class FileIO {
         }
     }
 
+    // image name : a00, thumbnail name : a00T.jpg
+    public static void thumbnail2File(Bitmap bitmap, String fileName) {
+        // Creating an internal dir;
+        File myDir = mContext.getDir(jpgFolder, Context.MODE_PRIVATE);
+        // Setting a file within the dir
+        File file = new File(myDir, fileName.substring(0,3) + "T.jpg");
+        FileOutputStream os;
+        try {
+            os = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.close();
+        } catch (IOException e) {
+            Log.e("ioException", e.toString());
+        }
+    }
 }

@@ -9,7 +9,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
@@ -18,6 +17,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
@@ -141,39 +141,43 @@ public class ActivitySelLevel extends AppCompatActivity {
         binding.selImage.setImageBitmap(chosenImageMap);
 //        Log.w("binding","time1");
 //        showLocked(binding, chosenImageMap);
-        select_level();
+        new Thread(this::select_level).start();
     }
 
     void select_level() {
-        View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_select_level, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
-        builder.setView(dialogView);
-        Log.w("binding","time a1");
+        this.runOnUiThread(() -> {
 
-        alertDialog = builder.create();
-        // show this dialog at the bottom
-        Window window = alertDialog.getWindow();
-        assert window != null;
-        WindowManager.LayoutParams wlp = window.getAttributes();
-        wlp.gravity = Gravity.BOTTOM;
-        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        window.setAttributes(wlp);
-        // give some bottom space on level dialog
-        alertDialog.getWindow().getAttributes().height = (int) (screenY * 0.7);
-        alertDialog.getWindow().getAttributes().width = screenX;
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-        Log.w("binding","time a2");
+            View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_select_level, null);
 
-        setDialogInfo(dialogView, 0, R.id.lvl_easy, R.id.lvl_eInfo, R.id.lvl_eNew);
-        setDialogInfo(dialogView, 1, R.id.lvl_normal, R.id.lvl_nInfo, R.id.lvl_nNew);
-        setDialogInfo(dialogView, 2, R.id.lvl_hard, R.id.lvl_hInfo, R.id.lvl_hNew);
-        setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
-        Log.w("binding","time a3");
+            AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
+            builder.setView(dialogView);
+            Log.w("binding","time a1");
 
-        dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
-        Log.w("binding","time 4");
+            alertDialog = builder.create();
+            // show this dialog at the bottom
+            Window window = alertDialog.getWindow();
+            assert window != null;
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.gravity = Gravity.BOTTOM;
+            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            window.setAttributes(wlp);
+            // give some bottom space on level dialog
+            alertDialog.getWindow().getAttributes().height = (int) (screenY * 0.7);
+            alertDialog.getWindow().getAttributes().width = screenX;
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+            Log.w("binding","time a2");
+
+            setDialogInfo(dialogView, 0, R.id.lvl_easy, R.id.lvl_eInfo, R.id.lvl_eNew);
+            setDialogInfo(dialogView, 1, R.id.lvl_normal, R.id.lvl_nInfo, R.id.lvl_nNew);
+            setDialogInfo(dialogView, 2, R.id.lvl_hard, R.id.lvl_hInfo, R.id.lvl_hNew);
+            setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
+            Log.w("binding","time a3");
+
+            dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
+            Log.w("binding","time 4");
+        });
 
     }
 
@@ -244,7 +248,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
         gVal = new GValGetPut().get(currGameLevel, this);
-        if (gVal == null || level > 9 || !gVal.version.equals(appVersion)) {    // over 9 means clear and new game
+        if (gVal == null || level > 9 || !gVal.version.equals(nowVersion)) {
+            // over 9 means clear and new game
             Log.w("gVal","newly defined "+currGameLevel);
             gVal = new GVal();
             defineColsRows.calc(currLevel);

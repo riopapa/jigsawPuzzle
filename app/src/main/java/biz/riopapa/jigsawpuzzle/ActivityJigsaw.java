@@ -3,6 +3,7 @@ package biz.riopapa.jigsawpuzzle;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
@@ -31,6 +32,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,8 +68,9 @@ public class ActivityJigsaw extends Activity {
 
     public static RecyclerView jigRecyclerView;
 
-
     public static PaintView paintView;
+
+    public static BackView backView;
 
     public static JigsawAdapter activeAdapter;
 
@@ -75,7 +78,7 @@ public class ActivityJigsaw extends Activity {
 
     public static Timer invalidateTimer;
 
-    public static Bitmap chosenImageMap, areaMap;
+    public static Bitmap chosenImageMap, areaMap, backMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite;
     public static int activePos; // jigsaw slide x, y count
@@ -114,6 +117,9 @@ public class ActivityJigsaw extends Activity {
         paintView = findViewById(R.id.paintview);
         paintView.init(this, binding);
         binding.paintview.getLayoutParams().height = screenBottom;
+
+        backView = findViewById(R.id.backview);
+
         showThumbnail = new ShowThumbnail();
 
         binding.moveLeft.setOnClickListener(v -> {
@@ -237,6 +243,9 @@ public class ActivityJigsaw extends Activity {
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
+
+        makeBackMap();
+
         binding.moveLeft.setVisibility ((gVal.offsetC == 0) ? View.INVISIBLE: View.VISIBLE);
         binding.moveRight.setVisibility ((gVal.offsetC == gVal.colNbr-gVal.showMaxX) ? View.INVISIBLE: View.VISIBLE);
         binding.moveUp.setVisibility((gVal.offsetR == 0)? View.INVISIBLE: View.VISIBLE);
@@ -278,6 +287,22 @@ public class ActivityJigsaw extends Activity {
 //        })).start();
     }
 
+    void makeBackMap() {
+        backMap = Bitmap.createBitmap((gVal.showMaxX+1) * gVal.picISize,
+                (gVal.showMaxY+1)* gVal.picISize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(backMap);
+
+        for (int c = 0; c < gVal.showMaxX; c++) {
+            for (int r = 0; r < gVal.showMaxY; r++) {
+                final int cc = c + gVal.offsetC;
+                final int rr = r + gVal.offsetR;
+                canvas.drawBitmap(jigPic[cc][rr],
+                            c * gVal.picISize, r * gVal.picISize, null);
+            }
+
+        }
+    }
+
     @Override
     protected void onPause() {
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
@@ -315,6 +340,7 @@ public class ActivityJigsaw extends Activity {
         sharedEditor.putBoolean("vibrate", vibrate);
         sharedEditor.putBoolean("sound", sound);
         sharedEditor.putInt("backColor", backColor);
+        sharedEditor.putString("appVersion", appVersion);
         sharedEditor.apply();
     }
 

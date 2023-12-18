@@ -38,7 +38,7 @@ import biz.riopapa.jigsawpuzzle.func.PieceSelection;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
-public class PaintView extends View {
+public class BackView extends View {
 
     public static int nowIdx;
     public Activity paintActivity;
@@ -51,11 +51,11 @@ public class PaintView extends View {
 
     public static FloatPiece nowFp;
 
-    public PaintView(Context context) {
+    public BackView(Context context) {
         this(context, null);
     }
 
-    public PaintView(Context context, @Nullable AttributeSet attrs) {
+    public BackView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
     public static long invalidateTime;
