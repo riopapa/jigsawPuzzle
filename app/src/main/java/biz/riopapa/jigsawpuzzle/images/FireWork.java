@@ -17,16 +17,16 @@ public class FireWork {
 
         // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
 
-        int[] maps = {R.mipmap.zfirewick27, R.mipmap.zfirewick26, R.mipmap.zfirewick25,
+        int[] maps = {R.mipmap.zfirework27, R.mipmap.zfirework26, R.mipmap.zfirework25,
 //                R.mipmap.zfirewick24, R.mipmap.zfirewick23, R.mipmap.zfirewick22,
-                R.mipmap.zfirewick21, R.mipmap.zfirewick20, R.mipmap.zfirewick19,
+                R.mipmap.zfirework21, R.mipmap.zfirework20, R.mipmap.zfirework19,
 //                R.mipmap.zfirewick18, R.mipmap.zfirewick17, R.mipmap.zfirewick16,
-                R.mipmap.zfirewick15, R.mipmap.zfirewick14, R.mipmap.zfirewick13,
+                R.mipmap.zfirework15, R.mipmap.zfirework14, R.mipmap.zfirework13,
 //                R.mipmap.zfirewick12, R.mipmap.zfirewick11, R.mipmap.zfirewick10,
-                R.mipmap.zfirewick09, R.mipmap.zfirewick08, R.mipmap.zfirewick07,
+                R.mipmap.zfirework09, R.mipmap.zfirework08, R.mipmap.zfirework07,
 //                R.mipmap.zfirewick06, R.mipmap.zfirewick05, R.mipmap.zfirewick04,
-                R.mipmap.zfirewick03, R.mipmap.zfirewick02, R.mipmap.zfirewick01,
-                R.mipmap.zfirewick00
+                R.mipmap.zfirework03, R.mipmap.zfirework02, R.mipmap.zfirework01,
+                R.mipmap.zfirework00
         };
 
         Bitmap[] fireMaps = new Bitmap[maps.length];
