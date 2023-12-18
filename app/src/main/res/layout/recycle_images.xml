@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:focusable="true"
     android:clickable="true"
+    android:background="@drawable/border_outer"
     android:layout_margin="1dp"
     >
     <TextView
@@ -27,7 +28,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/border_rounded"
+        android:background="@drawable/border_inner"
         android:padding="2dp"
         android:scaleType="fitXY" />
     <ImageView

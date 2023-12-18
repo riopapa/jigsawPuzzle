@@ -63,7 +63,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 if (jigFile.game.startsWith("_"))
                     chosenImageMap = new ImageStorage().getFullMap(chosenNumber);
                 else
-                    chosenImageMap = FileIO.getJPGFile(context, jpgFolder, jigFile.game+".jpg");
+                    chosenImageMap = FileIO.getJPGFile(jpgFolder, jigFile.game+".jpg");
 
                 assert chosenImageMap != null;
                 chosenImageWidth = chosenImageMap.getWidth();
@@ -123,7 +123,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         JigFile jigFile = jigFiles.get(position);
         Bitmap bMap;
         if (jigFile.thumbnailMap == null) {
-            bMap = FileIO.getJPGFile(context, jpgFolder, jigFile.game);
+            bMap = FileIO.getJPGFile(jpgFolder, jigFile.game);
             if (bMap != null) {
                 bMap = Bitmap.createScaledBitmap(bMap,
                         (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);

@@ -56,11 +56,11 @@ public class HistoryGetPut {
             String[] list = prefsDir.list();
             Log.w("prefsDir"," list len="+list.length);
             GValGetPut gValGetPut = new GValGetPut();
-            for (int i = 0; i < list.length; i++) {
-                if (list[i].startsWith("game_")) {
-                    GVal gval = gValGetPut.get(list[i].substring(5, list[i].length() - 4), context);
+            for (String s : list) {
+                if (s.startsWith("game_")) {
+                    GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
                     if (gval.version.equals(appVersion))
-                        add2History(list[i].substring(5, 9), gval);
+                        add2History(s.substring(5, 9), gval);
                 }
             }
             for (int i = 0; i < histories.size(); i++) {

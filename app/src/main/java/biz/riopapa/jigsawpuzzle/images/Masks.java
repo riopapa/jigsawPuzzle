@@ -1,6 +1,6 @@
 package biz.riopapa.jigsawpuzzle.images;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,6 +9,10 @@ import biz.riopapa.jigsawpuzzle.R;
 
 public class Masks {
 
+    PieceImage pieceImage;
+    public Masks(Context context) {
+        pieceImage = new PieceImage(context, gVal.imgOutSize, gVal.imgInSize);
+    }
     /*
      * predefine masks with imgOutSize for maskup to crop image
      * output : masks[][]

@@ -29,10 +29,10 @@ public class PieceImage {
 
     Context context;
 
-    public PieceImage(Context context, int orgSizeOut, int orgSizeIn) {
+    public PieceImage(Context context, int imgOutSize, int imgInSize) {
         this.context = context;
-        this.orgSizeOut = orgSizeOut;
-        this.orgSizeIn = orgSizeIn;
+        this.orgSizeOut = imgOutSize;
+        this.orgSizeIn = imgInSize;
 
         paintIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
         outLineColor = chosenImageColor;

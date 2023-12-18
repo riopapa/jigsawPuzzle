@@ -1,9 +1,7 @@
 package biz.riopapa.jigsawpuzzle.images;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,19 +13,10 @@ import biz.riopapa.jigsawpuzzle.R;
 
 public class FireWork {
 
-    /*
-     * predefine masks with imgOutSize for maskup to crop image
-     * output : masks[][]
-     */
-    public Bitmap[] make(Context cxt, int fireSize) {
+    public Bitmap[] make(int fireSize) {
 
         // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
 
-//        int[] maps = {R.mipmap.yfireworks_06, R.mipmap.yfireworks_07, R.mipmap.yfireworks_08,
-//                R.mipmap.yfireworks_09, R.mipmap.yfireworks_10, R.mipmap.yfireworks_11,
-//                R.mipmap.yfireworks_12, R.mipmap.yfireworks_20, R.mipmap.yfireworks_21,
-//                R.mipmap.yfireworks_23, R.mipmap.yfireworks_24, R.mipmap.yfireworks_25
-//        };
         int[] maps = {R.mipmap.zfirewick27, R.mipmap.zfirewick26, R.mipmap.zfirewick25,
 //                R.mipmap.zfirewick24, R.mipmap.zfirewick23, R.mipmap.zfirewick22,
                 R.mipmap.zfirewick21, R.mipmap.zfirewick20, R.mipmap.zfirewick19,

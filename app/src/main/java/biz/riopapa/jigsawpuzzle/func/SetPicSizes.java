@@ -1,10 +1,9 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 public class SetPicSizes {
     public SetPicSizes(int phoneSizeX) {

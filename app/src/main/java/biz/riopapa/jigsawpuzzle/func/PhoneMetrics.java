@@ -7,7 +7,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 public class PhoneMetrics {
     public PhoneMetrics(Activity activity) {

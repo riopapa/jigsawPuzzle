@@ -7,17 +7,17 @@ import android.graphics.BitmapFactory;
 
 import biz.riopapa.jigsawpuzzle.R;
 
-public class Congrat {
+public class JigDone {
 
     public Bitmap[] make(int mapSize) {
 
-        int[] maps = {R.mipmap.z_cong_00a, R.mipmap.z_cong_01a, R.mipmap.z_cong_02a,
-                R.mipmap.z_cong_03a, R.mipmap.z_cong_04a, R.mipmap.z_cong_05a,
-                R.mipmap.z_cong_06a, R.mipmap.z_cong_07a, R.mipmap.z_cong_08a,
-                R.mipmap.z_cong_09a, R.mipmap.z_cong_10a, R.mipmap.z_cong_11a,
-                R.mipmap.z_cong_12a, R.mipmap.z_cong_13a, R.mipmap.z_cong_14a,
-                R.mipmap.z_cong_15a, R.mipmap.z_cong_16a, R.mipmap.z_cong_17a,
-                R.mipmap.z_cong_18a, R.mipmap.z_cong_19a, R.mipmap.z_cong_20a
+        int[] maps = {R.mipmap.zjig_done_i, R.mipmap.zjig_done_j,
+                R.mipmap.zjig_done_k, R.mipmap.zjig_done_l, R.mipmap.zjig_done_m,
+                R.mipmap.zjig_done_n, R.mipmap.zjig_done_o, R.mipmap.zjig_done_p,
+                R.mipmap.zjig_done_q, R.mipmap.zjig_done_r, R.mipmap.zjig_done_s,
+                R.mipmap.zjig_done_t, R.mipmap.zjig_done_u, R.mipmap.zjig_done_v,
+                R.mipmap.zjig_done_w, R.mipmap.zjig_done_x, R.mipmap.zjig_done_y,
+                R.mipmap.zjig_done_z, R.mipmap.zjig_done_j, R.mipmap.zjig_done_j
         };
         Bitmap[] bMaps = new Bitmap[maps.length];
 

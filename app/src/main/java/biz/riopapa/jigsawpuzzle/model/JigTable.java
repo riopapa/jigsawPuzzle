@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle.model;
 
-import android.graphics.Bitmap;
-
 public class JigTable {
 
 //    public int posX, posY;  // sceen position

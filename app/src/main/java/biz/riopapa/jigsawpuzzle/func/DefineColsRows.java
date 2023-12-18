@@ -3,14 +3,12 @@ package biz.riopapa.jigsawpuzzle.func;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
 
-import android.util.Log;
-
 public class DefineColsRows {
 
     /**
      * calculate jigCOLUMNs, jigROWs initially by level info
-     * @param chosenImageHeight, chosenImageWidth : image Height
-     * @return jigCOLUMNs, jigROWs
+     * inp : chosenImageHeight, chosenImageWidth : image Height
+     * out : jigCOLUMNs, jigROWs
      **/
 
     public int col, row;    // return values

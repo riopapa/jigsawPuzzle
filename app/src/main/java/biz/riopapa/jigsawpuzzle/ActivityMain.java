@@ -1,20 +1,15 @@
 package biz.riopapa.jigsawpuzzle;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,6 +18,9 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import java.util.ArrayList;
+import java.util.Timer;
 
 import biz.riopapa.jigsawpuzzle.adaptors.ImageSelAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
@@ -36,9 +34,6 @@ import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
 import biz.riopapa.jigsawpuzzle.model.JigFile;
-
-import java.util.ArrayList;
-import java.util.Timer;
 
 public class ActivityMain extends Activity implements DownloadCompleteListener {
 
@@ -70,13 +65,15 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     final public static int GAME_PAUSED = 2044;
     final public static int GAME_GOBACK_TO_MAIN = 2047;
 
+    final public static int GAME_COMPLETED = 3333;
+
     final public static String[] levelNames = {"Easy", "Norm", "Hard", "Guru"};
 
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
     public static float fPhoneInchX, fPhoneInchY;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
-    public static Bitmap[] fireWorks, congrats;
+    public static Bitmap[] fireWorks, congrats, jigDones;
 
     /*
     ** Following will be handled with Set Menu
@@ -86,8 +83,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static boolean sound = false;
     public static int backColor = 0;
 
-    public static boolean debugMode = true;
-    public final static long INVALIDATE_INTERVAL = 40;
+    public static boolean debugMode = false;
+    public final static long INVALIDATE_INTERVAL = 50;
 
     // Google Drive related variables
     final String imageListId = "1HoO4s3dv4i8GAG5s5Nsl6HzMzF5TQ9Hf";
@@ -136,7 +133,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         new PhoneMetrics(this);
 
         // create jigFiles with existing files
-        new BuildJigFiles(this);
+        new BuildJigFiles();
 
         /* fileName, position status
             1) file = text, pos = -1; download jigsaw.txt
@@ -183,31 +180,40 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     @Override
     public void onDownloadComplete() {
 
-        Toast.makeText(this, "Download completed! sz="+downloadSize, Toast.LENGTH_SHORT).show();
-
-        Log.w("downPos "+downloadPosition,"onDownloadComplete " + downloadFileName);
-
         // if download if completed
         // downloadFile name = .jpg, downloadPosition > 0  then update thumbnail
         // downloadFile name =
-        if (downloadPosition > 0) {
+        if (downloadPosition > 0)   // continue to check possible download
             downloadNewJpg();
-        }
 
         if (downloadFileName != null && downloadFileName.equals(imageListOnDrive)) {
             String str = FileIO.readTextFile("", imageListOnDrive); // no dir for list
             String[] ss = str.split("\n");
+            boolean newlyAdd = false;
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
-                JigFile jf = new JigFile();
-                jf.game = imgInfo[0].trim();
-                jf.imageId = imgInfo[1].trim();
-                jf.keywords = imgInfo[2].trim();
-                jf.timeStamp = imgInfo[3].trim();
-                jigFiles.add(jf);
+                String nGame = imgInfo[0].trim();
+                if (newJpgFile(nGame)) {
+                    JigFile jf = new JigFile();
+                    jf.game = nGame;
+                    jf.imageId = imgInfo[1].trim();
+                    jf.keywords = imgInfo[2].trim();
+                    jf.timeStamp = imgInfo[3].trim();
+                    jigFiles.add(jf);
+                    newlyAdd = true;
+                }
             }
-            downloadNewJpg();
+            if (newlyAdd)
+                downloadNewJpg();
         }
+    }
+
+    private boolean newJpgFile(String game) {
+        for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
+            if (game.equals(jigFiles.get(i).game))
+                return false;
+        }
+        return true;
     }
 
     private void downloadNewJpg() {
@@ -216,7 +222,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
             if (jf.thumbnailMap == null &&
-                FileIO.existJPGFile(mContext, jpgFolder, jf.game+".jpg") == null) {
+                FileIO.existJPGFile(jpgFolder, jf.game+".jpg") == null) {
                 downloadFileName = jf.game + ".jpg";
                 downloadPosition = i;
                 Log.w("pos="+i,"downloadNewJpg "+downloadFileName);

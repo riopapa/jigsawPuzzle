@@ -5,13 +5,12 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static biz.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
-import static biz.riopapa.jigsawpuzzle.PaintView.piecePosition;
+import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
+import static biz.riopapa.jigsawpuzzle.PaintView.piecePosition;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 

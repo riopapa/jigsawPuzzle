@@ -41,9 +41,9 @@ public class FileIO {
         return sb.toString();
     }
 
-    public static Bitmap getJPGFile(Context context, String dir, String fileName) {
+    public static Bitmap getJPGFile(String dir, String fileName) {
         try {
-            File file = existJPGFile(context, dir, fileName);
+            File file = existJPGFile(dir, fileName);
             if (file == null)
                 return null;
 
@@ -61,7 +61,7 @@ public class FileIO {
         }
     }
 
-    public static File existJPGFile(Context context, String dir, String fileName) {
+    public static File existJPGFile(String dir, String fileName) {
         File myDir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
         File file = new File(myDir, fileName); //Getting a file within the dir.
         // Check if the file exists

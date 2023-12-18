@@ -3,8 +3,8 @@ package biz.riopapa.jigsawpuzzle.adaptors;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 import android.util.Log;
 import android.view.GestureDetector;
@@ -22,12 +22,14 @@ import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.ZItemTouchHelperListener;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
             implements ZItemTouchHelperListener {
 
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
+    PieceImage pieceImage;
 
     @NonNull
     @Override
@@ -42,7 +44,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         iv.requestLayout();
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
-
+        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
         return new ViewHolder(view);
     }
 

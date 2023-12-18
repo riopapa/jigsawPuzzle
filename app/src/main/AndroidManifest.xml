@@ -23,8 +23,11 @@
         >
         <activity
             android:name=".ActivitySelLevel"
+            android:screenOrientation="portrait"
             android:exported="false" />
-        <activity android:name=".ActivityJigsaw" />
+        <activity android:name=".ActivityJigsaw"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ActivityMain"
             android:screenOrientation="portrait"

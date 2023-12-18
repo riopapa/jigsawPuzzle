@@ -6,14 +6,12 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadSize;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.imageSelAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mActivity;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -34,8 +32,6 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
 
     private final String imageHead = "https://drive.google.com/uc?export=download&id=";
 
-    private final String imageDir = "image";
-    private final String thumbnailDir = "thumbnail";
     public DownloadTask(DownloadCompleteListener listener, String fileId, String dir, String fileName) {
         this.listener = listener;
         this.url = imageHead + fileId;
@@ -89,13 +85,14 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
         super.onPostExecute(result);
         if (fileName.endsWith(".jpg")) {
             // if jpg file downloaded, update to jigFiles.thumbnailMap;
-
-            Bitmap jigImage = FileIO.getJPGFile(mContext, jpgFolder, fileName);
+            Log.w("postDownload", fileName + "jpgFiles="+jigFiles.size());
+            Bitmap jigImage = FileIO.getJPGFile(jpgFolder, fileName);
             assert jigImage != null;
             Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
                     (int) (jigImage.getWidth()/4f), (int) (jigImage.getHeight()/4f), true);
             JigFile jf = jigFiles.get(downloadPosition);
             jf.thumbnailMap = FileIO.bitmap2string(thumb);
+
             jigFiles.set(downloadPosition, jf);
             imageSelAdapter.notifyItemChanged(downloadPosition);
             downloadFileName = null;

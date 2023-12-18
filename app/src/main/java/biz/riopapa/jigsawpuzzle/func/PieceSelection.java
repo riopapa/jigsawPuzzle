@@ -7,8 +7,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
 import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
 
-import android.util.Log;
-
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceSelection {

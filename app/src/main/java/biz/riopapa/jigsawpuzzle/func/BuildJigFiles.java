@@ -15,7 +15,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 public class BuildJigFiles {
-    public BuildJigFiles(Context context) {
+    public BuildJigFiles() {
         jigFiles = new ArrayList<>();
 
         // add mipmap images into jigFiles;
@@ -28,28 +28,27 @@ public class BuildJigFiles {
             jF.thumbnailMap = FileIO.bitmap2string(iStorage.getThumbnail(i));
             jigFiles.add(jF);
         }
-        Log.w("jigFiles","jigFiles sz= "+jigFiles.size());
+        Log.w("jigFiles","jigFiles after iStorage sz= "+jigFiles.size());
 
         // List all files in the directory, then add to jigFiles
-        File mydir = mContext.getDir(jpgFolder, Context.MODE_PRIVATE); //Creating an internal dir;
-        File[] files = mydir.listFiles();
+        File myDir = mContext.getDir(jpgFolder, Context.MODE_PRIVATE); //Creating an internal dir;
+        File[] files = myDir.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 String fName = file.getName();
                 if (fName.endsWith(".jpg")) {
                     JigFile jf = new JigFile();
-                    Bitmap bMap = FileIO.getJPGFile(context, jpgFolder, fName);
+                    Bitmap bMap = FileIO.getJPGFile(jpgFolder, fName);
                     assert bMap != null;
                     jf.thumbnailMap = FileIO.bitmap2string(Bitmap.createScaledBitmap(bMap,
                             (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true));
                     jf.game = fName.substring(0, 3);
                     jf.downloaded = true;
-                    Log.w("exist","file ="+jf.game);
                     jigFiles.add(jf);
                 }
             }
         }
-        Log.w("jigFiles","jigFiles sz= "+jigFiles.size());
+        Log.w("jigFiles","jigFiles after local files sz= "+jigFiles.size());
     }
 }

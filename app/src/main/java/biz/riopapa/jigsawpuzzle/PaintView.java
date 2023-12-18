@@ -7,7 +7,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
@@ -77,7 +79,9 @@ public class PaintView extends View {
             return;
         invalidateTime = nowTime + INVALIDATE_INTERVAL / 2;
         pieceDraw.draw(canvas);
-
+        if (gameMode == GAME_COMPLETED) {
+            paintActivity.finish();
+        }
     }
 
     private void paintTouchUp(){

@@ -1,8 +1,5 @@
 package biz.riopapa.jigsawpuzzle.model;
 
-import biz.riopapa.jigsawpuzzle.model.FloatPiece;
-import biz.riopapa.jigsawpuzzle.model.JigTable;
-
 import java.util.ArrayList;
 
 public class GVal {

@@ -1,8 +1,9 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.areaMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
@@ -10,13 +11,14 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.areaMap;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jigDones;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -35,6 +37,7 @@ import android.graphics.Path;
 import java.util.Random;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class PieceDraw {
@@ -44,6 +47,7 @@ public class PieceDraw {
     final int LOW_ALPHA = 117;
 
     ActivityJigsawBinding binding;
+    PieceImage pieceImage;
     public PieceDraw(ActivityJigsawBinding binding) {
         this.binding = binding;
         pGrayed0 = new Paint();
@@ -54,9 +58,9 @@ public class PieceDraw {
 
         pathPaint = new Paint();
         pathPaint.setColor(chosenImageColor);
-        gapSmall = gVal.picGap / 3;
         gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
+        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
     }
 
     public void draw(Canvas canvas){
@@ -67,7 +71,7 @@ public class PieceDraw {
         showPieceImage(canvas);
 //        showUnlockedImages(canvas);
         showLockedPieces(canvas);
-        showPiecePoint(canvas);
+        showPieceDiamondPoint(canvas);
         showFloatingPieces(canvas);
         if (nowDragging) {
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
@@ -209,8 +213,21 @@ public class PieceDraw {
             }
         }
         if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            congCount = congrats.length * 4;
+            congCount = jigDones.length * 5;
             allLockedMode = 20;
+            int locked = 0;
+            for (int cc = 0; cc < gVal.colNbr; cc++) {
+                for (int rr = 0; rr < gVal.rowNbr; rr++) {
+                    if (gVal.jigTables[cc][rr].locked)
+                        locked++;
+                    else
+                        break;
+                }
+            }
+            if (locked == gVal.colNbr * gVal.rowNbr) {
+                congCount = congrats.length * 4;
+                allLockedMode = 30;     // all puzzles are locked
+            }
         }
 
     }
@@ -259,8 +276,11 @@ public class PieceDraw {
         }
     }
 
-    private void showPiecePoint(Canvas canvas) {
+    private void showPieceDiamondPoint(Canvas canvas) {
+
         if (showBack == 0 || showBack == 1) {
+
+            gapSmall = gVal.picGap / ((showBack == 0) ? 3 : 4);
             for (int c = 1; c < gVal.showMaxX; c++) {
                 for (int r = 1; r < gVal.showMaxY; r++) {
                     Path path = new Path();
@@ -277,28 +297,20 @@ public class PieceDraw {
         }
     }
 
-    private void showCongratsX(Canvas canvas) {
-        congCount--;
-        for (int i = 0; i < 6; i++) {
-            int x = rnd.nextInt(screenX * 5 / 8);
-            int y = screenY / 8 + rnd.nextInt(screenY * 5 / 8);
-            int idx = rnd.nextInt(congrats.length-1);
-            canvas.drawBitmap(congrats[idx], x, y, null);
-        }
-        if (congCount == 0)
-            allLockedMode = 2;
-    }
-
     private void showCongrats(Canvas canvas) {
         congCount--;
-
-        int x = screenX / 8;
+        int x = screenX / 7;
         int y = screenY / 3;
         for (int i = 0; i < congrats.length; i++) {
-            int idx = congCount % congrats.length;
-            canvas.drawBitmap(congrats[idx], x, y, null);
+            int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigDones.length);
+            canvas.drawBitmap((allLockedMode == 30) ? congrats[idx] : jigDones[idx], x, y, null);
         }
-        if (congCount == 0)
-            allLockedMode = 2;
+        if (congCount == 0) {
+            if (allLockedMode == 30) {
+                gameMode = GAME_COMPLETED;
+                allLockedMode = 99;
+            } else
+                allLockedMode = 2;
+        }
     }
 }

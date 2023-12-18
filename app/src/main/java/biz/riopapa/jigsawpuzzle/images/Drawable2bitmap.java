@@ -11,9 +11,9 @@ public class Drawable2bitmap {
 
     /**
      * converts drawable resources into oLine;
-     * @param xySize : piece outer size (one time only)
-     * @param drawableId
-     * @return bitmap
+     * inp : piece outer size (one time only)
+     * inp : drawableId
+     * out : bitmap
      **/
 
     Context context;

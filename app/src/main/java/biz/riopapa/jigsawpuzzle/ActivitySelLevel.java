@@ -6,7 +6,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
@@ -24,17 +23,20 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,17 +44,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import biz.riopapa.jigsawpuzzle.ActivityJigsaw;
-import biz.riopapa.jigsawpuzzle.images.PieceImage;
-import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import biz.riopapa.jigsawpuzzle.func.CalcImageColor;
 import biz.riopapa.jigsawpuzzle.func.ClearGValValues;
 import biz.riopapa.jigsawpuzzle.func.DefineColsRows;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
-import biz.riopapa.jigsawpuzzle.images.Masks;
 import biz.riopapa.jigsawpuzzle.func.SetPicSizes;
+import biz.riopapa.jigsawpuzzle.images.Masks;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
 
@@ -62,6 +62,8 @@ public class ActivitySelLevel extends AppCompatActivity {
     AlertDialog alertDialog;
     Context context;
     DefineColsRows defineColsRows;
+    PieceImage pieceImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,8 +118,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-        srcMaskMaps = new Masks().make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks().makeOut(mContext, gVal.imgOutSize);
+        srcMaskMaps = new Masks(this).make(mContext, gVal.imgOutSize);
+        outMaskMaps = new Masks(this).makeOut(mContext, gVal.imgOutSize);
 
 //        if (history.latest != -1) {
 //            int xSize = screenX;
@@ -128,43 +130,18 @@ public class ActivitySelLevel extends AppCompatActivity {
 //            binding.selImage.setImageBitmap(bitmap);
 //
 //        } else
-            binding.selImage.setImageBitmap(chosenImageMap);
-
+//        binding.selImage.setImageBitmap(chosenImageMap);
+        TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0f, -500f);
+        // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
+        animation.setDuration(10000); // animation duration
+        animation.setRepeatCount(-1); // animation repeat count -1 means infinite
+        animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
+        animation.setFillAfter(false);
+        binding.selImage.startAnimation(animation);//your_view for mine is imageView
+        binding.selImage.setImageBitmap(chosenImageMap);
+//        Log.w("binding","time1");
+//        showLocked(binding, chosenImageMap);
         select_level();
-    }
-
-    private static void showLocked(ActivitySelLevelBinding binding, int xSize, Bitmap bitmap) {
-
-        new Thread(() -> {
-            Canvas canvas = new Canvas(bitmap);
-            float szI = (float) xSize / (gVal.colNbr+1);
-            float szO = szI * 24 / 14;
-            for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                for (int cc = 0; cc < gVal.colNbr; cc++) {
-                    if (!gVal.jigTables[cc][rr].locked) {
-                        Bitmap picMap = pieceImage.makePic(cc, rr);
-                        Bitmap sMap = Bitmap.createScaledBitmap(picMap,
-                                (int) szO, (int) szO, false);
-                        canvas.drawBitmap(sMap, cc * szI, rr * szI, null);
-                        binding.selImage.setImageBitmap(bitmap);
-                        binding.selImage.invalidate();
-                    }
-                }
-            }
-            for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                for (int cc = 0; cc < gVal.colNbr; cc++) {
-                    if (gVal.jigTables[cc][rr].locked) {
-                        Bitmap picMap = pieceImage.makePic(cc, rr);
-                        Bitmap oLMap = pieceImage.makeOline(picMap, cc, rr);
-                        Bitmap sMap = Bitmap.createScaledBitmap(oLMap,
-                                (int) szO, (int) szO, false);
-                        canvas.drawBitmap(sMap, cc * szI, rr * szI, null);
-                        binding.selImage.setImageBitmap(bitmap);
-                        binding.selImage.invalidate();
-                    }
-                }
-            }
-        }).start();
     }
 
     void select_level() {
@@ -172,6 +149,7 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
         builder.setView(dialogView);
+        Log.w("binding","time a1");
 
         alertDialog = builder.create();
         // show this dialog at the bottom
@@ -186,13 +164,16 @@ public class ActivitySelLevel extends AppCompatActivity {
         alertDialog.getWindow().getAttributes().width = screenX;
         alertDialog.setCancelable(false);
         alertDialog.show();
+        Log.w("binding","time a2");
 
         setDialogInfo(dialogView, 0, R.id.lvl_easy, R.id.lvl_eInfo, R.id.lvl_eNew);
         setDialogInfo(dialogView, 1, R.id.lvl_normal, R.id.lvl_nInfo, R.id.lvl_nNew);
         setDialogInfo(dialogView, 2, R.id.lvl_hard, R.id.lvl_hInfo, R.id.lvl_hNew);
         setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
+        Log.w("binding","time a3");
 
         dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
+        Log.w("binding","time 4");
 
     }
 
@@ -204,6 +185,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         tv = dialogView.findViewById(infoId);
         s  = levelNames[lvl] + "\n" + defineColsRows.col +"x"+ defineColsRows.row;
         tv.setText(s);
+
         tv = dialogView.findViewById(activeId);
         s  = "\n" + history.percent[lvl] + "%" + "\n" + sdf.format(history.time[lvl])+"\n";
         tv.setText(s);
@@ -213,6 +195,15 @@ public class ActivitySelLevel extends AppCompatActivity {
         } else
             dialogView.findViewById(activeId).setVisibility(View.INVISIBLE);
         dialogView.findViewById(newId).setOnClickListener(this::edit_table);
+        if (history.latest == lvl && history.percent[lvl] != 100) {
+            TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, -10.0f, 10.0f);
+            // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
+            animation.setDuration(200); // animation duration
+            animation.setRepeatCount(-1); // animation repeat count -1 means infinite
+            animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
+            animation.setFillAfter(false);
+            dialogView.findViewById(activeId).startAnimation(animation);//your_view for mine is imageView
+        }
     }
 
     private void edit_table(View view) {
@@ -225,6 +216,25 @@ public class ActivitySelLevel extends AppCompatActivity {
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }
+
+
+    void levelSelected(View view) {
+
+        float fromScale = 0.5f;
+        float toScale = 1.0f;
+
+        ValueAnimator animator = ValueAnimator.ofFloat(fromScale, toScale);
+        animator.setDuration(3500);
+        animator.addUpdateListener(animation -> {
+            float scale = (float) animation.getAnimatedValue();
+            view.setScaleX(scale);
+            view.setScaleY(scale);
+        });
+
+        animator.setInterpolator(new DecelerateInterpolator()); // Choose your desired interpolator
+        animator.start();
+    }
+
     private void go_back(View view) {
         alertDialog.dismiss();
         finish();

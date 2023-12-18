@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle.model;
 
-import android.graphics.Bitmap;
-
 public class JigFile {
     public String game; // _00 ~ _xx : internal mipmap else from google drive
     public String thumbnailMap; // if thumbnailMap is null then should be get from google Drive

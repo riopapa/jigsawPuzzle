@@ -3,6 +3,11 @@
     android:viewportWidth="24"
     android:width="64dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FF305A45"
-        android:pathData="M0,15h2L2,9L0,9v6zM3,17h2L5,7L3,7v10zM22,9v6h2L24,9h-2zM19,17h2L21,7h-2v10zM16.5,3h-9C6.67,3 6,3.67 6,4.5v15c0,0.83 0.67,1.5 1.5,1.5h9c0.83,0 1.5,-0.67 1.5,-1.5v-15c0,-0.83 -0.67,-1.5 -1.5,-1.5zM16,19L8,19L8,5h8v14z"/>
+    <path android:strokeColor="#CCA393"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2"
+        android:pathData="M1,8v8M4,6v12M7,2v20h10v-20h-10
+                M20,6v12M23,8v8
+        "/>
 </vector>
