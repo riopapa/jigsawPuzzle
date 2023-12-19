@@ -12,7 +12,7 @@ public class GVal {
     public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
     public int recSize, picOSize, picISize, picGap, picHSize;
-    // recycler size, at PaintView size;
+    // recycler size, at ForeView size;
     // picOSize : picture outer size
     // picISize : picture inner size
     // picGap   : gap between picISize and picOSize

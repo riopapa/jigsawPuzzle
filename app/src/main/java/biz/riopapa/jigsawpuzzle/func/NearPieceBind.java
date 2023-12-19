@@ -7,18 +7,18 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.PaintView.nearByFloatPiece;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
-import static biz.riopapa.jigsawpuzzle.PaintView.piecePosition;
+import static biz.riopapa.jigsawpuzzle.ForeView.nearByFloatPiece;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
+import static biz.riopapa.jigsawpuzzle.ForeView.piecePosition;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class NearPieceBind {
 
-    public void check(){
+    public boolean check(){
         if (doNotUpdate)
-            return;
+            return false;
 
         if (nowIdx < gVal.fps.size() -1) {
             new MoveThisOnTop(nowFp, nowIdx);
@@ -54,7 +54,7 @@ public class NearPieceBind {
                     i++;
             }
             allLockedMode = 10;
-            return;
+            return true;
         }
 
 
@@ -123,8 +123,7 @@ public class NearPieceBind {
                 }
             }
         }
+        return false;
     }
-
-
 
 }

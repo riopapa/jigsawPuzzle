@@ -4,8 +4,8 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 

@@ -50,8 +50,8 @@
         android:layout_margin="8dp"
         />
 
-    <biz.riopapa.jigsawpuzzle.PaintView
-        android:id="@+id/backview"
+    <biz.riopapa.jigsawpuzzle.BackView
+        android:id="@+id/back_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/piece_recycler"
@@ -59,15 +59,14 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
 
-    <biz.riopapa.jigsawpuzzle.PaintView
-        android:id="@+id/paintview"
+    <biz.riopapa.jigsawpuzzle.ForeView
+        android:id="@+id/paint_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/piece_recycler"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/piece_recycler"

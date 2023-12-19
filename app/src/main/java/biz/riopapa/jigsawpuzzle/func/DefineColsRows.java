@@ -25,8 +25,6 @@ public class DefineColsRows {
             col = row * chosenImageWidth / chosenImageHeight + 1;  // one more possible?
             float szH = (float) chosenImageHeight / (float) (row);
             int col2 = (int) ((float) chosenImageWidth / szH);
-            if (col != col2)
-                Log.e("defineCol","lvl="+level+" game="+gVal.game+" "+col + " vs "+col2);
             if (col2 > col + 2)
                 col++;
         } else {
@@ -35,8 +33,6 @@ public class DefineColsRows {
             row = col * chosenImageHeight / chosenImageWidth + 1;  // to avoid over y size
             float szW = (float) chosenImageWidth / (float) (col);
             int row2 = (int) ((float) chosenImageHeight / szW);
-            if (row != row2)
-                Log.e("defineRow","lvl="+level+" game="+gVal.game+" "+row + " vs "+row2);
             if (row2 > row + 2)
                 row++;
         }

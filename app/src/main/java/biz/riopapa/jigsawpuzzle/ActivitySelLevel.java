@@ -152,7 +152,6 @@ public class ActivitySelLevel extends AppCompatActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(dialogView.getContext());
             builder.setView(dialogView);
-            Log.w("binding","time a1");
 
             alertDialog = builder.create();
             // show this dialog at the bottom
@@ -167,16 +166,12 @@ public class ActivitySelLevel extends AppCompatActivity {
             alertDialog.getWindow().getAttributes().width = screenX;
             alertDialog.setCancelable(false);
             alertDialog.show();
-            Log.w("binding","time a2");
 
             setDialogInfo(dialogView, 0, R.id.lvl_easy, R.id.lvl_eInfo, R.id.lvl_eNew);
             setDialogInfo(dialogView, 1, R.id.lvl_normal, R.id.lvl_nInfo, R.id.lvl_nNew);
             setDialogInfo(dialogView, 2, R.id.lvl_hard, R.id.lvl_hInfo, R.id.lvl_hNew);
             setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
-            Log.w("binding","time a3");
-
             dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
-            Log.w("binding","time 4");
         });
 
     }

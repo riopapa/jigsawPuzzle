@@ -10,7 +10,9 @@ import biz.riopapa.jigsawpuzzle.R;
 public class Masks {
 
     PieceImage pieceImage;
+    Context context;
     public Masks(Context context) {
+        this.context = context;
         pieceImage = new PieceImage(context, gVal.imgOutSize, gVal.imgInSize);
     }
     /*

@@ -2,19 +2,21 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.backView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowIdx;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
 
 import android.graphics.Canvas;
 import android.util.Log;
@@ -79,9 +81,10 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 removeFromRecycle();
                 add2FloatingPiece();
                 anchorPiece.move();
-                nearPieceBind.check();
-//                GVal.debugMode = false;
-//                doNotUpdate = false;
+                if (nearPieceBind.check()) {
+                    backView.invalidate();
+//                    foreView.invalidate();
+                }
             }
         } else {
             Log.e("xx onSelec", "Helper "+actionState);
@@ -196,6 +199,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //            String txt = "dxDy "+dX+" x "+dY
 //                    + "\n GVal.jPos "+dragX+" x "+dragY + "fps size="+ gVal.fps.size();
 //            Log.w("screenbottom", txt);
+            foreView.invalidate();
         }
 
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;

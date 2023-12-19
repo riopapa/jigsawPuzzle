@@ -41,7 +41,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public static Context mContext;
 
-    public static Timer invalidateTimer;
     ActivityMainBinding binding;
 
 //    public static int maxImageCount;
@@ -84,7 +83,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static String appVersion = "";
 
     public static boolean debugMode = false;
-    public final static long INVALIDATE_INTERVAL = 100;
+    public static boolean showCR = true;
+    public final static long INVALIDATE_INTERVAL = 30;
 
     // Google Drive related variables
     final String imageListId = "1HoO4s3dv4i8GAG5s5Nsl6HzMzF5TQ9Hf";
@@ -145,7 +145,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     protected void onResume() {
         super.onResume();
         Log.w("Main ","onResume "+gameMode+" currGame="+currGame);
-        invalidateTimer = new Timer();
+//        invalidateTimer = new Timer();
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 

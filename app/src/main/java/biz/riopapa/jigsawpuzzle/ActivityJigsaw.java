@@ -2,7 +2,6 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
@@ -32,7 +31,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,7 +66,7 @@ public class ActivityJigsaw extends Activity {
 
     public static RecyclerView jigRecyclerView;
 
-    public static PaintView paintView;
+    public static ForeView foreView;
 
     public static BackView backView;
 
@@ -78,7 +76,7 @@ public class ActivityJigsaw extends Activity {
 
     public static Timer invalidateTimer;
 
-    public static Bitmap chosenImageMap, areaMap, backMap;
+    public static Bitmap chosenImageMap, areaMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite;
     public static int activePos; // jigsaw slide x, y count
@@ -114,11 +112,11 @@ public class ActivityJigsaw extends Activity {
         congrats = new Congrat().make(screenX * 7/10);
         jigDones = new JigDone().make(screenX * 7/10);
 
-        paintView = findViewById(R.id.paintview);
-        paintView.init(this, binding);
-        binding.paintview.getLayoutParams().height = screenBottom;
+        foreView = findViewById(R.id.paint_view);
+        binding.paintView.getLayoutParams().height = screenBottom;
 
-        backView = findViewById(R.id.backview);
+        backView = findViewById(R.id.back_view);
+        binding.backView.getLayoutParams().height = screenBottom;
 
         showThumbnail = new ShowThumbnail();
 
@@ -204,11 +202,11 @@ public class ActivityJigsaw extends Activity {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                paintView.invalidate();
+                foreView.invalidate();
             }
         };
-        invalidateTimer = new Timer();
-        invalidateTimer.schedule(tt, 100, INVALIDATE_INTERVAL);
+//        invalidateTimer = new Timer();
+//        invalidateTimer.schedule(tt, 100, INVALIDATE_INTERVAL);
 
         String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
 
@@ -226,6 +224,10 @@ public class ActivityJigsaw extends Activity {
                 }
             }
         }
+        backView.init(this, binding);
+        backView.invalidate();
+        foreView.init(this, binding);
+        foreView.invalidate();
     }
 
     private void readyPieces() {
@@ -241,10 +243,9 @@ public class ActivityJigsaw extends Activity {
         }).start();
     }
 
+
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
-
-        makeBackMap();
 
         binding.moveLeft.setVisibility ((gVal.offsetC == 0) ? View.INVISIBLE: View.VISIBLE);
         binding.moveRight.setVisibility ((gVal.offsetC == gVal.colNbr-gVal.showMaxX) ? View.INVISIBLE: View.VISIBLE);
@@ -287,26 +288,10 @@ public class ActivityJigsaw extends Activity {
 //        })).start();
     }
 
-    void makeBackMap() {
-        backMap = Bitmap.createBitmap((gVal.showMaxX+1) * gVal.picISize,
-                (gVal.showMaxY+1)* gVal.picISize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(backMap);
-
-        for (int c = 0; c < gVal.showMaxX; c++) {
-            for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                canvas.drawBitmap(jigPic[cc][rr],
-                            c * gVal.picISize, r * gVal.picISize, null);
-            }
-
-        }
-    }
-
     @Override
     protected void onPause() {
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
-        invalidateTimer.cancel();
+//        invalidateTimer.cancel();
         if (gameMode != GAME_GOBACK_TO_MAIN)
             gameMode = GAME_PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
@@ -342,6 +327,8 @@ public class ActivityJigsaw extends Activity {
         sharedEditor.putInt("backColor", backColor);
         sharedEditor.putString("appVersion", appVersion);
         sharedEditor.apply();
+        backView.invalidate();
+        foreView.invalidate();
     }
 
     @Override

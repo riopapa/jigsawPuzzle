@@ -3,7 +3,7 @@ package biz.riopapa.jigsawpuzzle.func;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.PaintView.nowFp;
+import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 

@@ -4,6 +4,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
@@ -99,7 +100,7 @@ public class PieceImage {
         Canvas canvas = new Canvas(src);
         canvas.drawBitmap(orgPiece, 0, 0, null);
         canvas.drawBitmap(mask, 0, 0, paintIN);
-        if (debugMode) {
+        if (showCR) {
             Paint p = new Paint();
             p.setColor(Color.BLACK);
             p.setTextSize(orgSizeOut * 4f / 18f);
@@ -117,14 +118,18 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jig = gVal.jigTables[col][row];
+        int del = gVal.picISize/14;
         Bitmap mask = maskMerge(outMaskMaps[0][jig.lType], outMaskMaps[1][jig.rType],
                 outMaskMaps[2][jig.uType], outMaskMaps[3][jig.dType]);
-        Bitmap maskScaled = Bitmap.createScaledBitmap(mask, gVal.picOSize, gVal.picOSize, true);
+        Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
+                gVal.picOSize-del, gVal.picOSize-del, true);
+        Bitmap picScaled = Bitmap.createScaledBitmap(pic,
+                gVal.picOSize-del, gVal.picOSize-del, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(maskScaled,0,0,  (jig.locked) ? paintLockedATop : paintOutATop);
         Matrix matrix = new Matrix();
-        canvas.drawBitmap(pic, matrix, paintOutLine);
+        canvas.drawBitmap(picScaled, matrix, paintOutLine);
         return outMap;
     }
 

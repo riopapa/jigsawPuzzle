@@ -2,8 +2,11 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.backView;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
@@ -38,24 +41,24 @@ import biz.riopapa.jigsawpuzzle.func.PieceSelection;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
-public class PaintView extends View {
+public class ForeView extends View {
 
     public static int nowIdx;
-    public Activity paintActivity;
+    Activity paintActivity;
     public static PiecePosition piecePosition;
     public static NearByFloatPiece nearByFloatPiece;
-    PieceDraw pieceDraw;
+    ForeDraw foreDraw;
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
     PieceSelection pieceSelection;
 
     public static FloatPiece nowFp;
 
-    public PaintView(Context context) {
+    public ForeView(Context context) {
         this(context, null);
     }
 
-    public PaintView(Context context, @Nullable AttributeSet attrs) {
+    public ForeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
     public static long invalidateTime;
@@ -67,7 +70,7 @@ public class PaintView extends View {
         this.binding = binding;
         nowFp = null;
         piecePosition = new PiecePosition(activity);
-        pieceDraw = new PieceDraw(binding);
+        foreDraw = new ForeDraw(binding);
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
@@ -75,54 +78,40 @@ public class PaintView extends View {
         invalidateTime = System.currentTimeMillis();
         if (showBack == 0)
             showBackCount = 200 * 10;
-        readyPieceImages();
     }
 
-    private void readyPieceImages() {
-
-        PieceImage pieceImage = new PieceImage(this.getContext(), gVal.imgOutSize, gVal.imgInSize);
-
-        for (int c = 0; c < gVal.showMaxX; c++) {
-            for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (jigPic[cc][rr] == null)
-                    jigPic[cc][rr] = pieceImage.makePic(cc, rr);
-                if (jigOLine[cc][rr] == null) {
-                    jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                }
-            }
-        }
-    }
-
-
-    protected void onDraw(@NonNull Canvas canvas){
+    protected void onDraw(@NonNull Canvas fCanvas){
         long nowTime = System.currentTimeMillis();
         if (nowTime < invalidateTime)
             return;
         invalidateTime = nowTime + INVALIDATE_INTERVAL;
-        pieceDraw.draw(canvas);
+        foreDraw.draw(fCanvas);
         if (gameMode == GAME_COMPLETED) {
             paintActivity.finish();
+        }
+        if (congCount > 0) {
+            backView.invalidate();
+            foreView.invalidate();
         }
     }
 
     private void paintTouchUp(){
-        gVal.allLocked = isPiecesAllLocked();
+//        gVal.allLocked = isPiecesAllLocked();
     }
 
-    boolean isPiecesAllLocked() {
-        if (gVal.activeJigs.size() > 0 || gVal.fps.size() > 0) {
-            return false;
-        }
-        for (int c = 0; c < gVal.colNbr; c++) {
-            for (int r = 0; r < gVal.rowNbr; r++) {
-                if (!gVal.jigTables[c][r].locked)
-                    return false;
-            }
-        }
-        return true;
-    }
+//    boolean isPiecesAllLocked() {
+//        if (gVal.activeJigs.size() > 0 || gVal.fps.size() > 0) {
+//            return false;
+//        }
+//        for (int c = 0; c < gVal.colNbr; c++) {
+//            for (int r = 0; r < gVal.rowNbr; r++) {
+//                if (!gVal.jigTables[c][r].locked)
+//                    return false;
+//            }
+//        }
+//        return true;
+//    }
+
     long nextOKTime = 0, nowTime;
     static int xOld, yOld;
     public boolean onTouchEvent(MotionEvent event) {
@@ -140,6 +129,8 @@ public class PaintView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 pieceSelection.check(x, y);
+//                backView.invalidate();
+//                foreView.invalidate();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -160,12 +151,15 @@ public class PaintView extends View {
                         nowFp.posX = x;
                         nowFp.posY = y;
                         anchorPiece.move();
-                        nearPieceBind.check();
+                        if (nearPieceBind.check()) {
+                            foreView.invalidate();
+                        }
                     } else {
                         y -= gVal.picOSize;
                         nowFp.posX = x;
                         nowFp.posY = y;
                     }
+                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
