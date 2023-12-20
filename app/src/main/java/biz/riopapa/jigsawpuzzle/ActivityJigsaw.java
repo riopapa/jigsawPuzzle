@@ -2,6 +2,7 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
@@ -23,9 +24,12 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
+import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
+import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 
 import android.app.Activity;
 import android.content.Context;
@@ -74,8 +78,6 @@ public class ActivityJigsaw extends Activity {
 
     public static boolean doNotUpdate; // wait while one action completed
 
-    public static Timer invalidateTimer;
-
     public static Bitmap chosenImageMap, areaMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite;
@@ -89,7 +91,7 @@ public class ActivityJigsaw extends Activity {
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
-
+    public static Timer loopTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,11 +152,15 @@ public class ActivityJigsaw extends Activity {
         });
 
         binding.showBack.setImageResource(eyes[showBack]);
+        if (showBack == 0) {
+            showBackCount = showBackLoop;
+            backBlink = true;
+        }
         binding.showBack.setOnClickListener(v -> {
             showBack = (showBack + 1) % 3;
             binding.showBack.setImageResource(eyes[showBack]);
             if (showBack == 0)
-                showBackCount = 250 * 10;
+                showBackCount = showBackLoop;
             save_params();
         });
 
@@ -228,6 +234,18 @@ public class ActivityJigsaw extends Activity {
         backView.invalidate();
         foreView.init(this, binding);
         foreView.invalidate();
+
+        loopTimer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (foreBlink)
+                    foreView.invalidate();
+                if (backBlink)
+                    backView.invalidate();
+            }
+        };
+        loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
     }
 
     private void readyPieces() {
@@ -285,6 +303,7 @@ public class ActivityJigsaw extends Activity {
             doNotUpdate = false;
             allLockedMode = 0;
             congCount = 0;
+            backBlink = true;
 //        })).start();
     }
 

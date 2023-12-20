@@ -17,6 +17,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -62,11 +63,14 @@ public class BackDraw {
         backPieceImages(canvas);
         showPieceDiamondPoint(canvas);
         canvas.restore();
-
     }
 
     private void backPieceImages(Canvas canvas) {
 
+        int alpha = 255 * (showBackCount--) / showBackLoop;
+        if (alpha < LOW_ALPHA)
+            alpha = LOW_ALPHA;
+        pGrayed0.setAlpha(alpha);
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
                 final int cc = c + gVal.offsetC;
@@ -80,7 +84,7 @@ public class BackDraw {
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pFull);
-                } else if (showBack == 0){
+                } else if (showBack == 0) {
                     canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,

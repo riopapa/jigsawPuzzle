@@ -190,13 +190,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         for (int i = 0; i < 4; i++) {
             if (hist.locked[i] > 0) {
                 drawStatusCircle(canvas, width, height, i, hist.percent[i]);
-
-//                canvas.drawLine(w4 * i + d, d, w4 * i + w4 - d, d, boxPaint);   // top
-//                canvas.drawLine(w4 * i + d , h, w4 * i + w4 - d, h, boxPaint);   // bottom
-//                canvas.drawLine(w4 * i + d, d, w4 * i, h-d, boxPaint);    // left
-//                canvas.drawLine(w4 * i + w4 - d, d, w4 * i + w4-d, h-d, boxPaint);    // right
-//                canvas.drawRect(w4 * i + d, h - (float) (h * hist.percent[i]) / 100,
-//                        w4 * i + w4-d, h-d, paint[i]);
             }
         }
         holder.iVStatus.setImageBitmap(statusMap);

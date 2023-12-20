@@ -2,23 +2,19 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.backView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,21 +34,21 @@ import biz.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.func.PiecePosition;
 import biz.riopapa.jigsawpuzzle.func.PieceSelection;
-import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class ForeView extends View {
 
     public static int nowIdx;
     Activity paintActivity;
-    public static PiecePosition piecePosition;
     public static NearByFloatPiece nearByFloatPiece;
+    public static PiecePosition piecePosition;
     ForeDraw foreDraw;
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
     PieceSelection pieceSelection;
 
     public static FloatPiece nowFp;
+    public static boolean foreBlink, backBlink;
 
     public ForeView(Context context) {
         this(context, null);
@@ -77,21 +73,18 @@ public class ForeView extends View {
         pieceSelection = new PieceSelection();
         invalidateTime = System.currentTimeMillis();
         if (showBack == 0)
-            showBackCount = 200 * 10;
+            showBackCount = showBackLoop;
     }
 
     protected void onDraw(@NonNull Canvas fCanvas){
-        long nowTime = System.currentTimeMillis();
-        if (nowTime < invalidateTime)
-            return;
-        invalidateTime = nowTime + INVALIDATE_INTERVAL;
+
+        foreBlink = false;
         foreDraw.draw(fCanvas);
         if (gameMode == GAME_COMPLETED) {
             paintActivity.finish();
         }
         if (congCount > 0) {
-            backView.invalidate();
-            foreView.invalidate();
+            foreBlink = true;
         }
     }
 
@@ -151,9 +144,7 @@ public class ForeView extends View {
                         nowFp.posX = x;
                         nowFp.posY = y;
                         anchorPiece.move();
-                        if (nearPieceBind.check()) {
-                            foreView.invalidate();
-                        }
+                        nearPieceBind.check();
                     } else {
                         y -= gVal.picOSize;
                         nowFp.posX = x;

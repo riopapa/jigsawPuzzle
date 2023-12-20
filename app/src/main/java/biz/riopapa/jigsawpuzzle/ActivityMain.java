@@ -78,6 +78,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
      */
     public static boolean vibrate = true;
     public static int showBack = 0, showBackCount = 0;
+    public static final int showBackLoop = 500;
     public static boolean sound = false;
     public static int backColor = 0;
     public static String appVersion = "";

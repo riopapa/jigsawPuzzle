@@ -15,6 +15,8 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
+import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
+import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
 
@@ -82,8 +84,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 add2FloatingPiece();
                 anchorPiece.move();
                 if (nearPieceBind.check()) {
-                    backView.invalidate();
-//                    foreView.invalidate();
+                    backBlink = true;
+                    foreBlink = true;
                 }
             }
         } else {

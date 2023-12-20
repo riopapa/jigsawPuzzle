@@ -88,11 +88,6 @@ public class NearPieceBind {
                 gVal.fps.set(ancThis, fpThis);
             }
             long anchorThis = fpThis.anchorId;
-
-//            for (int i = 0; i < GVal.fps.size(); i++) {
-//                Log.w(GVal.fps.get(i).C+"x"+GVal.fps.get(i).R+" before "+i, GVal.jigTables[GVal.fps.get(i).C][GVal.fps.get(i).R].posX +"x"+GVal.jigTables[GVal.fps.get(i).C][GVal.fps.get(i).R].posY);
-//            }
-
             for (int i = 0; i < gVal.fps.size(); i++) {
                 FloatPiece fpW = gVal.fps.get(i);
                 if (fpW.anchorId == anchorThis) {
@@ -102,8 +97,6 @@ public class NearPieceBind {
                     fpW.mode = ANI_ANCHOR; // make it not zero
                     fpW.count = 5;
                     gVal.fps.set(i, fpW);
-//                    Log.w( fpW.C+"x"+fpW.R+" fpW "+i, "fpW "+
-//                            GVal.jigTables[fpW.C][fpW.R].posX +"x"+GVal.jigTables[fpW.C][fpW.R].posY);
                 } else if (fpW.anchorId == anchorBase) {
                     fpW.mode = ANI_ANCHOR; // make it not zero
                     fpW.count = 5;

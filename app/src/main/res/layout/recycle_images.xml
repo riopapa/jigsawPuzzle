@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/border_outer"
-    android:layout_margin="1dp"
-    >
+    android:layout_margin="1dp">
     <TextView
         android:id="@+id/info"
         android:gravity="center|left"
@@ -18,19 +18,21 @@
         android:layout_height="wrap_content"
         tools:ignore="RtlHardcoded" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/info"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/border_inner"
-        android:padding="2dp"
-        android:scaleType="fitXY" />
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:padding="6dp"
+        android:scaleType="fitXY"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
     <ImageView
         android:id="@+id/status"
         android:layout_below="@id/info"

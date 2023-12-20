@@ -16,6 +16,8 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
+import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 
 import android.app.Activity;
 import android.content.Context;
@@ -54,7 +56,10 @@ public class BackView extends View {
         backDraw = new BackDraw(binding);
     }
     protected void onDraw(@NonNull Canvas canvas){
+        backBlink = false;
         backDraw.draw(canvas);
+        if (showBackCount > 0)
+            backBlink = true;
     }
 
 }
