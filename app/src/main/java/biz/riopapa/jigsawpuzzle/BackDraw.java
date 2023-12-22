@@ -1,21 +1,12 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.areaMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.jigDones;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;

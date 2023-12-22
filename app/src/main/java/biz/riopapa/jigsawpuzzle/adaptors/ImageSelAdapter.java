@@ -112,7 +112,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     @NonNull
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_images, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recycle_images, parent, false);
         return new ViewHolder(view);
     }
 
@@ -146,6 +147,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         }
         if (fPhoneInchX > 3f && width > height)   // tablet height should be shortened
             height = height * 8 / 10;
+
         parImage.width = width;
         parImage.height = height;
         holder.iVImage.setLayoutParams(parImage);

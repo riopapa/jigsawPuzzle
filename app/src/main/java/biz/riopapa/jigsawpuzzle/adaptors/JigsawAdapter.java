@@ -38,7 +38,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
                 .inflate(R.layout.recycle_jigsaw, viewGroup, false);
         view.getLayoutParams().width = gVal.recSize;
         view.getLayoutParams().height = gVal.recSize;
-        ImageView iv = view.findViewById(R.id.recycle_jigsaw);
+        ImageView iv = view.findViewById(R.id.recycler_jigsaw);
         iv.getLayoutParams().height = gVal.picOSize;
         iv.getLayoutParams().width = gVal.picOSize;
         iv.requestLayout();
@@ -70,7 +70,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             this.viewLine = itemView.findViewById(R.id.piece_layout);
-            this.ivIcon = itemView.findViewById(R.id.recycle_jigsaw);
+            this.ivIcon = itemView.findViewById(R.id.recycler_jigsaw);
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);

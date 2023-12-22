@@ -30,6 +30,7 @@
         android:layout_marginBottom="3dp"
         android:padding="6dp"
         android:scaleType="fitXY"
+        app:strokeColor="@null"
         app:layout_constraintHorizontal_bias="0.5"
         app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
@@ -47,9 +48,9 @@
         android:id="@+id/new_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFF"
+        android:textColor="#FFEEEEEE"
         android:text="NEW"
-        android:background="#F00"
+        android:background="#8fFF303F"
         android:textSize="8sp"
         android:padding="2sp"
         android:layout_margin="4sp"

@@ -14,7 +14,7 @@ public class DefineControlButton {
             sizeHeight = gVal.baseY * 5 / 10;
         int sizeWidth = sizeHeight * chosenImageWidth / chosenImageHeight;
 
-        int gap = (sizeHeight > sizeWidth) ? sizeWidth /4: sizeHeight / 4;
+        int gap = (sizeHeight > sizeWidth) ? sizeWidth /3: sizeHeight / 3;
 
         binding.moveRight.getLayoutParams().width = gap;
         binding.moveRight.getLayoutParams().height = sizeHeight;

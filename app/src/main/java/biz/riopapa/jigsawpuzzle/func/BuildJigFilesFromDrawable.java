@@ -23,11 +23,11 @@ public class BuildJigFilesFromDrawable {
         ImageStorage iStorage = new ImageStorage();
         int imgCnt = iStorage.count();
         for (int i = 0; i < imgCnt ; i++) {
-            JigFile jF = new JigFile();
-            jF.game = iStorage.getGame(i);
-            jF.thumbnailMap = iStorage.getThumbnail(i);
-//            jF.thumbnailMap = FileIO.bitmap2string(iStorage.getThumbnail(i));
-            jigFiles.add(jF);
+            JigFile jf = new JigFile();
+            jf.game = iStorage.getGame(i);
+            jf.thumbnailMap = iStorage.getThumbnail(i);
+//            jf.thumbnailMap = FileIO.bitmap2string(iStorage.getThumbnail(i));
+            jigFiles.add(jf);
         }
 //        Log.w("jigFiles","jigFiles after iStorage sz= "+jigFiles.size());
 

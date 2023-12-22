@@ -79,7 +79,6 @@ public class HistoryGetPut {
         }
     }
     void add2History(String gameLevel, GVal gVal) {
-        Log.w("add2History", "gamelvl="+gameLevel);
         String game = gameLevel.substring(0,3);
         int level = Integer.parseInt(gameLevel.substring(3,4));
         History h;

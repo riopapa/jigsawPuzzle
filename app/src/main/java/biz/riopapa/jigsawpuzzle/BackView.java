@@ -1,5 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
+import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 
@@ -33,8 +34,6 @@ public class BackView extends View {
     protected void onDraw(@NonNull Canvas canvas){
         backBlink = false;
         backDraw.draw(canvas);
-        if (showBackCount > 0)
-            backBlink = true;
     }
 
 }

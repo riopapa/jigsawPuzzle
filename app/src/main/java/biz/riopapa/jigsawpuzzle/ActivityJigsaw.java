@@ -78,7 +78,7 @@ public class ActivityJigsaw extends Activity {
 
     public static boolean doNotUpdate; // wait while one action completed
 
-    public static Bitmap chosenImageMap, areaMap;
+    public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray;
     public static int activePos; // jigsaw slide x, y count
@@ -234,9 +234,33 @@ public class ActivityJigsaw extends Activity {
                     foreView.invalidate();
                 if (backBlink)
                     backView.invalidate();
+                if (showBackCount > 0) {
+                    showBackCount--;
+                    backBlink = true;
+                    if (showBackCount == 0) {
+                        showBack = 1;
+                        binding.showBack.setImageResource(eyes[showBack]);
+                        binding.showBack.invalidate();
+                    }
+                }
             }
         };
         loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
+        Thread thread = new Thread(() -> {
+            for (int cc = 0; cc < gVal.colNbr; cc++) {
+                for (int rr = 0; rr < gVal.rowNbr; rr++) {
+                    if (jigPic[cc][rr] == null)
+                        jigPic[cc][rr] = pieceImage.makePic(cc, rr);
+                    if (jigOLine[cc][rr] == null)
+                        jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
+                    if (jigGray[cc][rr] == null)
+                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+                }
+            }
+        });
+        thread.setName("Thread pic");
+        thread.start();
+
     }
 
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
@@ -247,7 +271,7 @@ public class ActivityJigsaw extends Activity {
         binding.moveUp.setVisibility((gVal.offsetR == 0)? View.INVISIBLE: View.VISIBLE);
         binding.moveDown.setVisibility((gVal.offsetR == gVal.rowNbr-gVal.showMaxY)? View.INVISIBLE: View.VISIBLE);
 
-        binding.layoutJigsaw.setAlpha(0.5f);
+//        binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
         doNotUpdate = true;
@@ -261,15 +285,6 @@ public class ActivityJigsaw extends Activity {
                 gVal.activeJigs.add(cr);
             }
         }
-        areaMap = Bitmap.createBitmap(chosenImageMap,
-                gVal.offsetC * gVal.imgInSize + gVal.imgGapSize,
-                gVal.offsetR * gVal.imgInSize + gVal.imgGapSize,
-                gVal.showMaxX * gVal.imgInSize,
-                gVal.showMaxY * gVal.imgInSize, null, false);
-
-        areaMap = Bitmap.createScaledBitmap(areaMap,
-                gVal.showMaxX * gVal.picISize, gVal.showMaxY * gVal.picISize,
-                false);
         jigRecyclerView.setAdapter(activeAdapter);
         Bitmap thumb = showThumbnail.make();
         binding.thumbnail.setImageBitmap(thumb);
@@ -341,6 +356,7 @@ public class ActivityJigsaw extends Activity {
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
         gameMode = GAME_GOBACK_TO_MAIN;
+        loopTimer.cancel();
         super.onBackPressed();
     }
 }

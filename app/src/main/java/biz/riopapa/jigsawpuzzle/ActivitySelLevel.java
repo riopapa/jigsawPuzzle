@@ -82,6 +82,7 @@ public class ActivitySelLevel extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        findViewById(R.id.loading_circle).setVisibility(View.VISIBLE);
         Log.w("s1 SelLevel", "onResume gameMode="+gameMode);
         if (gameMode == GAME_GOBACK_TO_MAIN) {
             Log.w("SelLevel"," go back to main");
@@ -172,6 +173,8 @@ public class ActivitySelLevel extends AppCompatActivity {
             setDialogInfo(dialogView, 2, R.id.lvl_hard, R.id.lvl_hInfo, R.id.lvl_hNew);
             setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
             dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
+            findViewById(R.id.loading_circle).setVisibility(View.GONE);
+
         });
 
     }
@@ -207,10 +210,17 @@ public class ActivitySelLevel extends AppCompatActivity {
 
     private void edit_table(View view) {
         alertDialog.dismiss();
+
         gameMode = GAME_STARTED; // target Image, level has been set
         int level = Integer.parseInt(view.getTag().toString());
         // if level > 9 then it means play new game
         getGVal(level, defineColsRows);
+        pieceImage = null;
+        defineColsRows = null;
+        jigPic = null;
+        jigOLine = null;
+        jigWhite = null;
+        System.gc();
 
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
@@ -236,6 +246,13 @@ public class ActivitySelLevel extends AppCompatActivity {
 
     private void go_back(View view) {
         alertDialog.dismiss();
+        pieceImage = null;
+        defineColsRows = null;
+        jigPic = null;
+        jigOLine = null;
+        jigWhite = null;
+        System.gc();
+
         finish();
     }
 

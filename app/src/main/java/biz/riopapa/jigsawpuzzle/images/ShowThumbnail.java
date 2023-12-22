@@ -12,6 +12,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.util.Log;
 
 public class ShowThumbnail {
 
@@ -36,7 +37,12 @@ public class ShowThumbnail {
         rectHeight = oneSize * (float) gVal.showMaxY;
         xBeg = oneSize * (float) gVal.offsetC + gap;
         yBeg = oneSize * (float) gVal.offsetR + gap;
-
+        if (thumbHeight < (yBeg + rectHeight))
+            rectHeight = thumbHeight - yBeg - 1;
+        if (thumbWidth < (xBeg + rectWidth))
+            rectWidth = thumbWidth - xBeg - 1;
+        Log.e("data", "yBeg="+yBeg+" rectHeight="+rectHeight+" ");
+        Log.e("data","thumb "+thumb.getWidth()+"x"+thumb.getHeight()+" thumbHeight="+thumbHeight);
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);
         Paint pBox = new Paint();

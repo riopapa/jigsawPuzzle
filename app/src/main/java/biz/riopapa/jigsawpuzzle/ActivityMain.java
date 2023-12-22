@@ -47,7 +47,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     RecyclerView imageRecyclers;
     public static ImageSelAdapter imageSelAdapter;
     public static int gameMode;
-    public static String nowVersion = "000100";
+    public static String nowVersion = "000101";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -78,7 +78,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
      */
     public static boolean vibrate = true;
     public static int showBack = 0, showBackCount = 0;
-    public static final int showBackLoop = 300;
+    public static final int showBackLoop = 3333;
     public static boolean sound = false;
     public static int backColor = 0;
     public static String appVersion = "";
