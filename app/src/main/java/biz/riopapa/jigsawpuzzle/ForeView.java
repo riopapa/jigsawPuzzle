@@ -11,7 +11,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;

@@ -2,10 +2,10 @@ package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,14 +18,13 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
-import android.util.Log;
 
 import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pLockLine;
+    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine;
     int outLineColor, lockedColor;
 
     Context context;

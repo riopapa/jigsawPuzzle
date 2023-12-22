@@ -2,14 +2,13 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.backView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
