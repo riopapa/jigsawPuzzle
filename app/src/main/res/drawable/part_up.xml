@@ -6,10 +6,10 @@
 
     <path
         android:strokeWidth=".32"
-        android:strokeColor="#F00"
+        android:strokeColor="#ECFF33"
         android:fillColor="#ACDF13"
         android:pathData="
-    M-0.1,0 l12.2,12.2 12.2 -12.1
+    M-0.1,0 l12.1,12.1 12.1 -12.1
     z"
     />
 
