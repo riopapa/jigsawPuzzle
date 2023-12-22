@@ -35,8 +35,8 @@ public class PieceImage {
         this.orgSizeIn = imgInSize;
 
         pIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
-        outLineColor = chosenImageColor;
-        lockedColor = 0x1F000000 | (0x00FFFFFF & ~outLineColor);
+        lockedColor = chosenImageColor;
+        outLineColor = 0x1F000000 | (0x00FFFFFF & ~lockedColor);
 
         pIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
@@ -113,17 +113,15 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jig = gVal.jigTables[col][row];
-        int del = 0; // gVal.picISize/7;
         Bitmap mask = maskMerge(outMaskMaps[0][jig.lType], outMaskMaps[1][jig.rType],
                 outMaskMaps[2][jig.uType], outMaskMaps[3][jig.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
-                gVal.picOSize-del, gVal.picOSize-del, true);
+                gVal.picOSize, gVal.picOSize, true);
         Bitmap picScaled = Bitmap.createScaledBitmap(pic,
-                gVal.picOSize-del, gVal.picOSize-del, true);
+                gVal.picOSize, gVal.picOSize, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScaled,del/2f,del/2f,
-                (jig.locked) ? pLockedATop : pOutATop);
+        canvas.drawBitmap(maskScaled, 0, 0, (jig.locked) ? pLockedATop : pOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(picScaled, matrix, pOutLine);
         return outMap;

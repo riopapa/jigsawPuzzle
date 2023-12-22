@@ -25,7 +25,7 @@ public class BackDraw {
     Paint pFull, pGrayed0, pGrayed1, lPaint, pathPaint;
     Random rnd;
     int gapSmall, gapTwo;
-    final int LOW_ALPHA = 117;
+    final int LOW_ALPHA = 100;
     Paint backPaint;
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
@@ -62,7 +62,7 @@ public class BackDraw {
 
     private void backPieceImages(Canvas canvas) {
 
-        int alpha = 255 * (showBackCount--) / showBackLoop;
+        int alpha = 240 * (showBackCount--) / showBackLoop;
         if (alpha < LOW_ALPHA)
             alpha = LOW_ALPHA;
         pGrayed0.setAlpha(alpha);
@@ -75,7 +75,7 @@ public class BackDraw {
                 if (jigOLine[cc][rr] == null)
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                 if (gVal.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
+                    canvas.drawBitmap(jigOLine[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pFull);

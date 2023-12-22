@@ -38,18 +38,18 @@ public class BuildJigFilesFromDrawable {
         if (files != null) {
             for (File file : files) {
                 String fName = file.getName();
-                JigFile jf = new JigFile();
                 if (fName.endsWith("T.jpg")) {  // thumbnail a00T.jpg
+                    JigFile jf = new JigFile();
                     jf.thumbnailMap = FileIO.getJPGFile(jpgFolder, fName);
-                } else {
-                    Bitmap bMap = FileIO.getJPGFile(jpgFolder, fName);
-                    assert bMap != null;
-                    jf.thumbnailMap = Bitmap.createScaledBitmap(bMap,
-                            (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
+                    jf.game = fName.substring(0, 3);
+                    jf.downloaded = true;
+                    jigFiles.add(jf);
+//                } else {    // a00.jpg
+//                    Bitmap bMap = FileIO.getJPGFile(jpgFolder, fName);
+//                    assert bMap != null;
+//                    jf.thumbnailMap = Bitmap.createScaledBitmap(bMap,
+//                            (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
                 }
-                jf.game = fName.substring(0, 3);
-                jf.downloaded = true;
-                jigFiles.add(jf);
             }
         }
         Log.w("jigFiles","jigFiles after local files sz= "+jigFiles.size());
