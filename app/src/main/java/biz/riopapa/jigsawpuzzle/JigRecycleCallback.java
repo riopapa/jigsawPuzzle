@@ -41,11 +41,11 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     final private PieceImage pieceImage;
     public static boolean nowDragging;
 
-    public JigRecycleCallback(ZItemTouchHelperListener listener) {
+    public JigRecycleCallback(ZItemTouchHelperListener listener, PieceImage pieceImage) {
         this.listener = listener;
+        this.pieceImage = pieceImage;
         nearPieceBind = new NearPieceBind();
         anchorPiece = new AnchorPiece();
-        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
     }
 
     // this clearView removes piece shadow

@@ -11,9 +11,9 @@ public class Masks {
 
     PieceImage pieceImage;
     Context context;
-    public Masks(Context context) {
+    public Masks(Context context, PieceImage pieceImage) {
         this.context = context;
-        pieceImage = new PieceImage(context, gVal.imgOutSize, gVal.imgInSize);
+        this.pieceImage = pieceImage;
     }
     /*
      * predefine masks with imgOutSize for maskup to crop image

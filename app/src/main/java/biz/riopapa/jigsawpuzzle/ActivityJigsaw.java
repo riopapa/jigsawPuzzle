@@ -108,8 +108,10 @@ public class ActivityJigsaw extends Activity {
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigGray = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-        srcMaskMaps = new Masks(this).make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks(this).makeOut(mContext, gVal.imgOutSize);
+        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
+
+        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
+        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
         congrats = new Congrat().make(screenX * 7/10);
         jigDones = new JigDone().make(screenX * 7/10);
@@ -193,7 +195,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView.setHasFixedSize(true);
 
         ItemTouchHelper helper = new ItemTouchHelper(
-                new JigRecycleCallback(activeAdapter));
+                new JigRecycleCallback(activeAdapter, pieceImage));
 
         helper.attachToRecyclerView(jigRecyclerView);
 
@@ -219,7 +221,6 @@ public class ActivityJigsaw extends Activity {
                 }
             }
         }
-        pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         backView.init(this, binding, pieceImage);
         backView.invalidate();
         foreView.init(this, binding, pieceImage);

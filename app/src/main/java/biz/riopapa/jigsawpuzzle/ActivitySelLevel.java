@@ -118,8 +118,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-        srcMaskMaps = new Masks(this).make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks(this).makeOut(mContext, gVal.imgOutSize);
+        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
+        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
 
 //        if (history.latest != -1) {
 //            int xSize = screenX;
