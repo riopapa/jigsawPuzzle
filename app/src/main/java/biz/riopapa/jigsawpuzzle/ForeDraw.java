@@ -18,9 +18,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigDones;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
+import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
 
@@ -29,7 +29,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -40,14 +39,16 @@ import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 public class ForeDraw {
     Paint pGrayed0, pGrayed1, lPaint, pathPaint;
     Random rnd;
-    int gapSmall, gapTwo;
+    int gapTwo;
     final int LOW_ALPHA = 117;
+    PieceImage pieceImage;
 
     ActivityJigsawBinding binding;
-    PieceImage pieceImage;
     Paint backPaint;
-    public ForeDraw(ActivityJigsawBinding binding) {
+    public ForeDraw(ActivityJigsawBinding binding, PieceImage pieceImage) {
         this.binding = binding;
+        this.pieceImage = pieceImage;
+
         pGrayed0 = new Paint();
         pGrayed1 = new Paint();
         pGrayed1.setAlpha(LOW_ALPHA);
@@ -57,11 +58,10 @@ public class ForeDraw {
         pathPaint = new Paint();
         pathPaint.setColor(chosenImageColor);
         backPaint = new Paint();
-        backPaint.setAlpha(100);
+        backPaint.setAlpha(160);
 
         gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
-        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
     }
 
     public void draw(Canvas fCanvas){
@@ -84,7 +84,7 @@ public class ForeDraw {
 
     private void showJustLocked(Canvas canvas) {
         int lockedCount = 0;
-        // draw locked pieces first with .pic
+
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
                 final int cc = c + gVal.offsetC;
@@ -95,25 +95,30 @@ public class ForeDraw {
                     continue;
                 if (jigWhite[cc][rr] == null)
                     jigWhite[cc][rr] = pieceImage.makeWhite(jigOLine[cc][rr]);
-
-                gVal.jigTables[cc][rr].count -= 1 + rnd.nextInt(4);
-                if (gVal.jigTables[cc][rr].count < 0) {
+                gVal.jigTables[cc][rr].count -= 1 + rnd.nextInt(2);
+                if (gVal.jigTables[cc][rr].count < 0)
                     gVal.jigTables[cc][rr].count = 0;
-                }
-                if (gVal.jigTables[cc][rr].count == 0) {
+                if (gVal.jigTables[cc][rr].count == 0 && gVal.jigTables[cc][rr].locked) {
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                     jigWhite[cc][rr] = null;
+                    backBlink = true;
                 }
                 Bitmap bMap ;
-                if (gVal.jigTables[cc][rr].count % 3 == 1)
+                if (gVal.jigTables[cc][rr].count == 0)
+                    bMap = jigOLine[cc][rr];
+                else if (gVal.jigTables[cc][rr].count % 3 == 1)
                     bMap = fireWorks[gVal.jigTables[cc][rr].count];
                 else if ((gVal.jigTables[cc][rr].count % 2 == 0))
                     bMap = jigOLine[cc][rr];
                 else
                     bMap = jigWhite[cc][rr];
+//                canvas.drawBitmap(bMap,
+//                            gVal.baseX + c * gVal.picISize - gVal.picGap,
+//                            gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                 canvas.drawBitmap(bMap,
-                            gVal.baseX + c * gVal.picISize - gVal.picGap,
-                            gVal.baseY + r * gVal.picISize - gVal.picGap, null);
+                        gVal.baseX + c * gVal.picISize,
+                        gVal.baseY + r * gVal.picISize, null);
+
                 foreBlink = true;
             }
         }
@@ -145,16 +150,18 @@ public class ForeDraw {
             if (jigOLine[c][r] == null)
                 jigOLine[c][r] = pieceImage.makePic(c,r);
 
-            if (fp.count == 0) { // normal pieceImage
+            if (fp.mode == 0) { // normal pieceImage
                 fCanvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
                 continue;
             }
+            foreBlink = true;
             // animate just anchored
             if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
                 fp.count--;
                 Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
                 Matrix matrix = new Matrix();
-                matrix.postRotate(2 * (2 - fp.count / 2f + rnd.nextInt(4)));
+                if (fp.count > 0)
+                    matrix.postRotate(2 * (2 - fp.count / 2f + rnd.nextInt(4)));
                 Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
                         gVal.picOSize, gVal.picOSize, matrix, true);
                 fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
@@ -162,45 +169,40 @@ public class ForeDraw {
                     fp.mode = 0;
                 }
                 gVal.fps.set(cnt, fp);
-                foreBlink = true;
-                continue;
             }
             // animate recycler to paint
             if (fp.count > 0 && fp.mode == ANI_TO_FPS) {  // animate from recycle to foreView
                 fp.count--;
                 Matrix matrix = new Matrix();
-                matrix.postRotate(3 * (fp.count - 4));
+                if (fp.count > 0)
+                    matrix.postRotate(3 * (fp.count - 4));
                 Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
                         gVal.picOSize, gVal.picOSize, matrix, true);
                 fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
-
                 if (fp.count == 0) {
                     fp.mode = 0;
                 }
-                foreBlink = true;
                 gVal.fps.set(cnt, fp);
             }
         }
     }
 
     private void showCongrats(Canvas fCanvas) {
-        if (congCount > 0)
-            foreBlink = true;
+        foreBlink = true;
         congCount--;
-        int x = screenX / 7;
-        int y = screenY / 3;
-        Paint paint = new Paint();
-        paint.setAlpha(140);
-        for (int i = 0; i < congrats.length; i++) {
-            int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigDones.length);
-            fCanvas.drawBitmap((allLockedMode == 30) ? congrats[idx] : jigDones[idx], x, y, paint);
-        }
         if (congCount == 0) {
             if (allLockedMode == 30) {
                 gameMode = GAME_COMPLETED;
                 allLockedMode = 99;
             } else
                 allLockedMode = 2;
+            return;
         }
+        int x = screenX / 7;
+        int y = screenY / 3;
+        Paint paint = new Paint();
+        paint.setAlpha(200);
+        int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigDones.length);
+        fCanvas.drawBitmap((allLockedMode == 30) ? congrats[idx] : jigDones[idx], x, y, paint);
     }
 }

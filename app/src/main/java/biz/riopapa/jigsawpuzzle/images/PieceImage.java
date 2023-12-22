@@ -2,7 +2,6 @@ package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
@@ -19,13 +18,14 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
+import android.util.Log;
 
 import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint paintIN, paintOUT, paintBright, paintWhite, paintOutATop, paintLockedATop, paintOutLine;
+    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pLockLine;
     int outLineColor, lockedColor;
 
     Context context;
@@ -35,27 +35,23 @@ public class PieceImage {
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
 
-        paintIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
+        pIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
         outLineColor = chosenImageColor;
+        lockedColor = 0x1F000000 | (0x00FFFFFF & ~outLineColor);
 
-        int r = 255 - Color.red(outLineColor);
-        int g = 255 - Color.green(outLineColor);
-        int b = 255 - Color.blue(outLineColor);
-        lockedColor = Color.rgb(r, g, b);
+        pIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
-        paintIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        pOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
+        pOUT.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
 
-        paintOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paintOUT.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+        pOutATop = new Paint();
+        pOutATop.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
 
-        paintOutATop = new Paint();
-        paintOutATop.setColorFilter(new PorterDuffColorFilter(outLineColor, PorterDuff.Mode.SRC_ATOP));
+        pLockedATop = new Paint();
+        pLockedATop.setColorFilter(new PorterDuffColorFilter(lockedColor, PorterDuff.Mode.SRC_ATOP));
 
-        paintLockedATop = new Paint();
-        paintLockedATop.setColorFilter(new PorterDuffColorFilter(lockedColor, PorterDuff.Mode.SRC_ATOP));
-
-        paintOutLine = new Paint();
-        paintOutLine.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        pOutLine = new Paint();
+        pOutLine.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
         final float brightContrast  = 1;
         final int BrightBrightness = 50;  // positive is bright
@@ -66,8 +62,8 @@ public class PieceImage {
                         0, 0, brightContrast, 0, BrightBrightness,  // Blue
                         0, 0, 0, 1, 0                   // Alpha
                 });
-        paintBright = new Paint();
-        paintBright.setColorFilter(new ColorMatrixColorFilter(brightMatrix));
+        pBright = new Paint();
+        pBright.setColorFilter(new ColorMatrixColorFilter(brightMatrix));
 
         final float whiteContrast  = 2f;
         final int whiteBrightness = 200;  // positive is bright
@@ -78,8 +74,8 @@ public class PieceImage {
                         0, 0, whiteContrast, 0, whiteBrightness,  // Blue
                         0, 0, 0, 1, 0                   // Alpha
                 });
-        paintWhite = new Paint();
-        paintWhite.setColorFilter(new ColorMatrixColorFilter(whiteMatrix));
+        pWhite = new Paint();
+        pWhite.setColorFilter(new ColorMatrixColorFilter(whiteMatrix));
 
     }
 
@@ -99,7 +95,7 @@ public class PieceImage {
         Bitmap src = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(src);
         canvas.drawBitmap(orgPiece, 0, 0, null);
-        canvas.drawBitmap(mask, 0, 0, paintIN);
+        canvas.drawBitmap(mask, 0, 0, pIN);
         if (showCR) {
             Paint p = new Paint();
             p.setColor(Color.BLACK);
@@ -118,7 +114,7 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jig = gVal.jigTables[col][row];
-        int del = gVal.picISize/14;
+        int del = 0; // gVal.picISize/7;
         Bitmap mask = maskMerge(outMaskMaps[0][jig.lType], outMaskMaps[1][jig.rType],
                 outMaskMaps[2][jig.uType], outMaskMaps[3][jig.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
@@ -127,9 +123,28 @@ public class PieceImage {
                 gVal.picOSize-del, gVal.picOSize-del, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScaled,0,0,  (jig.locked) ? paintLockedATop : paintOutATop);
+        canvas.drawBitmap(maskScaled,del/2f,del/2f,
+                (jig.locked) ? pLockedATop : pOutATop);
         Matrix matrix = new Matrix();
-        canvas.drawBitmap(picScaled, matrix, paintOutLine);
+        canvas.drawBitmap(picScaled, matrix, pOutLine);
+        return outMap;
+    }
+
+    public Bitmap makeGray(Bitmap pic) {
+        Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outMap);
+        Paint p = new Paint();
+        for (int c = 0; c < gVal.picOSize; c++) {
+            for (int r = 0; r < gVal.picOSize; r++) {
+                int pxl = pic.getPixel(c, r);
+                if (pxl != 0) {
+                    int avr = (Color.red(pxl) + Color.green(pxl) + Color.blue(pxl)) / 3;
+                    int color = 0xFF000000 | avr<<16 | avr<<8 | avr;
+                    p.setColor(color);
+                    canvas.drawPoint(c, r, p);
+                }
+            }
+        }
         return outMap;
     }
 
@@ -138,7 +153,7 @@ public class PieceImage {
         Bitmap maskMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas tCanvas = new Canvas(maskMap);
         tCanvas.drawBitmap(srcImage, 0, 0, null);
-        tCanvas.drawBitmap(mask, 0, 0, paintIN);
+        tCanvas.drawBitmap(mask, 0, 0, pIN);
         return maskMap;
     }
 
@@ -167,14 +182,14 @@ public class PieceImage {
     public Bitmap makeBright(Bitmap inMap) {
         Bitmap bMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
-        canvasBright.drawBitmap(inMap, 0, 0, paintBright);
+        canvasBright.drawBitmap(inMap, 0, 0, pBright);
         return bMap;
     }
 
     public Bitmap makeWhite(Bitmap inMap) {
         Bitmap bMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvasBright = new Canvas(bMap);
-        canvasBright.drawBitmap(inMap, 0, 0, paintWhite);
+        canvasBright.drawBitmap(inMap, 0, 0, pWhite);
         return bMap;
     }
 

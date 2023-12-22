@@ -11,6 +11,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
@@ -34,6 +35,7 @@ import biz.riopapa.jigsawpuzzle.func.NearByFloatPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.func.PiecePosition;
 import biz.riopapa.jigsawpuzzle.func.PieceSelection;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class ForeView extends View {
@@ -46,6 +48,7 @@ public class ForeView extends View {
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
     PieceSelection pieceSelection;
+    PieceImage pieceImage;
 
     public static FloatPiece nowFp;
     public static boolean foreBlink, backBlink;
@@ -57,21 +60,20 @@ public class ForeView extends View {
     public ForeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-    public static long invalidateTime;
 
     ActivityJigsawBinding binding;
 
-    public void init(Activity activity, ActivityJigsawBinding binding){
+    public void init(Activity activity, ActivityJigsawBinding binding, PieceImage pieceImage){
         this.paintActivity = activity;
         this.binding = binding;
+        this.pieceImage = pieceImage;
         nowFp = null;
         piecePosition = new PiecePosition(activity);
-        foreDraw = new ForeDraw(binding);
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
-        invalidateTime = System.currentTimeMillis();
+        foreDraw = new ForeDraw(binding, pieceImage);
         if (showBack == 0)
             showBackCount = showBackLoop;
     }
@@ -121,6 +123,7 @@ public class ForeView extends View {
 //        Log.w("px on", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                Log.w("MotionEvent","ACTION_DOWN");
                 pieceSelection.check(x, y);
 //                backView.invalidate();
 //                foreView.invalidate();
@@ -144,7 +147,7 @@ public class ForeView extends View {
                         nowFp.posX = x;
                         nowFp.posY = y;
                         anchorPiece.move();
-                        nearPieceBind.check();
+                        nearPieceBind.check(pieceImage);
                     } else {
                         y -= gVal.picOSize;
                         nowFp.posX = x;

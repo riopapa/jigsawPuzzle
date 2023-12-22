@@ -4,6 +4,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.areaMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
@@ -34,12 +35,13 @@ public class BackDraw {
     Random rnd;
     int gapSmall, gapTwo;
     final int LOW_ALPHA = 117;
-    PieceImage pieceImage;
     Paint backPaint;
     ActivityJigsawBinding binding;
+    PieceImage pieceImage;
 
-    public BackDraw(ActivityJigsawBinding binding) {
+    public BackDraw(ActivityJigsawBinding binding, PieceImage pieceImage) {
         this.binding = binding;
+        this.pieceImage = pieceImage;
         pFull = new Paint();
         pGrayed0 = new Paint();
         pGrayed1 = new Paint();
@@ -51,17 +53,19 @@ public class BackDraw {
         pathPaint.setColor(chosenImageColor);
         backPaint = new Paint();
         backPaint.setAlpha(100);
-        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
 
         gapTwo = gVal.picGap + gVal.picGap;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
     }
 
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
         canvas.save();
-        canvas.drawLine(gVal.picHSize, screenBottom, screenX- gVal.picHSize, screenBottom, lPaint);
+        canvas.drawLine(gVal.picHSize, screenBottom, screenX - gVal.picHSize,
+                screenBottom, lPaint);
         backPieceImages(canvas);
-        showPieceDiamondPoint(canvas);
+        if (showBack == 2) {
+            showPieceDiamondPoint(canvas);
+        }
         canvas.restore();
     }
 
@@ -80,17 +84,21 @@ public class BackDraw {
                 if (jigOLine[cc][rr] == null)
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                 if (gVal.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(jigOLine[cc][rr],   // later jigShadow
+                    canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pFull);
+                    if (jigGray[cc][rr] != null)
+                        jigGray[cc][rr] = null;
                 } else if (showBack == 0) {
                     canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed0);
                 } else if (showBack == 1) {
-                    canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
+                    if (jigGray[cc][rr] == null)
+                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+                    canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed1);
@@ -102,21 +110,18 @@ public class BackDraw {
 
     private void showPieceDiamondPoint(Canvas canvas) {
 
-        if (showBack == 0 || showBack == 1) {
-
-            gapSmall = gVal.picGap / ((showBack == 0) ? 3 : 4);
-            for (int c = 1; c < gVal.showMaxX; c++) {
-                for (int r = 1; r < gVal.showMaxY; r++) {
-                    Path path = new Path();
-                    int x0 = gVal.baseX + gapTwo + c * gVal.picISize;
-                    int y0 = gVal.baseY + gapTwo + r * gVal.picISize ;
-                    path.moveTo(x0 - gapSmall, y0);
-                    path.lineTo(x0, y0 - gapSmall);
-                    path.lineTo(x0 + gapSmall, y0);
-                    path.lineTo(x0, y0 + gapSmall);
-                    path.lineTo(x0 - gapSmall, y0);
-                    canvas.drawPath(path, pathPaint);
-                }
+        gapSmall = gVal.picGap / 4;
+        for (int c = 1; c < gVal.showMaxX; c++) {
+            for (int r = 1; r < gVal.showMaxY; r++) {
+                Path path = new Path();
+                int x0 = gVal.baseX + gapTwo + c * gVal.picISize;
+                int y0 = gVal.baseY + gapTwo + r * gVal.picISize ;
+                path.moveTo(x0 - gapSmall, y0);
+                path.lineTo(x0, y0 - gapSmall);
+                path.lineTo(x0 + gapSmall, y0);
+                path.lineTo(x0, y0 + gapSmall);
+                path.lineTo(x0 - gapSmall, y0);
+                canvas.drawPath(path, pathPaint);
             }
         }
     }

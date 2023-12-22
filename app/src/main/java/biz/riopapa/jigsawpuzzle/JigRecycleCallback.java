@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.func.VibratePhone;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class JigRecycleCallback extends ItemTouchHelper.Callback {
@@ -38,14 +39,14 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     final private ZItemTouchHelperListener listener;
     final private AnchorPiece anchorPiece;
     final private NearPieceBind nearPieceBind;
-
+    final private PieceImage pieceImage;
     public static boolean nowDragging;
 
     public JigRecycleCallback(ZItemTouchHelperListener listener) {
         this.listener = listener;
         nearPieceBind = new NearPieceBind();
         anchorPiece = new AnchorPiece();
-
+        pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
     }
 
     // this clearView removes piece shadow
@@ -63,7 +64,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
 
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-//            Log.w("state is "+actionState, "START DRAG =");
+            Log.w("state is "+actionState, "START DRAG =");
             nowDragging = true;
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
@@ -83,9 +84,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 removeFromRecycle();
                 add2FloatingPiece();
                 anchorPiece.move();
-                if (nearPieceBind.check()) {
+                foreBlink = true;
+                if (nearPieceBind.check(pieceImage)) {
                     backBlink = true;
-                    foreBlink = true;
                 }
             }
         } else {
@@ -116,7 +117,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         nowFp.R = nowR;
         nowFp.posX = dragX;
         nowFp.posY = dragY;
-        nowFp.count = 5;
+        nowFp.count = 9;
         nowFp.mode = ANI_TO_FPS;
         nowFp.uId = System.currentTimeMillis();    // set Unique uId
         nowFp.anchorId = 0;       // let anchorId to itself

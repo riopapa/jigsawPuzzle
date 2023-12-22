@@ -2,6 +2,8 @@ package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
@@ -12,13 +14,13 @@ import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
 import static biz.riopapa.jigsawpuzzle.ForeView.piecePosition;
 
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
+import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class NearPieceBind {
 
-    public boolean check(){
-        if (doNotUpdate)
-            return false;
+    public boolean check(PieceImage pieceImage){
 
         if (nowIdx < gVal.fps.size() -1) {
             new MoveThisOnTop(nowFp, nowIdx);
@@ -49,6 +51,7 @@ public class NearPieceBind {
                 if (fpT.anchorId == anchorId) {
                     gVal.jigTables[fpT.C][fpT.R].locked = true;
                     gVal.jigTables[fpT.C][fpT.R].count = fireWorks.length;
+                    jigOLine[fpT.C][fpT.R] = pieceImage.makeOline(jigPic[fpT.C][fpT.R], fpT.C, fpT.R);
                     gVal.fps.remove(i);
                 } else
                     i++;
