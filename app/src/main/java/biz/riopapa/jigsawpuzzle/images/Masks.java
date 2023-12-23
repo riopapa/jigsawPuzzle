@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle.images;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 

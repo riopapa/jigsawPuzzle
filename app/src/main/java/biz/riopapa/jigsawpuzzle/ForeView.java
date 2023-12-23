@@ -122,7 +122,6 @@ public class ForeView extends View {
 //        Log.w("px on", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                Log.w("MotionEvent","ACTION_DOWN");
                 pieceSelection.check(x, y);
 //                backView.invalidate();
 //                foreView.invalidate();

@@ -2,10 +2,10 @@ package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.outMaskMaps;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -21,7 +21,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,15 +44,16 @@ import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
 
-    static Context context;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iVImage, iVStatus;
         TextView tVInfo, newInfo;
+        Context context;
 
         ViewHolder(final View itemView) {
             super(itemView);
+            context = mContext;
 
             iVImage = itemView.findViewById(R.id.image);
             iVImage.setOnClickListener(view -> {
@@ -95,7 +95,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        context = mContext;
         return jigFiles.size();
     }
 

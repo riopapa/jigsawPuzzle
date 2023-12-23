@@ -2,25 +2,20 @@ package biz.riopapa.jigsawpuzzle;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import biz.riopapa.jigsawpuzzle.adaptors.ImageSelAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
@@ -37,7 +32,7 @@ import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 public class ActivityMain extends Activity implements DownloadCompleteListener {
 
-    public static Activity mActivity;
+    Activity mActivity;
 
     public static Context mContext;
 
@@ -61,7 +56,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     final public static int GAME_SELECT_LEVEL = 2022;
     final public static int GAME_STARTED = 2033;
     final public static int GAME_PAUSED = 2044;
-    final public static int GAME_GOBACK_TO_MAIN = 2047;
+    final public static int GAME_BACK_TO_MAIN = 2047;
 
     final public static int GAME_COMPLETED = 3333;
 
@@ -70,8 +65,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static int screenX, screenY, screenBottom; // physical screen size, center puzzleBox
 
     public static float fPhoneInchX, fPhoneInchY;
-    public static Bitmap[][] srcMaskMaps, outMaskMaps;
-    public static Bitmap[] fireWorks, congrats, jigDones;
 
     /*
     ** Following will be handled with Set Menu
@@ -164,7 +157,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
 
-        if (gameMode == GAME_GOBACK_TO_MAIN) {
+        if (gameMode == GAME_BACK_TO_MAIN) {
             imageSelAdapter.notifyItemChanged(chosenNumber);
         }
         gameMode = GAME_SELECT_IMAGE;

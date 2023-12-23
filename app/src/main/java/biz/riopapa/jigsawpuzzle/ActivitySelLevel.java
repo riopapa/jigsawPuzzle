@@ -6,7 +6,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_BACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
@@ -16,12 +16,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
@@ -51,7 +48,6 @@ import biz.riopapa.jigsawpuzzle.func.DefineColsRows;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.SetPicSizes;
-import biz.riopapa.jigsawpuzzle.images.Masks;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
@@ -84,7 +80,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         super.onResume();
         findViewById(R.id.loading_circle).setVisibility(View.VISIBLE);
         Log.w("s1 SelLevel", "onResume gameMode="+gameMode);
-        if (gameMode == GAME_GOBACK_TO_MAIN) {
+        if (gameMode == GAME_BACK_TO_MAIN) {
             Log.w("SelLevel"," go back to main");
             finish();
             return;
@@ -119,8 +115,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
+//        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
+//        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
 
 //        if (history.latest != -1) {
 //            int xSize = screenX;
@@ -225,24 +221,24 @@ public class ActivitySelLevel extends AppCompatActivity {
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }
-
-
-    void levelSelected(View view) {
-
-        float fromScale = 0.5f;
-        float toScale = 1.0f;
-
-        ValueAnimator animator = ValueAnimator.ofFloat(fromScale, toScale);
-        animator.setDuration(3500);
-        animator.addUpdateListener(animation -> {
-            float scale = (float) animation.getAnimatedValue();
-            view.setScaleX(scale);
-            view.setScaleY(scale);
-        });
-
-        animator.setInterpolator(new DecelerateInterpolator()); // Choose your desired interpolator
-        animator.start();
-    }
+//
+//
+//    void levelSelected(View view) {
+//
+//        float fromScale = 0.5f;
+//        float toScale = 1.0f;
+//
+//        ValueAnimator animator = ValueAnimator.ofFloat(fromScale, toScale);
+//        animator.setDuration(3500);
+//        animator.addUpdateListener(animation -> {
+//            float scale = (float) animation.getAnimatedValue();
+//            view.setScaleX(scale);
+//            view.setScaleY(scale);
+//        });
+//
+//        animator.setInterpolator(new DecelerateInterpolator()); // Choose your desired interpolator
+//        animator.start();
+//    }
 
     private void go_back(View view) {
         alertDialog.dismiss();

@@ -30,10 +30,9 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
     private final String fileName;
     private final String dir;
 
-    private final String imageHead = "https://drive.google.com/uc?export=download&id=";
-
     public DownloadTask(DownloadCompleteListener listener, String fileId, String dir, String fileName) {
         this.listener = listener;
+        String imageHead = "https://drive.google.com/uc?export=download&id=";
         this.url = imageHead + fileId;
         this.dir = dir;
         this.fileName = fileName;

@@ -1,13 +1,12 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ForeView.nearByFloatPiece;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
@@ -16,7 +15,6 @@ import static biz.riopapa.jigsawpuzzle.ForeView.piecePosition;
 
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
-import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class NearPieceBind {
 

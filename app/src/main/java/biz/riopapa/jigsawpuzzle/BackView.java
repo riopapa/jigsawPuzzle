@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 
 import android.app.Activity;

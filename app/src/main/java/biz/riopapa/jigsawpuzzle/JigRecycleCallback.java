@@ -5,7 +5,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -70,7 +69,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-            Log.w("state is ", "ACTION_STATE_IDLE =");
             nowDragging = false;
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
@@ -78,7 +76,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 // make visibility to gone for no remaining shadow if tablet
 //                if (fPhoneInchX > 3f) // S22 에서도 문제 남
 //                    svViewHolder.itemView.setVisibility(View.INVISIBLE);
-                Log.w("MOVING ", "ACTION_STATE_IDLE =" + dragX + " x " + dragY);
 //                doNotUpdate = true;
                 removeFromRecycle();
                 add2FloatingPiece();
@@ -198,10 +195,11 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 nowFp.posX = dragX;
                 nowFp.posY = dragY;
             }
+            foreBlink = true;
 //            String txt = "dxDy "+dX+" x "+dY
 //                    + "\n GVal.jPos "+dragX+" x "+dragY + "fps size="+ gVal.fps.size();
 //            Log.w("screenbottom", txt);
-            foreView.invalidate();
+//            foreView.invalidate();
         }
 
 //        boolean isCancelled = dX == 0 && !isCurrentlyActive;

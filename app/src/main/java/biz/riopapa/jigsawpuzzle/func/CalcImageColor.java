@@ -8,8 +8,6 @@ import android.util.Log;
 
 public class CalcImageColor {
     public CalcImageColor() {
-//        chosenImageWidth = chosenImageMap.getWidth();
-//        chosenImageHeight = chosenImageMap.getHeight();
         long r = 0, g = 0, b = 0;
         if (chosenImageMap == null)
             Log.e("No", "chosenImageMap is null");

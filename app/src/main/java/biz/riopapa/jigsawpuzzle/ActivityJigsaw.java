@@ -1,24 +1,20 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_GOBACK_TO_MAIN;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_BACK_TO_MAIN;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.jigDones;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
@@ -26,7 +22,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
@@ -52,14 +47,14 @@ import java.util.TimerTask;
 import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
-import biz.riopapa.jigsawpuzzle.images.Congrat;
-import biz.riopapa.jigsawpuzzle.images.FireWork;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
+import biz.riopapa.jigsawpuzzle.images.Congrat;
+import biz.riopapa.jigsawpuzzle.images.FireWork;
 import biz.riopapa.jigsawpuzzle.images.JigDone;
 import biz.riopapa.jigsawpuzzle.images.Masks;
-import biz.riopapa.jigsawpuzzle.images.ShowThumbnail;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
+import biz.riopapa.jigsawpuzzle.images.ShowThumbnail;
 import biz.riopapa.jigsawpuzzle.model.History;
 
 public class ActivityJigsaw extends Activity {
@@ -70,9 +65,9 @@ public class ActivityJigsaw extends Activity {
 
     public static RecyclerView jigRecyclerView;
 
-    public static ForeView foreView;
+    ForeView foreView;
 
-    public static BackView backView;
+    BackView backView;
 
     public static JigsawAdapter activeAdapter;
 
@@ -81,6 +76,9 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray;
+    public static Bitmap[][] srcMaskMaps, outMaskMaps;
+    public static Bitmap[] fireWorks, congrats, jigDones;
+
     public static int activePos; // jigsaw slide x, y count
     public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
     public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
@@ -246,20 +244,20 @@ public class ActivityJigsaw extends Activity {
             }
         };
         loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
-        Thread thread = new Thread(() -> {
-            for (int cc = 0; cc < gVal.colNbr; cc++) {
-                for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                    if (jigPic[cc][rr] == null)
-                        jigPic[cc][rr] = pieceImage.makePic(cc, rr);
-                    if (jigOLine[cc][rr] == null)
-                        jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                    if (jigGray[cc][rr] == null)
-                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
-                }
-            }
-        });
-        thread.setName("Thread pic");
-        thread.start();
+//        Thread thread = new Thread(() -> {
+//            for (int cc = 0; cc < gVal.colNbr; cc++) {
+//                for (int rr = 0; rr < gVal.rowNbr; rr++) {
+//                    if (jigPic[cc][rr] == null)
+//                        jigPic[cc][rr] = pieceImage.makePic(cc, rr);
+//                    if (jigOLine[cc][rr] == null)
+//                        jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
+//                    if (jigGray[cc][rr] == null)
+//                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+//                }
+//            }
+//        });
+//        thread.setName("Thread pic");
+//        thread.start();
 
     }
 
@@ -276,11 +274,22 @@ public class ActivityJigsaw extends Activity {
         binding.thumbnail.invalidate();
         doNotUpdate = true;
         gVal.activeJigs = new ArrayList<>();
+        gVal.fps = new ArrayList<>();
+
+        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigGray = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
+
         for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
             int cr = gVal.allPossibleJigs.get(i);
             int cc = cr / 10000;
             int rr = cr - cc * 10000;
-            if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
+//            if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
+//                    cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
+//                gVal.activeJigs.add(cr);
+//            }
+            if (!gVal.jigTables[cc][rr].locked &&
                     cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
                 gVal.activeJigs.add(cr);
             }
@@ -303,7 +312,7 @@ public class ActivityJigsaw extends Activity {
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
 
 //        invalidateTimer.cancel();
-        if (gameMode != GAME_GOBACK_TO_MAIN)
+        if (gameMode != GAME_BACK_TO_MAIN)
             gameMode = GAME_PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
 
@@ -325,7 +334,16 @@ public class ActivityJigsaw extends Activity {
             histories.add(history);
         new HistoryGetPut().put(histories, this);
 
+        releaseAll();
+        System.gc();
+        if (gameMode == GAME_PAUSED)
+            finish();
+        super.onPause();
+    }
+
+    private void releaseAll() {
         jigRecyclerView = null;
+
         foreView = null;
         backView = null;
         activeAdapter = null;
@@ -333,10 +351,12 @@ public class ActivityJigsaw extends Activity {
         jigOLine = null;
         jigWhite = null;
         jigGray = null;
-        System.gc();
-        if (gameMode == GAME_PAUSED)
-            finish();
-        super.onPause();
+        srcMaskMaps = null;
+        outMaskMaps = null;
+        fireWorks = null;
+        congrats = null;
+        jigDones = null;
+        histories = null;
     }
 
     private void save_params() {
@@ -355,11 +375,21 @@ public class ActivityJigsaw extends Activity {
     @Override
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
-        gameMode = GAME_GOBACK_TO_MAIN;
+        gameMode = GAME_BACK_TO_MAIN;
         loopTimer.cancel();
+        finish();
         super.onBackPressed();
     }
+
+    @Override
+    protected void onDestroy() {
+        Log.w("onDestroy","release Memory");
+        releaseAll();
+        super.onDestroy();
+    }
 }
+
+
 
 //        binding.layoutJigsaw.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
