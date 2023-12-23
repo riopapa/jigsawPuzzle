@@ -120,23 +120,24 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        JigFile jigFile = jigFiles.get(position);
+        JigFile jf = jigFiles.get(position);
         Bitmap tMap;
-        if (jigFile.thumbnailMap == null) {
-            tMap = FileIO.getJPGFile(jpgFolder, jigFile.game+"T.jpg");
+        if (jf.thumbnailMap == null) {
+            tMap = FileIO.getJPGFile(jpgFolder, jf.game+"T.jpg");
             if (tMap == null) { // no thumbnail map then create thumbnail map
-                Bitmap bMap = FileIO.getJPGFile(jpgFolder, jigFile.game);
+                Bitmap bMap = FileIO.getJPGFile(jpgFolder, jf.game+".jpg");
                 if (bMap != null) {
                     tMap = Bitmap.createScaledBitmap(bMap,
                             (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
-                    jigFile.thumbnailMap = tMap;
-                    jigFiles.set(position, jigFile);
+                    FileIO.thumbnail2File(tMap, jf.game+"T.jpg");
+                    jf.thumbnailMap = tMap;
+                    jigFiles.set(position, jf);
                 } else
                     tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
             } else
                 tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
         } else
-            tMap = jigFile.thumbnailMap;
+            tMap = jf.thumbnailMap;
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
                 holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
@@ -157,10 +158,10 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         parStatus.width = width;
         parStatus.height = height;
         holder.iVStatus.setLayoutParams(parStatus);
-        holder.itemView.setTag(jigFile.game);
+        holder.itemView.setTag(jf.game);
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
-            if (hist.game.equals(jigFile.game)) {
+            if (hist.game.equals(jf.game)) {
                 int histLocked = 0;
                 for (int j = 0; j < 4; j++)
                     histLocked += hist.locked[j];
@@ -170,8 +171,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 }
             }
         }
-        holder.tVInfo.setText(jigFile.game);
-        holder.newInfo.setVisibility((jigFile.newFlag) ? View.VISIBLE: View.GONE);
+        holder.tVInfo.setText(jf.game);
+        holder.newInfo.setVisibility((jf.newFlag) ? View.VISIBLE: View.GONE);
     }
 
     private static void showHistoryStatus(@NonNull ViewHolder holder, History hist,

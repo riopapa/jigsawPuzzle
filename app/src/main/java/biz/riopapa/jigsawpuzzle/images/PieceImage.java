@@ -78,7 +78,7 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picGap / 12;
+        shadowSize = gVal.picGap / 10;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222222, PorterDuff.Mode.SRC_ATOP));
     }
