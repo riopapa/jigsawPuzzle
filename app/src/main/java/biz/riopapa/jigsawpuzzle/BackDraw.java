@@ -14,7 +14,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 
 import java.util.Random;
 
@@ -22,11 +21,11 @@ import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
 public class BackDraw {
-    Paint pFull, pGrayed0, pGrayed1, lPaint, pathPaint;
+    Paint pFull, pGrayed0, pGrayed1, pGrayed2, lPaint, pathPaint;
     Random rnd;
     int gapSmall, gapTwo;
-    final int LOW_ALPHA = 100;
-    Paint backPaint;
+    final int LOW_ALPHA = 160;
+    final int HIDE_ALPHA = 60;
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
 
@@ -37,15 +36,16 @@ public class BackDraw {
         pGrayed0 = new Paint();
         pGrayed1 = new Paint();
         pGrayed1.setAlpha(LOW_ALPHA);
+        pGrayed2 = new Paint();
+        pGrayed2.setAlpha(HIDE_ALPHA);
         lPaint = new Paint();
         lPaint.setColor(Color.RED);
 
         pathPaint = new Paint();
         pathPaint.setColor(chosenImageColor);
-        backPaint = new Paint();
-        backPaint.setAlpha(100);
 
         gapTwo = gVal.picGap + gVal.picGap;
+        gapSmall = gVal.picGap / 4;
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
     }
 
@@ -53,14 +53,12 @@ public class BackDraw {
         canvas.save();
         canvas.drawLine(gVal.picHSize, screenBottom, screenX - gVal.picHSize,
                 screenBottom, lPaint);
-        backPieceImages(canvas);
-        if (showBack == 2) {
-            showPieceDiamondPoint(canvas);
-        }
+        backUnLocked(canvas);
+        backLocked(canvas);
         canvas.restore();
     }
 
-    private void backPieceImages(Canvas canvas) {
+    private void backUnLocked(Canvas canvas) {
 
         int alpha = 240 * (showBackCount--) / showBackLoop;
         if (alpha < LOW_ALPHA)
@@ -74,14 +72,9 @@ public class BackDraw {
                     jigPic[cc][rr] = pieceImage.makePic(cc, rr);
                 if (jigOLine[cc][rr] == null)
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                if (gVal.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(jigOLine[cc][rr],   // later jigShadow
-                            gVal.baseX + c * gVal.picISize,
-                            gVal.baseY + r * gVal.picISize,
-                            pFull);
-                    if (jigGray[cc][rr] != null)
-                        jigGray[cc][rr] = null;
-                } else if (showBack == 0) {
+                if (gVal.jigTables[cc][rr].locked)
+                    continue;
+                if (showBack == 0) {
                     canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
@@ -93,27 +86,45 @@ public class BackDraw {
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed1);
+                } else {    // showBack == 2
+                    if (jigGray[cc][rr] == null)
+                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+                    canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
+                            gVal.baseX + c * gVal.picISize,
+                            gVal.baseY + r * gVal.picISize,
+                            pGrayed2);
+
                 }
             }
         }
-
     }
 
-    private void showPieceDiamondPoint(Canvas canvas) {
+    private void backLocked(Canvas canvas) {
 
-        gapSmall = gVal.picGap / 4;
-        for (int c = 1; c < gVal.showMaxX; c++) {
-            for (int r = 1; r < gVal.showMaxY; r++) {
-                Path path = new Path();
-                int x0 = gVal.baseX + gapTwo + c * gVal.picISize;
-                int y0 = gVal.baseY + gapTwo + r * gVal.picISize ;
-                path.moveTo(x0 - gapSmall, y0);
-                path.lineTo(x0, y0 - gapSmall);
-                path.lineTo(x0 + gapSmall, y0);
-                path.lineTo(x0, y0 + gapSmall);
-                path.lineTo(x0 - gapSmall, y0);
-                canvas.drawPath(path, pathPaint);
+        for (int c = 0; c < gVal.showMaxX; c++) {
+            for (int r = 0; r < gVal.showMaxY; r++) {
+                final int cc = c + gVal.offsetC;
+                final int rr = r + gVal.offsetR;
+                if (gVal.jigTables[cc][rr].locked) {
+                    canvas.drawBitmap(jigOLine[cc][rr],   // later jigShadow
+                            gVal.baseX + c * gVal.picISize,
+                            gVal.baseY + r * gVal.picISize,
+                            pFull);
+                    jigGray[cc][rr] = null;
+                }
             }
         }
     }
 }
+
+//                } else if (c > 0 && r > 0){
+//                        Path path = new Path();
+//                        int x0 = gVal.baseX + gapTwo + c * gVal.picISize;
+//                        int y0 = gVal.baseY + gapTwo + r * gVal.picISize ;
+//                        path.moveTo(x0 - gapSmall, y0);
+//                        path.lineTo(x0, y0 - gapSmall);
+//                        path.lineTo(x0 + gapSmall, y0);
+//                        path.lineTo(x0, y0 + gapSmall);
+//                        path.lineTo(x0 - gapSmall, y0);
+//                        canvas.drawPath(path, pathPaint);
+

@@ -41,8 +41,6 @@ public class ShowThumbnail {
             rectHeight = thumbHeight - yBeg - 1;
         if (thumbWidth < (xBeg + rectWidth))
             rectWidth = thumbWidth - xBeg - 1;
-        Log.e("data", "yBeg="+yBeg+" rectHeight="+rectHeight+" ");
-        Log.e("data","thumb "+thumb.getWidth()+"x"+thumb.getHeight()+" thumbHeight="+thumbHeight);
         Bitmap thumb_copy = thumb.copy(Bitmap.Config.ARGB_8888,true);
         Canvas canvas = new Canvas(thumb_copy);
         Paint pBox = new Paint();

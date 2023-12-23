@@ -5,7 +5,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <path
-        android:strokeWidth=".32"
+        android:strokeWidth="0.57"
         android:strokeColor="#ECFF33"
         android:fillColor="#ACDF13"
         android:pathData="

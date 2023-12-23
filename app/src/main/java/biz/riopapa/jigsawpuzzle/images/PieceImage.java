@@ -24,8 +24,8 @@ import biz.riopapa.jigsawpuzzle.model.JigTable;
 public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine;
-    int outLineColor, lockedColor;
+    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
+    int outLineColor, lockedColor, shadowSize;
 
     Context context;
 
@@ -76,6 +76,11 @@ public class PieceImage {
         pWhite = new Paint();
         pWhite.setColorFilter(new ColorMatrixColorFilter(whiteMatrix));
 
+        pShadow = new Paint();
+        pShadow.setColor(0xFF333333);
+        shadowSize = gVal.picGap / 12;
+        pShadowTop = new Paint();
+        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222222, PorterDuff.Mode.SRC_ATOP));
     }
 
     /**
@@ -121,6 +126,7 @@ public class PieceImage {
                 gVal.picOSize, gVal.picOSize, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
+        canvas.drawBitmap(maskScaled, shadowSize, shadowSize, pShadowTop);
         canvas.drawBitmap(maskScaled, 0, 0, (jig.locked) ? pLockedATop : pOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(picScaled, matrix, pOutLine);
@@ -136,9 +142,11 @@ public class PieceImage {
                 int pxl = pic.getPixel(c, r);
                 if (pxl != 0) {
                     int avr = (Color.red(pxl) + Color.green(pxl) + Color.blue(pxl)) / 3;
-                    int color = 0xFF000000 | avr<<16 | avr<<8 | avr;
-                    p.setColor(color);
-                    canvas.drawPoint(c, r, p);
+                    if (avr > 30) {
+                        int color = 0xFF000000 | avr << 16 | avr << 8 | avr;
+                        p.setColor(color);
+                        canvas.drawPoint(c, r, p);
+                    }
                 }
             }
         }

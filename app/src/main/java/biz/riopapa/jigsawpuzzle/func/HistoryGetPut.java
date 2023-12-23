@@ -60,7 +60,7 @@ public class HistoryGetPut {
             for (String s : list) {
                 if (s.startsWith("game_")) {
                     GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
-                    if (gval.version.equals(nowVersion))
+                    if (gval != null && gval.version.equals(nowVersion))
                         add2History(s.substring(5, 9), gval);
                 }
             }
