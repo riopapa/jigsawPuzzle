@@ -77,7 +77,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static String appVersion = "";
 
     public static boolean debugMode = false;
-    public static boolean showCR = false;
+    public static boolean showCR = true;
     public final static long INVALIDATE_INTERVAL = 30;
 
     // Google Drive related variables

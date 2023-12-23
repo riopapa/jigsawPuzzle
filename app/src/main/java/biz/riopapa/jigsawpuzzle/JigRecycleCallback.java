@@ -63,10 +63,10 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             Log.w("state is "+actionState, "START DRAG =");
-            nowDragging = true;
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
             recyclerSelected(viewHolder);
+            nowDragging = true;
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             nowDragging = false;
@@ -104,7 +104,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                 +" pieceSz="+gVal.activeJigs.size());
         if (vibrate)
             new VibratePhone(mContext);
-        doNotUpdate = false;
     }
     private void add2FloatingPiece() {
 
@@ -126,7 +125,15 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         gVal.jigTables[nowC][nowR].outRecycle = true;
         gVal.activeJigs.remove(activePos);
         activeAdapter.notifyItemRemoved(activePos);
-        svViewHolder.itemView.setAlpha(0);
+//        if (svViewHolder == null)
+//            Log.w("svViewHolder"," is null");
+//        else
+//            svViewHolder.itemView.setAlpha(0);
+
+//        helper = new ItemTouchHelper(
+//                new JigRecycleCallback(activeAdapter, pieceImage));
+//        helper.attachToRecyclerView(jigRecyclerView);
+
 //        System.gc();
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
         + " pieSZ="+gVal.activeJigs.size());
@@ -137,29 +144,43 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+        Log.w("p24 onMoved", "Pos="+viewHolder.getBindingAdapterPosition());
         super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
     }
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+//        return makeMovementFlags(
+//                ItemTouchHelper.UP | ItemTouchHelper.DOWN
+//                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+//                ,
+//                ItemTouchHelper.END | ItemTouchHelper.START
+//                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+//        );
         return makeMovementFlags(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN
                         | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
                 ,
-                ItemTouchHelper.END | ItemTouchHelper.START
-                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN
         );
     }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//        Log.w("p27 onMoved", "Pos="+viewHolder.getBindingAdapterPosition()+" target="+target.getAbsoluteAdapterPosition());
+//        int pf = viewHolder.getBindingAdapterPosition();
+//        int pt = target.getBindingAdapterPosition();
+//
+//        Collections.swap(gVal.activeJigs, pf, pt);
+//        activeAdapter.notifyItemChanged(pf);
+//        activeAdapter.notifyItemChanged(pt);
         return false;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.w("p28 onSwiped", "Swiped rightPosition "+viewHolder.getBindingAdapterPosition());
-        listener.onItemSwiped(viewHolder.getBindingAdapterPosition());
+//        Log.w("p28 onSwiped", "Swiped rightPosition "+viewHolder.getBindingAdapterPosition());
+//        listener.onItemSwiped(viewHolder.getBindingAdapterPosition());
     }
 
     long helperDrawTime = 0;

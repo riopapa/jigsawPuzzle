@@ -68,6 +68,7 @@ public class ActivityJigsaw extends Activity {
     ForeView foreView;
 
     BackView backView;
+    public static ItemTouchHelper helper;
 
     public static JigsawAdapter activeAdapter;
 
@@ -192,7 +193,7 @@ public class ActivityJigsaw extends Activity {
         activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
-        ItemTouchHelper helper = new ItemTouchHelper(
+        helper = new ItemTouchHelper(
                 new JigRecycleCallback(activeAdapter, pieceImage));
 
         helper.attachToRecyclerView(jigRecyclerView);
