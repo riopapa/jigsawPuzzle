@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import biz.riopapa.jigsawpuzzle.ItemClickSupport;
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.ItemTouchHelperListener;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
@@ -45,6 +46,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
+
         return new ViewHolder(view);
     }
 

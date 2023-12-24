@@ -28,8 +28,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +58,7 @@ import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.images.ShowThumbnail;
 import biz.riopapa.jigsawpuzzle.model.History;
 
-public class ActivityJigsaw extends Activity {
+public class ActivityJigsaw extends Activity implements GestureDetector.OnGestureListener {
 
     ActivityJigsawBinding binding;
 
@@ -61,6 +66,7 @@ public class ActivityJigsaw extends Activity {
 
     public static RecyclerView jigRecyclerView;
 
+    private GestureDetector gestureDetector;
     ForeView foreView;
 
     BackView backView;
@@ -182,10 +188,40 @@ public class ActivityJigsaw extends Activity {
         activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
-        helper = new ItemTouchHelper(
-                new JigRecycleCallback(activeAdapter, pieceImage));
 
-        helper.attachToRecyclerView(jigRecyclerView);
+        ItemClickSupport.addTo(jigRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener(){
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Log.w("ox onItemClicked", " item="+position);
+            }
+        });
+
+
+        ItemClickSupport.addTo(jigRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                Log.w("ox onLONG ItemClicked", " item="+position);
+                return true;
+            }
+        });
+
+        gestureDetector = new GestureDetector(getApplicationContext(),new GestureDetector.SimpleOnGestureListener() {
+
+            //누르고 뗄 때 한번만 인식하도록 하기위해서
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+
+
+//        helper = new ItemTouchHelper(
+//                new JigRecycleCallback(activeAdapter, pieceImage));
+//
+//        helper.attachToRecyclerView(jigRecyclerView);
+
+
+        jigRecyclerView.addOnItemTouchListener(onItemTouchListener);
 
         jigRecyclerView.setAdapter(activeAdapter);
         LinearLayoutManager mLinearLayoutManager
@@ -230,6 +266,39 @@ public class ActivityJigsaw extends Activity {
 
     }
 
+    RecyclerView.OnItemTouchListener onItemTouchListener = new RecyclerView.OnItemTouchListener() {
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            //손으로 터치한 곳의 좌표를 토대로 해당 Item의 View를 가져옴
+            View childView = rv.findChildViewUnder(e.getX(),e.getY());
+
+            //터치한 곳의 View가 RecyclerView 안의 아이템이고 그 아이템의 View가 null이 아니라
+            //정확한 Item의 View를 가져왔고, gestureDetector에서 한번만 누르면 true를 넘기게 구현했으니
+            //한번만 눌려서 그 값이 true가 넘어왔다면
+            if(childView != null && gestureDetector.onTouchEvent(e)){
+
+                //현재 터치된 곳의 position을 가져오고
+                int currentPosition = rv.getChildAdapterPosition(childView);
+
+                //해당 위치의 Data를 가져옴
+                Log.w("onInterceptTouch", "pos ="+currentPosition);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    };
+
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
 
@@ -267,6 +336,12 @@ public class ActivityJigsaw extends Activity {
         congCount = 0;
         backBlink = true;
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
 
     @Override
     protected void onPause() {
@@ -349,4 +424,35 @@ public class ActivityJigsaw extends Activity {
         releaseAll();
         super.onDestroy();
     }
+
+    @Override
+    public boolean onDown(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(@NonNull MotionEvent e) {
+        Log.w("OnshowPress","e.");
+    }
+
+    @Override
+    public boolean onSingleTapUp(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(@NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
 }
