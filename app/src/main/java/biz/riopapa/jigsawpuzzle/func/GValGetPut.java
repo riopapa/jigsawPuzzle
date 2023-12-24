@@ -55,7 +55,7 @@ public class GValGetPut {
         gVal.fps = new ArrayList<>();
         gVal.colNbr = col;
         gVal.rowNbr = row;
-        new SetPicSizes(screenX * (12 - currLevel) / 12);
+        new SetPicSizes(screenX * (16 - currLevel) / 16);
 
         float szW = (float) chosenImageWidth / (float) (gVal.colNbr +1);
         float szH = (float) chosenImageHeight / (float) (gVal.rowNbr +1);
