@@ -107,8 +107,8 @@ public class ActivityJigsaw extends Activity {
         srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
-        congrats = new Congrat().make(screenX * 7/10);
-        jigDones = new JigDone().make(screenX * 7/10);
+        congrats = new Congrat().make(screenX * 13/20);
+        jigDones = new JigDone().make(screenX * 13/20);
 
         foreView = findViewById(R.id.paint_view);
         binding.paintView.getLayoutParams().height = screenBottom;

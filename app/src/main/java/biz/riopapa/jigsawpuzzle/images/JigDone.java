@@ -12,13 +12,11 @@ public class JigDone {
     public Bitmap[] make(int mapSize) {
 
         int[] maps = {
-            R.mipmap.zjig_done_z, R.mipmap.zjig_done_y, R.mipmap.zjig_done_x,
-            R.mipmap.zjig_done_w, R.mipmap.zjig_done_v, R.mipmap.zjig_done_u,
-            R.mipmap.zjig_done_t, R.mipmap.zjig_done_s, R.mipmap.zjig_done_r,
-            R.mipmap.zjig_done_q, R.mipmap.zjig_done_p, R.mipmap.zjig_done_o,
-            R.mipmap.zjig_done_n, R.mipmap.zjig_done_m, R.mipmap.zjig_done_l,
-            R.mipmap.zjig_done_k, R.mipmap.zjig_done_j, R.mipmap.zjig_done_i,
-            R.mipmap.zjig_done_i
+                R.mipmap.zjig_done_z, R.mipmap.zjig_done_x, R.mipmap.zjig_done_v,
+                R.mipmap.zjig_done_t, R.mipmap.zjig_done_r, R.mipmap.zjig_done_q,
+                R.mipmap.zjig_done_p, R.mipmap.zjig_done_n, R.mipmap.zjig_done_m,
+                R.mipmap.zjig_done_l, R.mipmap.zjig_done_k, R.mipmap.zjig_done_j,
+                R.mipmap.zjig_done_i, R.mipmap.zjig_done_i
         };
         Bitmap[] bMaps = new Bitmap[maps.length];
 

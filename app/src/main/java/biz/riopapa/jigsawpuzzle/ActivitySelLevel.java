@@ -260,8 +260,7 @@ public class ActivitySelLevel extends AppCompatActivity {
             gVal = new GVal();
             defineColsRows.calc(currLevel);
             new GValGetPut().set(gVal, defineColsRows.col, defineColsRows.row);
-            int sz = screenX * (10 - currLevel) / 10;
-            new SetPicSizes(sz);
+            new SetPicSizes(screenX * (14 - currLevel) / 14);
             new ClearGValValues();
         }
     }

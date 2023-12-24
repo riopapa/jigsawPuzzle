@@ -126,7 +126,7 @@ public class ForeDraw {
             }
         }
         if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            congCount = jigDones.length * 5;
+            congCount = jigDones.length * 4;
             allLockedMode = 20;
             int locked = 0;
             for (int cc = 0; cc < gVal.colNbr; cc++) {
