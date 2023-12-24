@@ -25,7 +25,7 @@ import biz.riopapa.jigsawpuzzle.model.JigFile;
 public class DownloadTask extends AsyncTask<String, Integer, Long> {
 
     private static final String TAG = "DownloadTask";
-    private DownloadCompleteListener listener;
+    private final DownloadCompleteListener listener;
     private final String url;
     private final String fileName;
     private final String dir;
@@ -49,8 +49,8 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
 
             BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
 
-            File mydir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
-            File fileWithinMyDir = new File(mydir, fileName); //Getting a file within the dir.
+            File myDir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
+            File fileWithinMyDir = new File(myDir, fileName); //Getting a file within the dir.
             FileOutputStream out = new FileOutputStream(fileWithinMyDir);
             byte[] buffer = new byte[1024];
             int bytesRead;
@@ -101,14 +101,6 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
         if (listener != null) {
             listener.onDownloadComplete(); // Notify MainActivity about download completion
         }
-
-//
-//        if (result == -1) {
-//            Toast.makeText(this, "Error downloading file", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, "File downloaded successfully", Toast.LENGTH_SHORT).show();
-//        }
     }
 }
-//        jf.thumbnailMap = FileIO.bitmap2string(thumb);
 

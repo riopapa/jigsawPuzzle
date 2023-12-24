@@ -1,26 +1,20 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -40,7 +34,6 @@ import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 public class ForeView extends View {
 
     public static int nowIdx;
-    Activity paintActivity;
     public static NearByFloatPiece nearByFloatPiece;
     public static PiecePosition piecePosition;
     ForeDraw foreDraw;
@@ -62,19 +55,16 @@ public class ForeView extends View {
 
     ActivityJigsawBinding binding;
 
-    public void init(Activity activity, ActivityJigsawBinding binding, PieceImage pieceImage){
-        this.paintActivity = activity;
+    public void init(ActivityJigsawBinding binding, PieceImage pieceImage){
         this.binding = binding;
         this.pieceImage = pieceImage;
         nowFp = null;
-        piecePosition = new PiecePosition(activity);
+        piecePosition = new PiecePosition();
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
         foreDraw = new ForeDraw(binding, pieceImage);
-        if (showBack == 0)
-            showBackCount = showBackLoop;
     }
 
     protected void onDraw(@NonNull Canvas fCanvas){
@@ -90,24 +80,10 @@ public class ForeView extends View {
 //        gVal.allLocked = isPiecesAllLocked();
     }
 
-//    boolean isPiecesAllLocked() {
-//        if (gVal.activeJigs.size() > 0 || gVal.fps.size() > 0) {
-//            return false;
-//        }
-//        for (int c = 0; c < gVal.colNbr; c++) {
-//            for (int r = 0; r < gVal.rowNbr; r++) {
-//                if (!gVal.jigTables[c][r].locked)
-//                    return false;
-//            }
-//        }
-//        return true;
-//    }
-
     long nextOKTime = 0, nowTime;
     static int xOld, yOld;
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
-        if (doNotUpdate)
-            return false;
         nowTime = System.currentTimeMillis();
         if (nextOKTime > nowTime)
             return true;
@@ -116,12 +92,9 @@ public class ForeView extends View {
         int x = (int) event.getX() - gVal.picHSize;
         int y = (int) event.getY() - gVal.picHSize;
 
-//        Log.w("px on", x+"x"+y);
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 pieceSelection.check(x, y);
-//                backView.invalidate();
-//                foreView.invalidate();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -132,11 +105,9 @@ public class ForeView extends View {
                         nowFp != null) {
                     xOld = x; yOld = y;
                     if (wannaBack2Recycler(y)) {
-//                        doNotUpdate = true;
                         goBack2Recycler();
                         gVal.fps.remove(nowIdx);
                         nowFp = null;
-//                        doNotUpdate = false;
                         dragX = -1;
                     } else if (y < screenBottom) {
                         nowFp.posX = x;
@@ -160,12 +131,6 @@ public class ForeView extends View {
         return true;
     }
 
-//    @Override
-//    public boolean performClick() {
-//        Log.w("perform","Click");
-//        return super.performClick();
-//    }
-
     public void goBack2Recycler() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         assert layoutManager != null;
@@ -176,12 +141,12 @@ public class ForeView extends View {
             xPos = (int) v.getX();
         activePos = i + (dragX - xPos) / gVal.picOSize;
         gVal.jigTables[nowC][nowR].outRecycle = false;
-        if (activePos < gVal.activeJigs.size()-1) {
-            gVal.activeJigs.add(activePos, nowC * 10000 + nowR);
+        if (activePos < activeJigs.size()-1) {
+            activeJigs.add(activePos, nowC * 10000 + nowR);
             activeAdapter.notifyItemInserted(activePos);
         } else {
-            gVal.activeJigs.add(nowC * 10000 + nowR);
-            activeAdapter.notifyItemInserted(gVal.activeJigs.size()-1);
+            activeJigs.add(nowC * 10000 + nowR);
+            activeAdapter.notifyItemInserted(activeJigs.size()-1);
         }
     }
 

@@ -12,7 +12,7 @@ public class ImageStorage {
     int[] images = {
             R.mipmap._00_alberta,
             R.mipmap._01_bears,
-            R.mipmap._02_boat,
+            R.mipmap._02_horse,
             R.mipmap._03_birds,
             R.mipmap._04_builging,
             R.mipmap._05_city3,
@@ -21,8 +21,7 @@ public class ImageStorage {
             R.mipmap._08_apple_boots,
             R.mipmap._09_cafe,
             R.mipmap._10_cat_dog,
-            R.mipmap._11_forest_way,
-            R.mipmap._12_horse
+            R.mipmap._11_forest_way
     };
 
     public int count() {

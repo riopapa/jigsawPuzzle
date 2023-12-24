@@ -2,14 +2,10 @@ package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
-import android.app.Activity;
-
 public class PiecePosition {
 
-    Activity activity;
     int gapAllowed;
-    public PiecePosition(Activity activity) {
-        this.activity = activity;
+    public PiecePosition() {
         gapAllowed = gVal.picGap + gVal.picGap;
     }
     public boolean isLockable(int cc, int rr, int posX, int posY) {

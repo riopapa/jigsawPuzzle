@@ -16,13 +16,8 @@ public class ClearGValValues {
 
         // calculate piece size;
 
-//        recySize = (int) ((float) GVal.screenX * dipVal / 2000f / 8f);   // 8f is puzzle size dependency
-
-
         // note 20 pxVal=1000.0 dipVal=3000.0 innerSize = 468 GVal.screenX 1080 x 2316
         // Tab 7   pxVal=1000.0 dipVal=2125.0 innerSize = 331 GVal.screenX 1600 x 2560
-
-//        Log.w("r25 "+Build.MODEL, "pxVal="+pxVal+", dipVal="+dipVal+", mmVal="+mmVal+" recSz="+recySize);
 
         gVal.showMaxX = screenX / gVal.picISize - 2;
         if (gVal.showMaxX > gVal.colNbr)

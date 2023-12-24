@@ -26,7 +26,7 @@ public class BackView extends View {
         super(context, attrs);
     }
 
-    public void init(Activity activity, ActivityJigsawBinding binding, PieceImage pieceImage) {
+    public void init(ActivityJigsawBinding binding, PieceImage pieceImage) {
         backDraw = new BackDraw(binding, pieceImage);
     }
     protected void onDraw(@NonNull Canvas canvas){

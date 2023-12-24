@@ -8,8 +8,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -60,10 +58,10 @@ public class BackDraw {
 
     private void backUnLocked(Canvas canvas) {
 
-        int alpha = 240 * (showBackCount--) / showBackLoop;
-        if (alpha < LOW_ALPHA)
-            alpha = LOW_ALPHA;
-        pGrayed0.setAlpha(alpha);
+//        int alpha = 240 * (showBackCount--) / showBackLoop;
+//        if (alpha < LOW_ALPHA)
+//            alpha = LOW_ALPHA;
+        pGrayed0.setAlpha(LOW_ALPHA);
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
                 final int cc = c + gVal.offsetC;

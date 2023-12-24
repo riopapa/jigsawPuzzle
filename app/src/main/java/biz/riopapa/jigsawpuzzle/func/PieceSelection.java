@@ -1,6 +1,5 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -17,15 +16,11 @@ public class PieceSelection {
          */
 
         nowFp = null;
-        if (doNotUpdate)
-            return;
 
         for (int i = gVal.fps.size() - 1; i >= 0; i--) {
             FloatPiece fp = gVal.fps.get(i);
             int c = fp.C;
             int r = fp.R;
-//            Log.w("PieceSelection","init xy="+iX+"x"+iY + " cr="+c+"x"+r
-//                    +" pos="+fp.posX+"x"+fp.posY);
             if (Math.abs(fp.posX - iX) > gVal.picHSize)
                 continue;
             if (Math.abs(fp.posY - iY) > gVal.picHSize)

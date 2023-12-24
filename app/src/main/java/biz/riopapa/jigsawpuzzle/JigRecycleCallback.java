@@ -1,6 +1,7 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
@@ -72,10 +73,6 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
             // Piece dragging is finished
             // if yposition is above recycler then move to fps
             if (dragY < screenBottom - gVal.picHSize) {
-                // make visibility to gone for no remaining shadow if tablet
-//                if (fPhoneInchX > 3f) // S22 에서도 문제 남
-//                    svViewHolder.itemView.setVisibility(View.INVISIBLE);
-//                doNotUpdate = true;
                 removeFromRecycle();
                 add2FloatingPiece();
                 anchorPiece.move();
@@ -96,13 +93,13 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     private void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
         nowFp = null;
         activePos = viewHolder.getAbsoluteAdapterPosition();
-        nowCR = gVal.activeJigs.get(activePos);
+        nowCR = activeJigs.get(activePos);
         nowC = nowCR / 10000;
         nowR = nowCR - nowC * 10000;
         dragY = screenBottom;
         dragX = viewHolder.itemView.getLeft();
         Log.w("selected "+ activePos, " CR"+nowCR+ " drag x="+dragX+ " y="+dragY
-                +" pieceSz="+gVal.activeJigs.size());
+                +" pieceSz="+activeJigs.size());
         if (vibrate)
             new VibratePhone(mContext);
     }
@@ -124,9 +121,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
     private void removeFromRecycle() {
 //
         gVal.jigTables[nowC][nowR].outRecycle = true;
-        gVal.activeJigs.remove(activePos);
+        activeJigs.remove(activePos);
         activeAdapter.notifyItemRemoved(activePos);
-        activeAdapter.notifyItemRangeChanged(activePos, gVal.activeJigs.size());
+        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
 //        if (svViewHolder == null)
 //            Log.w("svViewHolder"," is null");
 //        else
@@ -138,7 +135,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
 //        System.gc();ar
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
-        + " pieSZ="+gVal.activeJigs.size());
+        + " pieSZ="+activeJigs.size());
 //        ItemTouchHelper helper = new ItemTouchHelper(
 //                new JigRecycleCallback(activeAdapter));
 //        helper.attachToRecyclerView(jigRecyclerView);
@@ -191,9 +188,9 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
         helperDrawTime = nowTime;
 
-        if (gVal.activeJigs.size() == 0)
+        if (activeJigs.size() == 0)
             return;
-        if (activePos == gVal.activeJigs.size()) {
+        if (activePos == activeJigs.size()) {
 //            Log.e("r tag","activeSize="+GVal.activeRecyclerJigs.size()+" GVal.jigRecyclePos="+GVal.jigRecyclePos);
 //            for (int i = 0; i < GVal.activeRecyclerJigs.size(); i++)
 //                Log.w("active "+i, "pos "+GVal.activeRecyclerJigs.get(i));

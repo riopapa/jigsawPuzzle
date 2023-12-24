@@ -8,7 +8,7 @@ public class History {
     public int [] locked;   // pieces locked
     public int [] percent;    // completed percent
     public History() {
-        latestLvl = 0;
+        latestLvl = -1;
         time = new long[4];
         locked = new int [4];
         percent = new int[4];

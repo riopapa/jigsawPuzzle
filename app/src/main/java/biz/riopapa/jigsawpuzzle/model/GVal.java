@@ -27,7 +27,7 @@ public class GVal {
 
     public int baseX, baseY; // puzzle view x, y offset
 
-    public ArrayList<Integer> allPossibleJigs, activeJigs;
+    public ArrayList<Integer> allPossibleJigs;
     // allRandomJigs contains jigsaws id which is not moved to floatingPiece
     // activeRecyclerJigs contains available jigsaws currently
 

@@ -1,6 +1,5 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import android.util.Log;
 
 import java.util.Random;
 

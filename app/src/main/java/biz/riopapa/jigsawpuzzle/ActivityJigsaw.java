@@ -17,8 +17,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackCount;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBackLoop;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
@@ -69,8 +67,7 @@ public class ActivityJigsaw extends Activity {
     public static ItemTouchHelper helper;
 
     public static JigsawAdapter activeAdapter;
-
-    public static boolean doNotUpdate; // wait while one action completed
+    public static ArrayList<Integer> activeJigs;
 
     public static Bitmap chosenImageMap;
     public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
@@ -151,15 +148,9 @@ public class ActivityJigsaw extends Activity {
         });
 
         binding.showBack.setImageResource(eyes[showBack]);
-        if (showBack == 0) {
-            showBackCount = showBackLoop;
-            backBlink = true;
-        }
         binding.showBack.setOnClickListener(v -> {
             showBack = (showBack + 1) % 3;
             binding.showBack.setImageResource(eyes[showBack]);
-            if (showBack == 0)
-                showBackCount = showBackLoop;
             save_params();
         });
 
@@ -204,11 +195,6 @@ public class ActivityJigsaw extends Activity {
         new DefineControlButton(binding);
         copy2RecyclerPieces();
 
-//        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
-//
-//        binding.pieceInfo.setText(info);
-        doNotUpdate = false;
-
         if (debugMode) {
             // followings are to test congrats
             for (int cc = 0; cc < gVal.colNbr; cc++) {
@@ -218,9 +204,9 @@ public class ActivityJigsaw extends Activity {
                 }
             }
         }
-        backView.init(this, binding, pieceImage);
+        backView.init(binding, pieceImage);
         backView.invalidate();
-        foreView.init(this, binding, pieceImage);
+        foreView.init(binding, pieceImage);
         foreView.invalidate();
 
         loopTimer = new Timer();
@@ -231,15 +217,7 @@ public class ActivityJigsaw extends Activity {
                     foreView.invalidate();
                 if (backBlink)
                     backView.invalidate();
-                if (showBackCount > 0) {
-                    showBackCount--;
-                    backBlink = true;
-                    if (showBackCount == 0) {
-                        showBack = 1;
-                        binding.showBack.setImageResource(eyes[showBack]);
-                        binding.showBack.invalidate();
-                    }
-                }
+
                 if (gameMode == GAME_COMPLETED) {
                     loopTimer.cancel();
                     loopTimer = null;
@@ -263,8 +241,7 @@ public class ActivityJigsaw extends Activity {
 //        binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
-        doNotUpdate = true;
-        gVal.activeJigs = new ArrayList<>();
+        activeJigs = new ArrayList<>();
 //        gVal.fps = new ArrayList<>();
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
@@ -276,13 +253,9 @@ public class ActivityJigsaw extends Activity {
             int cr = gVal.allPossibleJigs.get(i);
             int cc = cr / 10000;
             int rr = cr - cc * 10000;
-//            if (!gVal.jigTables[cc][rr].locked && !gVal.jigTables[cc][rr].outRecycle &&
-//                    cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-//                gVal.activeJigs.add(cr);
-//            }
             if (!gVal.jigTables[cc][rr].locked &&
                     cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                gVal.activeJigs.add(cr);
+                activeJigs.add(cr);
             }
         }
         jigRecyclerView.setAdapter(activeAdapter);
@@ -290,12 +263,9 @@ public class ActivityJigsaw extends Activity {
         binding.thumbnail.setImageBitmap(thumb);
         binding.layoutJigsaw.setAlpha(1f);
         binding.layoutJigsaw.invalidate();
-        doNotUpdate = false;
         allLockedMode = 0;
         congCount = 0;
         backBlink = true;
-        if (showBack == 0)
-            showBackCount = showBackLoop;
     }
 
     @Override
@@ -380,32 +350,3 @@ public class ActivityJigsaw extends Activity {
         super.onDestroy();
     }
 }
-
-
-
-//        binding.layoutJigsaw.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.w("paintview onTouch "+event.getAction(), "sel "+v.getX()+"x"+v.getY()
-//                        + " xy= "+event.getX()+"x"+event.getY());
-//                return binding.layoutJigsaw.performClick();
-//            }
-//        });
-//        binding.layoutJigsaw.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//                if (event.getAction() == DragEvent.ACTION_DROP) {
-//                    int iX = (int) event.getX() - GVal.picHSize;
-//                    int iY = (int) event.getY() - GVal.picHSize;
-//
-//                    if (iY < screenY - GVal.recSize - GVal.recSize - GVal.picOSize) {
-//                        jPosX = iX;
-//                        jPosY = iY;
-//                        doNotUpdate = true;
-//                        removeFrmRecycle.sendEmptyMessage(0);
-//                        add2FloatingPiece();
-//                    }
-//                }
-//                return true;
-//            }
-//        });

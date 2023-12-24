@@ -18,7 +18,7 @@ public class DefineFullRecyclePieces {
         ArrayList<Integer> arrayList = new ArrayList<>();
         int []temp = new int[mxSize];
         int wkIdx = rnd.nextInt(mxSize/2);
-        int r = 0,c;
+        int r, c;
         for (int i = 0; i < mxSize ; i++) {
             int tmp = wkIdx + rnd.nextInt(mxSize/3);
             if (tmp >= mxSize) {

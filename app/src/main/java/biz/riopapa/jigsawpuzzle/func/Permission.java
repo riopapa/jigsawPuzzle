@@ -19,25 +19,10 @@ public class Permission extends AppCompatActivity {
 
     public static void ask(Activity activity, Context context, PackageInfo info) {
         String [] permissions = info.requestedPermissions;
-//        String [] permissions = {"android.permission.VIBRATE", "android.permission.INTERNET",
-//                                "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"
-//            };
         if (!hasPermissions(context, permissions)) {
             ActivityCompat.requestPermissions(activity, permissions, MULTIPLE_PERMISSION);
         }
-
-//        String notificationListenerString = Settings.Secure.getString(activity.getContentResolver(),"enabled_notification_listeners");
-////Check notifications access permission
-//        if (notificationListenerString == null || !notificationListenerString.contains(activity.getPackageName())) {
-//            requestPermission(activity);
-//        }
     }
-
-//    public static void requestPermission(Activity activity) {
-//        Intent requestIntent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
-//        requestIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        activity.startActivity(requestIntent);
-//    }
 
     private static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {

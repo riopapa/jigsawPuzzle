@@ -37,7 +37,6 @@ import java.util.TimerTask;
 import biz.riopapa.jigsawpuzzle.ActivitySelLevel;
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.func.FileIO;
-import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.images.Drawable2bitmap;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.images.MakeDark;
@@ -124,9 +123,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-//        if (histories == null)
-//            histories = new HistoryGetPut().get(mContext);
-
         JigFile jf = jigFiles.get(position);
         if (jf.latestLvl == -1) {
             for (int h = 0; h < histories.size(); h++)
@@ -134,7 +130,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     jf.latestLvl = histories.get(h).latestLvl;
             jigFiles.set(position, jf);
         }
-        Bitmap tMap = getThumbNailBitmap(position, jf);
+        Bitmap tMap = getThumbNailBitmap(jf);
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
                 holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
@@ -172,7 +168,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         holder.newInfo.setVisibility((jf.newFlag) ? View.VISIBLE: View.GONE);
     }
 
-    private Bitmap getThumbNailBitmap(int position, JigFile jf) {
+    private Bitmap getThumbNailBitmap(JigFile jf) {
         Bitmap tMap;
         String tName = jf.game + "T.jpg";
 
@@ -189,14 +185,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     private void showHistoryStatus(@NonNull ViewHolder holder, History hist,
                                           int width, int height) {
 
-//        Paint boxPaint = new Paint();
-//        boxPaint.setColor(Color.BLACK);
-//        boxPaint.setStrokeWidth(4);
-//        Paint [] paint = new Paint[4];
-//        for (int i = 0; i < 4; i++) {
-//            paint[i] = new Paint();
-//            paint[i].setColor(boxColors[i]);
-//        }
         Bitmap statusMap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(statusMap);
         if (hist == null)

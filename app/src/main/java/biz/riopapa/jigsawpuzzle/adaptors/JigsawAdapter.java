@@ -1,12 +1,12 @@
 package biz.riopapa.jigsawpuzzle.adaptors;
 
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,24 +47,9 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
         return new ViewHolder(view);
     }
-//
-//    @Override
-//    public boolean onItemMove(int fromPosition, int toPosition) {
-////        Log.w("px0 onItemMove", fromPosition+" > "+toPosition);
-////        Collections.swap(gVal.activeJigs, fromPosition, toPosition);
-////        activeAdapter.notifyItemChanged(fromPosition);
-////        activeAdapter.notifyItemChanged(toPosition);
-//        return false;
-//    }
-
-//    @Override
-//    public void onItemSwiped(int position) {
-//
-//    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
-//        public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;
         View viewLine;
@@ -100,7 +85,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
         @Override
         public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-            Log.w("jigsawAdapter","onScroll "+e1.getAction());
+//            Log.w("jigsawAdapter","onScroll "+e1.getAction());
             return false;
         }
 
@@ -109,8 +94,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     //            Log.w("jigsawAdapter","onLongPress "+e.getAction());
         }
         @Override
-        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {         Log.w("onFling", "e1 "+ e1.getY()+" e2 "+e2.getY()+" vel="+velocityY);
-            Log.w("jigsawAdapter","onFling "+e1.getAction());
+        public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             return false;
         }
     }
@@ -118,7 +102,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
-        nowCR = gVal.activeJigs.get(position);
+        nowCR = activeJigs.get(position);
         int cc = nowCR / 10000;
         int rr = nowCR - cc * 10000;
     //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
@@ -134,7 +118,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return (gVal.activeJigs.size());
+        return (activeJigs.size());
     }
 
 }

@@ -24,9 +24,6 @@ public class CalcImageColor {
         r = 255 - 255 * r / mx;
         g = 255 - 255 * g / mx;
         b = 255 - 255 * b / mx;
-//        r = 255 * r / mx;
-//        g = 255 * g / mx;
-//        b = 255 * b / mx;
         chosenImageColor = Color.rgb (r, g, b);
 
     }
