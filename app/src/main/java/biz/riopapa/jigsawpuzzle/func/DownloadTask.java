@@ -90,7 +90,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
                         (int) (jigImage.getWidth() / 5f), (int) (jigImage.getHeight() / 5f), true);
                 FileIO.thumbnail2File(thumb, fileName);
                 JigFile jf = jigFiles.get(downloadPosition);
-                jf.thumbnailMap = thumb;
+//                jf.thumbnailMap = thumb;
                 jf.newFlag = true;
                 jigFiles.set(downloadPosition, jf);
                 imageSelAdapter.notifyItemChanged(downloadPosition);

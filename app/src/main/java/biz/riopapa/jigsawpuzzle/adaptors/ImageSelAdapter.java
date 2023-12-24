@@ -40,11 +40,14 @@ import biz.riopapa.jigsawpuzzle.func.FileIO;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.images.Drawable2bitmap;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
+import biz.riopapa.jigsawpuzzle.images.MakeDark;
 import biz.riopapa.jigsawpuzzle.model.History;
 import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHolder> {
 
+
+    static MakeDark makeDark = null;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -96,6 +99,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
     @Override
     public int getItemCount() {
+        makeDark = new MakeDark();
         return jigFiles.size();
     }
 
@@ -120,24 +124,17 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
+//        if (histories == null)
+//            histories = new HistoryGetPut().get(mContext);
+
         JigFile jf = jigFiles.get(position);
-        Bitmap tMap;
-        if (jf.thumbnailMap == null) {
-            tMap = FileIO.getJPGFile(jpgFolder, jf.game+"T.jpg");
-            if (tMap == null) { // no thumbnail map then create thumbnail map
-                Bitmap bMap = FileIO.getJPGFile(jpgFolder, jf.game+".jpg");
-                if (bMap != null) {
-                    tMap = Bitmap.createScaledBitmap(bMap,
-                            (int) (bMap.getWidth() / 4f), (int) (bMap.getHeight() / 4f), true);
-                    FileIO.thumbnail2File(tMap, jf.game+"T.jpg");
-                    jf.thumbnailMap = tMap;
-                    jigFiles.set(position, jf);
-                } else
-                    tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
-            } else
-                tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
-        } else
-            tMap = jf.thumbnailMap;
+        if (jf.latestLvl == -1) {
+            for (int h = 0; h < histories.size(); h++)
+                if (histories.get(h).game.equals(jf.game))
+                    jf.latestLvl = histories.get(h).latestLvl;
+            jigFiles.set(position, jf);
+        }
+        Bitmap tMap = getThumbNailBitmap(position, jf);
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
                 holder.iVImage.getLayoutParams();
         int width = screenX * 3 / 7;
@@ -159,8 +156,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         parStatus.height = height;
         holder.iVStatus.setLayoutParams(parStatus);
         holder.itemView.setTag(jf.game);
-        if (histories == null)
-            histories = new HistoryGetPut().get(mContext);
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
             if (hist.game.equals(jf.game)) {
@@ -177,7 +172,21 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         holder.newInfo.setVisibility((jf.newFlag) ? View.VISIBLE: View.GONE);
     }
 
-    private static void showHistoryStatus(@NonNull ViewHolder holder, History hist,
+    private Bitmap getThumbNailBitmap(int position, JigFile jf) {
+        Bitmap tMap;
+        String tName = jf.game + "T.jpg";
+
+        tMap = FileIO.getJPGFile(jpgFolder, tName);
+        if (tMap != null) {
+            if (jf.latestLvl == -1 && !tName.startsWith("_"))
+                return makeDark.make(tMap);
+            else
+                return tMap;
+        }
+        return new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
+    }
+
+    private void showHistoryStatus(@NonNull ViewHolder holder, History hist,
                                           int width, int height) {
 
 //        Paint boxPaint = new Paint();

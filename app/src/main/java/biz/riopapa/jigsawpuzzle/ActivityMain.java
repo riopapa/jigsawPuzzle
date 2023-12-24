@@ -120,9 +120,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         new PhoneMetrics(this);
 
-        // create jigFiles with existing files
-        new BuildJigFilesFromDrawable();
-
         /* fileName, position status
             1) file = text, pos = -1; download jigsaw.txt
             2) file = .jpg, pos = n ; downloading jpg start @ onDownloadCompleted
@@ -145,6 +142,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         if (histories == null || !appVersion.equals(nowVersion))
             new HistoryGetPut().set(this);
+        else
+            histories = new HistoryGetPut().get(this);
+
+        // create jigFiles with existing files
+        if (jigFiles == null)
+            new BuildJigFilesFromDrawable();
 
         // ready image recycler view
         imageRecyclers = findViewById(R.id.imageRecycler);
@@ -212,8 +215,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         Log.w("begin","downloadNewJpg ");
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
-            if (jf.thumbnailMap == null &&
-                FileIO.existJPGFile(jpgFolder, jf.game+".jpg") == null) {
+//            if (jf.thumbnailMap == null &&
+              if (FileIO.existJPGFile(jpgFolder, jf.game+".jpg") == null) {
                 downloadFileName = jf.game + ".jpg";
                 downloadPosition = i;
                 Log.w("pos="+i,"downloadNewJpg "+downloadFileName);

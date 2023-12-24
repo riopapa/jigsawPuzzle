@@ -108,7 +108,7 @@ public class FileIO {
         FileOutputStream os;
         try {
             os = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, os);
             os.close();
         } catch (IOException e) {
             Log.e("ioException", e.toString());

@@ -6,15 +6,12 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.levelNames;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -320,7 +317,7 @@ public class ActivityJigsaw extends Activity {
         }
         history.locked[gVal.level] = locked;
         history.percent[gVal.level] = locked * 100 / (gVal.colNbr * gVal.rowNbr);
-        history.latest = gVal.level;
+        history.latestLvl = gVal.level;
 
         if (historyIdx != -1) {
                 histories.set(historyIdx, history);
@@ -337,7 +334,6 @@ public class ActivityJigsaw extends Activity {
 
     private void releaseAll() {
         jigRecyclerView = null;
-
         foreView = null;
         backView = null;
         activeAdapter = null;
@@ -350,7 +346,6 @@ public class ActivityJigsaw extends Activity {
         fireWorks = null;
         congrats = null;
         jigDones = null;
-        histories = null;
     }
 
     private void save_params() {

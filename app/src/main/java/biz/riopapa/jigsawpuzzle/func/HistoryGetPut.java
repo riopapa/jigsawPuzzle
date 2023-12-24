@@ -5,7 +5,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -70,7 +69,7 @@ public class HistoryGetPut {
                 long lastTime = 0;
                 for (int j = 0; j < 4; j++) {
                     if (h.time[j] > lastTime) {
-                        h.latest = j;
+                        h.latestLvl = j;
                         lastTime = h.time[j];
                     }
                 }

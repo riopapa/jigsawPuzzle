@@ -81,14 +81,16 @@ public class BackDraw {
                             pGrayed0);
                 } else if (showBack == 1) {
                     if (jigGray[cc][rr] == null)
-                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr],
+                                gVal.picOSize,gVal.picOSize);
                     canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed1);
                 } else {    // showBack == 2
                     if (jigGray[cc][rr] == null)
-                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
+                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr],
+                                gVal.picOSize,gVal.picOSize);
                     canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,

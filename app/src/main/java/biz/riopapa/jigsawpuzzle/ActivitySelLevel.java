@@ -20,7 +20,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 
-import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +31,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
@@ -105,8 +103,8 @@ public class ActivitySelLevel extends AppCompatActivity {
             history.game = currGame;
         }
 
-        if (history.latest != -1)
-            getGVal(history.latest, defineColsRows);
+        if (history.latestLvl != -1)
+            getGVal(history.latestLvl, defineColsRows);
         else
             getGVal(2, defineColsRows);
 
@@ -193,7 +191,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         } else
             dialogView.findViewById(activeId).setVisibility(View.INVISIBLE);
         dialogView.findViewById(newId).setOnClickListener(this::edit_table);
-        if (history.latest == lvl && history.percent[lvl] != 100) {
+        if (history.latestLvl == lvl && history.percent[lvl] != 100) {
             TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, -10.0f, 10.0f);
             // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
             animation.setDuration(200); // animation duration

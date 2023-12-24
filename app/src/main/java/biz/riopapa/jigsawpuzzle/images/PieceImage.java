@@ -134,12 +134,12 @@ public class PieceImage {
         return outMap;
     }
 
-    public Bitmap makeGray(Bitmap pic) {
-        Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+    public Bitmap makeGray(Bitmap pic, int wSz, int hSz) {
+        Bitmap outMap = Bitmap.createBitmap(wSz, hSz, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         Paint p = new Paint();
-        for (int c = 0; c < gVal.picOSize; c++) {
-            for (int r = 0; r < gVal.picOSize; r++) {
+        for (int c = 0; c < wSz; c++) {
+            for (int r = 0; r < hSz; r++) {
                 int pxl = pic.getPixel(c, r);
                 if (pxl != 0) {
                     int avr = (Color.red(pxl) + Color.green(pxl) + Color.blue(pxl)) / 3;
