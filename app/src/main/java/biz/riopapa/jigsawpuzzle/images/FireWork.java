@@ -32,7 +32,7 @@ public class FireWork {
         Bitmap[] fireMaps = new Bitmap[maps.length];
 
         final float brightContrast  = 1;
-        final int BrightBrightness = 120;  // positive is bright
+        final int BrightBrightness = 200;  // positive is bright
         ColorMatrix brightMatrix = new ColorMatrix(new float[]
                 {
                         brightContrast, 0, 0, 0, BrightBrightness,  // Red

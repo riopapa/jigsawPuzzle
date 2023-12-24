@@ -78,7 +78,7 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picGap / 10;
+        shadowSize = gVal.picOSize / 70;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222222, PorterDuff.Mode.SRC_ATOP));
     }
@@ -117,17 +117,18 @@ public class PieceImage {
     }
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
-        JigTable jig = gVal.jigTables[col][row];
-        Bitmap mask = maskMerge(outMaskMaps[0][jig.lType], outMaskMaps[1][jig.rType],
-                outMaskMaps[2][jig.uType], outMaskMaps[3][jig.dType]);
+        JigTable jt = gVal.jigTables[col][row];
+        int delta = (jt.locked) ? 0 : gVal.picOSize / 50;
+        Bitmap mask = maskMerge(outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
+                outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
-                gVal.picOSize, gVal.picOSize, true);
+                gVal.picOSize - delta, gVal.picOSize - delta, true);
         Bitmap picScaled = Bitmap.createScaledBitmap(pic,
-                gVal.picOSize, gVal.picOSize, true);
+                gVal.picOSize - delta, gVal.picOSize - delta, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScaled, shadowSize, shadowSize, pShadowTop);
-        canvas.drawBitmap(maskScaled, 0, 0, (jig.locked) ? pLockedATop : pOutATop);
+        canvas.drawBitmap(maskScaled, shadowSize+delta, shadowSize+delta, pShadowTop);
+        canvas.drawBitmap(maskScaled, delta/2f, delta/2f, (jt.locked) ? pLockedATop : pOutATop);
         Matrix matrix = new Matrix();
         canvas.drawBitmap(picScaled, matrix, pOutLine);
         return outMap;

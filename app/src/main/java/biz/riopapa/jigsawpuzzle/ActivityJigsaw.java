@@ -1,6 +1,7 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_BACK_TO_MAIN;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
@@ -98,7 +99,7 @@ public class ActivityJigsaw extends Activity {
 
         setContentView(binding.getRoot());
         Log.w("jSaw","onCreate gameMode="+gameMode);
-        screenBottom = screenY - gVal.recSize - gVal.recSize;
+        screenBottom = screenY - gVal.recSize - gVal.recSize - gVal.picGap;
         if (fPhoneInchX > 3f)
             screenBottom += gVal.picHSize;
 
@@ -189,7 +190,7 @@ public class ActivityJigsaw extends Activity {
 
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
-        jigRecyclerView.getLayoutParams().height = gVal.recSize;
+        jigRecyclerView.getLayoutParams().height = gVal.recSize + gVal.picGap;
         activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
@@ -206,9 +207,9 @@ public class ActivityJigsaw extends Activity {
         new DefineControlButton(binding);
         copy2RecyclerPieces();
 
-        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
-
-        binding.pieceInfo.setText(info);
+//        String info = currGame+"\n"+levelNames[currLevel] + "\n"+gVal.colNbr+"x"+gVal.rowNbr;
+//
+//        binding.pieceInfo.setText(info);
         doNotUpdate = false;
 
         if (debugMode) {
@@ -242,23 +243,15 @@ public class ActivityJigsaw extends Activity {
                         binding.showBack.invalidate();
                     }
                 }
+                if (gameMode == GAME_COMPLETED) {
+                    loopTimer.cancel();
+                    loopTimer = null;
+                    finish();
+                }
+
             }
         };
         loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
-//        Thread thread = new Thread(() -> {
-//            for (int cc = 0; cc < gVal.colNbr; cc++) {
-//                for (int rr = 0; rr < gVal.rowNbr; rr++) {
-//                    if (jigPic[cc][rr] == null)
-//                        jigPic[cc][rr] = pieceImage.makePic(cc, rr);
-//                    if (jigOLine[cc][rr] == null)
-//                        jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-//                    if (jigGray[cc][rr] == null)
-//                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr]);
-//                }
-//            }
-//        });
-//        thread.setName("Thread pic");
-//        thread.start();
 
     }
 
@@ -275,7 +268,7 @@ public class ActivityJigsaw extends Activity {
         binding.thumbnail.invalidate();
         doNotUpdate = true;
         gVal.activeJigs = new ArrayList<>();
-        gVal.fps = new ArrayList<>();
+//        gVal.fps = new ArrayList<>();
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
@@ -377,7 +370,10 @@ public class ActivityJigsaw extends Activity {
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
         gameMode = GAME_BACK_TO_MAIN;
-        loopTimer.cancel();
+        if (loopTimer != null) {
+            loopTimer.cancel();
+            loopTimer = null;
+        }
         finish();
         super.onBackPressed();
     }

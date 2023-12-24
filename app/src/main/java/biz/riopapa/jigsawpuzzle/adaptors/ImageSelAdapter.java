@@ -37,6 +37,7 @@ import java.util.TimerTask;
 import biz.riopapa.jigsawpuzzle.ActivitySelLevel;
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.func.FileIO;
+import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.images.Drawable2bitmap;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.History;
@@ -132,9 +133,9 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     jf.thumbnailMap = tMap;
                     jigFiles.set(position, jf);
                 } else
-                    tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
+                    tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
             } else
-                tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_app);
+                tMap = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
         } else
             tMap = jf.thumbnailMap;
         RelativeLayout.LayoutParams parImage = (RelativeLayout.LayoutParams)
@@ -158,6 +159,8 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         parStatus.height = height;
         holder.iVStatus.setLayoutParams(parStatus);
         holder.itemView.setTag(jf.game);
+        if (histories == null)
+            histories = new HistoryGetPut().get(mContext);
         for (int i = 0; i < histories.size(); i++) {
             History hist = histories.get(i);
             if (hist.game.equals(jf.game)) {
@@ -215,6 +218,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         paint.setColor(0xFF000000);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2);
+        canvas.drawArc(rect, -90, 360f , true, paint);
         canvas.drawArc(rect, -90, pct*360f/100f , true, paint);
 
     }

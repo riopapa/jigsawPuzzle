@@ -25,7 +25,7 @@ public class BackDraw {
     Random rnd;
     int gapSmall, gapTwo;
     final int LOW_ALPHA = 160;
-    final int HIDE_ALPHA = 60;
+    final int HIDE_ALPHA = 130;
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
 
@@ -93,7 +93,6 @@ public class BackDraw {
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed2);
-
                 }
             }
         }

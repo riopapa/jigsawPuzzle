@@ -54,14 +54,15 @@ public class HistoryGetPut {
         File prefsDir = new File(context.getApplicationInfo().dataDir, "shared_prefs");
 
         if (prefsDir.exists() && prefsDir.isDirectory()) {
-            String[] list = prefsDir.list();
-            Log.w("prefsDir"," list len="+list.length);
             GValGetPut gValGetPut = new GValGetPut();
-            for (String s : list) {
-                if (s.startsWith("game_")) {
-                    GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
-                    if (gval != null && gval.version.equals(nowVersion))
-                        add2History(s.substring(5, 9), gval);
+            String[] list = prefsDir.list();
+            if (list != null) {
+                for (String s : list) {
+                    if (s.startsWith("game_")) {
+                        GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
+                        if (gval != null && gval.version.equals(nowVersion))
+                            add2History(s.substring(5, 9), gval);
+                    }
                 }
             }
             for (int i = 0; i < histories.size(); i++) {
@@ -75,7 +76,6 @@ public class HistoryGetPut {
                 }
                 histories.set(i, h);
             }
-            Log.w("history","history size="+histories.size());
         }
     }
     void add2History(String gameLevel, GVal gVal) {

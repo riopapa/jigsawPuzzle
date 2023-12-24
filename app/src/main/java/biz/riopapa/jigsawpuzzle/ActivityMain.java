@@ -77,8 +77,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static String appVersion = "";
 
     public static boolean debugMode = false;
-    public static boolean showCR = true;
-    public final static long INVALIDATE_INTERVAL = 30;
+    public static boolean showCR = false;
+    public final static long INVALIDATE_INTERVAL = 40;
 
     // Google Drive related variables
     final String imageListId = "1HoO4s3dv4i8GAG5s5Nsl6HzMzF5TQ9Hf";

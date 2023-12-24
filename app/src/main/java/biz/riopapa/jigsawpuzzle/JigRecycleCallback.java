@@ -2,7 +2,6 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.doNotUpdate;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
@@ -34,13 +33,13 @@ import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
-    final private ZItemTouchHelperListener listener;
+    final private ItemTouchHelperListener listener;
     final private AnchorPiece anchorPiece;
     final private NearPieceBind nearPieceBind;
     final private PieceImage pieceImage;
     public static boolean nowDragging;
 
-    public JigRecycleCallback(ZItemTouchHelperListener listener, PieceImage pieceImage) {
+    public JigRecycleCallback(ItemTouchHelperListener listener, PieceImage pieceImage) {
         this.listener = listener;
         this.pieceImage = pieceImage;
         nearPieceBind = new NearPieceBind();
@@ -85,6 +84,8 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
                     backBlink = true;
                 }
             }
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            // ignore swipe
         } else {
             Log.e("xx onSelec", "Helper "+actionState);
         }
@@ -125,6 +126,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
         gVal.jigTables[nowC][nowR].outRecycle = true;
         gVal.activeJigs.remove(activePos);
         activeAdapter.notifyItemRemoved(activePos);
+        activeAdapter.notifyItemRangeChanged(activePos, gVal.activeJigs.size());
 //        if (svViewHolder == null)
 //            Log.w("svViewHolder"," is null");
 //        else
@@ -134,7 +136,7 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 //                new JigRecycleCallback(activeAdapter, pieceImage));
 //        helper.attachToRecyclerView(jigRecyclerView);
 
-//        System.gc();
+//        System.gc();ar
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
         + " pieSZ="+gVal.activeJigs.size());
 //        ItemTouchHelper helper = new ItemTouchHelper(
@@ -150,18 +152,12 @@ public class JigRecycleCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-//        return makeMovementFlags(
-//                ItemTouchHelper.UP | ItemTouchHelper.DOWN
-//                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
-//                ,
-//                ItemTouchHelper.END | ItemTouchHelper.START
-//                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
-//        );
         return makeMovementFlags(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN
                         | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
                 ,
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN
+                ItemTouchHelper.END | ItemTouchHelper.START
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
         );
     }
 

@@ -81,9 +81,6 @@ public class ForeView extends View {
 
         foreBlink = false;
         foreDraw.draw(fCanvas);
-        if (gameMode == GAME_COMPLETED) {
-            paintActivity.finish();
-        }
         if (congCount > 0) {
             foreBlink = true;
         }
@@ -163,19 +160,21 @@ public class ForeView extends View {
         return true;
     }
 
-    @Override
-    public boolean performClick() {
-        Log.w("perform","Click");
-        return super.performClick();
-    }
+//    @Override
+//    public boolean performClick() {
+//        Log.w("perform","Click");
+//        return super.performClick();
+//    }
 
     public void goBack2Recycler() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         assert layoutManager != null;
         int i = layoutManager.findFirstVisibleItemPosition();
+        int xPos = 0;
         View v = layoutManager.findViewByPosition(i);
-        assert v != null;
-        activePos = i + (dragX - (int) v.getX()) / gVal.picOSize;
+        if (v != null)
+            xPos = (int) v.getX();
+        activePos = i + (dragX - xPos) / gVal.picOSize;
         gVal.jigTables[nowC][nowR].outRecycle = false;
         if (activePos < gVal.activeJigs.size()-1) {
             gVal.activeJigs.add(activePos, nowC * 10000 + nowR);
@@ -189,10 +188,6 @@ public class ForeView extends View {
     public boolean wannaBack2Recycler(int moveY) {
 
         // if sole piece then can go back to recycler
-        if (nowFp.anchorId == 0 && moveY > screenBottom - gVal.picHSize && gVal.fps.size() > 0) {
-            nowFp = null;
-            return true;
-        }
-        return false;
+        return nowFp.anchorId == 0 && moveY > screenBottom - gVal.picHSize && gVal.fps.size() > 0;
     }
 }

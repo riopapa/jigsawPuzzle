@@ -64,18 +64,18 @@ public class ForeDraw {
         rnd = new Random(System.currentTimeMillis() & 0xFFFFF);
     }
 
-    public void draw(Canvas fCanvas){
-        fCanvas.save();
-        showJustLocked(fCanvas);
-        showFloatingPieces(fCanvas);
+    public void draw(Canvas canvas){
+        canvas.save();
+        showJustLocked(canvas);
+        showFloatingPieces(canvas);
         if (nowDragging) {
-            fCanvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
+            canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
 //            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
         }
         if (congCount > 0)
-            showCongrats(fCanvas);
+            showCongrats(canvas);
 
-        fCanvas.restore();
+        canvas.restore();
 
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));
@@ -98,16 +98,19 @@ public class ForeDraw {
                 gVal.jigTables[cc][rr].count -= 1 + rnd.nextInt(2);
                 if (gVal.jigTables[cc][rr].count < 0)
                     gVal.jigTables[cc][rr].count = 0;
-                if (gVal.jigTables[cc][rr].count == 0 && gVal.jigTables[cc][rr].locked) {
+                if (gVal.jigTables[cc][rr].count == 0) {
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                     jigWhite[cc][rr] = null;
                     backBlink = true;
                 }
                 Bitmap bMap ;
+                int offset = 0;
                 if (gVal.jigTables[cc][rr].count == 0)
                     bMap = jigOLine[cc][rr];
-                else if (gVal.jigTables[cc][rr].count % 3 == 1)
+                else if (gVal.jigTables[cc][rr].count % 3 == 1) {
                     bMap = fireWorks[gVal.jigTables[cc][rr].count];
+                    offset = -gVal.picGap;
+                }
                 else if ((gVal.jigTables[cc][rr].count % 2 == 0))
                     bMap = jigOLine[cc][rr];
                 else
@@ -116,8 +119,8 @@ public class ForeDraw {
 //                            gVal.baseX + c * gVal.picISize - gVal.picGap,
 //                            gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                 canvas.drawBitmap(bMap,
-                        gVal.baseX + c * gVal.picISize,
-                        gVal.baseY + r * gVal.picISize, null);
+                        gVal.baseX + c * gVal.picISize + offset,
+                        gVal.baseY + r * gVal.picISize + offset, null);
 
                 foreBlink = true;
             }
@@ -156,32 +159,27 @@ public class ForeDraw {
             }
             foreBlink = true;
             // animate just anchored
-            if (fp.count > 0 && fp.mode == ANI_ANCHOR) {
-                fp.count--;
-                Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
-                Matrix matrix = new Matrix();
-                if (fp.count > 0)
-                    matrix.postRotate(2 * (2 - fp.count / 2f + rnd.nextInt(4)));
-                Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
-                        gVal.picOSize, gVal.picOSize, matrix, true);
-                fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
-                if (fp.count == 0) {
-                    fp.mode = 0;
+            if (fp.count > 0) {
+                if (fp.mode == ANI_ANCHOR) {
+                    fp.count--;
+                    Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
+                    Matrix matrix = new Matrix();
+                    if (fp.count > 0)
+                        matrix.postRotate(2 * (2 - fp.count / 2f + rnd.nextInt(4)));
+                    Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
+                            gVal.picOSize, gVal.picOSize, matrix, true);
+                    fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
+                } else if (fp.mode == ANI_TO_FPS) {  // animate from recycle to foreView
+                    fp.count--;
+                    Matrix matrix = new Matrix();
+                    if (fp.count > 0)
+                        matrix.postRotate(3 * (fp.count - 4));
+                    Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
+                            gVal.picOSize, gVal.picOSize, matrix, true);
+                    fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
                 }
-                gVal.fps.set(cnt, fp);
-            }
-            // animate recycler to paint
-            if (fp.count > 0 && fp.mode == ANI_TO_FPS) {  // animate from recycle to foreView
-                fp.count--;
-                Matrix matrix = new Matrix();
-                if (fp.count > 0)
-                    matrix.postRotate(3 * (fp.count - 4));
-                Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
-                        gVal.picOSize, gVal.picOSize, matrix, true);
-                fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
-                if (fp.count == 0) {
+                if (fp.count == 0)
                     fp.mode = 0;
-                }
                 gVal.fps.set(cnt, fp);
             }
         }

@@ -1,6 +1,5 @@
 package biz.riopapa.jigsawpuzzle.adaptors;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
@@ -19,16 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
-
 import biz.riopapa.jigsawpuzzle.R;
-import biz.riopapa.jigsawpuzzle.ZItemTouchHelperListener;
+import biz.riopapa.jigsawpuzzle.ItemTouchHelperListener;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
-            implements ZItemTouchHelperListener {
+            implements ItemTouchHelperListener {
 
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
@@ -50,20 +47,20 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
         return new ViewHolder(view);
     }
+//
+//    @Override
+//    public boolean onItemMove(int fromPosition, int toPosition) {
+////        Log.w("px0 onItemMove", fromPosition+" > "+toPosition);
+////        Collections.swap(gVal.activeJigs, fromPosition, toPosition);
+////        activeAdapter.notifyItemChanged(fromPosition);
+////        activeAdapter.notifyItemChanged(toPosition);
+//        return false;
+//    }
 
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-//        Log.w("px0 onItemMove", fromPosition+" > "+toPosition);
-//        Collections.swap(gVal.activeJigs, fromPosition, toPosition);
-//        activeAdapter.notifyItemChanged(fromPosition);
-//        activeAdapter.notifyItemChanged(toPosition);
-        return false;
-    }
-
-    @Override
-    public void onItemSwiped(int position) {
-
-    }
+//    @Override
+//    public void onItemSwiped(int position) {
+//
+//    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
