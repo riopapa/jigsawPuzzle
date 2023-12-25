@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
+import biz.riopapa.jigsawpuzzle.adaptors.JigAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
@@ -66,7 +66,7 @@ public class ActivityJigsaw extends Activity {
     BackView backView;
     public static ItemTouchHelper helper;
 
-    public static JigsawAdapter activeAdapter;
+    public static JigAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
     public static Bitmap chosenImageMap;
@@ -179,15 +179,25 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = gVal.recSize + gVal.picGap;
-        activeAdapter = new JigsawAdapter();
+        activeAdapter = new JigAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
-        helper = new ItemTouchHelper(
-                new JigRecycleCallback(activeAdapter, pieceImage));
 
-        helper.attachToRecyclerView(jigRecyclerView);
+        ItemTouchHelper.Callback callback =
+                new ItemMoveCallback(activeAdapter, pieceImage);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(jigRecyclerView);
 
         jigRecyclerView.setAdapter(activeAdapter);
+
+
+//
+//        helper = new ItemTouchHelper(
+//                new JigRecycleCallback(activeAdapter, pieceImage));
+//
+//        helper.attachToRecyclerView(jigRecyclerView);
+//
+//        jigRecyclerView.setAdapter(activeAdapter);
         LinearLayoutManager mLinearLayoutManager
                 = new LinearLayoutManager(mContext, layoutOrientation, false);
         jigRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -213,16 +223,16 @@ public class ActivityJigsaw extends Activity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                if (foreBlink)
-                    foreView.invalidate();
-                if (backBlink)
-                    backView.invalidate();
+            if (foreBlink)
+                foreView.invalidate();
+            if (backBlink)
+                backView.invalidate();
 
-                if (gameMode == GAME_COMPLETED) {
-                    loopTimer.cancel();
-                    loopTimer = null;
-                    finish();
-                }
+            if (gameMode == GAME_COMPLETED) {
+                loopTimer.cancel();
+                loopTimer = null;
+                finish();
+            }
 
             }
         };

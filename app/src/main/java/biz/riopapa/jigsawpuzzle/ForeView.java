@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -112,6 +113,7 @@ public class ForeView extends View {
                     } else if (y < screenBottom) {
                         nowFp.posX = x;
                         nowFp.posY = y;
+                        Log.w("nowFp", nowFp.C+" x "+nowFp.R+" "+gVal.jigTables[nowFp.C][nowFp.R].locked);
                         anchorPiece.move();
                         nearPieceBind.check(pieceImage);
                     } else {

@@ -78,9 +78,9 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picOSize / 70;
+        shadowSize = gVal.picOSize / 90;
         pShadowTop = new Paint();
-        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222222, PorterDuff.Mode.SRC_ATOP));
+        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
     }
 
     /**
@@ -118,7 +118,7 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
-        int delta = (jt.locked) ? 0 : gVal.picOSize / 50;
+        int delta = (jt.locked) ? 0 : gVal.picOSize / 70;
         Bitmap mask = maskMerge(outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
                 outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,

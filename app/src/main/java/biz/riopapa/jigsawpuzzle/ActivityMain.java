@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import biz.riopapa.jigsawpuzzle.adaptors.ImageSelAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
@@ -182,10 +184,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             String str = FileIO.readTextFile("", imageListOnDrive); // no dir for list
             String[] ss = str.split("\n");
             boolean newlyAdd = false;
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("YYMMdd", Locale.KOREA);
+            String today = dateFormat.format(System.currentTimeMillis());
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
                 String nGame = imgInfo[0].trim();
-                if (newJpgFile(nGame)) {
+                if (newJpgFile(nGame) && imgInfo[2].trim().compareTo(today) < 0) {
                     JigFile jf = new JigFile();
                     jf.game = nGame;
                     jf.imageId = imgInfo[1].trim();

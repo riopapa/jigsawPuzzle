@@ -23,7 +23,7 @@ public class BackDraw {
     Random rnd;
     int gapSmall, gapTwo;
     final int LOW_ALPHA = 160;
-    final int HIDE_ALPHA = 130;
+    final int HIDE_ALPHA = 80;
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
 
@@ -58,9 +58,6 @@ public class BackDraw {
 
     private void backUnLocked(Canvas canvas) {
 
-//        int alpha = 240 * (showBackCount--) / showBackLoop;
-//        if (alpha < LOW_ALPHA)
-//            alpha = LOW_ALPHA;
         pGrayed0.setAlpha(LOW_ALPHA);
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {

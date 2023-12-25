@@ -22,13 +22,14 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
-import static biz.riopapa.jigsawpuzzle.JigRecycleCallback.nowDragging;
+import static biz.riopapa.jigsawpuzzle.ItemMoveCallback.nowDragging;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -68,10 +69,9 @@ public class ForeDraw {
         canvas.save();
         showJustLocked(canvas);
         showFloatingPieces(canvas);
-        if (nowDragging) {
+        if (nowDragging)
             canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
-//            Log.w("nowDragging", "piece "+dragX+"x"+dragY + " screenBottom="+screenBottom);
-        }
+
         if (congCount > 0)
             showCongrats(canvas);
 
