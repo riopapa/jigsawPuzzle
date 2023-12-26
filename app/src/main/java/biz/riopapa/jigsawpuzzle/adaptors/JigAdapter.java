@@ -111,6 +111,7 @@ public class JigAdapter extends RecyclerView.Adapter<JigAdapter.MyViewHolder> im
 
     @Override
     public void onRowClear(MyViewHolder myViewHolder) {
-        myViewHolder.itemView.setAlpha(0);
+        if (myViewHolder.getAbsoluteAdapterPosition() != -1)
+            myViewHolder.itemView.setAlpha(0);
     }
 }
