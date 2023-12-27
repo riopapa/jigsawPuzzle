@@ -8,7 +8,8 @@ import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class AnchorPiece {
-    public void move() {
+    public boolean move() {
+        boolean updated = false;
         if (nowFp.anchorId > 0) {
             for (int i = 0; i < gVal.fps.size(); i++) {
                 FloatPiece fpT = gVal.fps.get(i);
@@ -16,9 +17,10 @@ public class AnchorPiece {
                     fpT.posX = nowFp.posX - (nowC - fpT.C) * gVal.picISize;
                     fpT.posY = nowFp.posY - (nowR - fpT.R) * gVal.picISize;
                     gVal.fps.set(i, fpT);
+                    updated = true;
                 }
             }
         }
-
+        return updated;
     }
 }

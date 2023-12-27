@@ -7,35 +7,48 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
-import android.view.GestureDetector;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
+
+import biz.riopapa.jigsawpuzzle.ItemMoveCallback;
 import biz.riopapa.jigsawpuzzle.R;
-import biz.riopapa.jigsawpuzzle.ItemTouchHelperListener;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
-public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder>
-            implements ItemTouchHelperListener {
+public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+
 
     AnchorPiece anchorPiece;
     NearPieceBind nearPieceBind;
     PieceImage pieceImage;
 
-    @NonNull
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView ivIcon;
+        View viewLine;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            this.viewLine = itemView.findViewById(R.id.piece_layout);
+            this.ivIcon = itemView.findViewById(R.id.recycler_jigsaw);
+
+        }
+    }
+
+    public JigsawAdapter() {}
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycle_jigsaw, viewGroup, false);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recycle_jigsaw, parent, false);
         view.getLayoutParams().width = gVal.recSize;
         view.getLayoutParams().height = gVal.recSize;
         ImageView iv = view.findViewById(R.id.recycler_jigsaw);
@@ -45,81 +58,58 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.ViewHolder
         anchorPiece = new AnchorPiece();
         nearPieceBind = new NearPieceBind();
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
-        return new ViewHolder(view);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
-            GestureDetector.OnGestureListener {
-
-        ImageView ivIcon;
-        View viewLine;
-        GestureDetector mGestureDetector;
-
-        public ViewHolder(View view) {
-            super(view);
-            this.viewLine = itemView.findViewById(R.id.piece_layout);
-            this.ivIcon = itemView.findViewById(R.id.recycler_jigsaw);
-
-            mGestureDetector = new GestureDetector(itemView.getContext(), this);
-            itemView.setOnTouchListener(this);
-
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            mGestureDetector.onTouchEvent(event);
-    //            Log.w("rq onTouch "+v.getTag(), "e "+event.getX()+";"+event.getY());
-            return v.performClick();
-        }
-
-        @Override
-        public boolean onDown(@NonNull MotionEvent e) {return false;}
-
-        @Override
-        public void onShowPress(@NonNull MotionEvent e) {
-    //            Log.w("jigsawAdapter","onShowPress "+e.getAction());
-        }
-
-        @Override
-        public boolean onSingleTapUp(@NonNull MotionEvent e) {return true;}
-
-        @Override
-        public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-//            Log.w("jigsawAdapter","onScroll "+e1.getAction());
-            return false;
-        }
-
-        @Override
-        public void onLongPress(@NonNull MotionEvent e) {
-    //            Log.w("jigsawAdapter","onLongPress "+e.getAction());
-        }
-        @Override
-        public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
-            return false;
-        }
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
 
         nowCR = activeJigs.get(position);
         int cc = nowCR / 10000;
         int rr = nowCR - cc * 10000;
-    //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
+        //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
         if (jigPic[cc][rr] == null)
             jigPic[cc][rr] = pieceImage.makePic(cc, rr);
 
         if (jigOLine[cc][rr] == null)
             jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
 
-        viewHolder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
-        viewHolder.ivIcon.setTag(nowCR);
+        holder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
+        holder.ivIcon.setTag(nowCR);
     }
+
 
     @Override
     public int getItemCount() {
-        return (activeJigs.size());
+        return activeJigs.size();
     }
 
-}
 
+    @Override
+    public void onRowMoved(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(activeJigs, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(activeJigs, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onRowSelected(MyViewHolder myViewHolder) {
+        Log.w("onRowSelected", "getPosition "+myViewHolder.getPosition());
+        Log.w("onRowSelected", "getLeft "+myViewHolder.itemView.getLeft());
+//        myViewHolder.rowView.setBackgroundColor(Color.GRAY);
+
+    }
+
+    @Override
+    public void onRowClear(MyViewHolder myViewHolder) {
+//        if (myViewHolder.getAbsoluteAdapterPosition() != -1)
+//            myViewHolder.itemView.setAlpha(0);
+    }
+}

@@ -47,10 +47,10 @@ public class NearPieceBind {
             for (int i = 0; i < gVal.fps.size(); ) {
                 FloatPiece fpT = gVal.fps.get(i);
                 if (fpT.anchorId == anchorId) {
+                    gVal.fps.remove(i);
                     gVal.jigTables[fpT.C][fpT.R].locked = true;
                     gVal.jigTables[fpT.C][fpT.R].count = fireWorks.length;
                     jigOLine[fpT.C][fpT.R] = pieceImage.makeOline(jigPic[fpT.C][fpT.R], fpT.C, fpT.R);
-                    gVal.fps.remove(i);
                 } else
                     i++;
             }

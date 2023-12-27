@@ -77,9 +77,9 @@ public class ForeView extends View {
         }
     }
 
-    private void paintTouchUp(){
-//        gVal.allLocked = isPiecesAllLocked();
-    }
+//    private void paintTouchUp(){
+////        gVal.allLocked = isPiecesAllLocked();
+//    }
 
     long nextOKTime = 0, nowTime;
     static int xOld, yOld;
@@ -103,7 +103,7 @@ public class ForeView extends View {
                 final float MOVE_ALLOWANCE = 20;
                 if ((Math.abs(x - xOld) > MOVE_ALLOWANCE ||
                         Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
-                        nowFp != null) {
+                        nowFp != null && !gVal.jigTables[nowFp.C][nowFp.R].locked) {
                     xOld = x; yOld = y;
                     if (wannaBack2Recycler(y)) {
                         goBack2Recycler();
@@ -113,20 +113,21 @@ public class ForeView extends View {
                     } else if (y < screenBottom) {
                         nowFp.posX = x;
                         nowFp.posY = y;
-                        Log.w("nowFp", nowFp.C+" x "+nowFp.R+" "+gVal.jigTables[nowFp.C][nowFp.R].locked);
-                        anchorPiece.move();
-                        nearPieceBind.check(pieceImage);
+                        Log.w("nowFp state", nowFp.C+" x "+nowFp.R+" "+gVal.jigTables[nowFp.C][nowFp.R].locked);
+                        if (anchorPiece.move() || nearPieceBind.check(pieceImage))
+                            foreBlink = true;
                     } else {
                         y -= gVal.picOSize;
                         nowFp.posX = x;
                         nowFp.posY = y;
+                        foreBlink = true;
                     }
-                    invalidate();
+//                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                paintTouchUp();
-                performClick();
+//                paintTouchUp();
+//                performClick();
                 break;
         }
 
@@ -142,7 +143,7 @@ public class ForeView extends View {
         if (v != null)
             xPos = (int) v.getX();
         activePos = i + (dragX - xPos) / gVal.picOSize;
-        gVal.jigTables[nowC][nowR].outRecycle = false;
+        gVal.jigTables[nowC][nowR].fp = false;
         if (activePos < activeJigs.size()-1) {
             activeJigs.add(activePos, nowC * 10000 + nowR);
             activeAdapter.notifyItemInserted(activePos);

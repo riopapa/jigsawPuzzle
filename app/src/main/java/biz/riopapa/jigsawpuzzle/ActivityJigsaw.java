@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import biz.riopapa.jigsawpuzzle.adaptors.JigAdapter;
+import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
@@ -66,7 +66,7 @@ public class ActivityJigsaw extends Activity {
     BackView backView;
     public static ItemTouchHelper helper;
 
-    public static JigAdapter activeAdapter;
+    public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
     public static Bitmap chosenImageMap;
@@ -179,7 +179,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = gVal.recSize + gVal.picGap;
-        activeAdapter = new JigAdapter();
+        activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
 
@@ -215,10 +215,9 @@ public class ActivityJigsaw extends Activity {
             }
         }
         backView.init(binding, pieceImage);
-        backView.invalidate();
         foreView.init(binding, pieceImage);
-        foreView.invalidate();
-
+        backBlink = true;
+        foreBlink = true;
         loopTimer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -233,7 +232,6 @@ public class ActivityJigsaw extends Activity {
                 loopTimer = null;
                 finish();
             }
-
             }
         };
         loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
@@ -248,11 +246,9 @@ public class ActivityJigsaw extends Activity {
         binding.moveUp.setVisibility((gVal.offsetR == 0)? View.INVISIBLE: View.VISIBLE);
         binding.moveDown.setVisibility((gVal.offsetR == gVal.rowNbr-gVal.showMaxY)? View.INVISIBLE: View.VISIBLE);
 
-//        binding.layoutJigsaw.setAlpha(0.5f);
         binding.thumbnail.setImageResource(R.drawable.z_transparent);
         binding.thumbnail.invalidate();
         activeJigs = new ArrayList<>();
-//        gVal.fps = new ArrayList<>();
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];

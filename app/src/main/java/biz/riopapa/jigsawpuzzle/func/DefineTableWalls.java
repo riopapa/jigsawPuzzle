@@ -41,7 +41,7 @@ public class DefineTableWalls {
                 else
                     z.dType = 0;
                 zz[col][row] = z;
-                zz[col][row].outRecycle = false;
+                zz[col][row].fp = false;
             }
         }
     }

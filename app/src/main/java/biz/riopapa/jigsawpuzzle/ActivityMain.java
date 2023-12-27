@@ -44,7 +44,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     RecyclerView imageRecyclers;
     public static ImageSelAdapter imageSelAdapter;
     public static int gameMode;
-    public static String nowVersion = "000103";
+    public static String nowVersion = "000104";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;

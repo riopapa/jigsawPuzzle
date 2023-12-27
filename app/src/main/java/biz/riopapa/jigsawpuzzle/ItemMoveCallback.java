@@ -6,7 +6,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
@@ -15,7 +14,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
-import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
 import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
@@ -28,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import biz.riopapa.jigsawpuzzle.adaptors.JigAdapter;
+import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
 import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
 import biz.riopapa.jigsawpuzzle.func.VibratePhone;
@@ -55,10 +53,10 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
 
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return true;
-    }
+//    @Override
+//    public boolean isLongPressDragEnabled() {
+//        return true;
+//    }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
@@ -95,28 +93,29 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
                                   int actionState) {
-
-        if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
+        foreBlink = false;
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             Log.w("state is "+actionState, "START DRAG =");
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
             recyclerSelected(viewHolder);
-            nowDragging = true;
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-            Log.w("state is "+actionState, " ACTION_STATE_IDLE =");
+//            Log.w("state is "+actionState, " ACTION_STATE_IDLE =");
+            if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
+                JigsawAdapter.MyViewHolder myViewHolder=
+                        (JigsawAdapter.MyViewHolder) viewHolder;
+                mAdapter.onRowSelected(myViewHolder);
+            }
 
-            nowDragging = false;
             // Piece dragging is finished
             // if yPosition is above recycler then move to fps
             if (dragY < screenBottom - gVal.picHSize) {
                 removeFromRecycle();
                 add2FloatingPiece();
-                anchorPiece.move();
+//                anchorPiece.move();
+                nowDragging = false;
                 foreBlink = true;
-                if (nearPieceBind.check(pieceImage)) {
-                    backBlink = true;
-                }
             }
         } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             Log.w("state is "+actionState, " ACTION_STATE_SWIPE =");
@@ -125,25 +124,21 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
             Log.w("state is "+actionState, " UN KNOWEN =");
         }
 
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof JigAdapter.MyViewHolder) {
-                JigAdapter.MyViewHolder myViewHolder=
-                        (JigAdapter.MyViewHolder) viewHolder;
-                mAdapter.onRowSelected(myViewHolder);
-            }
-
-        }
+//        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+//
+//        }
 
         super.onSelectedChanged(viewHolder, actionState);
     }
     @Override
-    public void clearView(RecyclerView recyclerView,
-                          RecyclerView.ViewHolder viewHolder) {
+    public void clearView(@NonNull RecyclerView recyclerView,
+                          @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        Log.w("clearView", "viewHolder pos "+viewHolder.getAbsoluteAdapterPosition());
-        if (viewHolder instanceof JigAdapter.MyViewHolder) {
-            JigAdapter.MyViewHolder myViewHolder=
-                    (JigAdapter.MyViewHolder) viewHolder;
+        if (dragY > screenBottom)
+            return;
+        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
+            JigsawAdapter.MyViewHolder myViewHolder=
+                    (JigsawAdapter.MyViewHolder) viewHolder;
             mAdapter.onRowClear(myViewHolder);
         }
 //        if (dragY < screenBottom - gVal.picHSize && ) {
@@ -151,7 +146,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 //        }
 
     }
-
 
     private void recyclerSelected(RecyclerView.ViewHolder viewHolder) {
         nowFp = null;
@@ -161,10 +155,10 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         nowR = nowCR - nowC * 10000;
         dragY = screenBottom;
         dragX = viewHolder.itemView.getLeft();
-        Log.w("selected "+ activePos, " CR"+nowCR+ " drag x="+dragX+ " y="+dragY
-                +" pieceSz="+activeJigs.size());
+        Log.w("selected "+ activePos, activePos+" CR"+nowCR + " pieceSz="+activeJigs.size());
         if (vibrate)
             new VibratePhone(mContext);
+        nowDragging = true;
     }
     private void add2FloatingPiece() {
 
@@ -182,26 +176,13 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
     private void removeFromRecycle() {
-//
-        gVal.jigTables[nowC][nowR].outRecycle = true;
+
         activeJigs.remove(activePos);
         activeAdapter.notifyItemRemoved(activePos);
-        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
-//        if (svViewHolder == null)
-//            Log.w("svViewHolder"," is null");
-//        else
-//            svViewHolder.itemView.setAlpha(0);
-
-//        helper = new ItemTouchHelper(
-//                new JigRecycleCallback(activeAdapter, pieceImage));
-//        helper.attachToRecyclerView(jigRecyclerView);
-
-//        System.gc();ar
+//        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
+        gVal.jigTables[nowC][nowR].fp = true;
         Log.w("r2m move R"+nowCR,"removed from recycler drag="+dragX+"x"+dragY
                 + " pieSZ="+activeJigs.size());
-//        ItemTouchHelper helper = new ItemTouchHelper(
-//                new JigRecycleCallback(activeAdapter));
-//        helper.attachToRecyclerView(jigRecyclerView);
     }
 
     static long helperDrawTime = 0;
@@ -236,8 +217,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                 nowFp.posX = dragX;
                 nowFp.posY = dragY;
             }
-
-            Log.w("xy ","Piece moving .." + dragX+"x"+dragY);
             foreBlink = true;
 //            String txt = "dxDy "+dX+" x "+dY
 //                    + "\n GVal.jPos "+dragX+" x "+dragY + "fps size="+ gVal.fps.size();
@@ -249,8 +228,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public interface ItemTouchHelperContract {
 
         void onRowMoved(int fromPosition, int toPosition);
-        void onRowSelected(JigAdapter.MyViewHolder myViewHolder);
-        void onRowClear(JigAdapter.MyViewHolder myViewHolder);
+        void onRowSelected(JigsawAdapter.MyViewHolder myViewHolder);
+        void onRowClear(JigsawAdapter.MyViewHolder myViewHolder);
 
     }
 

@@ -6,7 +6,7 @@ public class PiecePosition {
 
     int gapAllowed;
     public PiecePosition() {
-        gapAllowed = gVal.picGap + gVal.picGap;
+        gapAllowed = gVal.picGap + gVal.picGap + gVal.picGap;
     }
     public boolean isLockable(int cc, int rr, int posX, int posY) {
 
