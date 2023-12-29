@@ -1,7 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.blinkcable;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congrats;
@@ -65,7 +64,6 @@ public class ForeDraw {
     }
 
     public void draw(Canvas canvas){
-        if (blinkcable) {
             canvas.save();
             showJustLocked(canvas);
             showFloatingPieces(canvas);
@@ -74,7 +72,6 @@ public class ForeDraw {
             if (congCount > 0)
                 showCongrats(canvas);
             canvas.restore();
-        }
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));
 

@@ -1,6 +1,5 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.blinkcable;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
@@ -49,14 +48,12 @@ public class BackDraw {
     }
 
     public void draw(Canvas canvas) {
-        if (blinkcable) {
-            canvas.save();
-            canvas.drawLine(gVal.picHSize, screenBottom, screenX - gVal.picHSize,
-                    screenBottom, lPaint);
-            backUnLocked(canvas);
-            backLocked(canvas);
-            canvas.restore();
-        }
+        canvas.save();
+        canvas.drawLine(gVal.picHSize, screenBottom, screenX - gVal.picHSize,
+                screenBottom, lPaint);
+        backUnLocked(canvas);
+        backLocked(canvas);
+        canvas.restore();
     }
 
     private void backUnLocked(Canvas canvas) {

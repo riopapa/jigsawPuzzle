@@ -2,7 +2,6 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.blinkcable;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
@@ -74,12 +73,10 @@ public class ForeView extends View {
 
     protected void onDraw(@NonNull Canvas fCanvas){
 
-        if (blinkcable) {
-            foreBlink = false;
-            foreDraw.draw(fCanvas);
-            if (congCount > 0)
-                foreBlink = true;
-        }
+        foreBlink = false;
+        foreDraw.draw(fCanvas);
+        if (congCount > 0)
+            foreBlink = true;
     }
 
 //    private void paintTouchUp(){
@@ -112,7 +109,6 @@ public class ForeView extends View {
                     }
                     FloatPiece fp = gVal.fps.get(topIdx);
                     Log.w("ACTION_DOWN", topIdx+" fp Selected "+fp.C+" "+fp.R);
-                    blinkcable = true;
                 }
 
                 break;

@@ -61,7 +61,6 @@ public class ActivityJigsaw extends Activity {
     ForeView foreView;
 
     BackView backView;
-    public static boolean blinkcable;
     public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
@@ -210,7 +209,6 @@ public class ActivityJigsaw extends Activity {
                 }
             }
         }
-        blinkcable = true;
         backView.init(binding, pieceImage);
         foreView.init(binding, pieceImage);
         backBlink = true;
@@ -219,13 +217,10 @@ public class ActivityJigsaw extends Activity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-            if (blinkcable) {
-                if (backBlink)
-                    backView.invalidate();
-                if (foreBlink)
-                    foreView.invalidate();
-            } else
-                blinkcable = backBlink || foreBlink;
+            if (backBlink)
+                backView.invalidate();
+            if (foreBlink)
+                foreView.invalidate();
             if (gameMode == ActivityMain.GMode.ALL_DONE) {
                 loopTimer.cancel();
                 loopTimer = null;
