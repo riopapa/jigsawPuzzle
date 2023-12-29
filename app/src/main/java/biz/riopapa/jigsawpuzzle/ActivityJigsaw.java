@@ -1,8 +1,5 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_BACK_TO_MAIN;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
@@ -64,8 +61,7 @@ public class ActivityJigsaw extends Activity {
     ForeView foreView;
 
     BackView backView;
-    public static ItemTouchHelper helper;
-
+    public static boolean blinkcable;
     public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
@@ -75,9 +71,9 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
     public static Bitmap[] fireWorks, congrats, jigDones;
 
-    public static int activePos; // jigsaw slide x, y count
-    public static int nowC, nowR, nowCR;   // fullImage pieceImage array column, row , x*10000+y
-    public static int dragX, dragY; // absolute x,y rightPosition drawing current jigsaw
+    public static int itemPos; // jigsaw slide x, y count
+    public static int itemC, itemR, itemCR;   // fullImage pieceImage array column, row , x*10000+y
+    public static int itemX, itemY; // absolute x,y while recycler piece dragging
     public static History history;
     public static int historyIdx;
     public static int allLockedMode = 0;    // 10: just all locked, 20: after all locked 99: completed
@@ -184,7 +180,7 @@ public class ActivityJigsaw extends Activity {
 
 
         ItemTouchHelper.Callback callback =
-                new ItemMoveCallback(activeAdapter, pieceImage);
+                new ItemMoveCallback(activeAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(jigRecyclerView);
 
@@ -209,11 +205,12 @@ public class ActivityJigsaw extends Activity {
             // followings are to test congrats
             for (int cc = 0; cc < gVal.colNbr; cc++) {
                 for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                    if (new Random().nextInt(19) > 1)
+                    if (new Random().nextInt(8) > 1)
                         gVal.jigTables[cc][rr].locked = true;
                 }
             }
         }
+        blinkcable = true;
         backView.init(binding, pieceImage);
         foreView.init(binding, pieceImage);
         backBlink = true;
@@ -222,12 +219,14 @@ public class ActivityJigsaw extends Activity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-            if (foreBlink)
-                foreView.invalidate();
-            if (backBlink)
-                backView.invalidate();
-
-            if (gameMode == GAME_COMPLETED) {
+            if (blinkcable) {
+                if (backBlink)
+                    backView.invalidate();
+                if (foreBlink)
+                    foreView.invalidate();
+            } else
+                blinkcable = backBlink || foreBlink;
+            if (gameMode == ActivityMain.GMode.ALL_DONE) {
                 loopTimer.cancel();
                 loopTimer = null;
                 finish();
@@ -256,12 +255,12 @@ public class ActivityJigsaw extends Activity {
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
-            int cr = gVal.allPossibleJigs.get(i);
-            int cc = cr / 10000;
-            int rr = cr - cc * 10000;
+            int cr = gVal.allPossibleJigs.get(i) -  10000;
+            int cc = cr / 100;
+            int rr = cr - cc * 100;
             if (!gVal.jigTables[cc][rr].locked &&
                     cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                activeJigs.add(cr);
+                activeJigs.add(cr + 10000);
             }
         }
         jigRecyclerView.setAdapter(activeAdapter);
@@ -279,8 +278,8 @@ public class ActivityJigsaw extends Activity {
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
 
 //        invalidateTimer.cancel();
-        if (gameMode != GAME_BACK_TO_MAIN)
-            gameMode = GAME_PAUSED;
+        if (gameMode != ActivityMain.GMode.TO_MAIN)
+            gameMode = ActivityMain.GMode.PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
 
         history.time[gVal.level] = System.currentTimeMillis();
@@ -303,7 +302,7 @@ public class ActivityJigsaw extends Activity {
 
         releaseAll();
         System.gc();
-        if (gameMode == GAME_PAUSED)
+        if (gameMode == ActivityMain.GMode.PAUSED)
             finish();
         super.onPause();
     }
@@ -340,7 +339,7 @@ public class ActivityJigsaw extends Activity {
     @Override
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
-        gameMode = GAME_BACK_TO_MAIN;
+        gameMode = ActivityMain.GMode.TO_MAIN;
         if (loopTimer != null) {
             loopTimer.cancel();
             loopTimer = null;

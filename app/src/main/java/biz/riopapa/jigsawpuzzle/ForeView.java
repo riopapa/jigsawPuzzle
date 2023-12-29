@@ -2,12 +2,13 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activePos;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.blinkcable;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 
@@ -24,9 +25,11 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
-import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
+import biz.riopapa.jigsawpuzzle.func.PieceAlign;
+import biz.riopapa.jigsawpuzzle.func.MoveThisOnTop;
 import biz.riopapa.jigsawpuzzle.func.NearByFloatPiece;
-import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
+import biz.riopapa.jigsawpuzzle.func.PieceBind;
+import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.func.PiecePosition;
 import biz.riopapa.jigsawpuzzle.func.PieceSelection;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
@@ -34,16 +37,16 @@ import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class ForeView extends View {
 
-    public static int nowIdx;
+    public static int topIdx = -1;
     public static NearByFloatPiece nearByFloatPiece;
     public static PiecePosition piecePosition;
     ForeDraw foreDraw;
-    AnchorPiece anchorPiece;
-    NearPieceBind nearPieceBind;
+    PieceAlign pieceAlign;
+    PieceLock pieceLock;
+    PieceBind pieceBind;
     PieceSelection pieceSelection;
     PieceImage pieceImage;
 
-    public static FloatPiece nowFp;
     public static boolean foreBlink, backBlink;
 
     public ForeView(Context context) {
@@ -59,21 +62,23 @@ public class ForeView extends View {
     public void init(ActivityJigsawBinding binding, PieceImage pieceImage){
         this.binding = binding;
         this.pieceImage = pieceImage;
-        nowFp = null;
         piecePosition = new PiecePosition();
-        anchorPiece = new AnchorPiece();
-        nearPieceBind = new NearPieceBind();
+        pieceAlign = new PieceAlign();
+        pieceLock = new PieceLock();
+        pieceBind = new PieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
         foreDraw = new ForeDraw(binding, pieceImage);
+        topIdx = -1;
     }
 
     protected void onDraw(@NonNull Canvas fCanvas){
 
-        foreBlink = false;
-        foreDraw.draw(fCanvas);
-        if (congCount > 0) {
-            foreBlink = true;
+        if (blinkcable) {
+            foreBlink = false;
+            foreDraw.draw(fCanvas);
+            if (congCount > 0)
+                foreBlink = true;
         }
     }
 
@@ -96,6 +101,20 @@ public class ForeView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 pieceSelection.check(x, y);
+                if (topIdx == -1) {
+//                    itemX = -1;
+//                    itemY = -1;
+                    Log.w("ACTION_DOWN", "none selected");
+                } else {
+                    if (topIdx < gVal.fps.size() - 1) {
+                        new MoveThisOnTop(topIdx);
+                        topIdx = gVal.fps.size() - 1;
+                    }
+                    FloatPiece fp = gVal.fps.get(topIdx);
+                    Log.w("ACTION_DOWN", topIdx+" fp Selected "+fp.C+" "+fp.R);
+                    blinkcable = true;
+                }
+
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -103,29 +122,35 @@ public class ForeView extends View {
                 final float MOVE_ALLOWANCE = 20;
                 if ((Math.abs(x - xOld) > MOVE_ALLOWANCE ||
                         Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
-                        nowFp != null && !gVal.jigTables[nowFp.C][nowFp.R].locked) {
+                        topIdx != -1) {
                     xOld = x; yOld = y;
+                    Log.w("Action is idx=",topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
                     if (wannaBack2Recycler(y)) {
                         goBack2Recycler();
-                        gVal.fps.remove(nowIdx);
-                        nowFp = null;
-                        dragX = -1;
+                        gVal.fps.remove(topIdx);
+                        itemX = -1;
                     } else if (y < screenBottom) {
-                        nowFp.posX = x;
-                        nowFp.posY = y;
-                        Log.w("nowFp state", nowFp.C+" x "+nowFp.R+" "+gVal.jigTables[nowFp.C][nowFp.R].locked);
-                        if (anchorPiece.move() || nearPieceBind.check(pieceImage))
-                            foreBlink = true;
-                    } else {
+                        gVal.fps.get(topIdx).posX = x;
+                        gVal.fps.get(topIdx).posY = y;
+                        Log.w("vstate", topIdx+"  "+ gVal.fps.get(topIdx).C+" x "+gVal.fps.get(topIdx).R
+                            + " xy = "+x+"x"+y);
+                        pieceAlign.move();
+                        foreBlink = pieceLock.update(pieceImage);
+
+//                        if (foreBlink)
+//                            topIdx = gVal.fps.size() - 1;
+                        foreBlink |= pieceBind.update();
+                    } else if (gVal.fps.get(topIdx).anchorId == 0){
                         y -= gVal.picOSize;
-                        nowFp.posX = x;
-                        nowFp.posY = y;
+                        gVal.fps.get(topIdx).posX = x;
+                        gVal.fps.get(topIdx).posY = y;
                         foreBlink = true;
                     }
-//                    invalidate();
+                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                Log.w("Action","UP ");
 //                paintTouchUp();
 //                performClick();
                 break;
@@ -142,20 +167,20 @@ public class ForeView extends View {
         View v = layoutManager.findViewByPosition(i);
         if (v != null)
             xPos = (int) v.getX();
-        activePos = i + (dragX - xPos) / gVal.picOSize;
-        gVal.jigTables[nowC][nowR].fp = false;
-        if (activePos < activeJigs.size()-1) {
-            activeJigs.add(activePos, nowC * 10000 + nowR);
-            activeAdapter.notifyItemInserted(activePos);
+        itemPos = i + (itemX - xPos) / gVal.picOSize;
+        gVal.jigTables[itemC][itemR].fp = false;
+        if (itemPos < activeJigs.size()-1) {
+            activeJigs.add(itemPos, itemC * 10000 + itemR);
+            activeAdapter.notifyItemInserted(itemPos);
         } else {
-            activeJigs.add(nowC * 10000 + nowR);
+            activeJigs.add(itemC * 10000 + itemR);
             activeAdapter.notifyItemInserted(activeJigs.size()-1);
         }
     }
 
     public boolean wannaBack2Recycler(int moveY) {
-
         // if sole piece then can go back to recycler
-        return nowFp.anchorId == 0 && moveY > screenBottom - gVal.picHSize && gVal.fps.size() > 0;
+//        Log.w("back2", "topidx="+topIdx+" fps sz="+gVal.fps.size());
+        return gVal.fps.get(topIdx).anchorId == 0 && moveY > screenBottom - gVal.picHSize;
     }
 }

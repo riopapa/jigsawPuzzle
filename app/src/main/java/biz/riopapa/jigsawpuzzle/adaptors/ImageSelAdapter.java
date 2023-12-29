@@ -3,7 +3,6 @@ package biz.riopapa.jigsawpuzzle.adaptors;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_SELECT_LEVEL;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.chosenNumber;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
@@ -34,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import biz.riopapa.jigsawpuzzle.ActivityMain;
 import biz.riopapa.jigsawpuzzle.ActivitySelLevel;
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.func.FileIO;
@@ -61,7 +61,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage = itemView.findViewById(R.id.image);
             iVImage.setOnClickListener(view -> {
 
-                gameMode = GAME_SELECT_LEVEL;
+                gameMode = ActivityMain.GMode.SEL_LEVEL;
                 chosenNumber = getBindingAdapterPosition();
                 jigFile = jigFiles.get(chosenNumber);
                 if (jigFile.game.startsWith("_"))

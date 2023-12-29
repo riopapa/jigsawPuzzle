@@ -119,6 +119,45 @@ public class PieceImage {
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
         int delta = (jt.locked) ? 0 : gVal.picOSize / 70;
+        Bitmap mask, maskL, maskR, maskU, maskD;
+        if (jt.locked) {
+            if (col == 0 || !gVal.jigTables[col-1][row].locked)
+                maskL = outMaskMaps[0][jt.lType];
+            else
+                maskL = srcMaskMaps[0][jt.lType];
+            if (col == gVal.colNbr-1 || !gVal.jigTables[col+1][row].locked)
+                maskR = outMaskMaps[1][jt.rType];
+            else
+                maskR = srcMaskMaps[1][jt.rType];
+            if (row == 0 || !gVal.jigTables[col][row-1].locked)
+                maskU = outMaskMaps[2][jt.uType];
+            else
+                maskU = srcMaskMaps[2][jt.uType];
+            if (row == gVal.rowNbr-1 || !gVal.jigTables[col][row+1].locked)
+                maskD = outMaskMaps[3][jt.dType];
+            else
+                maskD = srcMaskMaps[3][jt.dType];
+            mask = maskMerge(maskL, maskR, maskU, maskD);
+        } else
+            mask = maskMerge(
+                outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
+                outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
+        Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
+                gVal.picOSize - delta, gVal.picOSize - delta, true);
+        Bitmap picScaled = Bitmap.createScaledBitmap(pic,
+                gVal.picOSize - delta, gVal.picOSize - delta, true);
+        Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outMap);
+        canvas.drawBitmap(maskScaled, shadowSize+delta, shadowSize+delta, pShadowTop);
+        canvas.drawBitmap(maskScaled, delta/2f, delta/2f, (jt.locked) ? pLockedATop : pOutATop);
+        Matrix matrix = new Matrix();
+        canvas.drawBitmap(picScaled, matrix, pOutLine);
+        return outMap;
+    }
+
+    public Bitmap makeOlinex(Bitmap pic, int col, int row) {
+        JigTable jt = gVal.jigTables[col][row];
+        int delta = (jt.locked) ? 0 : gVal.picOSize / 70;
         Bitmap mask = maskMerge(outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
                 outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,

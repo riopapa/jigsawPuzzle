@@ -6,9 +6,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_BACK_TO_MAIN;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_PAUSED;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_STARTED;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
@@ -63,7 +60,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        if (gameMode == GAME_PAUSED) {
+        if (gameMode == ActivityMain.GMode.PAUSED) {
 //            new DefineColsRows(gVal.gameLevel);
             Intent intent = new Intent(this, ActivityJigsaw.class);
             startActivity(intent);
@@ -78,7 +75,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         super.onResume();
         findViewById(R.id.loading_circle).setVisibility(View.VISIBLE);
         Log.w("s1 SelLevel", "onResume gameMode="+gameMode);
-        if (gameMode == GAME_BACK_TO_MAIN) {
+        if (gameMode == ActivityMain.GMode.TO_MAIN) {
             Log.w("SelLevel"," go back to main");
             finish();
             return;
@@ -205,7 +202,7 @@ public class ActivitySelLevel extends AppCompatActivity {
     private void edit_table(View view) {
         alertDialog.dismiss();
 
-        gameMode = GAME_STARTED; // target Image, level has been set
+        gameMode = ActivityMain.GMode.STARTED; // target Image, level has been set
         int level = Integer.parseInt(view.getTag().toString());
         // if level > 9 then it means play new game
         getGVal(level, defineColsRows);

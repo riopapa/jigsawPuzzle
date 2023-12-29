@@ -1,27 +1,26 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.blinkcable;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congrats;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragX;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.dragY;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.fireWorks;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigDones;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_ANCHOR;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.ANI_TO_FPS;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.GAME_COMPLETED;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
+import static biz.riopapa.jigsawpuzzle.ForeView.topIdx;
 import static biz.riopapa.jigsawpuzzle.ItemMoveCallback.nowDragging;
 
 import android.graphics.Bitmap;
@@ -66,17 +65,16 @@ public class ForeDraw {
     }
 
     public void draw(Canvas canvas){
-        canvas.save();
-        showJustLocked(canvas);
-        showFloatingPieces(canvas);
-        if (nowDragging)
-            canvas.drawBitmap(jigOLine[nowC][nowR],dragX, dragY, null);
-
-        if (congCount > 0)
-            showCongrats(canvas);
-
-        canvas.restore();
-
+        if (blinkcable) {
+            canvas.save();
+            showJustLocked(canvas);
+            showFloatingPieces(canvas);
+            if (nowDragging && itemX > 0)
+                canvas.drawBitmap(jigOLine[itemC][itemR], itemX, itemY, null);
+            if (congCount > 0)
+                showCongrats(canvas);
+            canvas.restore();
+        }
 //        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
 //        mActivity.runOnUiThread(() -> tvRight.setText(txt));
 
@@ -115,9 +113,6 @@ public class ForeDraw {
                     bMap = jigOLine[cc][rr];
                 else
                     bMap = jigWhite[cc][rr];
-//                canvas.drawBitmap(bMap,
-//                            gVal.baseX + c * gVal.picISize - gVal.picGap,
-//                            gVal.baseY + r * gVal.picISize - gVal.picGap, null);
                 canvas.drawBitmap(bMap,
                         gVal.baseX + c * gVal.picISize + offset,
                         gVal.baseY + r * gVal.picISize + offset, null);
@@ -146,6 +141,7 @@ public class ForeDraw {
     }
 
     private void showFloatingPieces(Canvas fCanvas) {
+        Log.w("showFloatingPieces", "fps sz="+gVal.fps.size());
         for (int cnt = 0; cnt < gVal.fps.size(); cnt++) {
             FloatPiece fp = gVal.fps.get(cnt);
             int c = fp.C;
@@ -153,15 +149,15 @@ public class ForeDraw {
             if (jigOLine[c][r] == null)
                 jigOLine[c][r] = pieceImage.makePic(c,r);
 
-            if (fp.mode == 0) { // normal pieceImage
+            if (fp.mode == null) { // normal pieceImage
                 fCanvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
+                Log.w(topIdx+" fp ("+cnt,fp.C+"x"+fp.R+" pos = "+fp.posX+" x "+fp.posY);
                 continue;
             }
-            foreBlink = true;
             // animate just anchored
             if (fp.count > 0) {
-                if (fp.mode == ANI_ANCHOR) {
-                    fp.count--;
+                fp.count--;
+                if (fp.mode == ActivityMain.GMode.ANCHOR) {
                     Bitmap oMap = pieceImage.makeBright(jigOLine[c][r]);
                     Matrix matrix = new Matrix();
                     if (fp.count > 0)
@@ -169,19 +165,25 @@ public class ForeDraw {
                     Bitmap rBitMap = Bitmap.createBitmap(oMap, 0, 0,
                             gVal.picOSize, gVal.picOSize, matrix, true);
                     fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
-                } else if (fp.mode == ANI_TO_FPS) {  // animate from recycle to foreView
-                    fp.count--;
+                } else if (fp.mode == ActivityMain.GMode.TO_FPS) {  // animate from recycle to foreView
                     Matrix matrix = new Matrix();
                     if (fp.count > 0)
                         matrix.postRotate(3 * (fp.count - 4));
                     Bitmap rBitMap = Bitmap.createBitmap(jigOLine[c][r], 0, 0,
                             gVal.picOSize, gVal.picOSize, matrix, true);
                     fCanvas.drawBitmap(rBitMap, fp.posX, fp.posY, null);
+                } else {
+                    Log.e("fp Mode","Mode Error "+fp.mode);
                 }
                 if (fp.count == 0)
-                    fp.mode = 0;
+                    fp.mode = null;
+                else
+                    foreBlink = true;
                 gVal.fps.set(cnt, fp);
+//            } else {
+//                fCanvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
             }
+            foreBlink = true;
         }
     }
 
@@ -190,7 +192,7 @@ public class ForeDraw {
         congCount--;
         if (congCount == 0) {
             if (allLockedMode == 30) {
-                gameMode = GAME_COMPLETED;
+                gameMode = ActivityMain.GMode.ALL_DONE;
                 allLockedMode = 99;
             } else
                 allLockedMode = 2;

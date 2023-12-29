@@ -43,24 +43,16 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 //    public static int maxImageCount;
     RecyclerView imageRecyclers;
     public static ImageSelAdapter imageSelAdapter;
-    public static int gameMode;
+    public static GMode gameMode;
+    public enum GMode { STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR, IMAGE }
     public static String nowVersion = "000104";
+
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
     public static int currLevel;
     public static GVal gVal;
     public static ArrayList<History> histories = null;
-
-    final public static int ANI_TO_FPS = 10123;
-    final public static int ANI_ANCHOR = 10321;
-    final public static int GAME_SELECT_IMAGE = 2011;
-    final public static int GAME_SELECT_LEVEL = 2022;
-    final public static int GAME_STARTED = 2033;
-    final public static int GAME_PAUSED = 2044;
-    final public static int GAME_BACK_TO_MAIN = 2047;
-
-    final public static int GAME_COMPLETED = 3333;
 
     final public static String[] levelNames = {"Easy", "Norm", "Hard", "Guru"};
 
@@ -161,10 +153,10 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
 
-        if (gameMode == GAME_BACK_TO_MAIN) {
+        if (gameMode == GMode.TO_MAIN) {
             imageSelAdapter.notifyItemChanged(chosenNumber);
         }
-        gameMode = GAME_SELECT_IMAGE;
+        gameMode = GMode.SEL_LEVEL;
 
     }
 

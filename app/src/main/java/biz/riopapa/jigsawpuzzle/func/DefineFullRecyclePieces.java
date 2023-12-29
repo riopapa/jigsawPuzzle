@@ -38,7 +38,7 @@ public class DefineFullRecyclePieces {
                 c = tmp / gVal.rowNbr;
                 r = tmp - c * gVal.rowNbr;
             }
-            arrayList.add(c*10000+r);
+            arrayList.add(10000 + c*100 + r);
             temp[tmp] = 1;
             wkIdx = tmp;
         }

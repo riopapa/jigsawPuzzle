@@ -8,6 +8,7 @@ public class PiecePosition {
     public PiecePosition() {
         gapAllowed = gVal.picGap + gVal.picGap + gVal.picGap;
     }
+
     public boolean isLockable(int cc, int rr, int posX, int posY) {
 
         if (isNearLocked(cc, rr)) {
@@ -17,6 +18,7 @@ public class PiecePosition {
         } else
             return false;
     }
+
     boolean isNearLocked(int cc, int rr) {
 
         // return true if near by pieces are already locked

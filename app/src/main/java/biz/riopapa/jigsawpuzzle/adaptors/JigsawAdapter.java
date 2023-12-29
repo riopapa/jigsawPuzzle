@@ -3,7 +3,7 @@ package biz.riopapa.jigsawpuzzle.adaptors;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowCR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemCR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
@@ -19,15 +19,15 @@ import java.util.Collections;
 
 import biz.riopapa.jigsawpuzzle.ItemMoveCallback;
 import biz.riopapa.jigsawpuzzle.R;
-import biz.riopapa.jigsawpuzzle.func.AnchorPiece;
-import biz.riopapa.jigsawpuzzle.func.NearPieceBind;
+import biz.riopapa.jigsawpuzzle.func.PieceAlign;
+import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
 public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
 
-    AnchorPiece anchorPiece;
-    NearPieceBind nearPieceBind;
+    PieceAlign pieceAlign;
+    PieceLock pieceLock;
     PieceImage pieceImage;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -55,8 +55,8 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
         iv.getLayoutParams().height = gVal.picOSize;
         iv.getLayoutParams().width = gVal.picOSize;
         iv.requestLayout();
-        anchorPiece = new AnchorPiece();
-        nearPieceBind = new NearPieceBind();
+        pieceAlign = new PieceAlign();
+        pieceLock = new PieceLock();
         pieceImage = new PieceImage(mContext, gVal.imgOutSize, gVal.imgInSize);
         return new MyViewHolder(view);
     }
@@ -64,9 +64,9 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        nowCR = activeJigs.get(position);
-        int cc = nowCR / 10000;
-        int rr = nowCR - cc * 10000;
+        itemCR = activeJigs.get(position) - 10000;
+        int cc = itemCR / 100;
+        int rr = itemCR - cc * 100;
         //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
         if (jigPic[cc][rr] == null)
             jigPic[cc][rr] = pieceImage.makePic(cc, rr);
@@ -75,7 +75,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
             jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
 
         holder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
-        holder.ivIcon.setTag(nowCR);
+        holder.ivIcon.setTag(itemCR);
     }
 
 

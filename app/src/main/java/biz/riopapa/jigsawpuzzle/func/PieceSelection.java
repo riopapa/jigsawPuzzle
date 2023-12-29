@@ -1,10 +1,11 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowC;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.nowR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
-import static biz.riopapa.jigsawpuzzle.ForeView.nowFp;
-import static biz.riopapa.jigsawpuzzle.ForeView.nowIdx;
+import static biz.riopapa.jigsawpuzzle.ForeView.topIdx;
+
+import android.util.Log;
 
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -15,8 +16,6 @@ public class PieceSelection {
          * if new item has been touched in right position then set it to fpNow
          */
 
-        nowFp = null;
-
         for (int i = gVal.fps.size() - 1; i >= 0; i--) {
             FloatPiece fp = gVal.fps.get(i);
             int c = fp.C;
@@ -25,11 +24,12 @@ public class PieceSelection {
                 continue;
             if (Math.abs(fp.posY - iY) > gVal.picHSize)
                 continue;
-            nowFp = fp;
-            nowR = r; nowC = c;
-            nowIdx = i;
-            break;
+            itemR = r; itemC = c;
+            topIdx = i;
+            Log.w("piece","Selected "+c+"x"+r+" idx="+i);
+            return;
         }
+        topIdx = -1;
     }
 
 }
