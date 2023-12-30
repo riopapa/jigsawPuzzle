@@ -40,6 +40,7 @@ import java.util.TimerTask;
 import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
+import biz.riopapa.jigsawpuzzle.func.DumpData;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.images.Congrat;
@@ -58,7 +59,7 @@ public class ActivityJigsaw extends Activity {
 
     public static RecyclerView jigRecyclerView;
 
-    ForeView foreView;
+    public static ForeView foreView;
 
     BackView backView;
     public static JigsawAdapter activeAdapter;
@@ -81,13 +82,15 @@ public class ActivityJigsaw extends Activity {
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
     public static Timer loopTimer;
+    int chkC, chkR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityJigsawBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-        Log.w("jSaw","onCreate gameMode="+gameMode);
+        Log.w("jSaw", "onCreate gameMode=" + gameMode);
         screenBottom = screenY - gVal.recSize - gVal.recSize - gVal.picGap;
         if (fPhoneInchX > 3f)
             screenBottom += gVal.picHSize;
@@ -102,14 +105,18 @@ public class ActivityJigsaw extends Activity {
         srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
         outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
-        congrats = new Congrat().make(screenX * 13/20);
-        jigDones = new JigDone().make(screenX * 13/20);
+        congrats = new Congrat().make(screenX * 13 / 20);
+        jigDones = new JigDone().make(screenX * 13 / 20);
 
         foreView = findViewById(R.id.paint_view);
         binding.paintView.getLayoutParams().height = screenBottom;
 
         backView = findViewById(R.id.back_view);
         binding.backView.getLayoutParams().height = screenBottom;
+        backView.init(binding, pieceImage);
+        foreView.init(binding, pieceImage);
+        backBlink = true;
+        foreBlink = true;
 
         showThumbnail = new ShowThumbnail();
 
@@ -149,21 +156,27 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
-        binding.vibrate.setImageResource((vibrate)? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
-        binding.vibrate.setOnClickListener(v -> { vibrate = !vibrate;
-            binding.vibrate.setImageResource((vibrate)? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
+        binding.vibrate.setImageResource((vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
+        binding.vibrate.setOnClickListener(v -> {
+            vibrate = !vibrate;
+            binding.vibrate.setImageResource((vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
             save_params();
         });
 
-        binding.sound.setImageResource((sound)? R.drawable.z_sound_on : R.drawable.z_sound_off);
-        binding.sound.setOnClickListener(v -> { sound = !sound;
-            binding.sound.setImageResource((sound)? R.drawable.z_sound_on : R.drawable.z_sound_off);
+        binding.sound.setImageResource((sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
+        binding.sound.setOnClickListener(v -> {
+            sound = !sound;
+            binding.sound.setImageResource((sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
             save_params();
         });
 
-        int [] backColors = {ContextCompat.getColor(mContext, R.color.backColor0),
-                            ContextCompat.getColor(mContext, R.color.backColor1),
-                            ContextCompat.getColor(mContext, R.color.backColor2)};
+        binding.debugRight.setOnClickListener(v -> {
+            new DumpData();
+        });
+
+        int[] backColors = {ContextCompat.getColor(mContext, R.color.backColor0),
+                ContextCompat.getColor(mContext, R.color.backColor1),
+                ContextCompat.getColor(mContext, R.color.backColor2)};
 
         binding.backcolor.setOnClickListener(v -> {
             backColor = (backColor + 1) % 3;
@@ -177,9 +190,13 @@ public class ActivityJigsaw extends Activity {
         activeAdapter = new JigsawAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
+        LinearLayoutManager mLinearLayoutManager
+                = new LinearLayoutManager(mContext, layoutOrientation, false);
+        jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         ItemTouchHelper.Callback callback =
-                new ItemMoveCallback(activeAdapter);
+                new ItemMoveCallback(activeAdapter, foreView.pieceLock,
+                        pieceImage, foreView.pieceBind);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(jigRecyclerView);
 
@@ -193,9 +210,6 @@ public class ActivityJigsaw extends Activity {
 //        helper.attachToRecyclerView(jigRecyclerView);
 //
 //        jigRecyclerView.setAdapter(activeAdapter);
-        LinearLayoutManager mLinearLayoutManager
-                = new LinearLayoutManager(mContext, layoutOrientation, false);
-        jigRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         new DefineControlButton(binding);
         copy2RecyclerPieces();
@@ -209,29 +223,41 @@ public class ActivityJigsaw extends Activity {
                 }
             }
         }
-        backView.init(binding, pieceImage);
-        foreView.init(binding, pieceImage);
-        backBlink = true;
-        foreBlink = true;
+        chkC = 0;
+        chkR = 0;
         loopTimer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-            if (backBlink)
-                backView.invalidate();
-            if (foreBlink)
-                foreView.invalidate();
-            if (gameMode == ActivityMain.GMode.ALL_DONE) {
-                loopTimer.cancel();
-                loopTimer = null;
-                finish();
-            }
+                if (backBlink)
+                    backView.invalidate();
+                if (foreBlink)
+                    foreView.invalidate();
+                if (gameMode == ActivityMain.GMode.ALL_DONE) {
+                    loopTimer.cancel();
+                    loopTimer = null;
+                    finish();
+                }
+                chkC++;
+                if (chkC > gVal.colNbr - 1) {
+                    chkC = 0;
+                    chkR++;
+                    if (chkR > gVal.rowNbr - 1) {
+                        chkR = 0;
+                        chkC = 0;
+                    }
+                }
+                if (gVal.jigTables[chkC][chkR].locked) {
+                    if (jigPic[chkC][chkR] == null)
+                        jigPic[chkC][chkR] = pieceImage.makePic(chkC, chkR);
+                    jigOLine[chkC][chkR] = pieceImage.makeOline(jigPic[chkC][chkR], chkC, chkR);
+                }
+
             }
         };
         loopTimer.schedule(timerTask, INVALIDATE_INTERVAL, INVALIDATE_INTERVAL);
 
     }
-
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
     public void copy2RecyclerPieces() {
 

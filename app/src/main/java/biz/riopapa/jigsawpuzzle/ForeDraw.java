@@ -148,7 +148,7 @@ public class ForeDraw {
 
             if (fp.mode == null) { // normal pieceImage
                 fCanvas.drawBitmap(jigOLine[c][r], fp.posX, fp.posY, null);
-                Log.w(topIdx+" fp ("+cnt,fp.C+"x"+fp.R+" pos = "+fp.posX+" x "+fp.posY);
+//                Log.w(topIdx+" fp ("+cnt,fp.C+"x"+fp.R+" pos = "+fp.posX+" x "+fp.posY);
                 continue;
             }
             // animate just anchored

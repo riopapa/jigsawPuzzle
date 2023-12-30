@@ -2,6 +2,7 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.foreView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
@@ -24,7 +25,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
+import biz.riopapa.jigsawpuzzle.func.PieceBind;
+import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.func.VibratePhone;
+import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class ItemMoveCallback extends ItemTouchHelper.Callback {
@@ -32,10 +36,15 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     private final ItemTouchHelperContract mAdapter;
 
     public static boolean nowDragging;
-
-    public ItemMoveCallback(ItemTouchHelperContract adapter) {
-
+    PieceLock pieceLock;
+    PieceImage pieceImage;
+    PieceBind pieceBind;
+    public ItemMoveCallback(ItemTouchHelperContract adapter, PieceLock pieceLock,
+                            PieceImage pieceImage, PieceBind pieceBind) {
         mAdapter = adapter;
+        this.pieceLock = pieceLock;
+        this.pieceImage = pieceImage;
+        this.pieceBind = pieceBind;
     }
 
 
@@ -99,6 +108,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                 removeFromRecycle();
                 add2FloatingPiece();
                 nowDragging = false;
+                pieceLock.update(pieceImage);
+                pieceBind.update();
                 foreBlink = true;
             }
         } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {

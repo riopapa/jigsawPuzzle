@@ -120,11 +120,11 @@ public class ForeView extends View {
                         Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
                         topIdx != -1) {
                     xOld = x; yOld = y;
-                    Log.w("Action is idx=",topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
+                    Log.w("Action", "is idx="+topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
                     if (wannaBack2Recycler(y)) {
                         goBack2Recycler();
                         gVal.fps.remove(topIdx);
-                        itemX = -1;
+                        topIdx = -1;
                     } else if (y < screenBottom) {
                         gVal.fps.get(topIdx).posX = x;
                         gVal.fps.get(topIdx).posY = y;
@@ -163,15 +163,18 @@ public class ForeView extends View {
         View v = layoutManager.findViewByPosition(i);
         if (v != null)
             xPos = (int) v.getX();
-        itemPos = i + (itemX - xPos) / gVal.picOSize;
+        Log.w("goback2", "xPos= "+xPos);
+//        itemPos = i + (xOld - xPos) / gVal.picOSize;
+        itemPos = i + xOld / gVal.picOSize + 1;
         gVal.jigTables[itemC][itemR].fp = false;
         if (itemPos < activeJigs.size()-1) {
-            activeJigs.add(itemPos, itemC * 10000 + itemR);
+            activeJigs.add(itemPos, 10000 + itemC * 100 + itemR);
             activeAdapter.notifyItemInserted(itemPos);
         } else {
-            activeJigs.add(itemC * 10000 + itemR);
+            activeJigs.add(10000 + itemC * 100 + itemR);
             activeAdapter.notifyItemInserted(activeJigs.size()-1);
         }
+        Log.w("goback2 "+itemPos, itemC+"x"+itemR);
     }
 
     public boolean wannaBack2Recycler(int moveY) {
