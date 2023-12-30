@@ -1,8 +1,8 @@
 package biz.riopapa.jigsawpuzzle.adaptors;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.chosenNumber;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
@@ -65,18 +65,18 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 chosenNumber = getBindingAdapterPosition();
                 jigFile = jigFiles.get(chosenNumber);
                 if (jigFile.game.startsWith("_"))
-                    chosenImageMap = new ImageStorage().getFullMap(chosenNumber);
+                    currImageMap = new ImageStorage().getFullMap(chosenNumber);
                 else
-                    chosenImageMap = FileIO.getJPGFile(jpgFolder, jigFile.game+".jpg");
+                    currImageMap = FileIO.getJPGFile(jpgFolder, jigFile.game+".jpg");
 
-                assert chosenImageMap != null;
-                chosenImageWidth = chosenImageMap.getWidth();
-                chosenImageHeight = chosenImageMap.getHeight();
+                assert currImageMap != null;
+                currImageWidth = currImageMap.getWidth();
+                currImageHeight = currImageMap.getHeight();
 
                 currGame = itemView.getTag().toString();
                 ImageView imageView = iVImage.getRootView().findViewById(R.id.chosen_image);
                 imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(chosenImageMap);
+                imageView.setImageBitmap(currImageMap);
                 RecyclerView imageRecycler = iVImage.getRootView().findViewById(R.id.imageRecycler);
                 imageRecycler.setVisibility(View.GONE);
 

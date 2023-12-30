@@ -9,6 +9,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moving;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
@@ -79,6 +80,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                           RecyclerView.ViewHolder target) {
         Log.w("onMove", "onMove " +viewHolder.getAbsoluteAdapterPosition()+" > "+target.getAbsoluteAdapterPosition());
         mAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        moving = true;
         return true;
     }
 
@@ -86,6 +88,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
                                   int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
         foreBlink = false;
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             topIdx = -1;
@@ -101,12 +104,15 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                         (JigsawAdapter.MyViewHolder) viewHolder;
                 mAdapter.onRowSelected(myViewHolder);
             }
+//            svViewHolder.itemView.setAlpha(0);
+//            View pieceView = viewHolder.itemView;
+//            pieceView.setAlpha(0);
 
             // Piece dragging is finished
             // if yPosition is above recycler then move to fps
             if (itemY < screenBottom - gVal.picHSize) {
-                removeFromRecycle();
                 add2FloatingPiece();
+                removeFromRecycle();
                 nowDragging = false;
                 pieceLock.update(pieceImage);
                 pieceBind.update();
@@ -123,22 +129,22 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 //
 //        }
 
-        super.onSelectedChanged(viewHolder, actionState);
     }
     @Override
     public void clearView(@NonNull RecyclerView recyclerView,
                           @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        if (itemY > screenBottom)
-            return;
+        Log.w("moving","moving is "+moving);
+//        if (!moving)
+//            viewHolder.itemView.setAlpha(0);
+//        moving = false;
+//        if (itemY > screenBottom)
+//            return;
         if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
             JigsawAdapter.MyViewHolder myViewHolder=
                     (JigsawAdapter.MyViewHolder) viewHolder;
             mAdapter.onRowClear(myViewHolder);
         }
-//        if (dragY < screenBottom - gVal.picHSize && ) {
-//            viewHolder.itemView.setAlpha(0);
-//        }
 
     }
 
@@ -156,6 +162,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
     private void add2FloatingPiece() {
 
+        gVal.jigTables[itemC][itemR].fp = true;
         FloatPiece itemFp = new FloatPiece();
         itemFp.C = itemC;
         itemFp.R = itemR;
@@ -176,7 +183,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         activeJigs.remove(itemPos);
         activeAdapter.notifyItemRemoved(itemPos);
 //        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
-        gVal.jigTables[itemC][itemR].fp = true;
         Log.w("r2m move R"+ itemCR,"removed from recycler drag="+ itemX +"x"+ itemY
                 + " pieSZ="+activeJigs.size());
     }
@@ -186,11 +192,11 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-        long nowTime = System.currentTimeMillis();
-        if (nowTime < helperDrawTime)
-            return;
-
-        helperDrawTime = nowTime + 150;
+//        long nowTime = System.currentTimeMillis();
+//        if (nowTime < helperDrawTime)
+//            return;
+//
+//        helperDrawTime = nowTime + 150;
 
         if (activeJigs.size() == 0)
             return;
@@ -209,7 +215,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
             View pieceView = viewHolder.itemView;
             itemX = (int) pieceView.getX();
             itemY = screenBottom + (int) pieceView.getY();
-            Log.w("dragXY "+topIdx, itemPos + " dragging "+ itemX +"/"+ itemY);
+//            Log.w("dragXY "+topIdx, itemPos + " dragging "+ itemX +"/"+ itemY);
 //            if (gVal.fps.size() > 0) {    // not effect to fp pools
 //                gVal.fps.get(topIdx).posX = dragX;
 //                gVal.fps.get(topIdx).posY = dragY;

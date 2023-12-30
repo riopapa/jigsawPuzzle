@@ -65,11 +65,12 @@ public class ActivityJigsaw extends Activity {
     public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
-    public static Bitmap chosenImageMap;
-    public static int chosenImageWidth, chosenImageHeight, chosenImageColor; // puzzle photo size (in dpi)
+    public static Bitmap currImageMap;
+    public static int currImageWidth, currImageHeight;
+    public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
-    public static Bitmap[] fireWorks, congrats, jigDones;
+    public static Bitmap[] fireWorks, congrats, jigFinishes;
 
     public static int itemPos; // jigsaw slide x, y count
     public static int itemC, itemR, itemCR;   // fullImage pieceImage array column, row , x*10000+y
@@ -78,6 +79,8 @@ public class ActivityJigsaw extends Activity {
     public static int historyIdx;
     public static int allLockedMode = 0;    // 10: just all locked, 20: after all locked 99: completed
     public static int congCount = 0;
+
+    public static boolean moving;
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
@@ -106,7 +109,7 @@ public class ActivityJigsaw extends Activity {
         outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
         congrats = new Congrat().make(screenX * 13 / 20);
-        jigDones = new JigDone().make(screenX * 13 / 20);
+        jigFinishes = new JigDone().make(screenX * 13 / 20);
 
         foreView = findViewById(R.id.paint_view);
         binding.paintView.getLayoutParams().height = screenBottom;
@@ -229,10 +232,6 @@ public class ActivityJigsaw extends Activity {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                if (backBlink)
-                    backView.invalidate();
-                if (foreBlink)
-                    foreView.invalidate();
                 if (gameMode == ActivityMain.GMode.ALL_DONE) {
                     loopTimer.cancel();
                     loopTimer = null;
@@ -251,7 +250,12 @@ public class ActivityJigsaw extends Activity {
                     if (jigPic[chkC][chkR] == null)
                         jigPic[chkC][chkR] = pieceImage.makePic(chkC, chkR);
                     jigOLine[chkC][chkR] = pieceImage.makeOline(jigPic[chkC][chkR], chkC, chkR);
+                    backView.invalidate();
                 }
+                if (backBlink)
+                    backView.invalidate();
+                if (foreBlink)
+                    foreView.invalidate();
 
             }
         };
@@ -341,7 +345,7 @@ public class ActivityJigsaw extends Activity {
         outMaskMaps = null;
         fireWorks = null;
         congrats = null;
-        jigDones = null;
+        jigFinishes = null;
     }
 
     private void save_params() {

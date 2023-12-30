@@ -1,6 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
@@ -130,7 +130,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
         animation.setFillAfter(false);
         binding.selImage.startAnimation(animation);//your_view for mine is imageView
-        binding.selImage.setImageBitmap(chosenImageMap);
+        binding.selImage.setImageBitmap(currImageMap);
 //        Log.w("binding","time1");
 //        showLocked(binding, chosenImageMap);
         new Thread(this::select_level).start();

@@ -1,13 +1,13 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.allLockedMode;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congrats;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.fireWorks;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigDones;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigFinishes;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
@@ -19,7 +19,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
-import static biz.riopapa.jigsawpuzzle.ForeView.topIdx;
 import static biz.riopapa.jigsawpuzzle.ItemMoveCallback.nowDragging;
 
 import android.graphics.Bitmap;
@@ -55,7 +54,7 @@ public class ForeDraw {
         lPaint.setColor(Color.RED);
 
         pathPaint = new Paint();
-        pathPaint.setColor(chosenImageColor);
+        pathPaint.setColor(colorOutline);
         backPaint = new Paint();
         backPaint.setAlpha(160);
 
@@ -118,7 +117,7 @@ public class ForeDraw {
             }
         }
         if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            congCount = jigDones.length * 4;
+            congCount = jigFinishes.length * 4;
             allLockedMode = 20;
             int locked = 0;
             for (int cc = 0; cc < gVal.colNbr; cc++) {
@@ -138,7 +137,6 @@ public class ForeDraw {
     }
 
     private void showFloatingPieces(Canvas fCanvas) {
-        Log.w("showFloatingPieces", "fps sz="+gVal.fps.size());
         for (int cnt = 0; cnt < gVal.fps.size(); cnt++) {
             FloatPiece fp = gVal.fps.get(cnt);
             int c = fp.C;
@@ -199,7 +197,7 @@ public class ForeDraw {
         int y = screenY / 3;
         Paint paint = new Paint();
         paint.setAlpha(200);
-        int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigDones.length);
-        fCanvas.drawBitmap((allLockedMode == 30) ? congrats[idx] : jigDones[idx], x, y, paint);
+        int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigFinishes.length);
+        fCanvas.drawBitmap((allLockedMode == 30) ? congrats[idx] : jigFinishes[idx], x, y, paint);
     }
 }

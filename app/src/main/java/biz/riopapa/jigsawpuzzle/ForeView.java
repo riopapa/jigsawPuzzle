@@ -119,9 +119,11 @@ public class ForeView extends View {
                 if ((Math.abs(x - xOld) > MOVE_ALLOWANCE ||
                         Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
                         topIdx != -1) {
-                    xOld = x; yOld = y;
                     Log.w("Action", "is idx="+topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
-                    if (wannaBack2Recycler(y)) {
+                    if (!(gVal.fps.get(topIdx).anchorId == 0) && y > screenBottom - gVal.picISize)
+                        break;
+                    xOld = x; yOld = y;
+                    if (y > screenBottom - gVal.picHSize) {
                         goBack2Recycler();
                         gVal.fps.remove(topIdx);
                         topIdx = -1;
@@ -159,12 +161,11 @@ public class ForeView extends View {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         assert layoutManager != null;
         int i = layoutManager.findFirstVisibleItemPosition();
-        int xPos = 0;
-        View v = layoutManager.findViewByPosition(i);
-        if (v != null)
-            xPos = (int) v.getX();
-        Log.w("goback2", "xPos= "+xPos);
-//        itemPos = i + (xOld - xPos) / gVal.picOSize;
+//        int xPos = 0;
+//        View v = layoutManager.findViewByPosition(i);
+//        if (v != null)
+//            xPos = (int) v.getX();
+//        Log.w("goback2", "xPos= "+xPos);
         itemPos = i + xOld / gVal.picOSize + 1;
         gVal.jigTables[itemC][itemR].fp = false;
         if (itemPos < activeJigs.size()-1) {
@@ -174,12 +175,6 @@ public class ForeView extends View {
             activeJigs.add(10000 + itemC * 100 + itemR);
             activeAdapter.notifyItemInserted(activeJigs.size()-1);
         }
-        Log.w("goback2 "+itemPos, itemC+"x"+itemR);
-    }
-
-    public boolean wannaBack2Recycler(int moveY) {
-        // if sole piece then can go back to recycler
-//        Log.w("back2", "topidx="+topIdx+" fps sz="+gVal.fps.size());
-        return gVal.fps.get(topIdx).anchorId == 0 && moveY > screenBottom - gVal.picHSize;
+//        Log.w("goback2 "+itemPos, itemC+"x"+itemR);
     }
 }

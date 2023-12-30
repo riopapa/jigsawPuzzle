@@ -1,6 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
@@ -22,8 +22,8 @@ public class BackDraw {
     Paint pFull, pGrayed0, pGrayed1, pGrayed2, lPaint, pathPaint;
     Random rnd;
     int gapSmall, gapTwo;
-    final int LOW_ALPHA = 160;
-    final int HIDE_ALPHA = 80;
+    final int LOW_ALPHA = 200;
+    final int HIDE_ALPHA = 100;
     ActivityJigsawBinding binding;
     PieceImage pieceImage;
 
@@ -40,7 +40,7 @@ public class BackDraw {
         lPaint.setColor(Color.RED);
 
         pathPaint = new Paint();
-        pathPaint.setColor(chosenImageColor);
+        pathPaint.setColor(colorOutline);
 
         gapTwo = gVal.picGap + gVal.picGap;
         gapSmall = gVal.picGap / 4;

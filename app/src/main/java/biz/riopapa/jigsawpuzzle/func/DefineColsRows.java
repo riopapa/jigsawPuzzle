@@ -1,7 +1,7 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 
 public class DefineColsRows {
 
@@ -15,21 +15,21 @@ public class DefineColsRows {
 
     public void calc(int level) {
         int [] sizes = {4, 8, 12, 15};
-        double sz = Math.sqrt(Math.sqrt(chosenImageWidth * chosenImageHeight));
-        if (chosenImageWidth > chosenImageHeight) {
+        double sz = Math.sqrt(Math.sqrt(currImageWidth * currImageHeight));
+        if (currImageWidth > currImageHeight) {
             row = sizes[level];
             row = (int) Math.sqrt(row * row + sz*(level+1));
-            col = row * chosenImageWidth / chosenImageHeight + 1;  // one more possible?
-            float szH = (float) chosenImageHeight / (float) (row);
-            int col2 = (int) ((float) chosenImageWidth / szH);
+            col = row * currImageWidth / currImageHeight + 1;  // one more possible?
+            float szH = (float) currImageHeight / (float) (row);
+            int col2 = (int) ((float) currImageWidth / szH);
             if (col2 > col + 2)
                 col++;
         } else {
             col = sizes[level];
             col = (int) Math.sqrt(col * col + sz*(level+1));
-            row = col * chosenImageHeight / chosenImageWidth + 1;  // to avoid over y size
-            float szW = (float) chosenImageWidth / (float) (col);
-            int row2 = (int) ((float) chosenImageHeight / szW);
+            row = col * currImageHeight / currImageWidth + 1;  // to avoid over y size
+            float szW = (float) currImageWidth / (float) (col);
+            int row2 = (int) ((float) currImageHeight / szW);
             if (row2 > row + 2)
                 row++;
         }

@@ -4,9 +4,11 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemCR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moving;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,15 +103,23 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
 
     @Override
     public void onRowSelected(MyViewHolder myViewHolder) {
-        Log.w("onRowSelected", "getPosition "+myViewHolder.getPosition());
-        Log.w("onRowSelected", "getLeft "+myViewHolder.itemView.getLeft());
-//        myViewHolder.rowView.setBackgroundColor(Color.GRAY);
 
     }
+//
+//    @Override
+//    public void onRowSelected(MyViewHolder myViewHolder) {
+//        Log.w("onRowSelected", "getPosition "+myViewHolder.getPosition());
+//        Log.w("onRowSelected", "getLeft "+myViewHolder.itemView.getLeft());
+//        myViewHolder.itemView.setBackgroundColor(Color.GRAY);
+//
+//    }
 
     @Override
     public void onRowClear(MyViewHolder myViewHolder) {
+
 //        if (myViewHolder.getAbsoluteAdapterPosition() != -1)
-//            myViewHolder.itemView.setAlpha(0);
+        if (!moving)
+            myViewHolder.itemView.setAlpha(0);
+        moving  = false;
     }
 }

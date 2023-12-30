@@ -1,8 +1,8 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
@@ -57,17 +57,17 @@ public class GValGetPut {
         gVal.rowNbr = row;
         new SetPicSizes(screenX * (16 - currLevel) / 16);
 
-        float szW = (float) chosenImageWidth / (float) (gVal.colNbr +1);
-        float szH = (float) chosenImageHeight / (float) (gVal.rowNbr +1);
+        float szW = (float) currImageWidth / (float) (gVal.colNbr +1);
+        float szH = (float) currImageHeight / (float) (gVal.rowNbr +1);
         gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         gVal.imgGapSize = gVal.imgInSize * 5 / 14;
         gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
-        chosenImageMap = Bitmap.createBitmap(chosenImageMap, 0, 0,
+        currImageMap = Bitmap.createBitmap(currImageMap, 0, 0,
                 gVal.imgInSize * gVal.colNbr + gVal.imgGapSize + gVal.imgGapSize,
                 gVal.imgInSize * gVal.rowNbr + gVal.imgGapSize + gVal.imgGapSize);
         // refine map size
-        chosenImageWidth = chosenImageMap.getWidth();
-        chosenImageHeight = chosenImageMap.getHeight();
+        currImageWidth = currImageMap.getWidth();
+        currImageHeight = currImageMap.getHeight();
         gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
         new DefineTableWalls(gVal.jigTables);
         new ClearGValValues();

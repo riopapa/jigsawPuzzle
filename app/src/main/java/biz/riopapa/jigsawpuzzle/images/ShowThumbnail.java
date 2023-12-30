@@ -1,9 +1,9 @@
 package biz.riopapa.jigsawpuzzle.images;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageColor;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageHeight;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.chosenImageWidth;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.graphics.Bitmap;
@@ -21,17 +21,17 @@ public class ShowThumbnail {
     }
     public Bitmap make() {
 
-        if (chosenImageHeight > chosenImageWidth) {
+        if (currImageHeight > currImageWidth) {
             thumbHeight = 800f;
-            thumbWidth = thumbHeight * chosenImageWidth / chosenImageHeight;
+            thumbWidth = thumbHeight * currImageWidth / currImageHeight;
             oneSize = thumbWidth / ((float) gVal.colNbr + 0.5f);
         } else {
             thumbWidth = 1000f;
-            thumbHeight = thumbWidth * chosenImageHeight / chosenImageWidth;
+            thumbHeight = thumbWidth * currImageHeight / currImageWidth;
             oneSize = thumbHeight / ((float) gVal.rowNbr + 0.5f);
         }
         gap = oneSize * 5/ 24;
-        thumb = Bitmap.createScaledBitmap(chosenImageMap, (int) thumbWidth, (int) thumbHeight, true);
+        thumb = Bitmap.createScaledBitmap(currImageMap, (int) thumbWidth, (int) thumbHeight, true);
         rectWidth = oneSize * (float) gVal.showMaxX;
         rectHeight = oneSize * (float) gVal.showMaxY;
         xBeg = oneSize * (float) gVal.offsetC + gap;
@@ -51,11 +51,11 @@ public class ShowThumbnail {
         canvas.drawBitmap(boxMap, xBeg, yBeg, pBox);
 
         Paint pLine = new Paint();
-        pLine.setColor(chosenImageColor);
+        pLine.setColor(colorOutline);
         pLine.setStrokeWidth(20f);
 
         Paint pDash = new Paint();
-        pDash.setColor(chosenImageColor);
+        pDash.setColor(colorOutline);
         pDash.setStrokeWidth(20f);
         pDash.setPathEffect(new DashPathEffect(new float[] {40, 40}, 0));
 
