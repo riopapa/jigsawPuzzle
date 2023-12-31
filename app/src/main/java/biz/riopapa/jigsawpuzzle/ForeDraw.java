@@ -71,9 +71,6 @@ public class ForeDraw {
             if (congCount > 0)
                 showCongrats(canvas);
             canvas.restore();
-//        String txt = "onD c" + nowC +" r"+ nowR + "\noffCR "+GVal.offsetC + " x " + GVal.offsetR+"\n calc " + calcC +" x "+ calcR+"\n GVal.fps "+GVal.fps.size();
-//        mActivity.runOnUiThread(() -> tvRight.setText(txt));
-
     }
 
     private void showJustLocked(Canvas canvas) {

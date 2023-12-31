@@ -15,9 +15,7 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import biz.riopapa.jigsawpuzzle.adaptors.ImageSelAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityMainBinding;
@@ -40,11 +38,13 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     ActivityMainBinding binding;
 
-//    public static int maxImageCount;
+    //    public static int maxImageCount;
     RecyclerView imageRecyclers;
     public static ImageSelAdapter imageSelAdapter;
     public static GMode gameMode;
-    public enum GMode { STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR, IMAGE }
+
+    public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
+
     public static String nowVersion = "000104";
 
 
@@ -61,9 +61,10 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static float fPhoneInchX, fPhoneInchY;
 
     /*
-    ** Following will be handled with Set Menu
+     ** Following will be handled with Set Menu
      */
     public static boolean vibrate = true;
+    public static long installDate = 0;
     public static int showBack = 0;
     public static boolean sound = false;
     public static int backColor = 0;
@@ -88,7 +89,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.w("Main","onCreate gameMode="+gameMode);
+        Log.w("Main", "onCreate gameMode=" + gameMode);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         super.onCreate(savedInstanceState);
@@ -105,11 +106,13 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
+
+        installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
         showBack = sharedPref.getInt("showBack", 0);
         vibrate = sharedPref.getBoolean("vibrate", true);
         sound = sharedPref.getBoolean("sound", true);
         backColor = sharedPref.getInt("backColor", 0);
-        appVersion = sharedPref.getString("appVersion","none");
+        appVersion = sharedPref.getString("appVersion", "none");
 
         new PhoneMetrics(this);
 
@@ -121,14 +124,14 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
          */
         downloadFileName = imageListOnDrive;
         downloadPosition = -1;
-        DownloadTask task = new DownloadTask( this, imageListId, "", downloadFileName);
+        DownloadTask task = new DownloadTask(this, imageListId, "", downloadFileName);
         task.execute();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.w("Main ","onResume "+gameMode+" currGame="+currGame);
+        Log.w("Main ", "onResume " + gameMode + " currGame=" + currGame);
 //        invalidateTimer = new Timer();
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
@@ -150,7 +153,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         // StaggeredGridLayoutManager makes various height
         StaggeredGridLayoutManager staggeredGridLayoutManager
-                = new StaggeredGridLayoutManager((fPhoneInchX > 3) ?3: 2, StaggeredGridLayoutManager.VERTICAL);
+                = new StaggeredGridLayoutManager((fPhoneInchX > 3) ? 3 : 2, StaggeredGridLayoutManager.VERTICAL);
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
 
         if (gameMode == GMode.TO_MAIN) {
@@ -169,26 +172,26 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         if (downloadPosition > 0)   // continue to check possible download
             downloadNewJpg();
 
-        Log.w("download","complted "+downloadFileName+" pos="+downloadPosition);
+        Log.w("download", "complted " + downloadFileName + " pos=" + downloadPosition);
         // at first time, drive image list from drive is loaded
 
         if (downloadFileName != null && downloadFileName.equals(imageListOnDrive)) {
             String str = FileIO.readTextFile("", imageListOnDrive); // no dir for list
             String[] ss = str.split("\n");
             boolean newlyAdd = false;
-            final SimpleDateFormat dateFormat = new SimpleDateFormat("YYMMdd", Locale.KOREA);
-            String today = dateFormat.format(System.currentTimeMillis());
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
                 String nGame = imgInfo[0].trim();
-                if (newJpgFile(nGame) && imgInfo[2].trim().compareTo(today) < 0) {
+                long imgDays = Long.parseLong(imgInfo[2].trim());
+                long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
+                if (newJpgFile(nGame) && today > installDate + imgDays) {
                     JigFile jf = new JigFile();
                     jf.game = nGame;
                     jf.imageId = imgInfo[1].trim();
                     jf.timeStamp = imgInfo[2].trim();       // not used now
                     jf.keywords = imgInfo[3].trim();        // not used now
                     jigFiles.add(jf);
-                    imageSelAdapter.notifyItemInserted(jigFiles.size()-1);
+                    imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
                     newlyAdd = true;
                 }
             }
@@ -207,14 +210,14 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     private void downloadNewJpg() {
         // at least one jpg has been done
-        Log.w("begin","downloadNewJpg ");
+        Log.w("begin", "downloadNewJpg ");
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
 //            if (jf.thumbnailMap == null &&
-              if (FileIO.existJPGFile(jpgFolder, jf.game+".jpg") == null) {
+            if (FileIO.existJPGFile(jpgFolder, jf.game + ".jpg") == null) {
                 downloadFileName = jf.game + ".jpg";
                 downloadPosition = i;
-                Log.w("pos="+i,"downloadNewJpg "+downloadFileName);
+                Log.w("pos=" + i, "downloadNewJpg " + downloadFileName);
                 DownloadTask task = new DownloadTask(this, jf.imageId, jpgFolder, downloadFileName);
                 task.execute();
                 return;
@@ -234,72 +237,4 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         finish();
         super.onBackPressed();
     }
-//    // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓
-//    ArrayList<String> permissions = new ArrayList<>();
-//    private final static int ALL_PERMISSIONS_RESULT = 101;
-//    ArrayList<String> permissionsToRequest;
-//    ArrayList<String> permissionsRejected = new ArrayList<>();
-//
-////    private void askPermission() {
-//////        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-////        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-////        permissionsToRequest = findUnAskedPermissions(permissions);
-////        if (permissionsToRequest.size() != 0) {
-////            requestPermissions(permissionsToRequest.toArray(new String[0]),
-//////            requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-////                    ALL_PERMISSIONS_RESULT);
-////        }
-////    }
-////
-////    private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
-////        ArrayList <String> result = new ArrayList<>();
-////        for (String perm : wanted) if (hasPermission(perm)) result.add(perm);
-////        return result;
-////    }
-//    private boolean hasPermission(String permission) {
-//        return (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED);
-//    }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == ALL_PERMISSIONS_RESULT) {
-//            for (String perms : permissionsToRequest) {
-//                if (hasPermission(perms)) {
-//                    permissionsRejected.add(perms);
-//                }
-//            }
-//            if (permissionsRejected.size() > 0) {
-//                if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-//                    String msg = "These permissions are mandatory for the application. Please allow access.";
-//                    showDialog(msg);
-//                }
-//            } else
-//                Toast.makeText(mContext, "Permissions not granted.", Toast.LENGTH_LONG).show();
-//        }
-//    }
-//    private void showDialog(String msg) {
-//        showMessageOKCancel(msg,
-//                (dialog, which) -> requestPermissions(permissionsRejected.toArray(
-//                        new String[0]), ALL_PERMISSIONS_RESULT));
-//    }
-//    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-//        new AlertDialog.Builder(this)
-//                .setMessage(message)
-//                .setPositiveButton("OK", okListener)
-//                .setNegativeButton("Cancel", null)
-//                .create()
-//                .show();
-//    }
-//
-//// ↑ ↑ ↑ ↑ P E R M I S S I O N    RELATED /////// ↑ ↑ ↑
-
 }
-
-//
-//        for (int y = 0; y < jigROWs-1; y++) {
-//            String s = "";
-//            for (int x = 0; x < jigCOLUMNs - 1; x++) {
-//                s +="  ("+jigInfo[x][y].dType+"."+jigInfo[x][y+1].uType+") ";
-//            }
-//            Log.w("y "+y, s);
-//        }

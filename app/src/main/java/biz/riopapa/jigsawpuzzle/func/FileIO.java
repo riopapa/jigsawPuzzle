@@ -69,32 +69,6 @@ public class FileIO {
             return null;
         return file;
     }
-//
-//    public static String bitmap2string(Bitmap bitmap) {
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream); // Adjust quality as needed
-//        byte[] bitmapBytes = outputStream.toByteArray();
-//        return Base64.encodeToString(bitmapBytes, Base64.NO_WRAP);
-//    }
-//
-//    public static Bitmap string2bitmap (String base64String) {
-//        byte[] decodedBytes = Base64.decode(base64String, Base64.NO_WRAP);
-//        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-//    }
-
-    void writeFile(File targetFolder, String fileName, String outText) {
-        try {
-            File targetFile = new File(targetFolder, fileName);
-            FileWriter fileWriter = new FileWriter(targetFile, false);
-
-            // Always wrap FileWriter in BufferedWriter.
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(outText);
-            bufferedWriter.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     // image name : a00, thumbnail name : a00T.jpg
     public static void thumbnail2File(Bitmap bitmap, String fileName) {

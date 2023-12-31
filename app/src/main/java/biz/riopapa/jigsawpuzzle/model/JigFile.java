@@ -10,7 +10,7 @@ public class JigFile {
 
     public int [] locked;   // pieces locked
     public int [] percent;    // completed percent
-    public boolean newFlag, downloaded;
+    public boolean newFlag;
     public JigFile() {
         game = null;
 //        thumbnailMap = null;    // if thumbnailMap is null then should be get from google Drive

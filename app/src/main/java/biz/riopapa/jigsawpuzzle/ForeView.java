@@ -2,12 +2,11 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.congCount;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigRecyclerView;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 
@@ -24,9 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
-import biz.riopapa.jigsawpuzzle.func.PieceAlign;
 import biz.riopapa.jigsawpuzzle.func.MoveThisOnTop;
 import biz.riopapa.jigsawpuzzle.func.NearByFloatPiece;
+import biz.riopapa.jigsawpuzzle.func.PieceAlign;
 import biz.riopapa.jigsawpuzzle.func.PieceBind;
 import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.func.PiecePosition;
@@ -79,10 +78,6 @@ public class ForeView extends View {
             foreBlink = true;
     }
 
-//    private void paintTouchUp(){
-////        gVal.allLocked = isPiecesAllLocked();
-//    }
-
     long nextOKTime = 0, nowTime;
     static int xOld, yOld;
     @SuppressLint("ClickableViewAccessibility")
@@ -98,11 +93,7 @@ public class ForeView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 pieceSelection.check(x, y);
-                if (topIdx == -1) {
-//                    itemX = -1;
-//                    itemY = -1;
-                    Log.w("ACTION_DOWN", "none selected");
-                } else {
+                if (topIdx != -1) {
                     if (topIdx < gVal.fps.size() - 1) {
                         new MoveThisOnTop(topIdx);
                         topIdx = gVal.fps.size() - 1;
@@ -110,7 +101,6 @@ public class ForeView extends View {
                     FloatPiece fp = gVal.fps.get(topIdx);
                     Log.w("ACTION_DOWN", topIdx+" fp Selected "+fp.C+" "+fp.R);
                 }
-
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -135,8 +125,6 @@ public class ForeView extends View {
                         pieceAlign.move();
                         foreBlink = pieceLock.update(pieceImage);
 
-//                        if (foreBlink)
-//                            topIdx = gVal.fps.size() - 1;
                         foreBlink |= pieceBind.update();
                     } else if (gVal.fps.get(topIdx).anchorId == 0){
                         y -= gVal.picOSize;
@@ -149,8 +137,6 @@ public class ForeView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 Log.w("Action","UP ");
-//                paintTouchUp();
-//                performClick();
                 break;
         }
 
@@ -161,11 +147,6 @@ public class ForeView extends View {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         assert layoutManager != null;
         int i = layoutManager.findFirstVisibleItemPosition();
-//        int xPos = 0;
-//        View v = layoutManager.findViewByPosition(i);
-//        if (v != null)
-//            xPos = (int) v.getX();
-//        Log.w("goback2", "xPos= "+xPos);
         itemPos = i + xOld / gVal.picOSize + 1;
         gVal.jigTables[itemC][itemR].fp = false;
         if (itemPos < activeJigs.size()-1) {

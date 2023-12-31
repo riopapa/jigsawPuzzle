@@ -110,29 +110,14 @@ public class ActivitySelLevel extends AppCompatActivity {
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-//        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
-//        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
-
-//        if (history.latest != -1) {
-//            int xSize = screenX;
-//            int ySize = xSize * chosenImageHeight / chosenImageWidth;
-//
-//            Bitmap bitmap = Bitmap.createBitmap(xSize, ySize, Bitmap.Config.ARGB_8888,true);
-//            showLocked(binding, xSize, bitmap);
-//            binding.selImage.setImageBitmap(bitmap);
-//
-//        } else
-//        binding.selImage.setImageBitmap(chosenImageMap);
         TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0f, -500f);
         // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
-        animation.setDuration(10000); // animation duration
+        animation.setDuration(5000); // animation duration
         animation.setRepeatCount(-1); // animation repeat count -1 means infinite
         animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
         animation.setFillAfter(false);
         binding.selImage.startAnimation(animation);//your_view for mine is imageView
         binding.selImage.setImageBitmap(currImageMap);
-//        Log.w("binding","time1");
-//        showLocked(binding, chosenImageMap);
         new Thread(this::select_level).start();
     }
 
@@ -216,24 +201,6 @@ public class ActivitySelLevel extends AppCompatActivity {
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }
-//
-//
-//    void levelSelected(View view) {
-//
-//        float fromScale = 0.5f;
-//        float toScale = 1.0f;
-//
-//        ValueAnimator animator = ValueAnimator.ofFloat(fromScale, toScale);
-//        animator.setDuration(3500);
-//        animator.addUpdateListener(animation -> {
-//            float scale = (float) animation.getAnimatedValue();
-//            view.setScaleX(scale);
-//            view.setScaleY(scale);
-//        });
-//
-//        animator.setInterpolator(new DecelerateInterpolator()); // Choose your desired interpolator
-//        animator.start();
-//    }
 
     private void go_back(View view) {
         alertDialog.dismiss();

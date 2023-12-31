@@ -55,18 +55,6 @@ public class PieceBind {
                     gVal.fps.set(i, fpW);
                 }
             }
-
-            // move anchored pieces too
-//            if (nowFp.anchorId > 0) {
-//                for (int i = 0; i < gVal.fps.size(); i++) {
-//                    FloatPiece fpT = gVal.fps.get(i);
-//                    if (fpT.anchorId == nowFp.anchorId) {
-//                        fpT.posX = nowFp.posX - (nowC - fpT.C) * gVal.picISize;
-//                        fpT.posY = nowFp.posY - (nowR - fpT.R) * gVal.picISize;
-//
-//                    }
-//                }
-//            }
         }
         return false;
     }

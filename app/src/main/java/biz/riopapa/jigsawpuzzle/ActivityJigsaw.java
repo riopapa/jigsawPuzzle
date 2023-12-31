@@ -173,9 +173,7 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
-        binding.debugRight.setOnClickListener(v -> {
-            new DumpData();
-        });
+        binding.debugRight.setOnClickListener(v -> new DumpData());
 
         int[] backColors = {ContextCompat.getColor(mContext, R.color.backColor0),
                 ContextCompat.getColor(mContext, R.color.backColor1),
@@ -204,15 +202,6 @@ public class ActivityJigsaw extends Activity {
         touchHelper.attachToRecyclerView(jigRecyclerView);
 
         jigRecyclerView.setAdapter(activeAdapter);
-
-
-//
-//        helper = new ItemTouchHelper(
-//                new JigRecycleCallback(activeAdapter, pieceImage));
-//
-//        helper.attachToRecyclerView(jigRecyclerView);
-//
-//        jigRecyclerView.setAdapter(activeAdapter);
 
         new DefineControlButton(binding);
         copy2RecyclerPieces();
@@ -243,7 +232,6 @@ public class ActivityJigsaw extends Activity {
                     chkR++;
                     if (chkR > gVal.rowNbr - 1) {
                         chkR = 0;
-                        chkC = 0;
                     }
                 }
                 if (gVal.jigTables[chkC][chkR].locked) {
