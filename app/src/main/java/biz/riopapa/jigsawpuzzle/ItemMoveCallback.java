@@ -72,8 +72,10 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                           RecyclerView.ViewHolder target) {
-        Log.w("onMove", "onMove " + viewHolder.getAbsoluteAdapterPosition() + " > " + target.getAbsoluteAdapterPosition());
-//        if (itemY < screenBottom - gVal.picHSize) {
+        Log.w("onMove", "onMove " + viewHolder.getAbsoluteAdapterPosition() + " > " + target.getAbsoluteAdapterPosition() +
+                " x delta " + viewHolder.itemView.getLeft() + " > " + target.itemView.getLeft());
+
+        //        if (itemY < screenBottom - gVal.picHSize) {
 //            reFresh = false;
 //            Log.w("onMove", "onMove " + viewHolder.getAbsoluteAdapterPosition() + " > " + target.getAbsoluteAdapterPosition());
 //            mAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
