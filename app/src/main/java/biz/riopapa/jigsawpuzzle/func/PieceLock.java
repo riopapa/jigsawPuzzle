@@ -29,7 +29,7 @@ public class PieceLock {
                 allLockedMode = 10;
                 svBlink = true;
                 topIdx = -1;
-                new DumpData();
+//                new DumpData();
             }
         }
 

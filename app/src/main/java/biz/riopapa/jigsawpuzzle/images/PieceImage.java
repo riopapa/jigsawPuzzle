@@ -35,7 +35,7 @@ public class PieceImage {
         this.context = context;
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
-        outLineSz = gVal.picOSize / 60;
+        outLineSz = gVal.picOSize / 120;
 
         pIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
 
@@ -79,7 +79,7 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picOSize / 90;
+        shadowSize = gVal.picOSize / 140;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
 
@@ -105,8 +105,8 @@ public class PieceImage {
         if (showCR) {
             Paint p = new Paint();
             p.setColor(Color.BLACK);
-            p.setTextSize(orgSizeOut * 4f / 18f);
-            p.setStrokeWidth(orgSizeOut / 15f);
+            p.setTextSize(orgSizeOut * 4f / 20f);
+            p.setStrokeWidth(orgSizeOut / 20f);
             p.setTextAlign(Paint.Align.CENTER);
             p.setStyle(Paint.Style.STROKE);
             canvas.drawText(col + "." + row, orgSizeOut / 2f, orgSizeOut * 3f / 6f, p);
@@ -166,12 +166,12 @@ public class PieceImage {
             for (int r = 0; r < hSz; r++) {
                 int pxl = pic.getPixel(c, r);
                 if (pxl != 0) {
-                    int avr = (Color.red(pxl) + Color.green(pxl) + Color.blue(pxl)) / 3;
-                    if (avr > 30) {
-                        int color = 0xFF000000 | avr << 16 | avr << 8 | avr;
-                        p.setColor(color);
-                        canvas.drawPoint(c, r, p);
-                    }
+                    int red = Color.red(pxl); int gre = Color.green(pxl); int blu = Color.blue(pxl);
+                    int avr = ( red + gre + blu) / 3;
+                    red = (red+avr+avr) / 3; gre = (gre+avr+avr) / 3; blu = (blu+avr+avr) / 3;
+                    int color = Color.argb(0xA0, red, gre, blu);
+                    p.setColor(color);
+                    canvas.drawPoint(c, r, p);
                 }
             }
         }

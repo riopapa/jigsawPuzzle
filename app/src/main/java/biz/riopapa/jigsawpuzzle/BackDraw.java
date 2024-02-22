@@ -58,6 +58,8 @@ public class BackDraw {
 
     private void backUnLocked(Canvas canvas) {
 
+        if (jigPic == null || jigOLine == null)
+            return;
         pGrayed0.setAlpha(LOW_ALPHA);
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
@@ -97,6 +99,8 @@ public class BackDraw {
 
     private void backLocked(Canvas canvas) {
 
+        if (jigOLine == null)
+            return;
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
                 final int cc = c + gVal.offsetC;

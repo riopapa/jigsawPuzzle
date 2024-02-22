@@ -218,6 +218,13 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
         canvas.drawArc(rect, -90, 360f , true, paint);
         canvas.drawArc(rect, -90, pct*360f/100f , true, paint);
 
+        paint.setColor((boxColors[i] ^ 0xFFFFFF) | 0xFF000000);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setAlpha(255);
+        paint.setTextSize((width+height)/20f);
+        String s = pct + "%";
+        canvas.drawText(s, offX+width/4f, offY+height/4f+(width+height)/40f, paint);
     }
 
 

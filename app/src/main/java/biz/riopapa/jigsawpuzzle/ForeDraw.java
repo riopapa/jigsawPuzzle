@@ -13,8 +13,11 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.save_History;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
@@ -31,6 +34,7 @@ import android.util.Log;
 import java.util.Random;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
+import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
@@ -128,6 +132,8 @@ public class ForeDraw {
             if (locked == gVal.colNbr * gVal.rowNbr) {
                 congCount = congrats.length * 4;
                 allLockedMode = 30;     // all puzzles are locked
+                new GValGetPut().put(currGameLevel, gVal, mContext);
+                save_History();
             }
             foreBlink = true;
         }

@@ -295,6 +295,16 @@ public class ActivityJigsaw extends Activity {
             gameMode = ActivityMain.GMode.PAUSED;
         new GValGetPut().put(currGameLevel, gVal, this);
 
+        save_History();
+
+        releaseAll();
+        System.gc();
+        if (gameMode == ActivityMain.GMode.PAUSED)
+            finish();
+        super.onPause();
+    }
+
+    public static void save_History() {
         history.time[gVal.level] = System.currentTimeMillis();
         int locked = 0;
         for (int cc = 0; cc < gVal.colNbr; cc++) {
@@ -311,13 +321,7 @@ public class ActivityJigsaw extends Activity {
                 histories.set(historyIdx, history);
         } else
             histories.add(history);
-        new HistoryGetPut().put(histories, this);
-
-        releaseAll();
-        System.gc();
-        if (gameMode == ActivityMain.GMode.PAUSED)
-            finish();
-        super.onPause();
+        new HistoryGetPut().put(histories, mContext);
     }
 
     private void releaseAll() {

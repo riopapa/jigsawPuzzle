@@ -1,6 +1,7 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
+import static biz.riopapa.jigsawpuzzle.ForeView.reFresh;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -29,8 +30,10 @@ public class BackView extends View {
         backDraw = new BackDraw(binding, pieceImage);
     }
     protected void onDraw(@NonNull Canvas canvas){
-        backBlink = false;
-        backDraw.draw(canvas);
+        if (reFresh) {
+            backBlink = false;
+            backDraw.draw(canvas);
+        }
     }
 
 }

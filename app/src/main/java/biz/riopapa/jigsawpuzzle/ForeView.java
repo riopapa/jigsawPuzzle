@@ -45,7 +45,7 @@ public class ForeView extends View {
     PieceSelection pieceSelection;
     PieceImage pieceImage;
 
-    public static boolean foreBlink, backBlink;
+    public static boolean foreBlink, backBlink, reFresh;
 
     public ForeView(Context context) {
         this(context, null);
@@ -68,14 +68,17 @@ public class ForeView extends View {
         pieceSelection = new PieceSelection();
         foreDraw = new ForeDraw(binding, pieceImage);
         topIdx = -1;
+        reFresh = true;
     }
 
     protected void onDraw(@NonNull Canvas fCanvas){
 
-        foreBlink = false;
-        foreDraw.draw(fCanvas);
-        if (congCount > 0)
-            foreBlink = true;
+        if (reFresh) {
+            foreBlink = false;
+            foreDraw.draw(fCanvas);
+            if (congCount > 0)
+                foreBlink = true;
+        }
     }
 
     long nextOKTime = 0, nowTime;
@@ -147,6 +150,7 @@ public class ForeView extends View {
         LinearLayoutManager layoutManager = (LinearLayoutManager) jigRecyclerView.getLayoutManager();
         assert layoutManager != null;
         int i = layoutManager.findFirstVisibleItemPosition();
+        reFresh = false;
         itemPos = i + xOld / gVal.picOSize + 1;
         gVal.jigTables[itemC][itemR].fp = false;
         if (itemPos < activeJigs.size()-1) {
@@ -156,6 +160,7 @@ public class ForeView extends View {
             activeJigs.add(10000 + itemC * 100 + itemR);
             activeAdapter.notifyItemInserted(activeJigs.size()-1);
         }
+        reFresh = true;
 //        Log.w("goback2 "+itemPos, itemC+"x"+itemR);
     }
 }
