@@ -100,7 +100,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-//            Log.w("state is "+actionState, " ACTION_STATE_IDLE =");
             if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
                 JigsawAdapter.MyViewHolder myViewHolder=
                         (JigsawAdapter.MyViewHolder) viewHolder;
@@ -110,12 +109,12 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
             // Piece dragging is finished
             // if yPosition is above recycler then move to fps
             if (itemY < screenBottom - gVal.picHSize) {
+                nowDragging = false;
                 reFresh = false;
                 removeFromRecycle();
                 add2FloatingPiece();
                 pieceLock.update(pieceImage);
                 pieceBind.update();
-                nowDragging = false;
                 foreBlink = true;
                 reFresh = true;
             }
@@ -131,12 +130,12 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public void clearView(@NonNull RecyclerView recyclerView,
                           @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
-            Log.w("clearView","x moving is "+moving+" RowClear");
-            JigsawAdapter.MyViewHolder myViewHolder=
-                    (JigsawAdapter.MyViewHolder) viewHolder;
-            mAdapter.onRowClear(myViewHolder);
-        }
+//        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
+//            Log.w("clearView","x moving is "+moving+" RowClear");
+//            JigsawAdapter.MyViewHolder myViewHolder=
+//                    (JigsawAdapter.MyViewHolder) viewHolder;
+//            mAdapter.onRowClear(myViewHolder);
+//        }
 
     }
 
@@ -172,10 +171,10 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
     private void removeFromRecycle() {
 
-        activeJigs.remove(itemPos);
         activeAdapter.notifyItemRemoved(itemPos);
+        activeJigs.remove(itemPos);
 //        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
-        Log.w("r2m remove"+ itemCR,"removed from recycler drag="+ itemX +"x"+ itemY
+        Log.w("r2m remove "+ itemCR,"removed from recycler drag="+ itemX +"x"+ itemY
                 + " pieSZ="+activeJigs.size());
     }
 

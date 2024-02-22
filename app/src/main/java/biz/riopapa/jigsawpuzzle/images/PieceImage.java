@@ -35,9 +35,9 @@ public class PieceImage {
         this.context = context;
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
-        outLineSz = gVal.picOSize / 120;
+        outLineSz = gVal.picOSize / 40;
 
-        pIN = new Paint(); // Paint.ANTI_ALIAS_FLAG
+        pIN = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         pIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
@@ -79,7 +79,7 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picOSize / 140;
+        shadowSize = gVal.picOSize / 80;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
 
@@ -120,35 +120,35 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
-        if (jt.locked) {
-            shadowSz = 0;
-            if (col == 0 || !gVal.jigTables[col-1][row].locked)
-                maskL = outMaskMaps[0][jt.lType];
-            else
-                maskL = srcMaskMaps[0][jt.lType];
-            if (col == gVal.colNbr-1 || !gVal.jigTables[col+1][row].locked)
-                maskR = outMaskMaps[1][jt.rType];
-            else
-                maskR = srcMaskMaps[1][jt.rType];
-            if (row == 0 || !gVal.jigTables[col][row-1].locked)
-                maskU = outMaskMaps[2][jt.uType];
-            else
-                maskU = srcMaskMaps[2][jt.uType];
-            if (row == gVal.rowNbr-1 || !gVal.jigTables[col][row+1].locked)
-                maskD = outMaskMaps[3][jt.dType];
-            else
-                maskD = srcMaskMaps[3][jt.dType];
-            mask = maskMerge(maskL, maskR, maskU, maskD);
-        } else {
+//        if (jt.locked) {
+//            shadowSz = 0;
+//            if (col == 0 || !gVal.jigTables[col-1][row].locked)
+//                maskL = srcMaskMaps[0][jt.lType];
+//            else
+//                maskL = outMaskMaps[0][jt.lType];
+//            if (col == gVal.colNbr-1 || !gVal.jigTables[col+1][row].locked)
+//                maskR = srcMaskMaps[1][jt.rType];
+//            else
+//                maskR = outMaskMaps[1][jt.rType];
+//            if (row == 0 || !gVal.jigTables[col][row-1].locked)
+//                maskU = srcMaskMaps[2][jt.uType];
+//            else
+//                maskU = outMaskMaps[2][jt.uType];
+//            if (row == gVal.rowNbr-1 || !gVal.jigTables[col][row+1].locked)
+//                maskD = srcMaskMaps[3][jt.dType];
+//            else
+//                maskD = outMaskMaps[3][jt.dType];
+//            mask = maskMerge(maskL, maskR, maskU, maskD);
+//        } else {
             shadowSz = outLineSz;
             mask = maskMerge(
                     outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
                     outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
-        }
+//        }
         Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
                 gVal.picOSize - shadowSz, gVal.picOSize - shadowSz, true);
         Bitmap picScaled = Bitmap.createScaledBitmap(pic,
-                gVal.picOSize - shadowSz, gVal.picOSize - shadowSz, true);
+                gVal.picOSize- shadowSz, gVal.picOSize - shadowSz, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(maskScaled, shadowSize+ shadowSz, shadowSize+ shadowSz, pShadowTop);

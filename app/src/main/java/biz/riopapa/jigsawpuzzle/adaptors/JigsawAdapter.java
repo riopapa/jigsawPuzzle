@@ -118,21 +118,21 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
     @Override
     public void onRowClear(MyViewHolder myViewHolder) {
 
-        if (myViewHolder.getAbsoluteAdapterPosition() != -1) {
-            Log.w("onRowClear"," pos ="+myViewHolder.getAbsoluteAdapterPosition());
-            if (!moving) {
-                final String tag1;
-                final MyViewHolder svHolder = myViewHolder;
-                svHolder.itemView.setAlpha(0);
-                tag1 = svHolder.ivIcon.getTag().toString();
-                new Timer().schedule(new TimerTask() {
-                    public void run() {
-                        String tag2 = svHolder.ivIcon.getTag().toString();
-                        Log.w("onRowClear " + tag1.equals(tag2), "tag " + tag1 + " vs " + tag2);
-                        svHolder.itemView.setAlpha(1);
-                    }
-                }, 10);
-            }
-        }
+//        if (myViewHolder.getAbsoluteAdapterPosition() != -1) {
+//            Log.w("onRowClear"," pos ="+myViewHolder.getAbsoluteAdapterPosition());
+//            if (!moving) {
+//                final String tag1;
+//                final MyViewHolder svHolder = myViewHolder;
+//                svHolder.itemView.setAlpha(0);
+//                tag1 = svHolder.ivIcon.getTag().toString();
+//                new Timer().schedule(new TimerTask() {
+//                    public void run() {
+//                        String tag2 = svHolder.ivIcon.getTag().toString();
+//                        Log.w("onRowClear " + tag1.equals(tag2), "tag " + tag1 + " vs " + tag2);
+//                        svHolder.itemView.setAlpha(1);
+//                    }
+//                }, 10);
+//            }
+//        }
     }
 }

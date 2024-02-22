@@ -14,7 +14,7 @@ public class DefineColsRows {
     public int col, row;    // return values
 
     public void calc(int level) {
-        int [] sizes = {4, 8, 12, 15};
+        int [] sizes = {4, 6, 10, 12};
         double sz = Math.sqrt(Math.sqrt(currImageWidth * currImageHeight));
         if (currImageWidth > currImageHeight) {
             row = sizes[level];

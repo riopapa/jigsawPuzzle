@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "biz.riopapa.jigsawpuzzle"
-        minSdk 29
-        targetSdk 29
+        minSdk 33
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
