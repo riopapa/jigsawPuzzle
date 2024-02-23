@@ -3,7 +3,6 @@ package biz.riopapa.jigsawpuzzle;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,6 +24,7 @@ import biz.riopapa.jigsawpuzzle.func.FileIO;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.Permission;
 import biz.riopapa.jigsawpuzzle.func.PhoneMetrics;
+import biz.riopapa.jigsawpuzzle.func.SharedParam;
 import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
@@ -45,8 +45,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
 
-    public static String nowVersion = "000100";
-
+    public static String nowVersion = "000105";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -61,14 +60,15 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static float fPhoneInchX, fPhoneInchY;
 
     /*
-     ** Following will be handled with Set Menu
+     ** Shared Values
      */
-    public static boolean vibrate = true;
-    public static long installDate = 0;
-    public static int showBack = 0;
-    public static boolean sound = false;
-    public static int backColor = 0;
-    public static String appVersion = "";
+    public static boolean share_vibrate = true;
+    public static long share_installDate = 0;
+    public static int share_showBack = 0;
+    public static boolean share_sound = false;
+    public static String share_appVersion = "";
+
+    public static int share_backColor = 0;
 
     public static boolean debugMode = false;
     public static boolean showCR = true;
@@ -105,15 +105,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
-
-        installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
-        showBack = sharedPref.getInt("showBack", 0);
-        vibrate = sharedPref.getBoolean("vibrate", true);
-        sound = sharedPref.getBoolean("sound", true);
-        backColor = sharedPref.getInt("backColor", 0);
-        appVersion = sharedPref.getString("appVersion", "none");
-
+        new SharedParam().get(mContext);
         new PhoneMetrics(this);
 
         /* fileName, position status
@@ -136,7 +128,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
 
-        if (histories == null || !appVersion.equals(nowVersion))
+        if (histories == null || !share_appVersion.equals(nowVersion))
             new HistoryGetPut().set(this);
         else
             histories = new HistoryGetPut().get(this);
@@ -182,9 +174,25 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
                 String nGame = imgInfo[0].trim();
-                long imgDays = Long.parseLong(imgInfo[2].trim());
-                long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
-                if (newJpgFile(nGame) && today > installDate + imgDays) {
+
+                if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
+
+                    Log.w("image", nGame +" is not found");
+                    long imgDays = Long.parseLong(imgInfo[2].trim());
+                    long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
+                    if (today > share_installDate + imgDays) {
+                        Log.w("image", "Date Passed "+imgDays);
+                        JigFile jf = new JigFile();
+                        jf.game = nGame;
+                        jf.imageId = imgInfo[1].trim();
+                        jf.timeStamp = imgInfo[2].trim();       // not used now
+                        jf.keywords = imgInfo[3].trim();        // not used now
+                        jigFiles.add(jf);
+                        imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
+                        newlyAdd = true;
+                    }
+                } else {
+                    Log.w("image "+i, nGame +" is already in Phone");
                     JigFile jf = new JigFile();
                     jf.game = nGame;
                     jf.imageId = imgInfo[1].trim();
@@ -192,7 +200,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                     jf.keywords = imgInfo[3].trim();        // not used now
                     jigFiles.add(jf);
                     imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
-                    newlyAdd = true;
                 }
             }
             if (newlyAdd)
@@ -230,6 +237,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     protected void onPause() {
 //        new GValGetPut().put(currGameLevel, gVal, this);
         super.onPause();
+
     }
 
     @Override

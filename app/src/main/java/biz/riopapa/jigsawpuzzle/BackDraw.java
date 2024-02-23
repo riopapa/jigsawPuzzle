@@ -7,7 +7,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_showBack;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -71,12 +71,12 @@ public class BackDraw {
                     jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
                 if (gVal.jigTables[cc][rr].locked)
                     continue;
-                if (showBack == 0) {
+                if (share_showBack == 0) {
                     canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed0);
-                } else if (showBack == 1) {
+                } else if (share_showBack == 1) {
                     if (jigGray[cc][rr] == null)
                         jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr],
                                 gVal.picOSize,gVal.picOSize);

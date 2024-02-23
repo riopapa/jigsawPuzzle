@@ -1,8 +1,8 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.appVersion;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.backColor;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_appVersion;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
@@ -13,9 +13,9 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.sound;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_showBack;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_sound;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_vibrate;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 
@@ -43,6 +43,7 @@ import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.func.DumpData;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
+import biz.riopapa.jigsawpuzzle.func.SharedParam;
 import biz.riopapa.jigsawpuzzle.images.Congrat;
 import biz.riopapa.jigsawpuzzle.images.FireWork;
 import biz.riopapa.jigsawpuzzle.images.JigDone;
@@ -152,24 +153,24 @@ public class ActivityJigsaw extends Activity {
             copy2RecyclerPieces();
         });
 
-        binding.showBack.setImageResource(eyes[showBack]);
+        binding.showBack.setImageResource(eyes[share_showBack]);
         binding.showBack.setOnClickListener(v -> {
-            showBack = (showBack + 1) % 3;
-            binding.showBack.setImageResource(eyes[showBack]);
+            share_showBack = (share_showBack + 1) % 3;
+            binding.showBack.setImageResource(eyes[share_showBack]);
             save_params();
         });
 
-        binding.vibrate.setImageResource((vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
+        binding.vibrate.setImageResource((share_vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
         binding.vibrate.setOnClickListener(v -> {
-            vibrate = !vibrate;
-            binding.vibrate.setImageResource((vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
+            share_vibrate = !share_vibrate;
+            binding.vibrate.setImageResource((share_vibrate) ? R.drawable.z_vibrate_on : R.drawable.z_vibrate_off);
             save_params();
         });
 
-        binding.sound.setImageResource((sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
+        binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
         binding.sound.setOnClickListener(v -> {
-            sound = !sound;
-            binding.sound.setImageResource((sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
+            share_sound = !share_sound;
+            binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
             save_params();
         });
 
@@ -180,8 +181,8 @@ public class ActivityJigsaw extends Activity {
                 ContextCompat.getColor(mContext, R.color.backColor2)};
 
         binding.backcolor.setOnClickListener(v -> {
-            backColor = (backColor + 1) % 3;
-            binding.layoutJigsaw.setBackgroundColor(backColors[backColor]);
+            share_backColor = (share_backColor + 1) % 3;
+            binding.layoutJigsaw.setBackgroundColor(backColors[share_backColor]);
             save_params();
         });
 
@@ -341,14 +342,7 @@ public class ActivityJigsaw extends Activity {
     }
 
     private void save_params() {
-        SharedPreferences sharedPref = getSharedPreferences("params", Context.MODE_PRIVATE);
-        SharedPreferences.Editor sharedEditor = sharedPref.edit();
-        sharedEditor.putInt("showBack", showBack);
-        sharedEditor.putBoolean("vibrate", vibrate);
-        sharedEditor.putBoolean("sound", sound);
-        sharedEditor.putInt("backColor", backColor);
-        sharedEditor.putString("appVersion", appVersion);
-        sharedEditor.apply();
+        new SharedParam().put(this);
         backView.invalidate();
         foreView.invalidate();
     }

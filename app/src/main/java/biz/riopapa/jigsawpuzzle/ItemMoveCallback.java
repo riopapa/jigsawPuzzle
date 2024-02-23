@@ -8,11 +8,10 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moving;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.vibrate;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.share_vibrate;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.reFresh;
 import static biz.riopapa.jigsawpuzzle.ForeView.topIdx;
@@ -148,7 +147,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         itemX = viewHolder.itemView.getLeft();
         Log.w("selected "+ itemPos, itemPos +" CR"+ itemCR + " pieceSz="+activeJigs.size());
         nowDragging = true;
-        if (vibrate)
+        if (share_vibrate)
             new VibratePhone(mContext);
     }
     private void add2FloatingPiece() {
