@@ -69,7 +69,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap currImageMap;
     public static int currImageWidth, currImageHeight;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
-    public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray;
+    public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
     public static Bitmap[] fireWorks, congrats, jigFinishes;
 
@@ -81,7 +81,7 @@ public class ActivityJigsaw extends Activity {
     public static int allLockedMode = 0;    // 10: just all locked, 20: after all locked 99: completed
     public static int congCount = 0;
 
-    public static boolean moving;
+    public static boolean moving, reDrawOLine;
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
     ShowThumbnail showThumbnail;
@@ -98,11 +98,6 @@ public class ActivityJigsaw extends Activity {
         screenBottom = screenY - gVal.recSize - gVal.recSize - gVal.picGap;
         if (fPhoneInchX > 3f)
             screenBottom += gVal.picHSize;
-
-        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
-        jigGray = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
@@ -209,16 +204,17 @@ public class ActivityJigsaw extends Activity {
 
         if (debugMode) {
             // followings are to test congrats
-            for (int cc = 0; cc < gVal.colNbr; cc++) {
-                for (int rr = 0; rr < gVal.rowNbr; rr++) {
+            for (int ac = 0; ac < gVal.colNbr; ac++) {
+                for (int ar = 0; ar < gVal.rowNbr; ar++) {
                     if (new Random().nextInt(8) > 1)
-                        gVal.jigTables[cc][rr].locked = true;
+                        gVal.jigTables[ac][ar].locked = true;
                 }
             }
         }
         chkC = 0;
         chkR = 0;
         loopTimer = new Timer();
+        reDrawOLine = true;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -235,12 +231,12 @@ public class ActivityJigsaw extends Activity {
                         chkR = 0;
                     }
                 }
-                if (gVal.jigTables[chkC][chkR].locked) {
-                    if (jigPic[chkC][chkR] == null)
-                        jigPic[chkC][chkR] = pieceImage.makePic(chkC, chkR);
-                    jigOLine[chkC][chkR] = pieceImage.makeOline(jigPic[chkC][chkR], chkC, chkR);
-                    backView.invalidate();
-                }
+//                if (gVal.jigTables[chkC][chkR].locked) {
+//                    if (jigPic[chkC][chkR] == null)
+//                        jigPic[chkC][chkR] = pieceImage.makePic(chkC, chkR);
+//                    jigOLine[chkC][chkR] = pieceImage.makeOline(jigPic[chkC][chkR], chkC, chkR);
+//                    backView.invalidate();
+//                }
                 if (backBlink)
                     backView.invalidate();
                 if (foreBlink)
@@ -269,12 +265,12 @@ public class ActivityJigsaw extends Activity {
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
         for (int i = 0; i < gVal.allPossibleJigs.size(); i++) {
-            int cr = gVal.allPossibleJigs.get(i) -  10000;
-            int cc = cr / 100;
-            int rr = cr - cc * 100;
-            if (!gVal.jigTables[cc][rr].locked &&
-                    cc >= gVal.offsetC && cc < gVal.offsetC + gVal.showMaxX && rr >= gVal.offsetR && rr < gVal.offsetR + gVal.showMaxY) {
-                activeJigs.add(cr + 10000);
+            int tmp = gVal.allPossibleJigs.get(i) -  10000;
+            int ac = tmp / 100;
+            int ar = tmp - ac * 100;
+            if (!gVal.jigTables[ac][ar].locked &&
+                    ac >= gVal.offsetC && ac < gVal.offsetC + gVal.showMaxX && ar >= gVal.offsetR && ar < gVal.offsetR + gVal.showMaxY) {
+                activeJigs.add(tmp + 10000);
             }
         }
         jigRecyclerView.setAdapter(activeAdapter);
@@ -308,9 +304,9 @@ public class ActivityJigsaw extends Activity {
     public static void save_History() {
         history.time[gVal.level] = System.currentTimeMillis();
         int locked = 0;
-        for (int cc = 0; cc < gVal.colNbr; cc++) {
-            for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                if (gVal.jigTables[cc][rr].locked)
+        for (int ac = 0; ac < gVal.colNbr; ac++) {
+            for (int ar = 0; ar < gVal.rowNbr; ar++) {
+                if (gVal.jigTables[ac][ar].locked)
                     locked++;
             }
         }

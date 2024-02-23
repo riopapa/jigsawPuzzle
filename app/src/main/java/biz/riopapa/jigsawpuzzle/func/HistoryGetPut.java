@@ -95,9 +95,9 @@ public class HistoryGetPut {
         h.game = game;
         h.time[level] = gVal.time;
         int locked = 0;
-        for (int cc = 0; cc < gVal.colNbr; cc++) {
-            for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                if (gVal.jigTables[cc][rr].locked)
+        for (int ac = 0; ac < gVal.colNbr; ac++) {
+            for (int ar = 0; ar < gVal.rowNbr; ar++) {
+                if (gVal.jigTables[ac][ar].locked)
                     locked++;
             }
         }

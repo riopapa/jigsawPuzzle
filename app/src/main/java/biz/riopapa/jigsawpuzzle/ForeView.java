@@ -123,7 +123,7 @@ public class ForeView extends View {
                     } else if (y < screenBottom) {
                         gVal.fps.get(topIdx).posX = x;
                         gVal.fps.get(topIdx).posY = y;
-                        Log.w("vstate", topIdx+"  "+ gVal.fps.get(topIdx).C+" x "+gVal.fps.get(topIdx).R
+                        Log.w("vState", topIdx+"  "+ gVal.fps.get(topIdx).C+" x "+gVal.fps.get(topIdx).R
                             + " xy = "+x+"x"+y);
                         pieceAlign.move();
                         foreBlink = pieceLock.update(pieceImage);

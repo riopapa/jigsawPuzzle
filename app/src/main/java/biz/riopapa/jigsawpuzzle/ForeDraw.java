@@ -82,34 +82,34 @@ public class ForeDraw {
 
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (gVal.jigTables[cc][rr].locked)
+                final int ac = c + gVal.offsetC;
+                final int ar = r + gVal.offsetR;
+                if (gVal.jigTables[ac][ar].locked)
                     lockedCount++;
-                if (gVal.jigTables[cc][rr].count == 0)
+                if (gVal.jigTables[ac][ar].count == 0)
                     continue;
-                if (jigWhite[cc][rr] == null)
-                    jigWhite[cc][rr] = pieceImage.makeWhite(jigOLine[cc][rr]);
-                gVal.jigTables[cc][rr].count -= 1 + rnd.nextInt(2);
-                if (gVal.jigTables[cc][rr].count < 0)
-                    gVal.jigTables[cc][rr].count = 0;
-                if (gVal.jigTables[cc][rr].count == 0) {
-                    jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                    jigWhite[cc][rr] = null;
+                if (jigWhite[ac][ar] == null)
+                    jigWhite[ac][ar] = pieceImage.makeWhite(jigOLine[ac][ar]);
+                gVal.jigTables[ac][ar].count -= 1 + rnd.nextInt(2);
+                if (gVal.jigTables[ac][ar].count < 0)
+                    gVal.jigTables[ac][ar].count = 0;
+                if (gVal.jigTables[ac][ar].count == 0) {
+                    jigOLine[ac][ar] = pieceImage.makeOline(jigPic[ac][ar], ac, ar);
+                    jigWhite[ac][ar] = null;
                     backBlink = true;
                 }
                 Bitmap bMap ;
                 int offset = 0;
-                if (gVal.jigTables[cc][rr].count == 0)
-                    bMap = jigOLine[cc][rr];
-                else if (gVal.jigTables[cc][rr].count % 3 == 1) {
-                    bMap = fireWorks[gVal.jigTables[cc][rr].count];
+                if (gVal.jigTables[ac][ar].count == 0)
+                    bMap = jigOLine[ac][ar];
+                else if (gVal.jigTables[ac][ar].count % 3 == 1) {
+                    bMap = fireWorks[gVal.jigTables[ac][ar].count];
                     offset = -gVal.picGap;
                 }
-                else if ((gVal.jigTables[cc][rr].count % 2 == 0))
-                    bMap = jigOLine[cc][rr];
+                else if ((gVal.jigTables[ac][ar].count % 2 == 0))
+                    bMap = jigOLine[ac][ar];
                 else
-                    bMap = jigWhite[cc][rr];
+                    bMap = jigWhite[ac][ar];
                 canvas.drawBitmap(bMap,
                         gVal.baseX + c * gVal.picISize + offset,
                         gVal.baseY + r * gVal.picISize + offset, null);
@@ -121,9 +121,9 @@ public class ForeDraw {
             congCount = jigFinishes.length * 4;
             allLockedMode = 20;
             int locked = 0;
-            for (int cc = 0; cc < gVal.colNbr; cc++) {
-                for (int rr = 0; rr < gVal.rowNbr; rr++) {
-                    if (gVal.jigTables[cc][rr].locked)
+            for (int ac = 0; ac < gVal.colNbr; ac++) {
+                for (int ar = 0; ar < gVal.rowNbr; ar++) {
+                    if (gVal.jigTables[ac][ar].locked)
                         locked++;
                     else
                         break;

@@ -177,7 +177,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
                 if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
 
-                    Log.w("image", nGame +" is not found");
                     long imgDays = Long.parseLong(imgInfo[2].trim());
                     long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
                     if (today > share_installDate + imgDays) {
@@ -192,7 +191,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                         newlyAdd = true;
                     }
                 } else {
-                    Log.w("image "+i, nGame +" is already in Phone");
                     JigFile jf = new JigFile();
                     jf.game = nGame;
                     jf.imageId = imgInfo[1].trim();

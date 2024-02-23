@@ -17,8 +17,8 @@ public class NearByFloatPiece {
     public int isNear(int thisIdx, FloatPiece fpThis) {
 
         long anchorId = fpThis.anchorId;
-        int cc = fpThis.C;
-        int rr = fpThis.R;
+        int ac = fpThis.C;
+        int ar = fpThis.R;
 
         for (int i = 0; i < gVal.fps.size(); i++) {
             if (i != thisIdx) {
@@ -26,8 +26,8 @@ public class NearByFloatPiece {
                 // pass if already anchored group
                 if (anchorId > 0 && anchorId == fpWork.anchorId)
                     continue;
-                int cDelta = cc - fpWork.C;
-                int rDelta = rr - fpWork.R;
+                int cDelta = ac - fpWork.C;
+                int rDelta = ar - fpWork.R;
                 if (Math.abs(cDelta) > 1 || Math.abs(rDelta) > 1)
                     continue;
                 if (Math.abs(cDelta) == 1 && Math.abs(rDelta) == 1)

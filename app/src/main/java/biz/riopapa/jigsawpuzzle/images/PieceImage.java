@@ -6,6 +6,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
 
 import android.content.Context;
@@ -20,14 +21,20 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 
+import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint pIN, pOUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
+    Paint pNORM, pIN, pOUT, pCUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
     int shadowSize, outLineSz, shadowSz;
-    Bitmap mask, maskL, maskR, maskU, maskD;
+    Bitmap mask;
+    Bitmap maskSmall, picSmall, mapLocked, mapUnLocked;
+    Bitmap part_up, part_dn, part_le, part_ri;
+    Canvas canvasUn, canvasLk;
+    Drawable2bitmap dMap;
+    Matrix matrix;
 
     Context context;
 
@@ -36,9 +43,11 @@ public class PieceImage {
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
         outLineSz = gVal.picOSize / 40;
+        shadowSz = outLineSz/2;
+
+        pNORM = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         pIN = new Paint(Paint.ANTI_ALIAS_FLAG);
-
         pIN.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
         pOUT = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -52,6 +61,9 @@ public class PieceImage {
 
         pOutLine = new Paint();
         pOutLine.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+
+        pCUT = new Paint();
+        pCUT.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
 
         final float brightContrast  = 1;
         final int BrightBrightness = 50;  // positive is bright
@@ -82,6 +94,18 @@ public class PieceImage {
         shadowSize = gVal.picOSize / 80;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
+        matrix = new Matrix();
+
+        dMap = new Drawable2bitmap(mContext, gVal.picOSize);
+
+        part_up = Bitmap.createScaledBitmap(dMap.make(R.drawable.part_up),
+                gVal.picOSize, gVal.picOSize, true);;
+        part_dn = Bitmap.createScaledBitmap(dMap.make(R.drawable.part_dn),
+                gVal.picOSize, gVal.picOSize, true);;
+        part_le = Bitmap.createScaledBitmap(dMap.make(R.drawable.part_le),
+                gVal.picOSize, gVal.picOSize, true);;
+        part_ri = Bitmap.createScaledBitmap(dMap.make(R.drawable.part_ri),
+                gVal.picOSize, gVal.picOSize, true);;
 
     }
 
@@ -120,42 +144,48 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
-//        if (jt.locked) {
-//            shadowSz = 0;
-//            if (col == 0 || !gVal.jigTables[col-1][row].locked)
-//                maskL = srcMaskMaps[0][jt.lType];
-//            else
-//                maskL = outMaskMaps[0][jt.lType];
-//            if (col == gVal.colNbr-1 || !gVal.jigTables[col+1][row].locked)
-//                maskR = srcMaskMaps[1][jt.rType];
-//            else
-//                maskR = outMaskMaps[1][jt.rType];
-//            if (row == 0 || !gVal.jigTables[col][row-1].locked)
-//                maskU = srcMaskMaps[2][jt.uType];
-//            else
-//                maskU = outMaskMaps[2][jt.uType];
-//            if (row == gVal.rowNbr-1 || !gVal.jigTables[col][row+1].locked)
-//                maskD = srcMaskMaps[3][jt.dType];
-//            else
-//                maskD = outMaskMaps[3][jt.dType];
-//            mask = maskMerge(maskL, maskR, maskU, maskD);
-//        } else {
-            shadowSz = outLineSz;
-            mask = maskMerge(
-                    outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
-                    outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
-//        }
-        Bitmap maskScaled = Bitmap.createScaledBitmap(mask,
+        shadowSz = outLineSz;
+        mask = maskMerge(
+                outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
+                outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
+        maskSmall = Bitmap.createScaledBitmap(mask,
                 gVal.picOSize - shadowSz, gVal.picOSize - shadowSz, true);
-        Bitmap picScaled = Bitmap.createScaledBitmap(pic,
+        picSmall = Bitmap.createScaledBitmap(pic,
                 gVal.picOSize- shadowSz, gVal.picOSize - shadowSz, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScaled, shadowSize+ shadowSz, shadowSize+ shadowSz, pShadowTop);
-        canvas.drawBitmap(maskScaled, shadowSz /2f, shadowSz /2f, (jt.locked) ? pLockedATop : pOutATop);
+        canvas.drawBitmap(maskSmall, shadowSize+ shadowSz, shadowSize+ shadowSz, pShadowTop);
+        canvas.drawBitmap(maskSmall, shadowSz /2f, shadowSz /2f, (jt.locked) ? pLockedATop : pOutATop);
         Matrix matrix = new Matrix();
-        canvas.drawBitmap(picScaled, matrix, pOutLine);
+        canvas.drawBitmap(picSmall, matrix, pOutLine);
         return outMap;
+    }
+
+    public Bitmap makeLock(Bitmap pic, Bitmap oLine, int col, int row) {
+
+        boolean lockL = col == 0 || gVal.jigTables[col-1][row].locked;
+        boolean lockR = col == gVal.colNbr-1 || gVal.jigTables[col+1][row].locked;
+        boolean lockU = row == 0 || gVal.jigTables[col][row-1].locked;
+        boolean lockD = row == gVal.rowNbr-1 || gVal.jigTables[col][row+1].locked;
+
+        shadowSz = outLineSz;
+
+        mask = maskMerge((lockL) ? part_le : null, (lockR) ? part_ri : null,
+                (lockU) ? part_up : null, (lockD) ? part_dn : null);
+        mapLocked = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+        canvasLk = new Canvas(mapLocked);
+        canvasLk.drawBitmap(pic, 0, 0, pNORM);
+        canvasLk.drawBitmap(mask, 0, 0, pIN);
+
+        mask = maskMerge((lockL) ? null : part_le, (lockR) ? null : part_ri,
+                (lockU) ? null : part_up, (lockD) ? null : part_dn);
+        mapUnLocked = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
+        canvasUn = new Canvas(mapUnLocked);
+        canvasUn.drawBitmap(oLine, 0, 0, pNORM);
+        canvasUn.drawBitmap(mask, 0, 0, pIN);
+
+        canvasLk.drawBitmap(mapUnLocked, 0, 0, pNORM);
+        return mapLocked;
     }
 
     public Bitmap makeGray(Bitmap pic, int wSz, int hSz) {
@@ -196,10 +226,14 @@ public class PieceImage {
     public Bitmap maskMerge(Bitmap maskL, Bitmap maskR, Bitmap maskU, Bitmap maskD) {
         Bitmap tMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tMap);
-        canvas.drawBitmap(maskL, 0,0, null);
-        canvas.drawBitmap(maskR, 0,0, null);
-        canvas.drawBitmap(maskU, 0,0, null);
-        canvas.drawBitmap(maskD, 0,0, null);
+        if (maskL != null)
+            canvas.drawBitmap(maskL, 0,0, null);
+        if (maskR != null)
+            canvas.drawBitmap(maskR, 0,0, null);
+        if (maskU != null)
+            canvas.drawBitmap(maskU, 0,0, null);
+        if (maskD != null)
+            canvas.drawBitmap(maskD, 0,0, null);
         return tMap;
     }
 

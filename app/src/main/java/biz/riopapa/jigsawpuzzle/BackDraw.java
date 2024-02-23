@@ -2,8 +2,10 @@ package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigLock;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.reDrawOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
@@ -63,32 +65,32 @@ public class BackDraw {
         pGrayed0.setAlpha(LOW_ALPHA);
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (jigPic[cc][rr] == null)
-                    jigPic[cc][rr] = pieceImage.makePic(cc, rr);
-                if (jigOLine[cc][rr] == null)
-                    jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
-                if (gVal.jigTables[cc][rr].locked)
+                final int ac = c + gVal.offsetC;
+                final int ar = r + gVal.offsetR;
+                if (jigPic[ac][ar] == null)
+                    jigPic[ac][ar] = pieceImage.makePic(ac, ar);
+                if (jigOLine[ac][ar] == null)
+                    jigOLine[ac][ar] = pieceImage.makeOline(jigPic[ac][ar], ac, ar);
+                if (gVal.jigTables[ac][ar].locked)
                     continue;
                 if (share_showBack == 0) {
-                    canvas.drawBitmap(jigPic[cc][rr],   // later jigShadow
+                    canvas.drawBitmap(jigPic[ac][ar],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed0);
                 } else if (share_showBack == 1) {
-                    if (jigGray[cc][rr] == null)
-                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr],
+                    if (jigGray[ac][ar] == null)
+                        jigGray[ac][ar] = pieceImage.makeGray(jigPic[ac][ar],
                                 gVal.picOSize,gVal.picOSize);
-                    canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
+                    canvas.drawBitmap(jigGray[ac][ar],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed1);
                 } else {    // showBack == 2
-                    if (jigGray[cc][rr] == null)
-                        jigGray[cc][rr] = pieceImage.makeGray(jigPic[cc][rr],
+                    if (jigGray[ac][ar] == null)
+                        jigGray[ac][ar] = pieceImage.makeGray(jigPic[ac][ar],
                                 gVal.picOSize,gVal.picOSize);
-                    canvas.drawBitmap(jigGray[cc][rr],   // later jigShadow
+                    canvas.drawBitmap(jigGray[ac][ar],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pGrayed2);
@@ -103,17 +105,20 @@ public class BackDraw {
             return;
         for (int c = 0; c < gVal.showMaxX; c++) {
             for (int r = 0; r < gVal.showMaxY; r++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (gVal.jigTables[cc][rr].locked) {
-                    canvas.drawBitmap(jigOLine[cc][rr],   // later jigShadow
+                final int ac = c + gVal.offsetC;
+                final int ar = r + gVal.offsetR;
+                if (gVal.jigTables[ac][ar].locked) {
+                    if (reDrawOLine)
+                        jigLock[ac][ar] = pieceImage.makeLock(jigPic[ac][ar], jigOLine[ac][ar], ac, ar);
+                    canvas.drawBitmap(jigLock[ac][ar],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,
                             pFull);
-                    jigGray[cc][rr] = null;
+                    jigGray[ac][ar] = null;
                 }
             }
         }
+        reDrawOLine = false;
     }
 }
 

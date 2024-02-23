@@ -16,9 +16,9 @@ public class DumpData {
         for (int r = 0; r < gVal.showMaxY; r++) {
             sb.append("\n(").append(r);
             for (int c = 0; c < gVal.showMaxX; c++) {
-                final int cc = c + gVal.offsetC;
-                final int rr = r + gVal.offsetR;
-                if (gVal.jigTables[cc][rr].locked) {
+                final int ac = c + gVal.offsetC;
+                final int ar = r + gVal.offsetR;
+                if (gVal.jigTables[ac][ar].locked) {
                     sb.append(" L");
                     locked++;
                 }
@@ -30,19 +30,19 @@ public class DumpData {
         sb.append("\nDump FP Status");
         for (int i = 0; i < gVal.fps.size(); i++) {
             FloatPiece fp = gVal.fps.get(i);
-            final int cc = fp.C;
-            final int rr = fp.R;
-            if (gVal.jigTables[cc][rr].locked)
-                sb.append("\nDump fps "+i+" "+ cc+"x"+rr+" is locked");
+            final int ac = fp.C;
+            final int ar = fp.R;
+            if (gVal.jigTables[ac][ar].locked)
+                sb.append("\nDump fps "+i+" "+ ac+"x"+ar+" is locked");
             else
-                sb.append("\nDump fps "+i+" "+cc+"x"+rr+" OK");
+                sb.append("\nDump fps "+i+" "+ac+"x"+ar+" OK");
         }
         for (int i = 0; i < activeJigs.size(); i++) {
-            final int cr = activeJigs.get(i) - 10000;
-            final int cc = cr / 100;
-            final int rr = cr - cc * 100;
-            if (gVal.jigTables[cc][rr].locked)
-                sb.append("\n **** "+cc + "x" + rr + " is locked");
+            final int tmp = activeJigs.get(i) - 10000;
+            final int ac = tmp / 100;
+            final int ar = tmp - ac * 100;
+            if (gVal.jigTables[ac][ar].locked)
+                sb.append("\n **** "+ac + "x" + ar + " is locked");
         }
 
         if (locked + activeJigs.size() + gVal.fps.size() != (gVal.showMaxX*gVal.showMaxY)) {

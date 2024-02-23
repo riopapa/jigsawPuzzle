@@ -70,16 +70,16 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         itemCR = activeJigs.get(position) - 10000;
-        int cc = itemCR / 100;
-        int rr = itemCR - cc * 100;
+        int ac = itemCR / 100;
+        int ar = itemCR - ac * 100;
         //        Log.w("onBindViewHolder "+position,jigC+"x"+jigR);
-        if (jigPic[cc][rr] == null)
-            jigPic[cc][rr] = pieceImage.makePic(cc, rr);
+        if (jigPic[ac][ar] == null)
+            jigPic[ac][ar] = pieceImage.makePic(ac, ar);
 
-        if (jigOLine[cc][rr] == null)
-            jigOLine[cc][rr] = pieceImage.makeOline(jigPic[cc][rr], cc, rr);
+        if (jigOLine[ac][ar] == null)
+            jigOLine[ac][ar] = pieceImage.makeOline(jigPic[ac][ar], ac, ar);
 
-        holder.ivIcon.setImageBitmap(jigOLine[cc][rr]);
+        holder.ivIcon.setImageBitmap(jigOLine[ac][ar]);
         holder.ivIcon.setTag(itemCR);
     }
 

@@ -3,6 +3,8 @@ package biz.riopapa.jigsawpuzzle;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.history;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.historyIdx;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigLock;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
@@ -193,11 +195,14 @@ public class ActivitySelLevel extends AppCompatActivity {
         getGVal(level, defineColsRows);
         pieceImage = null;
         defineColsRows = null;
-        jigPic = null;
-        jigOLine = null;
-        jigWhite = null;
-        System.gc();
 
+        jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigGray = new Bitmap[gVal.colNbr][gVal.rowNbr];
+        jigLock = new Bitmap[gVal.colNbr][gVal.rowNbr];
+
+        System.gc();
         Intent intent = new Intent(this, ActivityJigsaw.class);
         startActivity(intent);
     }
