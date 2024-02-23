@@ -168,6 +168,9 @@ public class PieceImage {
         boolean lockU = row == 0 || gVal.jigTables[col][row-1].locked;
         boolean lockD = row == gVal.rowNbr-1 || gVal.jigTables[col][row+1].locked;
 
+        if (lockL && lockR && lockU && lockD)
+            return pic;
+
         shadowSz = outLineSz;
 
         mask = maskMerge((lockL) ? part_le : null, (lockR) ? part_ri : null,
