@@ -205,12 +205,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#959FD8"
+        android:background="#B3B7CD"
         android:layout_margin="3dp"
         android:orientation="horizontal"
         >
         <TextView android:id="@+id/go_back"
-            android:background="#DDD37B"
+            android:background="@drawable/zdialog_select_another"
             android:textSize="16sp"
             android:layout_margin="3dp"
             android:padding="8sp"
