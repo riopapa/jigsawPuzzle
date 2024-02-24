@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_installDate;
@@ -11,9 +9,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.share_vibrate;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 
 public class SharedParam {
     final String params = "params";
@@ -21,7 +16,7 @@ public class SharedParam {
         SharedPreferences sharedPref = context.getSharedPreferences(params, Context.MODE_PRIVATE);
 
         share_installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
-        share_showBack = sharedPref.getInt("showBack", 0);
+        share_showBack = sharedPref.getInt("showBack", 1);
         share_vibrate = sharedPref.getBoolean("vibrate", true);
         share_sound = sharedPref.getBoolean("sound", true);
         share_backColor = sharedPref.getInt("backColor", 0);

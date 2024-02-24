@@ -19,7 +19,7 @@ public class BuildJigFilesFromDrawable {
         for (int i = 0; i < imgCnt ; i++) {
             JigFile jf = new JigFile();
             jf.game = iStorage.getGame(i);
-            FileIO.thumbnail2File(iStorage.getThumbnail(i), jf.game);
+            FileIO.saveThumbnail(iStorage.getThumbnail(i), jf.game);
             for (int h = 0; h < histories.size(); h++)
                 if (histories.get(h).game.equals(jf.game))
                     jf.latestLvl = histories.get(h).latestLvl;

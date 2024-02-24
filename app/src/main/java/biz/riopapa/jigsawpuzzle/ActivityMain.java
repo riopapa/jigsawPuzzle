@@ -77,14 +77,15 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     // Google Drive related variables
     final String imageListId = "1HoO4s3dv4i8GAG5s5Nsl6HzMzF5TQ9Hf";
 
-    final String imageListOnDrive = "_imageList.txt";
+    final String imageListOnDrive = "@imageList";
 
     public static String downloadGame, downloadFileName = "";
     public static int downloadPosition = -1;
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
-    public static String jpgFolder = "jpg";
+    public static String puzzleFolder = "puzzle";
+    public static DownloadCompleteListener dListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         new SharedParam().get(mContext);
         new PhoneMetrics(this);
 
+        dListener = this;
         /* fileName, position status
             1) file = text, pos = -1; download jigsaw.txt
             2) file = .jpg, pos = n ; downloading jpg start @ onDownloadCompleted
@@ -115,7 +117,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
          */
         downloadFileName = imageListOnDrive;
         downloadPosition = -1;
-        DownloadTask task = new DownloadTask(this, imageListId, "", downloadFileName);
+        DownloadTask task = new DownloadTask(dListener, imageListId, puzzleFolder,
+                downloadFileName, ".txt");
         task.execute();
     }
 
@@ -164,11 +167,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             downloadNewJpg();
         }
 
-        Log.w("download", "complted " + downloadFileName + " pos=" + downloadPosition);
+        Log.w("download", "done for " + downloadFileName + " pos=" + downloadPosition);
         // at first time, drive image list from drive is loaded
 
         if (downloadFileName != null && downloadFileName.equals(imageListOnDrive)) {
-            String str = FileIO.readTextFile("", imageListOnDrive); // no dir for list
+            Log.w("download","List file process");
+            String str = FileIO.readTextFile(puzzleFolder, imageListOnDrive+".txt"); // no dir for list
             String[] ss = str.split("\n");
             boolean newlyAdd = false;
             for (int i = 1; i < ss.length; i++) {
@@ -177,12 +181,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 if (isInJpgTable(nGame))
                     continue;
 
-                if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
+                if (FileIO.existJPGFile(puzzleFolder, nGame + ".jpg") == null) {
 
                     long imgDays = Long.parseLong(imgInfo[2].trim());
                     long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
-                    if (today > share_installDate + imgDays) {
-                        Log.w("image", "Date Passed "+imgDays);
+                    if (today >= share_installDate + imgDays) {
+                        Log.w("image", nGame +" dowload "+imgDays);
                         JigFile jf = new JigFile();
                         jf.game = nGame;
                         jf.imageId = imgInfo[1].trim();
@@ -221,12 +225,13 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
 //            if (jf.thumbnailMap == null &&
-            if (FileIO.existJPGFile(jpgFolder, jf.game + ".jpg") == null) {
+            if (FileIO.existJPGFile(puzzleFolder, jf.game + ".jpg") == null) {
                 downloadGame = jf.game;
-                downloadFileName = downloadGame + ".jpg";
+                downloadFileName = downloadGame;
                 downloadPosition = i;
                 Log.w("pos=" + i, "downloadNewJpg " + downloadFileName);
-                DownloadTask task = new DownloadTask(this, jf.imageId, jpgFolder, downloadFileName);
+                DownloadTask task = new DownloadTask(this, jf.imageId, puzzleFolder,
+                        downloadFileName, ".jpg");
                 task.execute();
                 return;
             }

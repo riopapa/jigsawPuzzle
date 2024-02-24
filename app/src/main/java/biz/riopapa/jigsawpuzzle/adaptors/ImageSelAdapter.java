@@ -5,12 +5,13 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.chosenNumber;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.dListener;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadPosition;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
@@ -71,10 +72,11 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 if (jf.game.startsWith("_"))
                     currImageMap = new ImageStorage().getFullMap(chosenNumber);
                 else
-                    currImageMap = FileIO.getJPGFile(jpgFolder, jf.game+".jpg");
+                    currImageMap = FileIO.getJPGFile(puzzleFolder, jf.game+".jpg");
 
                 if (currImageMap == null) {
-                    DownloadTask task = new DownloadTask(null, jf.imageId, "", jf.game);
+                    DownloadTask task = new DownloadTask(dListener, jf.imageId, puzzleFolder,
+                            jf.game, ".jpg");
                     task.execute();
                 } else {
                     currImageWidth = currImageMap.getWidth();
@@ -138,10 +140,15 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     jf.latestLvl = histories.get(h).latestLvl;
             jigFiles.set(position, jf);
         }
-        Bitmap thumbnailMap = getThumbNailBitmap(jf);
+        Bitmap thumbnailMap;
+        if (jf.game.startsWith("_"))
+            thumbnailMap = new ImageStorage().getThumbnail(position);
+        else
+            thumbnailMap = getThumbNailBitmap(jf);
         if (downloadPosition == -1 && thumbnailMap.equals(zigPuzzle)) {
             Log.w("onBindViewHolder "+position,"Download in adaptor "+jf.game);
-            DownloadTask task = new DownloadTask(null, jf.imageId, "", jf.game);
+            DownloadTask task = new DownloadTask(dListener, jf.imageId, puzzleFolder,
+                    jf.game, ".jpg");
             task.execute();
         }
 
@@ -183,10 +190,11 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     }
 
     private Bitmap getThumbNailBitmap(JigFile jf) {
+
+
         Bitmap tMap;
         String tName = jf.game + "T.jpg";
-
-        tMap = FileIO.getJPGFile(jpgFolder, tName);
+        tMap = FileIO.getJPGFile(puzzleFolder, tName);
         if (tMap != null) {
             if (jf.latestLvl == -1 && !tName.startsWith("_"))
                 return makeDark.make(tMap);

@@ -6,7 +6,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadPosition;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadSize;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.imageSelAdapter;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 import android.content.Context;
@@ -29,15 +29,17 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
     private static final String TAG = "DownloadTask";
     private final DownloadCompleteListener listener;
     private final String url;
-    private final String fileName;
-    private final String dir;
+    private final String fileName, fileType;
+    private final String puzzleDir;
 
-    public DownloadTask(DownloadCompleteListener listener, String fileId, String dir, String fileName) {
+    public DownloadTask(DownloadCompleteListener listener, String fileId, String puzzleDir,
+                        String fileName, String fileType) {
         this.listener = listener;
         String imageHead = "https://drive.google.com/uc?export=download&id=";
         this.url = imageHead + fileId;
-        this.dir = dir;
+        this.puzzleDir = puzzleDir;
         this.fileName = fileName;
+        this.fileType = fileType;   // ".jpg", ".txt"
     }
 
     @Override
@@ -51,8 +53,8 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
 
             BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
 
-            File myDir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
-            File fileWithinMyDir = new File(myDir, fileName); //Getting a file within the dir.
+            File myDir = mContext.getDir(puzzleDir, Context.MODE_PRIVATE); //Creating an internal dir;
+            File fileWithinMyDir = new File(myDir, fileName+fileType); //Getting a file within the dir.
             FileOutputStream out = new FileOutputStream(fileWithinMyDir);
             byte[] buffer = new byte[1024];
             int bytesRead;
@@ -83,25 +85,25 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
     @Override
     protected void onPostExecute(Long result) {
         super.onPostExecute(result);
-        if (fileName.endsWith(".jpg")) {
+        Log.w("download","Post exe for "+fileName);
+        if (fileType.equals(".jpg")) {
             // if jpg file downloaded, update to jigFiles.thumbnailMap;
             Log.w("postDownload", fileName + ", jpgFiles="+jigFiles.size());
-            Bitmap jigImage = FileIO.getJPGFile(jpgFolder, fileName);
+            Bitmap jigImage = FileIO.getJPGFile(puzzleFolder, fileName+fileType);
             if (jigImage != null) {
                 Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
                         (int) (jigImage.getWidth() / 5f), (int) (jigImage.getHeight() / 5f), true);
-                FileIO.thumbnail2File(thumb, downloadGame);
+                FileIO.saveThumbnail(thumb, fileName);
 
                 for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
                     JigFile jf = jigFiles.get(i);
-                    if (jf.game.equals(downloadGame)) {
+                    if (jf.game.equals(fileName)) {
                         jf.newFlag = true;
-                        jigFiles.set(downloadPosition, jf);
+                        jigFiles.set(i, jf);
                         imageSelAdapter.notifyItemChanged(i);
                         break;
                     }
                 }
-                downloadFileName = null;
                 downloadPosition = -1;
             }
         }
