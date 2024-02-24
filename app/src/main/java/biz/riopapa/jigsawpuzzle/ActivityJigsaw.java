@@ -66,7 +66,7 @@ public class ActivityJigsaw extends Activity {
     public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
-    public static Bitmap currImageMap;
+    public static Bitmap currImageMap, currThumnailMap;
     public static int currImageWidth, currImageHeight;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;

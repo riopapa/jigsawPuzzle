@@ -122,14 +122,3 @@ public class BackDraw {
     }
 }
 
-//                } else if (c > 0 && r > 0){
-//                        Path path = new Path();
-//                        int x0 = gVal.baseX + gapTwo + c * gVal.picISize;
-//                        int y0 = gVal.baseY + gapTwo + r * gVal.picISize ;
-//                        path.moveTo(x0 - gapSmall, y0);
-//                        path.lineTo(x0, y0 - gapSmall);
-//                        path.lineTo(x0 + gapSmall, y0);
-//                        path.lineTo(x0, y0 + gapSmall);
-//                        path.lineTo(x0 - gapSmall, y0);
-//                        canvas.drawPath(path, pathPaint);
-

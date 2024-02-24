@@ -45,7 +45,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
 
-    public static String nowVersion = "000105";
+    public static String nowVersion = "00010A";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -71,7 +71,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static int share_backColor = 0;
 
     public static boolean debugMode = false;
-    public static boolean showCR = true;
+    public static boolean showCR = false;
     public final static long INVALIDATE_INTERVAL = 80;
 
     // Google Drive related variables
@@ -79,12 +79,11 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     final String imageListOnDrive = "_imageList.txt";
 
-    public static String downloadFileName = "";
+    public static String downloadGame, downloadFileName = "";
     public static int downloadPosition = -1;
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
-    public static JigFile jigFile = null;
     public static String jpgFolder = "jpg";
 
     @Override
@@ -161,8 +160,9 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         // if download if completed
         // downloadFile name = .jpg, downloadPosition > 0  then update thumbnail
         // downloadFile name =
-        if (downloadPosition > 0)   // continue to check possible download
+        if (downloadPosition > 0) {  // continue to check possible download
             downloadNewJpg();
+        }
 
         Log.w("download", "complted " + downloadFileName + " pos=" + downloadPosition);
         // at first time, drive image list from drive is loaded
@@ -174,6 +174,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
                 String nGame = imgInfo[0].trim();
+                if (isInJpgTable(nGame))
+                    continue;
 
                 if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
 
@@ -205,12 +207,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         }
     }
 
-    private boolean newJpgFile(String game) {
+    private boolean isInJpgTable(String game) {
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             if (game.equals(jigFiles.get(i).game))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private void downloadNewJpg() {
@@ -220,7 +222,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             JigFile jf = jigFiles.get(i);
 //            if (jf.thumbnailMap == null &&
             if (FileIO.existJPGFile(jpgFolder, jf.game + ".jpg") == null) {
-                downloadFileName = jf.game + ".jpg";
+                downloadGame = jf.game;
+                downloadFileName = downloadGame + ".jpg";
                 downloadPosition = i;
                 Log.w("pos=" + i, "downloadNewJpg " + downloadFileName);
                 DownloadTask task = new DownloadTask(this, jf.imageId, jpgFolder, downloadFileName);

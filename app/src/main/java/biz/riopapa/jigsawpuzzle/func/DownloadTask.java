@@ -1,6 +1,7 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadFileName;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadGame;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadPosition;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadSize;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.imageSelAdapter;
@@ -20,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import biz.riopapa.jigsawpuzzle.DownloadCompleteListener;
+import biz.riopapa.jigsawpuzzle.images.ImageStorage;
 import biz.riopapa.jigsawpuzzle.model.JigFile;
 
 public class DownloadTask extends AsyncTask<String, Integer, Long> {
@@ -88,13 +90,19 @@ public class DownloadTask extends AsyncTask<String, Integer, Long> {
             if (jigImage != null) {
                 Bitmap thumb = Bitmap.createScaledBitmap(jigImage,
                         (int) (jigImage.getWidth() / 5f), (int) (jigImage.getHeight() / 5f), true);
-                FileIO.thumbnail2File(thumb, fileName);
-                JigFile jf = jigFiles.get(downloadPosition);
-//                jf.thumbnailMap = thumb;
-                jf.newFlag = true;
-                jigFiles.set(downloadPosition, jf);
-                imageSelAdapter.notifyItemChanged(downloadPosition);
+                FileIO.thumbnail2File(thumb, downloadGame);
+
+                for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
+                    JigFile jf = jigFiles.get(i);
+                    if (jf.game.equals(downloadGame)) {
+                        jf.newFlag = true;
+                        jigFiles.set(downloadPosition, jf);
+                        imageSelAdapter.notifyItemChanged(i);
+                        break;
+                    }
+                }
                 downloadFileName = null;
+                downloadPosition = -1;
             }
         }
 

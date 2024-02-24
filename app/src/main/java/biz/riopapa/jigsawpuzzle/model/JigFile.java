@@ -12,10 +12,6 @@ public class JigFile {
     public int [] percent;    // completed percent
     public boolean newFlag;
     public JigFile() {
-        game = null;
-//        thumbnailMap = null;    // if thumbnailMap is null then should be get from google Drive
-        imageId = null;
-        keywords = null;
         timeStamp = "00";
         latestLvl = -1;
         time = new long[4];

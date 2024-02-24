@@ -65,17 +65,18 @@ public class FileIO {
         File myDir = mContext.getDir(dir, Context.MODE_PRIVATE); //Creating an internal dir;
         File file = new File(myDir, fileName); //Getting a file within the dir.
         // Check if the file exists
-        if (!file.exists())
+        if (!file.exists()) {
             return null;
+        }
         return file;
     }
 
-    // image name : a00, thumbnail name : a00T.jpg
+    // image name : game, thumbnail name : gameT.jpg
     public static void thumbnail2File(Bitmap bitmap, String fileName) {
         // Creating an internal dir;
         File myDir = mContext.getDir(jpgFolder, Context.MODE_PRIVATE);
         // Setting a file within the dir
-        File file = new File(myDir, fileName.substring(0,3) + "T.jpg");
+        File file = new File(myDir, fileName + "T.jpg");
         FileOutputStream os;
         try {
             os = new FileOutputStream(file);
