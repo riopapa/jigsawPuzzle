@@ -12,7 +12,7 @@ public class SetPicSizes {
         ** calculate picOSize, picISize, picHSize, picGap by phoneSize
          */
 
-        gVal.recSize =  (int) (phoneSizeX / fPhoneInchX / ((fPhoneInchX > 3f)? 1.2f:1.7f));
+        gVal.recSize =  (int) (phoneSizeX / fPhoneInchX / ((fPhoneInchX > 3f)? 1.1f:1.6f));
 
         gVal.picOSize = gVal.recSize;
         gVal.picISize = gVal.picOSize * 14 / (14+5+5);
