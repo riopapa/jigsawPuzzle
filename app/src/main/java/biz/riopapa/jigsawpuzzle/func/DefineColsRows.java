@@ -14,11 +14,11 @@ public class DefineColsRows {
     public int col, row;    // return values
 
     public void calc(int level) {
-        int [] sizes = {4, 6, 10, 12};
+        int [] sizes = {2, 5, 7, 9};
         double sz = Math.sqrt(Math.sqrt(currImageWidth * currImageHeight));
         if (currImageWidth > currImageHeight) {
             row = sizes[level];
-            row = (int) Math.sqrt(row * row + sz*(level+1));
+            row = (int) Math.sqrt(row * row + sz*(level+3)) / 2;
             col = row * currImageWidth / currImageHeight + 1;  // one more possible?
             float szH = (float) currImageHeight / (float) (row);
             int col2 = (int) ((float) currImageWidth / szH);
@@ -26,7 +26,7 @@ public class DefineColsRows {
                 col++;
         } else {
             col = sizes[level];
-            col = (int) Math.sqrt(col * col + sz*(level+1));
+            col = (int) Math.sqrt(col * col + sz*(level+3)) / 2;
             row = col * currImageHeight / currImageWidth + 1;  // to avoid over y size
             float szW = (float) currImageWidth / (float) (col);
             int row2 = (int) ((float) currImageHeight / szW);
