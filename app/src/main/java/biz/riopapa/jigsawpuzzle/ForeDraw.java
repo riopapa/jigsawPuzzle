@@ -196,8 +196,8 @@ public class ForeDraw {
                 allLockedMode = 2;
             return;
         }
-        int x = screenX / 7;
-        int y = screenY / 3;
+        int x = screenX * 16 / 100 + rnd.nextInt(6);
+        int y = screenY * 35 / 100 + rnd.nextInt(6);
         Paint paint = new Paint();
         paint.setAlpha(200);
         int idx = congCount % ((allLockedMode == 30) ? congrats.length : jigFinishes.length);

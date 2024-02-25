@@ -70,8 +70,10 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public static int share_backColor = 0;
 
+    // for debug process
     public static boolean debugMode = false;
     public static boolean showCR = false;
+
     public final static long INVALIDATE_INTERVAL = 80;
 
     // Google Drive related variables

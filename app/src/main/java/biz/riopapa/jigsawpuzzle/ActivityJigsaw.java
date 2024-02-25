@@ -50,6 +50,7 @@ import biz.riopapa.jigsawpuzzle.images.JigDone;
 import biz.riopapa.jigsawpuzzle.images.Masks;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.images.ShowThumbnail;
+import biz.riopapa.jigsawpuzzle.model.FloatPiece;
 import biz.riopapa.jigsawpuzzle.model.History;
 
 public class ActivityJigsaw extends Activity {
@@ -66,7 +67,7 @@ public class ActivityJigsaw extends Activity {
     public static JigsawAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
-    public static Bitmap currImageMap, currThumnailMap;
+    public static Bitmap currImageMap;
     public static int currImageWidth, currImageHeight;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;
@@ -270,9 +271,11 @@ public class ActivityJigsaw extends Activity {
             int ar = tmp - ac * 100;
             if (!gVal.jigTables[ac][ar].locked &&
                     ac >= gVal.offsetC && ac < gVal.offsetC + gVal.showMaxX && ar >= gVal.offsetR && ar < gVal.offsetR + gVal.showMaxY) {
-                activeJigs.add(tmp + 10000);
+                if (isNotInFp(ac,ar))
+                    activeJigs.add(tmp + 10000);
             }
         }
+
         jigRecyclerView.setAdapter(activeAdapter);
         Bitmap thumb = showThumbnail.make();
         binding.thumbnail.setImageBitmap(thumb);
@@ -281,6 +284,15 @@ public class ActivityJigsaw extends Activity {
         allLockedMode = 0;
         congCount = 0;
         backBlink = true;
+    }
+
+    boolean isNotInFp(int ac, int ar) {
+        for (int i = 0; i < gVal.fps.size(); i++) {
+            FloatPiece fp = gVal.fps.get(i);
+            if (fp.C == ac && fp.R == ar)
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -346,6 +358,7 @@ public class ActivityJigsaw extends Activity {
     @Override
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
+        new GValGetPut().put(currGameLevel, gVal, this);
         gameMode = ActivityMain.GMode.TO_MAIN;
         if (loopTimer != null) {
             loopTimer.cancel();
