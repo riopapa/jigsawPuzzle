@@ -1,5 +1,6 @@
 package biz.riopapa.jigsawpuzzle.func;
 
+import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_installDate;
@@ -11,9 +12,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedParam {
-    final String params = "params";
+
     public void get (Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(params, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(puzzleFolder, Context.MODE_PRIVATE);
 
         share_installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
         share_showBack = sharedPref.getInt("showBack", 1);
@@ -24,7 +25,7 @@ public class SharedParam {
     }
 
     public void put(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(params, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(puzzleFolder, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putLong("installDate", share_installDate);

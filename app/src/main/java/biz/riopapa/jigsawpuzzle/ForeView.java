@@ -126,8 +126,7 @@ public class ForeView extends View {
                         Log.w("vState", topIdx+"  "+ gVal.fps.get(topIdx).C+" x "+gVal.fps.get(topIdx).R
                             + " xy = "+x+"x"+y);
                         pieceAlign.move();
-                        foreBlink = pieceLock.update(pieceImage);
-
+                        foreBlink = pieceLock.update();
                         foreBlink |= pieceBind.update();
                     } else if (gVal.fps.get(topIdx).anchorId == 0){
                         y -= gVal.picOSize;

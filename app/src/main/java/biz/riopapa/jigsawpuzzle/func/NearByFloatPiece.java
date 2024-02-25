@@ -12,7 +12,7 @@ public class NearByFloatPiece {
      */
     int gapAllowed;
     public NearByFloatPiece() {
-        gapAllowed = gVal.picGap + gVal.picGap;
+        gapAllowed = gVal.picGap * 3 / 2;
     }
     public int isNear(int thisIdx, FloatPiece fpThis) {
 

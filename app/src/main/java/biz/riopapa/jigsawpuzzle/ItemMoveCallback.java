@@ -112,7 +112,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                 reFresh = false;
                 removeFromRecycle();
                 add2FloatingPiece();
-                pieceLock.update(pieceImage);
+                pieceLock.update();
                 pieceBind.update();
                 foreBlink = true;
                 reFresh = true;

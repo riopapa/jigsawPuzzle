@@ -45,7 +45,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
 
-    public static String nowVersion = "00100";
+    public static String nowVersion = "0100";
 
     public static int chosenNumber;
     public static String currGame, currGameLevel;
@@ -86,7 +86,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
-    public static String puzzleFolder = "puzzle";
+    public static String puzzleFolder;
     public static DownloadCompleteListener dListener;
 
     @Override
@@ -106,7 +106,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        puzzleFolder = "V" + nowVersion;
         new SharedParam().get(mContext);
         new PhoneMetrics(this);
 
@@ -192,8 +192,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                         JigFile jf = new JigFile();
                         jf.game = nGame;
                         jf.imageId = imgInfo[1].trim();
-                        jf.timeStamp = imgInfo[2].trim();       // not used now
-                        jf.keywords = imgInfo[3].trim();        // not used now
+//                        jf.timeStamp = imgInfo[2].trim();       // not used now
+//                        jf.keywords = imgInfo[3].trim();        // not used now
                         jigFiles.add(jf);
                         imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
                         newlyAdd = true;
@@ -202,8 +202,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                     JigFile jf = new JigFile();
                     jf.game = nGame;
                     jf.imageId = imgInfo[1].trim();
-                    jf.timeStamp = imgInfo[2].trim();       // not used now
-                    jf.keywords = imgInfo[3].trim();        // not used now
+//                    jf.timeStamp = imgInfo[2].trim();       // not used now
+//                    jf.keywords = imgInfo[3].trim();        // not used now
                     jigFiles.add(jf);
                     imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
                 }

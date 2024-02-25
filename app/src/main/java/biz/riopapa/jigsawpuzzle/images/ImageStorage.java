@@ -10,17 +10,17 @@ import biz.riopapa.jigsawpuzzle.R;
 public class ImageStorage {
 
     int[] images = {
-            R.mipmap._00_alberta,
+            R.mipmap._00_apple_boots,
             R.mipmap._01_bears,
-            R.mipmap._02_horse,
+            R.mipmap._02_horse_yard,
             R.mipmap._03_birds,
             R.mipmap._04_builging,
-            R.mipmap._05_city3,
-            R.mipmap._06_tajimahal,
-            R.mipmap._07_apple_basket,
-            R.mipmap._08_apple_boots,
+            R.mipmap._05_apple_basket,
+            R.mipmap._06_cat_dog,
+            R.mipmap._07_city3,
+            R.mipmap._08_alberta,
             R.mipmap._09_cafe,
-            R.mipmap._10_cat_dog,
+            R.mipmap._10_tajimahal,
             R.mipmap._11_forest_way
     };
 
