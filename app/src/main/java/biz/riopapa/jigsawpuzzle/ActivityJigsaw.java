@@ -82,6 +82,8 @@ public class ActivityJigsaw extends Activity {
     public static int allLockedMode = 0;    // 10: just all locked, 20: after all locked 99: completed
     public static int congCount = 0;
 
+    public static int moveFrom, moveTo;
+
     public static boolean moving, reDrawOLine;
 
     int [] eyes = {R.drawable.z_eye_open, R.drawable.z_eye_half, R.drawable.z_eye_closed};
@@ -117,6 +119,7 @@ public class ActivityJigsaw extends Activity {
         foreView.init(binding, pieceImage);
         backBlink = true;
         foreBlink = true;
+        moveFrom = -1; moveTo = -1;
 
         showThumbnail = new ShowThumbnail();
 

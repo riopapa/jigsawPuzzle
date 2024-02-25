@@ -17,7 +17,6 @@ import java.util.List;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
 
-
 public class HistoryGetPut {
 
     final String hist = "history";

@@ -89,7 +89,6 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
         return activeJigs.size();
     }
 
-
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {

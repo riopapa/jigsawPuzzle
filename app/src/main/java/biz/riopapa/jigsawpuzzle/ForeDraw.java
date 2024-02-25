@@ -118,7 +118,7 @@ public class ForeDraw {
             }
         }
         if (allLockedMode == 10  && lockedCount == gVal.showMaxX * gVal.showMaxY) {
-            congCount = jigFinishes.length * 4;
+            congCount = jigFinishes.length * 3;
             allLockedMode = 20;
             int locked = 0;
             for (int ac = 0; ac < gVal.colNbr; ac++) {
@@ -130,11 +130,10 @@ public class ForeDraw {
                 }
             }
             if (locked == gVal.colNbr * gVal.rowNbr) {
-                congCount = congrats.length * 4;
-                allLockedMode = 30;     // all puzzles are locked
-                new GValGetPut().put(currGameLevel, gVal, mContext);
+                congCount = congrats.length * 3;
                 save_History();
             }
+            new GValGetPut().put(currGameLevel, gVal, mContext);
             foreBlink = true;
         }
     }
