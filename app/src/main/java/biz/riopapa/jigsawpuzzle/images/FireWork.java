@@ -17,30 +17,17 @@ public class FireWork {
 
         // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
 
-        int[] maps = {R.mipmap.zfirework27, R.mipmap.zfirework26, // R.mipmap.zfirework25,
-//                R.mipmap.zfirework24,
-                R.mipmap.zfirework23, // R.mipmap.zfirework22,
-//                R.mipmap.zfirework21,
-                R.mipmap.zfirework20, // R.mipmap.zfirework19,
-//                R.mipmap.zfirework18,
-                R.mipmap.zfirework17, // R.mipmap.zfirework16,
-//                R.mipmap.zfirework15,
-                R.mipmap.zfirework14, // R.mipmap.zfirework13,
-//                R.mipmap.zfirework12,
-                R.mipmap.zfirework11, // R.mipmap.zfirework10,
-//                R.mipmap.zfirework09,
-                R.mipmap.zfirework08, // R.mipmap.zfirework07,
-                R.mipmap.zfirework06, // R.mipmap.zfirewick05, R.mipmap.zfirewick04,
-                R.mipmap.zfirework03,
-//                R.mipmap.zfirework02,
-                R.mipmap.zfirework01,
-                R.mipmap.zfirework00
+        int[] maps = {R.mipmap.zfirework27, R.mipmap.zfirework25, R.mipmap.zfirework23,
+                R.mipmap.zfirework21, R.mipmap.zfirework19, R.mipmap.zfirework17,
+                R.mipmap.zfirework15, R.mipmap.zfirework13, R.mipmap.zfirework11,
+                R.mipmap.zfirework09, R.mipmap.zfirework07, R.mipmap.zfirework05,
+                R.mipmap.zfirework03, R.mipmap.zfirework01, R.mipmap.zfirework00
         };
 
         Bitmap[] fireMaps = new Bitmap[maps.length];
 
         final float brightContrast  = 1;
-        final int BrightBrightness = 200;  // positive is bright
+        final int BrightBrightness = 170;  // positive is bright
         ColorMatrix brightMatrix = new ColorMatrix(new float[]
                 {
                         brightContrast, 0, 0, 0, BrightBrightness,  // Red
