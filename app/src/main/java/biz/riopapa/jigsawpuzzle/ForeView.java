@@ -101,8 +101,8 @@ public class ForeView extends View {
                         new MoveThisOnTop(topIdx);
                         topIdx = gVal.fps.size() - 1;
                     }
-                    FloatPiece fp = gVal.fps.get(topIdx);
-                    Log.w("ACTION_DOWN", topIdx+" fp Selected "+fp.C+" "+fp.R);
+//                    FloatPiece fp = gVal.fps.get(topIdx);
+//                    Log.w("ACTION_DOWN", topIdx+" fp Selected "+fp.C+" "+fp.R);
                 }
                 break;
 
@@ -112,7 +112,7 @@ public class ForeView extends View {
                 if ((Math.abs(x - xOld) > MOVE_ALLOWANCE ||
                         Math.abs(y - yOld) > MOVE_ALLOWANCE) &&
                         topIdx != -1) {
-                    Log.w("Action", "is idx="+topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
+//                    Log.w("Action", "is idx="+topIdx + " Moving "+x+"x"+y+" fps Sz="+gVal.fps.size());
                     if (!(gVal.fps.get(topIdx).anchorId == 0) && y > screenBottom - gVal.picISize)
                         break;
                     xOld = x; yOld = y;

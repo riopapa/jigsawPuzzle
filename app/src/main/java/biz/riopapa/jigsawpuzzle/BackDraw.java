@@ -108,8 +108,13 @@ public class BackDraw {
                 final int ac = c + gVal.offsetC;
                 final int ar = r + gVal.offsetR;
                 if (gVal.jigTables[ac][ar].locked) {
-                    if (reDrawOLine)
+                    if (reDrawOLine) {
+                        if (jigPic[ac][ar] == null)
+                            jigPic[ac][ar] = pieceImage.makePic(ac, ar);
+                        if (jigOLine[ac][ar] == null)
+                            jigOLine[ac][ar] = pieceImage.makeOline(jigPic[ac][ar], ac, ar);
                         jigLock[ac][ar] = pieceImage.makeLock(jigPic[ac][ar], jigOLine[ac][ar], ac, ar);
+                    }
                     canvas.drawBitmap(jigLock[ac][ar],   // later jigShadow
                             gVal.baseX + c * gVal.picISize,
                             gVal.baseY + r * gVal.picISize,

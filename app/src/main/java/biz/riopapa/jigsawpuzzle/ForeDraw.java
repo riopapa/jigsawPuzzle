@@ -130,9 +130,10 @@ public class ForeDraw {
                 }
             }
             if (locked == gVal.colNbr * gVal.rowNbr) {
+                allLockedMode = 30;
                 congCount = congrats.length * 3;
-                save_History();
             }
+            save_History();
             new GValGetPut().put(currGameLevel, gVal, mContext);
             foreBlink = true;
         }

@@ -166,14 +166,14 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
-        binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
-        binding.sound.setOnClickListener(v -> {
-            share_sound = !share_sound;
-            binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
-            save_params();
-        });
+//        binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
+//        binding.sound.setOnClickListener(v -> {
+//            share_sound = !share_sound;
+//            binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
+//            save_params();
+//        });
 
-        binding.debugRight.setOnClickListener(v -> new DumpData());
+//        binding.debugRight.setOnClickListener(v -> new DumpData());
 
         int[] backColors = {ContextCompat.getColor(mContext, R.color.backColor0),
                 ContextCompat.getColor(mContext, R.color.backColor1),
@@ -252,7 +252,7 @@ public class ActivityJigsaw extends Activity {
 
     }
     // build recycler from all pieces within in leftC, rightC, topR, bottomR
-    public void copy2RecyclerPieces() {
+    void copy2RecyclerPieces() {
 
         binding.moveLeft.setVisibility ((gVal.offsetC == 0) ? View.INVISIBLE: View.VISIBLE);
         binding.moveRight.setVisibility ((gVal.offsetC == gVal.colNbr-gVal.showMaxX) ? View.INVISIBLE: View.VISIBLE);
@@ -361,6 +361,7 @@ public class ActivityJigsaw extends Activity {
     @Override
     public void onBackPressed() {
         Log.w("jigsaw","jigsaw onBackPressed");
+        new SharedParam().put(this);
         new GValGetPut().put(currGameLevel, gVal, this);
         gameMode = ActivityMain.GMode.TO_MAIN;
         if (loopTimer != null) {
