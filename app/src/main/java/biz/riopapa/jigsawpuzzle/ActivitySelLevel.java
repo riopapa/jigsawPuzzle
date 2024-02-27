@@ -31,31 +31,36 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivitySelLevelBinding;
 import biz.riopapa.jigsawpuzzle.func.CalcImageColor;
 import biz.riopapa.jigsawpuzzle.func.ClearGValValues;
 import biz.riopapa.jigsawpuzzle.func.DefineColsRows;
+import biz.riopapa.jigsawpuzzle.func.DefineFullRecyclePieces;
+import biz.riopapa.jigsawpuzzle.func.DefineTableWalls;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.SetPicSizes;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 import biz.riopapa.jigsawpuzzle.model.GVal;
 import biz.riopapa.jigsawpuzzle.model.History;
+import biz.riopapa.jigsawpuzzle.model.JigTable;
 
 public class ActivitySelLevel extends AppCompatActivity {
 
     ActivitySelLevelBinding binding;
     AlertDialog alertDialog;
     Context context;
-    DefineColsRows defineColsRows;
     PieceImage pieceImage;
+    int imgFullWidth, imgFullHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,8 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
+        imgFullWidth = currImageMap.getWidth();
+        imgFullHeight = currImageMap.getHeight();
     }
 
     @Override
@@ -82,7 +89,6 @@ public class ActivitySelLevel extends AppCompatActivity {
             finish();
             return;
         }
-        defineColsRows = new DefineColsRows();
 
         new CalcImageColor();
 
@@ -103,27 +109,37 @@ public class ActivitySelLevel extends AppCompatActivity {
         }
 
         if (history.latestLvl != -1)
-            getGVal(history.latestLvl, defineColsRows);
+            getGVal(history.latestLvl);
         else
-            getGVal(2, defineColsRows);
+            getGVal(2);
 
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigWhite = new Bitmap[gVal.colNbr][gVal.rowNbr];
 
-        TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0f, -500f);
+        binding.selImage.setImageBitmap(currImageMap);
+        binding.selImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        new Thread(this::select_level).start();
+    }
+
+    void select_level() {
+
+        int upDown;
+        TranslateAnimation animation;
+        if (imgFullWidth < imgFullHeight) {
+            upDown = imgFullHeight / 8;
+            animation = new TranslateAnimation(0.0f, 0.0f, upDown, -upDown);
+        } else {
+            upDown = imgFullWidth / 12;
+            animation = new TranslateAnimation(-upDown, upDown, 0f, -0f);
+        }
         // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
         animation.setDuration(5000); // animation duration
         animation.setRepeatCount(-1); // animation repeat count -1 means infinite
         animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
         animation.setFillAfter(false);
         binding.selImage.startAnimation(animation);//your_view for mine is imageView
-        binding.selImage.setImageBitmap(currImageMap);
-        new Thread(this::select_level).start();
-    }
-
-    void select_level() {
 
         this.runOnUiThread(() -> {
 
@@ -161,9 +177,9 @@ public class ActivitySelLevel extends AppCompatActivity {
         String s;
         TextView tv;
         final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
-        defineColsRows.calc(lvl);
+        int [] colRow = new DefineColsRows().calc(lvl, imgFullWidth, imgFullHeight);
         tv = dialogView.findViewById(infoId);
-        s  = levelNames[lvl] + "\n" + defineColsRows.col +"x"+ defineColsRows.row;
+        s  = levelNames[lvl] + "\n" + colRow[0] +"x"+ colRow[1];
         tv.setText(s);
 
         tv = dialogView.findViewById(activeId);
@@ -192,9 +208,8 @@ public class ActivitySelLevel extends AppCompatActivity {
         gameMode = ActivityMain.GMode.STARTED; // target Image, level has been set
         int level = Integer.parseInt(view.getTag().toString());
         // if level > 9 then it means play new game
-        getGVal(level, defineColsRows);
+        getGVal(level);
         pieceImage = null;
-        defineColsRows = null;
 
         jigPic = new Bitmap[gVal.colNbr][gVal.rowNbr];
         jigOLine = new Bitmap[gVal.colNbr][gVal.rowNbr];
@@ -210,7 +225,6 @@ public class ActivitySelLevel extends AppCompatActivity {
     private void go_back(View view) {
         alertDialog.dismiss();
         pieceImage = null;
-        defineColsRows = null;
         jigPic = null;
         jigOLine = null;
         jigWhite = null;
@@ -219,7 +233,7 @@ public class ActivitySelLevel extends AppCompatActivity {
         finish();
     }
 
-    private void getGVal(int level, DefineColsRows defineColsRows) {
+    private void getGVal(int level) {
         currLevel = (level > 9) ? level - 10 : level;
         currGameLevel = currGame + currLevel;
         gVal = new GValGetPut().get(currGameLevel, this);
@@ -227,11 +241,39 @@ public class ActivitySelLevel extends AppCompatActivity {
             // over 9 means clear and new game
             Log.w("gVal","newly defined "+currGameLevel);
             gVal = new GVal();
-            defineColsRows.calc(currLevel);
-            new GValGetPut().set(gVal, defineColsRows.col, defineColsRows.row);
+            set(gVal);
             new SetPicSizes(screenX * (14 - currLevel) / 14);
             new ClearGValValues();
         }
+    }
+
+    void set(GVal gVal) {
+
+        gVal.game = currGame;
+        gVal.version = nowVersion;
+        gVal.level =  currLevel;
+        gVal.imgFullWidth = imgFullWidth;
+        gVal.imgFullHeight = imgFullHeight;
+        gVal.time = System.currentTimeMillis();
+        gVal.fps = new ArrayList<>();
+        int [] colRow = new DefineColsRows().calc(currLevel, imgFullWidth, imgFullHeight);
+        gVal.colNbr = colRow[0];
+        gVal.rowNbr = colRow[1];
+        new SetPicSizes(screenX * (16 - currLevel) / 16);
+
+        float szW = (float) gVal.imgFullWidth / (float) (gVal.colNbr +1);
+        float szH = (float) gVal.imgFullHeight / (float) (gVal.rowNbr +1);
+        gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
+        gVal.imgGapSize = gVal.imgInSize * 5 / 14;
+        gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
+        currImageMap = Bitmap.createBitmap(currImageMap, 0, 0,
+                gVal.imgInSize * gVal.colNbr + gVal.imgGapSize + gVal.imgGapSize,
+                gVal.imgInSize * gVal.rowNbr + gVal.imgGapSize + gVal.imgGapSize);
+        // refine map size
+        gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
+        new DefineTableWalls(gVal.jigTables);
+        new ClearGValValues();
+        new DefineFullRecyclePieces();
     }
 
 }

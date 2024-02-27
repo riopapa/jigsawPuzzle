@@ -9,7 +9,7 @@ public class GVal {
     public String game;
     public  int level;
     public long time; // last saved time
-    public int imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
+    public int imgFullWidth, imgFullHeight, imgOutSize, imgInSize, imgGapSize;  // real pieceImage size
 
     public int recSize, picOSize, picISize, picGap, picHSize;
     // recycler size, at ForeView size;

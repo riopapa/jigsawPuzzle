@@ -1,6 +1,7 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.nowVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_installDate;
@@ -13,19 +14,20 @@ import android.content.SharedPreferences;
 
 public class SharedParam {
 
+    final String shared = "shared";
     public void get (Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(puzzleFolder, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(shared, Context.MODE_PRIVATE);
 
         share_installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
         share_showBack = sharedPref.getInt("showBack", 1);
         share_vibrate = sharedPref.getBoolean("vibrate", true);
         share_sound = sharedPref.getBoolean("sound", true);
         share_backColor = sharedPref.getInt("backColor", 0);
-        share_appVersion = sharedPref.getString("appVersion", "none");
+        share_appVersion = sharedPref.getString("appVersion", nowVersion);
     }
 
     public void put(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(puzzleFolder, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(shared, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putLong("installDate", share_installDate);

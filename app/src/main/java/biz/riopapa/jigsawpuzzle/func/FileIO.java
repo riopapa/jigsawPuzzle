@@ -1,6 +1,6 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 
 import android.content.Context;
@@ -72,7 +72,7 @@ public class FileIO {
     // image name : game, thumbnail name : gameT.jpg
     public static void saveThumbnail(Bitmap bitmap, String fileName) {
         // Creating an internal dir;
-        File myDir = mContext.getDir(puzzleFolder, Context.MODE_PRIVATE);
+        File myDir = mContext.getDir(jpgFolder, Context.MODE_PRIVATE);
         // Setting a file within the dir
         File file = new File(myDir, fileName + "T.jpg");
         FileOutputStream os;

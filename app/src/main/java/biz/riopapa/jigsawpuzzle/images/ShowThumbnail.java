@@ -1,9 +1,7 @@
 package biz.riopapa.jigsawpuzzle.images;
 
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import android.graphics.Bitmap;
@@ -19,19 +17,21 @@ public class ShowThumbnail {
     static Bitmap thumb;
     public ShowThumbnail() {
     }
-    public Bitmap make() {
+    public Bitmap make(Bitmap iMap) {
 
-        if (currImageHeight > currImageWidth) {
+        int iWidth = iMap.getWidth();
+        int iHeight = iMap.getHeight();
+        if (iHeight > iWidth) {
             thumbHeight = 800f;
-            thumbWidth = thumbHeight * currImageWidth / currImageHeight;
+            thumbWidth = thumbHeight * iWidth / iHeight;
             oneSize = thumbWidth / ((float) gVal.colNbr + 0.5f);
         } else {
             thumbWidth = 1000f;
-            thumbHeight = thumbWidth * currImageHeight / currImageWidth;
+            thumbHeight = thumbWidth * iHeight / iWidth;
             oneSize = thumbHeight / ((float) gVal.rowNbr + 0.5f);
         }
         gap = oneSize * 5/ 24;
-        thumb = Bitmap.createScaledBitmap(currImageMap, (int) thumbWidth, (int) thumbHeight, true);
+        thumb = Bitmap.createScaledBitmap(iMap, (int) thumbWidth, (int) thumbHeight, true);
         rectWidth = oneSize * (float) gVal.showMaxX;
         rectHeight = oneSize * (float) gVal.showMaxY;
         xBeg = oneSize * (float) gVal.offsetC + gap;

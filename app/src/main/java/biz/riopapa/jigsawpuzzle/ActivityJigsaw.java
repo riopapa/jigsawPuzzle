@@ -68,7 +68,6 @@ public class ActivityJigsaw extends Activity {
     public static ArrayList<Integer> activeJigs;
 
     public static Bitmap currImageMap;
-    public static int currImageWidth, currImageHeight;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;
     public static Bitmap[][] srcMaskMaps, outMaskMaps;
@@ -235,12 +234,6 @@ public class ActivityJigsaw extends Activity {
                         chkR = 0;
                     }
                 }
-//                if (gVal.jigTables[chkC][chkR].locked) {
-//                    if (jigPic[chkC][chkR] == null)
-//                        jigPic[chkC][chkR] = pieceImage.makePic(chkC, chkR);
-//                    jigOLine[chkC][chkR] = pieceImage.makeOline(jigPic[chkC][chkR], chkC, chkR);
-//                    backView.invalidate();
-//                }
                 if (backBlink)
                     backView.invalidate();
                 if (foreBlink)
@@ -280,8 +273,7 @@ public class ActivityJigsaw extends Activity {
         }
 
         jigRecyclerView.setAdapter(activeAdapter);
-        Bitmap thumb = showThumbnail.make();
-        binding.thumbnail.setImageBitmap(thumb);
+        binding.thumbnail.setImageBitmap(showThumbnail.make(currImageMap));
         binding.layoutJigsaw.setAlpha(1f);
         binding.layoutJigsaw.invalidate();
         allLockedMode = 0;
@@ -300,16 +292,18 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     protected void onPause() {
+        if (loopTimer != null) {
+            loopTimer.cancel();
+            loopTimer = null;
+        }
         Log.w("jigsaw","jigsaw onPause "+ gameMode);
-
-//        invalidateTimer.cancel();
+        releaseAll();
         if (gameMode != ActivityMain.GMode.TO_MAIN)
             gameMode = ActivityMain.GMode.PAUSED;
-        new GValGetPut().put(currGameLevel, gVal, this);
 
+        new GValGetPut().put(currGameLevel, gVal, this);
         save_History();
 
-        releaseAll();
         System.gc();
         if (gameMode == ActivityMain.GMode.PAUSED)
             finish();
@@ -360,15 +354,16 @@ public class ActivityJigsaw extends Activity {
 
     @Override
     public void onBackPressed() {
-        Log.w("jigsaw","jigsaw onBackPressed");
-        new SharedParam().put(this);
-        new GValGetPut().put(currGameLevel, gVal, this);
-        gameMode = ActivityMain.GMode.TO_MAIN;
+        finish();
         if (loopTimer != null) {
             loopTimer.cancel();
             loopTimer = null;
         }
-        finish();
+        Log.w("jigsaw","jigsaw onBackPressed");
+        new SharedParam().put(this);
+        new GValGetPut().put(currGameLevel, gVal, this);
+        releaseAll();
+        gameMode = ActivityMain.GMode.TO_MAIN;
         super.onBackPressed();
     }
 

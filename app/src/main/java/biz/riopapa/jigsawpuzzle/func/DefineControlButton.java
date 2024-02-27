@@ -1,7 +1,5 @@
 package biz.riopapa.jigsawpuzzle.func;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
@@ -12,7 +10,7 @@ public class DefineControlButton {
         int sizeHeight = gVal.picISize * 16 / 10;
         if (sizeHeight > gVal.baseY * 5 / 10)
             sizeHeight = gVal.baseY * 5 / 10;
-        int sizeWidth = sizeHeight * currImageWidth / currImageHeight;
+        int sizeWidth = sizeHeight * gVal.imgFullWidth / gVal.imgFullHeight;
 
         int gap = (sizeHeight > sizeWidth) ? sizeWidth /3: sizeHeight / 3;
 

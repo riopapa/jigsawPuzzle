@@ -45,9 +45,9 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
 
-    public static String nowVersion = "0100";
+    public static String nowVersion = "V0100";
 
-    public static int chosenNumber;
+    public static int currJpgNumber;
     public static String currGame, currGameLevel;
     public static int currLevel;
     public static GVal gVal;
@@ -59,15 +59,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public static float fPhoneInchX, fPhoneInchY;
 
-    /*
-     ** Shared Values
-     */
+    // Shared Values
     public static boolean share_vibrate = true;
     public static long share_installDate = 0;
     public static int share_showBack = 0;
     public static boolean share_sound = false;
     public static String share_appVersion = "";
-
     public static int share_backColor = 0;
 
     // for debug process
@@ -86,7 +83,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
-    public static String puzzleFolder;
+    public static String jpgFolder;
     public static DownloadCompleteListener dListener;
 
     @Override
@@ -106,7 +103,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mContext = getApplicationContext();
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        puzzleFolder = "V" + nowVersion;
+        jpgFolder = "jpgs";
         new SharedParam().get(mContext);
         new PhoneMetrics(this);
 
@@ -119,7 +116,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
          */
         downloadFileName = imageListOnDrive;
         downloadPosition = -1;
-        DownloadTask task = new DownloadTask(dListener, imageListId, puzzleFolder,
+        DownloadTask task = new DownloadTask(dListener, imageListId, jpgFolder,
                 downloadFileName, ".txt");
         task.execute();
     }
@@ -153,7 +150,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         imageRecyclers.setLayoutManager(staggeredGridLayoutManager);
 
         if (gameMode == GMode.TO_MAIN) {
-            imageSelAdapter.notifyItemChanged(chosenNumber);
+            imageSelAdapter.notifyItemChanged(currJpgNumber);
         }
         gameMode = GMode.SEL_LEVEL;
 
@@ -174,7 +171,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         if (downloadFileName != null && downloadFileName.equals(imageListOnDrive)) {
             Log.w("download","List file process");
-            String str = FileIO.readTextFile(puzzleFolder, imageListOnDrive+".txt"); // no dir for list
+            String str = FileIO.readTextFile(jpgFolder, imageListOnDrive+".txt"); // no dir for list
             String[] ss = str.split("\n");
             boolean newlyAdd = false;
             for (int i = 1; i < ss.length; i++) {
@@ -183,7 +180,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 if (isInJpgTable(nGame))
                     continue;
 
-                if (FileIO.existJPGFile(puzzleFolder, nGame + ".jpg") == null) {
+                if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
 
                     long imgDays = Long.parseLong(imgInfo[2].trim());
                     long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
@@ -227,12 +224,12 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
 //            if (jf.thumbnailMap == null &&
-            if (FileIO.existJPGFile(puzzleFolder, jf.game + ".jpg") == null) {
+            if (FileIO.existJPGFile(jpgFolder, jf.game + ".jpg") == null) {
                 downloadGame = jf.game;
                 downloadFileName = downloadGame;
                 downloadPosition = i;
                 Log.w("pos=" + i, "downloadNewJpg " + downloadFileName);
-                DownloadTask task = new DownloadTask(this, jf.imageId, puzzleFolder,
+                DownloadTask task = new DownloadTask(this, jf.imageId, jpgFolder,
                         downloadFileName, ".jpg");
                 task.execute();
                 return;

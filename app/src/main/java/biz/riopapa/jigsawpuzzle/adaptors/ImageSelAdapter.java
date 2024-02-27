@@ -1,17 +1,15 @@
 package biz.riopapa.jigsawpuzzle.adaptors;
 
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageHeight;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageWidth;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.chosenNumber;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGame;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.currJpgNumber;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.dListener;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.downloadPosition;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gameMode;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.histories;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.jigFiles;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.puzzleFolder;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.jpgFolder;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 
@@ -67,21 +65,18 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             iVImage.setOnClickListener(view -> {
 
                 gameMode = ActivityMain.GMode.SEL_LEVEL;
-                chosenNumber = getBindingAdapterPosition();
-                jf = jigFiles.get(chosenNumber);
+                currJpgNumber = getBindingAdapterPosition();
+                jf = jigFiles.get(currJpgNumber);
                 if (jf.game.startsWith("_"))
-                    currImageMap = new ImageStorage().getFullMap(chosenNumber);
+                    currImageMap = new ImageStorage().getFullMap(currJpgNumber);
                 else
-                    currImageMap = FileIO.getJPGFile(puzzleFolder, jf.game+".jpg");
+                    currImageMap = FileIO.getJPGFile(jpgFolder, jf.game+".jpg");
 
                 if (currImageMap == null) {
-                    DownloadTask task = new DownloadTask(dListener, jf.imageId, puzzleFolder,
+                    DownloadTask task = new DownloadTask(dListener, jf.imageId, jpgFolder,
                             jf.game, ".jpg");
                     task.execute();
                 } else {
-                    currImageWidth = currImageMap.getWidth();
-                    currImageHeight = currImageMap.getHeight();
-
                     currGame = itemView.getTag().toString();
                     ImageView imageView = iVImage.getRootView().findViewById(R.id.chosen_image);
                     imageView.setVisibility(View.VISIBLE);
@@ -147,7 +142,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
             thumbnailMap = getThumbNailBitmap(jf);
         if (downloadPosition == -1 && thumbnailMap.equals(zigPuzzle)) {
             Log.w("onBindViewHolder "+position,"Download in adaptor "+jf.game);
-            DownloadTask task = new DownloadTask(dListener, jf.imageId, puzzleFolder,
+            DownloadTask task = new DownloadTask(dListener, jf.imageId, jpgFolder,
                     jf.game, ".jpg");
             task.execute();
         }
@@ -194,7 +189,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
         Bitmap tMap;
         String tName = jf.game + "T.jpg";
-        tMap = FileIO.getJPGFile(puzzleFolder, tName);
+        tMap = FileIO.getJPGFile(jpgFolder, tName);
         if (tMap != null) {
             if (jf.latestLvl == -1 && !tName.startsWith("_"))
                 return makeDark.make(tMap);

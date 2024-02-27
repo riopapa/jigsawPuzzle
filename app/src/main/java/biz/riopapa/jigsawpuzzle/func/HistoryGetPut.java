@@ -56,10 +56,11 @@ public class HistoryGetPut {
             String[] list = prefsDir.list();
             if (list != null) {
                 for (String s : list) {
-                    if (s.startsWith("game_")) {
-                        GVal gval = gValGetPut.get(s.substring(5, s.length() - 4), context);
+                    if (s.startsWith("g_")) {
+                        String gameId = s.substring(2, s.length() - 4); // g_ xxxx .xml
+                        GVal gval = gValGetPut.get(gameId, context);
                         if (gval != null && gval.version.equals(nowVersion))
-                            add2History(s.substring(5, 9), gval);
+                            add2History(gameId, gval);
                     }
                 }
             }

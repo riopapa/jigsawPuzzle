@@ -120,8 +120,8 @@ public class PieceImage {
         JigTable jig = gVal.jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(currImageMap,
                 col * orgSizeIn, row * orgSizeIn, orgSizeOut, orgSizeOut, null, false);
-        Bitmap mask = maskMerge(srcMaskMaps[0][jig.lType], srcMaskMaps[1][jig.rType],
-                srcMaskMaps[2][jig.uType], srcMaskMaps[3][jig.dType]);
+        Bitmap mask = maskMerge(srcMaskMaps[0][jig.le], srcMaskMaps[1][jig.ri],
+                srcMaskMaps[2][jig.up], srcMaskMaps[3][jig.dn]);
         Bitmap src = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(src);
         canvas.drawBitmap(orgPiece, 0, 0, null);
@@ -146,8 +146,8 @@ public class PieceImage {
         JigTable jt = gVal.jigTables[col][row];
         shadowSz = outLineSz;
         mask = maskMerge(
-                outMaskMaps[0][jt.lType], outMaskMaps[1][jt.rType],
-                outMaskMaps[2][jt.uType], outMaskMaps[3][jt.dType]);
+                outMaskMaps[0][jt.le], outMaskMaps[1][jt.ri],
+                outMaskMaps[2][jt.up], outMaskMaps[3][jt.dn]);
         maskSmall = Bitmap.createScaledBitmap(mask,
                 gVal.picOSize - shadowSz, gVal.picOSize - shadowSz, true);
         picSmall = Bitmap.createScaledBitmap(pic,
