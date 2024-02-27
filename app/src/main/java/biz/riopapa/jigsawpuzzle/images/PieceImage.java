@@ -28,9 +28,9 @@ public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
     Paint pNORM, pIN, pOUT, pCUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
-    int shadowSize, outLineSz, shadowSz;
+    int blockHeight, outLineSz;
     Bitmap mask;
-    Bitmap maskSmall, picSmall, mapLocked, mapUnLocked;
+    Bitmap maskScale, picSmall, mapLocked, mapUnLocked;
     Bitmap part_up, part_dn, part_le, part_ri;
     Canvas canvasUn, canvasLk;
     Drawable2bitmap dMap;
@@ -43,7 +43,6 @@ public class PieceImage {
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
         outLineSz = gVal.picOSize / 60;
-        shadowSz = outLineSz/2;
 
         pNORM = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -91,7 +90,7 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        shadowSize = gVal.picOSize / 80;
+        blockHeight = gVal.picOSize / 50;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
         matrix = new Matrix();
@@ -144,20 +143,17 @@ public class PieceImage {
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
-        shadowSz = outLineSz;
         mask = maskMerge(
                 outMaskMaps[0][jt.le], outMaskMaps[1][jt.ri],
                 outMaskMaps[2][jt.up], outMaskMaps[3][jt.dn]);
-        maskSmall = Bitmap.createScaledBitmap(mask,
-                gVal.picOSize - shadowSz, gVal.picOSize - shadowSz, true);
+        maskScale = Bitmap.createScaledBitmap(mask, gVal.picOSize, gVal.picOSize, true);
         picSmall = Bitmap.createScaledBitmap(pic,
-                gVal.picOSize- shadowSz, gVal.picOSize - shadowSz, true);
+                gVal.picOSize- outLineSz, gVal.picOSize - outLineSz, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskSmall, shadowSize+ shadowSz, shadowSize+ shadowSz, pShadowTop);
-        canvas.drawBitmap(maskSmall, shadowSz /2f, shadowSz /2f, (jt.locked) ? pLockedATop : pOutATop);
-        Matrix matrix = new Matrix();
-        canvas.drawBitmap(picSmall, matrix, pOutLine);
+        canvas.drawBitmap(maskScale, blockHeight + outLineSz, blockHeight + outLineSz, pShadowTop);
+        canvas.drawBitmap(maskScale, 0, 0, (jt.locked) ? pLockedATop : pOutATop);
+        canvas.drawBitmap(picSmall, outLineSz, outLineSz, pOutLine);
         return outMap;
     }
 
@@ -170,8 +166,6 @@ public class PieceImage {
 
         if (lockL && lockR && lockU && lockD)
             return pic;
-
-        shadowSz = outLineSz;
 
         mask = maskMerge((lockL) ? part_le : null, (lockR) ? part_ri : null,
                 (lockU) ? part_up : null, (lockD) ? part_dn : null);
