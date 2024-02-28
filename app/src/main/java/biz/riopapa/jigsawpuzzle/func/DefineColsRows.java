@@ -16,19 +16,20 @@ public class DefineColsRows {
         if (imageWidth > imageHeight) {
             row = sizes[level];
             row = (int) Math.sqrt(row * row + sz*(level+2)) / 2;
-            col = row * imageWidth / imageHeight + 1;  // one more possible?
-            float szH = (float) imageHeight / (float) (row);
-            int col2 = (int) ((float) imageWidth / szH);
-            if (col2 > col + 2)
-                col++;
+            int inner = imageHeight /(row+1);
+            int gap = inner * 5 / 14;
+            col = imageWidth / inner;
+            while (col * inner + gap + gap + 4 > imageWidth)
+                col--;
+
         } else {
             col = sizes[level];
             col = (int) Math.sqrt(col * col + sz*(level+2)) / 2;
-            row = col * imageHeight / imageWidth + 1;  // to avoid over y size
-            float szW = (float) imageWidth / (float) (col);
-            int row2 = (int) ((float) imageHeight / szW);
-            if (row2 > row + 2)
-                row++;
+            int inner = imageWidth /(col+1);
+            int gap = inner * 5 / 14;
+            row = imageHeight / inner;
+            while (row * inner + gap + gap + 4 > imageHeight)
+                row--;
         }
         int[] colRow = {col, row};;
         return colRow;

@@ -75,8 +75,6 @@ public class ActivitySelLevel extends AppCompatActivity {
 
         binding = ActivitySelLevelBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
-        imgFullWidth = currImageMap.getWidth();
-        imgFullHeight = currImageMap.getHeight();
     }
 
     @Override
@@ -89,6 +87,8 @@ public class ActivitySelLevel extends AppCompatActivity {
             finish();
             return;
         }
+        imgFullWidth = currImageMap.getWidth();
+        imgFullHeight = currImageMap.getHeight();
 
         new CalcImageColor();
 
@@ -261,15 +261,11 @@ public class ActivitySelLevel extends AppCompatActivity {
         gVal.rowNbr = colRow[1];
         new SetPicSizes(screenX * (16 - currLevel) / 16);
 
-        float szW = (float) gVal.imgFullWidth / (float) (gVal.colNbr +1);
-        float szH = (float) gVal.imgFullHeight / (float) (gVal.rowNbr +1);
+        float szW = (float) gVal.imgFullWidth / (float) (gVal.colNbr + 1);
+        float szH = (float) gVal.imgFullHeight / (float) (gVal.rowNbr + 1);
         gVal.imgInSize = (szH > szW) ? (int) szW : (int) szH;
         gVal.imgGapSize = gVal.imgInSize * 5 / 14;
         gVal.imgOutSize = gVal.imgInSize + gVal.imgGapSize + gVal.imgGapSize;
-        currImageMap = Bitmap.createBitmap(currImageMap, 0, 0,
-                gVal.imgInSize * gVal.colNbr + gVal.imgGapSize + gVal.imgGapSize,
-                gVal.imgInSize * gVal.rowNbr + gVal.imgGapSize + gVal.imgGapSize);
-        // refine map size
         gVal.jigTables = new JigTable[gVal.colNbr][gVal.rowNbr];
         new DefineTableWalls(gVal.jigTables);
         new ClearGValValues();

@@ -20,6 +20,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
+import android.util.Log;
 
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.model.JigTable;
@@ -28,7 +29,7 @@ public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
     Paint pNORM, pIN, pOUT, pCUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
-    int blockHeight, outLineSz;
+    int darkSz, outLineSz;
     Bitmap mask;
     Bitmap maskScale, picSmall, mapLocked, mapUnLocked;
     Bitmap part_up, part_dn, part_le, part_ri;
@@ -42,7 +43,8 @@ public class PieceImage {
         this.context = context;
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
-        outLineSz = gVal.picOSize / 60;
+        outLineSz = gVal.picOSize / 50;
+        darkSz = gVal.picOSize / 60;
 
         pNORM = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -90,7 +92,6 @@ public class PieceImage {
 
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
-        blockHeight = gVal.picOSize / 50;
         pShadowTop = new Paint();
         pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
         matrix = new Matrix();
@@ -151,7 +152,7 @@ public class PieceImage {
                 gVal.picOSize- outLineSz, gVal.picOSize - outLineSz, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
-        canvas.drawBitmap(maskScale, blockHeight + outLineSz, blockHeight + outLineSz, pShadowTop);
+        canvas.drawBitmap(maskScale, darkSz + outLineSz, darkSz + outLineSz, pShadowTop);
         canvas.drawBitmap(maskScale, 0, 0, (jt.locked) ? pLockedATop : pOutATop);
         canvas.drawBitmap(picSmall, outLineSz, outLineSz, pOutLine);
         return outMap;
