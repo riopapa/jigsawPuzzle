@@ -79,7 +79,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     final String imageListOnDrive = "@imageList";
 
     public static String downloadGame, downloadFileName = "";
-    public static int downloadPosition = -1;
+    public static int downloadPosition = -1, downloadCount = 0;
     public static long downloadSize = 0;
 
     public static ArrayList<JigFile> jigFiles = null;
@@ -184,8 +184,9 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
                     long imgDays = Long.parseLong(imgInfo[2].trim());
                     long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
-                    if (today >= share_installDate + imgDays) {
-                        Log.w("image", nGame +" dowload "+imgDays);
+                    if (today >= share_installDate + imgDays && downloadCount < 3) {
+                        downloadCount++;
+                        Log.w("downloadCount="+downloadCount, nGame +" dowload "+imgDays);
                         JigFile jf = new JigFile();
                         jf.game = nGame;
                         jf.imageId = imgInfo[1].trim();
@@ -223,7 +224,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         Log.w("begin", "downloadNewJpg ");
         for (int i = new ImageStorage().count(); i < jigFiles.size(); i++) {
             JigFile jf = jigFiles.get(i);
-//            if (jf.thumbnailMap == null &&
             if (FileIO.existJPGFile(jpgFolder, jf.game + ".jpg") == null) {
                 downloadGame = jf.game;
                 downloadFileName = downloadGame;

@@ -43,8 +43,8 @@ public class PieceImage {
         this.context = context;
         this.orgSizeOut = imgOutSize;
         this.orgSizeIn = imgInSize;
-        outLineSz = gVal.picOSize / 50;
-        darkSz = gVal.picOSize / 60;
+        outLineSz = gVal.picOSize / 60;
+        darkSz = gVal.picOSize / 80;
 
         pNORM = new Paint(Paint.ANTI_ALIAS_FLAG);
 

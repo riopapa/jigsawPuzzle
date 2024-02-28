@@ -54,7 +54,7 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iVImage, iVStatus;
-        TextView tVInfo, newInfo;
+        TextView newInfo;
         Context context;
 
         ViewHolder(final View itemView) {
@@ -93,7 +93,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                     }, 30);
                 }
             });
-            tVInfo = itemView.findViewById(R.id.info);
             iVStatus = itemView.findViewById(R.id.status);
             newInfo = itemView.findViewById(R.id.new_info);
             zigPuzzle = new Drawable2bitmap(mContext, 400).make(R.mipmap.zjigsaw_puzzle);
@@ -180,7 +179,6 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
                 }
             }
         }
-        holder.tVInfo.setText(jf.game);
         holder.newInfo.setVisibility((jf.newFlag) ? View.VISIBLE: View.GONE);
     }
 

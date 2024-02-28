@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -128,13 +129,12 @@ public class ActivitySelLevel extends AppCompatActivity {
         int upDown;
         TranslateAnimation animation;
         if (imgFullWidth < imgFullHeight) {
-            upDown = imgFullHeight / 8;
-            animation = new TranslateAnimation(0.0f, 0.0f, upDown, -upDown);
+            upDown = imgFullHeight / 12;
+            animation = new TranslateAnimation(0.0f, 0.0f, upDown, -upDown-upDown);
         } else {
             upDown = imgFullWidth / 12;
             animation = new TranslateAnimation(-upDown, upDown, 0f, -0f);
         }
-        // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
         animation.setDuration(5000); // animation duration
         animation.setRepeatCount(-1); // animation repeat count -1 means infinite
         animation.setRepeatMode(Animation.REVERSE); // repeat animation (left to right, right to left)
@@ -168,9 +168,9 @@ public class ActivitySelLevel extends AppCompatActivity {
             setDialogInfo(dialogView, 3, R.id.lvl_guru, R.id.lvl_gInfo, R.id.lvl_gNew);
             dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
             findViewById(R.id.loading_circle).setVisibility(View.GONE);
-
+            TextView tv = dialogView.findViewById(R.id.gameInfo);
+            tv.setText("GAME : "+currGameLevel);
         });
-
     }
 
     private void setDialogInfo(View dialogView, int lvl, int activeId, int infoId, int newId) {
@@ -204,7 +204,7 @@ public class ActivitySelLevel extends AppCompatActivity {
 
     private void edit_table(View view) {
         alertDialog.dismiss();
-
+        
         gameMode = ActivityMain.GMode.STARTED; // target Image, level has been set
         int level = Integer.parseInt(view.getTag().toString());
         // if level > 9 then it means play new game

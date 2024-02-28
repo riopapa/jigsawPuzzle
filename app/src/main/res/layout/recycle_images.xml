@@ -8,15 +8,6 @@
     android:clickable="true"
     android:background="@drawable/border_outer"
     android:layout_margin="1dp">
-    <TextView
-        android:id="@+id/info"
-        android:gravity="center|left"
-        android:textSize="12sp"
-        android:textColor="#000000"
-        android:layout_marginLeft="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="RtlHardcoded" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image"
@@ -24,11 +15,8 @@
         android:layout_height="200dp"
         android:layout_below="@id/info"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="3dp"
-        android:padding="6dp"
+        android:layout_margin="3dp"
+        android:padding="3dp"
         android:scaleType="fitXY"
         app:strokeColor="@null"
         app:layout_constraintHorizontal_bias="0.5"
@@ -36,7 +24,6 @@
 
     <ImageView
         android:id="@+id/status"
-        android:layout_below="@id/info"
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_margin="2dp"
@@ -54,7 +41,6 @@
         android:textSize="8sp"
         android:padding="2sp"
         android:layout_margin="4sp"
-        android:layout_below="@id/info"
         />
 
 </RelativeLayout>
