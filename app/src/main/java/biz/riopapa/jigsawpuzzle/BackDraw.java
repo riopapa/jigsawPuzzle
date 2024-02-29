@@ -5,6 +5,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigGray;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigLock;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.reDrawOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
@@ -27,11 +28,9 @@ public class BackDraw {
     final int LOW_ALPHA = 200;
     final int HIDE_ALPHA = 100;
     ActivityJigsawBinding binding;
-    PieceImage pieceImage;
 
-    public BackDraw(ActivityJigsawBinding binding, PieceImage pieceImage) {
+    public BackDraw(ActivityJigsawBinding binding) {
         this.binding = binding;
-        this.pieceImage = pieceImage;
         pFull = new Paint();
         pGrayed0 = new Paint();
         pGrayed1 = new Paint();

@@ -57,7 +57,7 @@ public class ActivityJigsaw extends Activity {
 
     ActivityJigsawBinding binding;
 
-    PieceImage pieceImage;
+    public static PieceImage pieceImage;
 
     public static RecyclerView jigRecyclerView;
 
@@ -114,8 +114,8 @@ public class ActivityJigsaw extends Activity {
 
         backView = findViewById(R.id.back_view);
         binding.backView.getLayoutParams().height = screenBottom;
-        backView.init(binding, pieceImage);
-        foreView.init(binding, pieceImage);
+        backView.init(binding);
+        foreView.init(binding);
         backBlink = true;
         foreBlink = true;
         moveFrom = -1; moveTo = -1;
@@ -209,8 +209,10 @@ public class ActivityJigsaw extends Activity {
             // followings are to test congrats
             for (int ac = 0; ac < gVal.colNbr; ac++) {
                 for (int ar = 0; ar < gVal.rowNbr; ar++) {
-                    if (new Random().nextInt(8) > 1)
+                    if (new Random().nextInt(8) > 1) {
                         gVal.jigTables[ac][ar].locked = true;
+                        jigOLine[ac][ar] = pieceImage.makeOline(jigPic[ac][ar], ac, ar);
+                    }
                 }
             }
         }

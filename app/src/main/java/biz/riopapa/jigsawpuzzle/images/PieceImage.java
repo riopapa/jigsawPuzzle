@@ -15,12 +15,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
-import android.util.Log;
 
 import biz.riopapa.jigsawpuzzle.R;
 import biz.riopapa.jigsawpuzzle.model.JigTable;
@@ -28,14 +26,13 @@ import biz.riopapa.jigsawpuzzle.model.JigTable;
 public class PieceImage {
     int orgSizeOut, orgSizeIn;
 //    float out2Scale = 1.05f;
-    Paint pNORM, pIN, pOUT, pCUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop;
+    Paint pNORM, pIN, pOUT, pCUT, pBright, pWhite, pOutATop, pLockedATop, pOutLine, pShadow, pShadowTop, pLockedTop;
     int darkSz, outLineSz;
     Bitmap mask;
     Bitmap maskScale, picSmall, mapLocked, mapUnLocked;
     Bitmap part_up, part_dn, part_le, part_ri;
     Canvas canvasUn, canvasLk;
     Drawable2bitmap dMap;
-    Matrix matrix;
 
     Context context;
 
@@ -91,10 +88,13 @@ public class PieceImage {
         pWhite.setColorFilter(new ColorMatrixColorFilter(whiteMatrix));
 
         pShadow = new Paint();
-        pShadow.setColor(0xFF333333);
+        pShadow.setColor(context.getColor(R.color.shadow));
+
         pShadowTop = new Paint();
-        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF442244, PorterDuff.Mode.SRC_ATOP));
-        matrix = new Matrix();
+        pShadowTop.setColorFilter(new PorterDuffColorFilter(context.getColor(R.color.shadowTop), PorterDuff.Mode.SRC_ATOP));
+
+        pLockedTop = new Paint();
+        pLockedTop.setColorFilter(new PorterDuffColorFilter(context.getColor(R.color.shadowTop), PorterDuff.Mode.SRC_ATOP));
 
         dMap = new Drawable2bitmap(mContext, gVal.picOSize);
 
@@ -153,17 +153,13 @@ public class PieceImage {
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(maskScale, darkSz + outLineSz, darkSz + outLineSz, pShadowTop);
-        canvas.drawBitmap(maskScale, 0, 0, pOutATop);
+        canvas.drawBitmap(maskScale, 0, 0, (jt.locked) ? pLockedATop : pOutATop);
         canvas.drawBitmap(picSmall, outLineSz, outLineSz, pOutLine);
         return outMap;
     }
 
     public Bitmap makeLock(Bitmap pic, Bitmap oLine, int col, int row) {
 
-//        boolean lockL = col == 0 || gVal.jigTables[col-1][row].locked;
-//        boolean lockR = col == gVal.colNbr-1 || gVal.jigTables[col+1][row].locked;
-//        boolean lockU = row == 0 || gVal.jigTables[col][row-1].locked;
-//        boolean lockD = row == gVal.rowNbr-1 || gVal.jigTables[col][row+1].locked;
         boolean lockL = col > 0 && gVal.jigTables[col-1][row].locked;
         boolean lockR = col < gVal.colNbr-1 && gVal.jigTables[col+1][row].locked;
         boolean lockU = row > 0 && gVal.jigTables[col][row-1].locked;

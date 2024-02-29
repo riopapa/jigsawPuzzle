@@ -13,6 +13,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigWhite;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemC;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.pieceImage;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.save_History;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
@@ -43,13 +44,11 @@ public class ForeDraw {
     Random rnd;
     int gapTwo;
     final int LOW_ALPHA = 117;
-    PieceImage pieceImage;
 
     ActivityJigsawBinding binding;
     Paint backPaint;
-    public ForeDraw(ActivityJigsawBinding binding, PieceImage pieceImage) {
+    public ForeDraw(ActivityJigsawBinding binding) {
         this.binding = binding;
-        this.pieceImage = pieceImage;
 
         pGrayed0 = new Paint();
         pGrayed1 = new Paint();

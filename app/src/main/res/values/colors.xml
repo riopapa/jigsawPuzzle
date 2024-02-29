@@ -13,4 +13,7 @@
     <color name="backColor1">#78B17B</color>
     <color name="backColor2">#75609C</color>
 
+    <color name="shadow">#FF333333</color>
+    <color name="shadowTop">#FF442244</color>
+
 </resources>

@@ -43,7 +43,6 @@ public class ForeView extends View {
     PieceLock pieceLock;
     PieceBind pieceBind;
     PieceSelection pieceSelection;
-    PieceImage pieceImage;
 
     public static boolean foreBlink, backBlink, reFresh;
 
@@ -57,16 +56,15 @@ public class ForeView extends View {
 
     ActivityJigsawBinding binding;
 
-    public void init(ActivityJigsawBinding binding, PieceImage pieceImage){
+    public void init(ActivityJigsawBinding binding){
         this.binding = binding;
-        this.pieceImage = pieceImage;
         piecePosition = new PiecePosition();
         pieceAlign = new PieceAlign();
         pieceLock = new PieceLock();
         pieceBind = new PieceBind();
         nearByFloatPiece = new NearByFloatPiece();
         pieceSelection = new PieceSelection();
-        foreDraw = new ForeDraw(binding, pieceImage);
+        foreDraw = new ForeDraw(binding);
         topIdx = -1;
         reFresh = true;
     }
