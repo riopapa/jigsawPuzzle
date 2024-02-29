@@ -17,7 +17,6 @@ public class PieceLock {
         // if this fp lockable then remove to back
 
         boolean svBlink = foreBlink;
-        reDrawOLine = false;
         foreBlink = false;
         for (int i = 0; i < gVal.fps.size(); ) {
             FloatPiece fp = gVal.fps.get(i);
@@ -31,7 +30,6 @@ public class PieceLock {
                 allLockedMode = 10;
                 svBlink = true;
                 topIdx = -1;
-                reDrawOLine = true;
                 i = 0;
             } else
                 i++;

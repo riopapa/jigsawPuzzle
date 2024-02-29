@@ -34,11 +34,10 @@ public class ClearGValValues {
 
         gVal.allLocked = false;
         gVal.baseX = (screenX - gVal.showMaxX * gVal.picISize) / 2 - gVal.picGap - gVal.picGap;
-        gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) * 20 / 30 - gVal.picOSize;
+        gVal.baseY = (screenY - gVal.showMaxY * gVal.picISize) * 18 / 30 - gVal.picOSize;
 
-        Log.w("r23GValValues", "Jig Cnt="+ gVal.colNbr +"x"+ gVal.rowNbr +", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
-                ", showMax "+ gVal.showMaxX+"x"+ gVal.showMaxY);
-
+//        Log.w("r23GValValues", "Jig Cnt="+ gVal.colNbr +"x"+ gVal.rowNbr +", showShift "+ gVal.showShiftX+"x"+ gVal.showShiftY +
+//                ", showMax "+ gVal.showMaxX+"x"+ gVal.showMaxY);
     }
 
 }

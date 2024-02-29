@@ -93,7 +93,7 @@ public class PieceImage {
         pShadow = new Paint();
         pShadow.setColor(0xFF333333);
         pShadowTop = new Paint();
-        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF222244, PorterDuff.Mode.SRC_ATOP));
+        pShadowTop.setColorFilter(new PorterDuffColorFilter(0xFF442244, PorterDuff.Mode.SRC_ATOP));
         matrix = new Matrix();
 
         dMap = new Drawable2bitmap(mContext, gVal.picOSize);
@@ -153,17 +153,21 @@ public class PieceImage {
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(maskScale, darkSz + outLineSz, darkSz + outLineSz, pShadowTop);
-        canvas.drawBitmap(maskScale, 0, 0, (jt.locked) ? pLockedATop : pOutATop);
+        canvas.drawBitmap(maskScale, 0, 0, pOutATop);
         canvas.drawBitmap(picSmall, outLineSz, outLineSz, pOutLine);
         return outMap;
     }
 
     public Bitmap makeLock(Bitmap pic, Bitmap oLine, int col, int row) {
 
-        boolean lockL = col == 0 || gVal.jigTables[col-1][row].locked;
-        boolean lockR = col == gVal.colNbr-1 || gVal.jigTables[col+1][row].locked;
-        boolean lockU = row == 0 || gVal.jigTables[col][row-1].locked;
-        boolean lockD = row == gVal.rowNbr-1 || gVal.jigTables[col][row+1].locked;
+//        boolean lockL = col == 0 || gVal.jigTables[col-1][row].locked;
+//        boolean lockR = col == gVal.colNbr-1 || gVal.jigTables[col+1][row].locked;
+//        boolean lockU = row == 0 || gVal.jigTables[col][row-1].locked;
+//        boolean lockD = row == gVal.rowNbr-1 || gVal.jigTables[col][row+1].locked;
+        boolean lockL = col > 0 && gVal.jigTables[col-1][row].locked;
+        boolean lockR = col < gVal.colNbr-1 && gVal.jigTables[col+1][row].locked;
+        boolean lockU = row > 0 && gVal.jigTables[col][row-1].locked;
+        boolean lockD = row < gVal.rowNbr-1 && gVal.jigTables[col][row+1].locked;
 
         if (lockL && lockR && lockU && lockD)
             return pic;

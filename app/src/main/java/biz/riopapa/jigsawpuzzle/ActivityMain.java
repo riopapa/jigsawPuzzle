@@ -62,6 +62,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
     // Shared Values
     public static boolean share_vibrate = true;
     public static long share_installDate = 0;
+    public static long share_today = 0;
+    public static int share_download = 0;
     public static int share_showBack = 0;
     public static boolean share_sound = false;
     public static String share_appVersion = "";
@@ -105,6 +107,8 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         jpgFolder = "jpgs";
         new SharedParam().get(mContext);
+        new SharedParam().getToday(this);
+
         new PhoneMetrics(this);
 
         dListener = this;
@@ -174,6 +178,11 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
             String str = FileIO.readTextFile(jpgFolder, imageListOnDrive+".txt"); // no dir for list
             String[] ss = str.split("\n");
             boolean newlyAdd = false;
+            long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
+            if (share_today != today) {
+                share_today = today;
+                share_download = 0;
+            }
             for (int i = 1; i < ss.length; i++) {
                 String[] imgInfo = ss[i].split(";");
                 String nGame = imgInfo[0].trim();
@@ -183,10 +192,11 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
 
                     long imgDays = Long.parseLong(imgInfo[2].trim());
-                    long today = System.currentTimeMillis() / 24 / 60 / 60 / 1000;
-                    if (today >= share_installDate + imgDays && downloadCount < 3) {
-                        downloadCount++;
-                        Log.w("downloadCount="+downloadCount, nGame +" dowload "+imgDays);
+
+                    if (today >= share_installDate + imgDays && share_download < 3) {
+                        share_download++;
+                        new SharedParam().putToday(this);
+                        Log.w("downloadCount="+ share_download, nGame +" dowload "+imgDays);
                         JigFile jf = new JigFile();
                         jf.game = nGame;
                         jf.imageId = imgInfo[1].trim();
@@ -206,8 +216,9 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                     imageSelAdapter.notifyItemInserted(jigFiles.size() - 1);
                 }
             }
-            if (newlyAdd)
+            if (newlyAdd) {
                 downloadNewJpg();
+            }
         }
     }
 
