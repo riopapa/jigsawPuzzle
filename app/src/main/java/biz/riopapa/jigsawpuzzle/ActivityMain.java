@@ -106,8 +106,9 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
         mActivity = this;
         mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         jpgFolder = "jpgs";
+        new SharedParam().getBase(mContext);
         new SharedParam().get(mContext);
-        new SharedParam().getToday(this);
+        new SharedParam().getToday(mContext);
 
         new PhoneMetrics(this);
 
@@ -132,7 +133,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 //        invalidateTimer = new Timer();
         ImageView imageView = findViewById(R.id.chosen_image);
         imageView.setVisibility(View.GONE);
-
+        new SharedParam().putBase(this);
         if (histories == null || !share_appVersion.equals(nowVersion))
             new HistoryGetPut().set(this);
         else
@@ -192,7 +193,6 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
                 if (FileIO.existJPGFile(jpgFolder, nGame + ".jpg") == null) {
 
                     long imgDays = Long.parseLong(imgInfo[2].trim());
-
                     if (today >= share_installDate + imgDays && share_download < 3) {
                         share_download++;
                         new SharedParam().putToday(this);

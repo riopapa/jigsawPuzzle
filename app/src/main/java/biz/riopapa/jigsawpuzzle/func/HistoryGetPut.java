@@ -78,8 +78,8 @@ public class HistoryGetPut {
         }
     }
     void add2History(String gameLevel, GVal gVal) {
-        String game = gameLevel.substring(0,3);
-        int level = Integer.parseInt(gameLevel.substring(3,4));
+        String game = gameLevel.substring(0,gameLevel.length()-1);
+        int level = Integer.parseInt(gameLevel.substring(game.length()));
         History h;
         int hIdx = -1;
         for (int i = 0; i < histories.size(); i++) {

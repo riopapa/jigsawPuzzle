@@ -40,6 +40,7 @@ public class SharedParam {
         share_installDate = sharedPref.getLong("installDate", System.currentTimeMillis() / 24 / 60 / 60 / 1000);
         share_appVersion = sharedPref.getString("appVersion", nowVersion);
     }
+
     public void putBase(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(shared, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

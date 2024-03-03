@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name = "out_line">#222222</color>
     <color name = "recycler_background" >#33FFAAFF</color>
-    <color name="jigsaw_background">#7f7AC5BC</color>
 
     <color name="snackBarBack">#838E1F</color>
     <color name="snackBarTitle">#801237</color>
