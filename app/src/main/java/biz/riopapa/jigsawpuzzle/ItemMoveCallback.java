@@ -10,6 +10,7 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moveFrom;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moveTo;
+import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
@@ -95,16 +96,15 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         foreBlink = false;
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             topIdx = -1;
-            Log.w("state is "+actionState, "START DRAG =");
             // Piece is selected and begun dragging
             svViewHolder = viewHolder;
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
-                JigsawAdapter.MyViewHolder myViewHolder=
-                        (JigsawAdapter.MyViewHolder) viewHolder;
-                mAdapter.onRowSelected(myViewHolder);
+//                JigsawAdapter.MyViewHolder myViewHolder=
+//                        (JigsawAdapter.MyViewHolder) viewHolder;
+//                mAdapter.onRowSelected(myViewHolder);
             }
             nowDragging = false;
 
@@ -114,11 +114,16 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                 reFresh = false;
                 removeFromRecycle();
                 add2FloatingPiece();
+
                 pieceLock.update();
                 pieceBind.update();
                 foreBlink = true;
                 reFresh = true;
             }
+            if (fPhoneInchX > 3f) {
+                svViewHolder.itemView.findViewById(R.id.recycler_jigsaw).setAlpha(0);
+            }
+
         } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             Log.w("state is "+actionState, " ACTION_STATE_SWIPE =");
             // ignore swipe
@@ -131,7 +136,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public void clearView(@NonNull RecyclerView recyclerView,
                           @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-//        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
+
+        //        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
 //            Log.w("clearView","x moving is "+moving+" RowClear");
 //            JigsawAdapter.MyViewHolder myViewHolder=
 //                    (JigsawAdapter.MyViewHolder) viewHolder;
@@ -151,6 +157,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         nowDragging = true;
         if (share_vibrate)
             new VibratePhone(mContext);
+
     }
     private void add2FloatingPiece() {
 
