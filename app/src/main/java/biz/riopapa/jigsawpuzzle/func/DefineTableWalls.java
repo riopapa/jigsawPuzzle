@@ -1,6 +1,8 @@
 package biz.riopapa.jigsawpuzzle.func;
 
 
+import android.util.Log;
+
 import java.util.Random;
 
 import biz.riopapa.jigsawpuzzle.model.JigTable;
@@ -16,8 +18,8 @@ public class DefineTableWalls {
 
         int columns = zz.length;
         int rows = zz[0].length;
-        Random rnd = new Random(System.currentTimeMillis() & 0xfffffff);
         for (int row = 0; row < rows; row++) {
+            Random rnd = new Random(System.currentTimeMillis() + columns + rows);
             for (int col = 0; col < columns; col++) {
                 JigTable z = new JigTable();
                 if (col == 0) {
@@ -26,7 +28,7 @@ public class DefineTableWalls {
                     z.le = zz[col - 1][row].ri;
                 }
                 if (col < columns - 1) {
-                    z.ri = 1 + rnd.nextInt(5);   // rType counts
+                    z.ri = 1 + rnd.nextInt(60) / 10;   // rType counts
                 } else {
                     z.ri = 0;
                 }
@@ -37,11 +39,11 @@ public class DefineTableWalls {
                     z.up = zz[col][row - 1].dn;
                 }
                 if (row < rows - 1)
-                    z.dn = 1 + rnd.nextInt(5);
+                    z.dn = 1 + rnd.nextInt(60) / 10;
                 else
                     z.dn = 0;
                 zz[col][row] = z;
-                zz[col][row].fp = false;
+//                zz[col][row].fp = false;
             }
         }
     }

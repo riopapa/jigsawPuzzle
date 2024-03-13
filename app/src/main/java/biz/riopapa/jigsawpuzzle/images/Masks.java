@@ -21,7 +21,7 @@ public class Masks {
 
         // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
         // outerSize means puzzle outer size
-        Bitmap [][] masks = new Bitmap[4][6];
+        Bitmap [][] masks = new Bitmap[4][7];
         Drawable2bitmap dMap = new Drawable2bitmap(cxt, outerSize);
         
         Bitmap part_up = dMap.make(R.drawable.part_up);
@@ -35,6 +35,7 @@ public class Masks {
         masks[0][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l3), part_le);
         masks[0][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l4), part_le);
         masks[0][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l5), part_le);
+        masks[0][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l6), part_le);
 
         masks[1][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_ri), part_ri);
         masks[1][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r1), part_ri);
@@ -42,6 +43,7 @@ public class Masks {
         masks[1][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r3), part_ri);
         masks[1][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r4), part_ri);
         masks[1][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r5), part_ri);
+        masks[1][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r6), part_ri);
 
         masks[2][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_up), part_up);
         masks[2][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u1), part_up);
@@ -49,6 +51,7 @@ public class Masks {
         masks[2][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u3), part_up);
         masks[2][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u4), part_up);
         masks[2][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u5), part_up);
+        masks[2][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u6), part_up);
 
         masks[3][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_dn), part_dn);
         masks[3][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d1), part_dn);
@@ -56,6 +59,8 @@ public class Masks {
         masks[3][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d3), part_dn);
         masks[3][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d4), part_dn);
         masks[3][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d5), part_dn);
+        masks[3][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d6), part_dn);
+
         return masks;
     }
     /*
@@ -66,7 +71,7 @@ public class Masks {
     public Bitmap[][] makeOut(Context cxt, int outerSize) {
 
         // remember to set biz.riopapa.jigsawpuzzle.DefineTableWalls() nextInt with this value
-        Bitmap [][] masks = new Bitmap[4][6];
+        Bitmap [][] masks = new Bitmap[4][7];
         Drawable2bitmap dMap = new Drawable2bitmap(cxt, outerSize);
 
         Bitmap part_up = dMap.make(R.drawable.part_up);
@@ -80,6 +85,7 @@ public class Masks {
         masks[0][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l3o), part_le);
         masks[0][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l4o), part_le);
         masks[0][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l5o), part_le);
+        masks[0][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l6o), part_le);
 
         masks[1][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_rio), part_ri);
         masks[1][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r1o), part_ri);
@@ -87,6 +93,7 @@ public class Masks {
         masks[1][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r3o), part_ri);
         masks[1][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r4o), part_ri);
         masks[1][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r5o), part_ri);
+        masks[1][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r6o), part_ri);
 
         masks[2][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_upo), part_up);
         masks[2][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u1o), part_up);
@@ -94,6 +101,7 @@ public class Masks {
         masks[2][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u3o), part_up);
         masks[2][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u4o), part_up);
         masks[2][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u5o), part_up);
+        masks[2][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u6o), part_up);
 
         masks[3][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_dno), part_dn);
         masks[3][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d1o), part_dn);
@@ -101,6 +109,8 @@ public class Masks {
         masks[3][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d3o), part_dn);
         masks[3][4] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d4o), part_dn);
         masks[3][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d5o), part_dn);
+        masks[3][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d6o), part_dn);
+
         return masks;
     }
 }

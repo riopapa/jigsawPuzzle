@@ -45,7 +45,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
     public enum GMode {STARTED, PAUSED, TO_MAIN, SEL_LEVEL, ALL_DONE, TO_FPS, ANCHOR}
 
-    public static String nowVersion = "V0100";
+    public static String nowVersion = "V0102";
 
     public static int currJpgNumber;
     public static String currGame, currGameLevel;
