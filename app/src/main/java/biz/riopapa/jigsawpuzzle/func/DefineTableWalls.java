@@ -18,9 +18,9 @@ public class DefineTableWalls {
 
         int columns = zz.length;
         int rows = zz[0].length;
-        for (int row = 0; row < rows; row++) {
-            Random rnd = new Random(System.currentTimeMillis() + columns + rows);
-            for (int col = 0; col < columns; col++) {
+        for (int col = 0; col < columns; col++) {
+            for (int row = 0; row < rows; row++) {
+                Random rnd = new Random(System.nanoTime() + columns + rows);
                 JigTable z = new JigTable();
                 if (col == 0) {
                     z.le = 0;
@@ -28,6 +28,7 @@ public class DefineTableWalls {
                     z.le = zz[col - 1][row].ri;
                 }
                 if (col < columns - 1) {
+                    z.ri = 1 + rnd.nextInt(60) / 10;   // rType counts
                     z.ri = 1 + rnd.nextInt(60) / 10;   // rType counts
                 } else {
                     z.ri = 0;
@@ -38,12 +39,13 @@ public class DefineTableWalls {
                 } else {
                     z.up = zz[col][row - 1].dn;
                 }
-                if (row < rows - 1)
+                if (row < rows - 1) {
                     z.dn = 1 + rnd.nextInt(60) / 10;
+                    z.dn = 1 + rnd.nextInt(60) / 10;
+                }
                 else
                     z.dn = 0;
                 zz[col][row] = z;
-//                zz[col][row].fp = false;
             }
         }
     }
