@@ -194,10 +194,10 @@ public class PieceImage {
             for (int r = 0; r < hSz; r++) {
                 int pxl = pic.getPixel(c, r);
                 if (pxl != 0) {
-                    int red = Color.red(pxl); int gre = Color.green(pxl); int blu = Color.blue(pxl);
-                    int avr = ( red + gre + blu) / 3;
-                    red = (red+avr+avr) / 3; gre = (gre+avr+avr) / 3; blu = (blu+avr+avr) / 3;
-                    int color = Color.argb(0xA0, red, gre, blu);
+                    int red = Color.red(pxl); int grn = Color.green(pxl); int blu = Color.blue(pxl);
+                    int avr = (red + grn + blu) / 3;
+                    red = (red+red+avr) / 3; grn = (grn+grn+avr) / 3; blu = (blu+blu+avr) / 3;
+                    int color = Color.argb(0xF0, red, grn, blu);
                     p.setColor(color);
                     canvas.drawPoint(c, r, p);
                 }

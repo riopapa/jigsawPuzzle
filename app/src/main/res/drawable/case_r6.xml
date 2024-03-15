@@ -5,8 +5,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <path
-        android:strokeColor="#ECFF33"
-        android:strokeWidth="0.03"
+        android:strokeColor="#AC8F73"
+        android:strokeWidth="0.23"
         android:strokeLineCap="round"
         android:fillColor="#ACDF13"
         android:pathData="
