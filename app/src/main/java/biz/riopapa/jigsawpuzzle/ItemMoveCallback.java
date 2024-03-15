@@ -119,9 +119,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                 pieceBind.update();
                 foreBlink = true;
                 reFresh = true;
-            }
-            if (fPhoneInchX > 3f) {
-                svViewHolder.itemView.findViewById(R.id.recycler_jigsaw).setAlpha(0);
+                if (fPhoneInchX > 3f) {
+                    svViewHolder.itemView.findViewById(R.id.recycler_jigsaw).setAlpha(0);
+                }
             }
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {

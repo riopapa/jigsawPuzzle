@@ -3,7 +3,6 @@ package biz.riopapa.jigsawpuzzle.images;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorLocked;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.outMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.srcMaskMaps;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
@@ -122,8 +121,8 @@ public class PieceImage {
                 col * orgSizeIn, row * orgSizeIn, orgSizeOut, orgSizeOut, null, false);
         Bitmap mask = maskMerge(srcMaskMaps[0][jig.le], srcMaskMaps[1][jig.ri],
                 srcMaskMaps[2][jig.up], srcMaskMaps[3][jig.dn]);
-        Bitmap src = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(src);
+        Bitmap picMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(picMap);
         canvas.drawBitmap(orgPiece, 0, 0, null);
         canvas.drawBitmap(mask, 0, 0, pIN);
         if (showCR) {
@@ -139,17 +138,18 @@ public class PieceImage {
             p.setStyle(Paint.Style.FILL_AND_STROKE);
             canvas.drawText(col + "." + row, orgSizeOut / 2f, orgSizeOut * 3f / 6f, p);
         }
-        return Bitmap.createScaledBitmap(src, gVal.picOSize, gVal.picOSize, false);
+        return Bitmap.createScaledBitmap(picMap, gVal.picOSize, gVal.picOSize, false);
     }
 
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
         mask = maskMerge(
-                outMaskMaps[0][jt.le], outMaskMaps[1][jt.ri],
-                outMaskMaps[2][jt.up], outMaskMaps[3][jt.dn]);
-        maskScale = Bitmap.createScaledBitmap(mask, gVal.picOSize, gVal.picOSize, true);
+                srcMaskMaps[0][jt.le], srcMaskMaps[1][jt.ri],
+                srcMaskMaps[2][jt.up], srcMaskMaps[3][jt.dn]);
+        maskScale = Bitmap.createScaledBitmap(mask,
+                gVal.picOSize - outLineSz, gVal.picOSize - outLineSz, true);
         picSmall = Bitmap.createScaledBitmap(pic,
-                gVal.picOSize- outLineSz, gVal.picOSize - outLineSz, true);
+                gVal.picOSize - outLineSz, gVal.picOSize - outLineSz, true);
         Bitmap outMap = Bitmap.createBitmap(gVal.picOSize, gVal.picOSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(outMap);
         canvas.drawBitmap(maskScale, darkSz + outLineSz, darkSz + outLineSz, pShadowTop);
@@ -209,9 +209,9 @@ public class PieceImage {
     public Bitmap maskSrcMap(Bitmap srcImage, Bitmap mask) {
 
         Bitmap maskMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
-        Canvas tCanvas = new Canvas(maskMap);
-        tCanvas.drawBitmap(srcImage, 0, 0, null);
-        tCanvas.drawBitmap(mask, 0, 0, pIN);
+        Canvas canvas = new Canvas(maskMap);
+        canvas.drawBitmap(srcImage, 0, 0, null);
+        canvas.drawBitmap(mask, 0, 0, pIN);
         return maskMap;
     }
 

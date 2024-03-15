@@ -70,7 +70,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap currImageMap;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;
-    public static Bitmap[][] srcMaskMaps, outMaskMaps;
+    public static Bitmap[][] srcMaskMaps; // , outMaskMaps;
     public static Bitmap[] fireWorks, congrats, jigFinishes;
 
     public static int itemPos; // jigsaw slide x, y count
@@ -104,7 +104,7 @@ public class ActivityJigsaw extends Activity {
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
-        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
+//        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
         congrats = new Congrat().make(screenX * 13 / 20);
         jigFinishes = new JigDone().make(screenX * 13 / 20);
@@ -342,7 +342,7 @@ public class ActivityJigsaw extends Activity {
         jigWhite = null;
         jigGray = null;
         srcMaskMaps = null;
-        outMaskMaps = null;
+         // outMaskMaps = null;
         fireWorks = null;
         congrats = null;
         jigFinishes = null;
