@@ -29,7 +29,7 @@ public class Masks {
         Bitmap part_ri = dMap.make(R.drawable.part_ri);
         Bitmap part_dn = dMap.make(R.drawable.part_dn);
 
-        masks[0][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_le), part_le);
+        masks[0][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l0), part_le);
         masks[0][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l1), part_le);
         masks[0][2] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l2), part_le);
         masks[0][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l3), part_le);
@@ -37,7 +37,7 @@ public class Masks {
         masks[0][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l5), part_le);
         masks[0][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_l6), part_le);
 
-        masks[1][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_ri), part_ri);
+        masks[1][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r0), part_ri);
         masks[1][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r1), part_ri);
         masks[1][2] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r2), part_ri);
         masks[1][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r3), part_ri);
@@ -45,7 +45,7 @@ public class Masks {
         masks[1][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r5), part_ri);
         masks[1][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_r6), part_ri);
 
-        masks[2][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_up), part_up);
+        masks[2][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u0), part_up);
         masks[2][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u1), part_up);
         masks[2][2] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u2), part_up);
         masks[2][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u3), part_up);
@@ -53,7 +53,7 @@ public class Masks {
         masks[2][5] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u5), part_up);
         masks[2][6] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_u6), part_up);
 
-        masks[3][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.part0_dn), part_dn);
+        masks[3][0] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d0), part_dn);
         masks[3][1] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d1), part_dn);
         masks[3][2] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d2), part_dn);
         masks[3][3] = pieceImage.maskSrcMap(dMap.make(R.drawable.case_d3), part_dn);

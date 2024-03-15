@@ -119,7 +119,8 @@ public class PieceImage {
         JigTable jig = gVal.jigTables[col][row];
         Bitmap orgPiece = Bitmap.createBitmap(currImageMap,
                 col * orgSizeIn, row * orgSizeIn, orgSizeOut, orgSizeOut, null, false);
-        Bitmap mask = maskMerge(srcMaskMaps[0][jig.le], srcMaskMaps[1][jig.ri],
+        Bitmap mask = maskMerge(
+                srcMaskMaps[0][jig.le], srcMaskMaps[1][jig.ri],
                 srcMaskMaps[2][jig.up], srcMaskMaps[3][jig.dn]);
         Bitmap picMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(picMap);
