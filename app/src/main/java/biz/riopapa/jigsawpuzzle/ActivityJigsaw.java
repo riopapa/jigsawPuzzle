@@ -1,7 +1,6 @@
 package biz.riopapa.jigsawpuzzle;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.INVALIDATE_INTERVAL;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.share_appVersion;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_backColor;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.currGameLevel;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.debugMode;
@@ -14,14 +13,11 @@ import static biz.riopapa.jigsawpuzzle.ActivityMain.screenBottom;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.screenY;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_showBack;
-import static biz.riopapa.jigsawpuzzle.ActivityMain.share_sound;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.share_vibrate;
 import static biz.riopapa.jigsawpuzzle.ForeView.backBlink;
 import static biz.riopapa.jigsawpuzzle.ForeView.foreBlink;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +36,6 @@ import java.util.TimerTask;
 import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
-import biz.riopapa.jigsawpuzzle.func.DumpData;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
 import biz.riopapa.jigsawpuzzle.func.HistoryGetPut;
 import biz.riopapa.jigsawpuzzle.func.SharedParam;
@@ -70,7 +65,7 @@ public class ActivityJigsaw extends Activity {
     public static Bitmap currImageMap;
     public static int colorOutline, colorLocked; // puzzle photo size (in dpi)
     public static Bitmap [][] jigPic, jigOLine, jigWhite, jigGray, jigLock;
-    public static Bitmap[][] srcMaskMaps; // , outMaskMaps;
+    public static Bitmap[][] picMasks;
     public static Bitmap[] fireWorks, congrats, jigFinishes;
 
     public static int itemPos; // jigsaw slide x, y count
@@ -103,11 +98,11 @@ public class ActivityJigsaw extends Activity {
 
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
-        srcMaskMaps = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
+        picMasks = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
 //        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
-        congrats = new Congrat().make(screenX * 13 / 20);
-        jigFinishes = new JigDone().make(screenX * 13 / 20);
+        congrats = new Congrat().make(screenX * 12 / 20);
+        jigFinishes = new JigDone().make(screenX * 12 / 20);
 
         foreView = findViewById(R.id.paint_view);
         binding.paintView.getLayoutParams().height = screenBottom;
@@ -341,7 +336,7 @@ public class ActivityJigsaw extends Activity {
         jigOLine = null;
         jigWhite = null;
         jigGray = null;
-        srcMaskMaps = null;
+        picMasks = null;
          // outMaskMaps = null;
         fireWorks = null;
         congrats = null;

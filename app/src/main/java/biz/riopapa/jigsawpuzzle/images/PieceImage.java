@@ -3,7 +3,7 @@ package biz.riopapa.jigsawpuzzle.images;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorLocked;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.colorOutline;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.currImageMap;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.srcMaskMaps;
+import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.picMasks;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.showCR;
@@ -120,8 +120,8 @@ public class PieceImage {
         Bitmap orgPiece = Bitmap.createBitmap(currImageMap,
                 col * orgSizeIn, row * orgSizeIn, orgSizeOut, orgSizeOut, null, false);
         Bitmap mask = maskMerge(
-                srcMaskMaps[0][jig.le], srcMaskMaps[1][jig.ri],
-                srcMaskMaps[2][jig.up], srcMaskMaps[3][jig.dn]);
+                picMasks[0][jig.le], picMasks[1][jig.ri],
+                picMasks[2][jig.up], picMasks[3][jig.dn]);
         Bitmap picMap = Bitmap.createBitmap(orgSizeOut, orgSizeOut, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(picMap);
         canvas.drawBitmap(orgPiece, 0, 0, null);
@@ -145,8 +145,8 @@ public class PieceImage {
     public Bitmap makeOline(Bitmap pic, int col, int row) {
         JigTable jt = gVal.jigTables[col][row];
         mask = maskMerge(
-                srcMaskMaps[0][jt.le], srcMaskMaps[1][jt.ri],
-                srcMaskMaps[2][jt.up], srcMaskMaps[3][jt.dn]);
+                picMasks[0][jt.le], picMasks[1][jt.ri],
+                picMasks[2][jt.up], picMasks[3][jt.dn]);
         maskScale = Bitmap.createScaledBitmap(mask,
                 gVal.picOSize - outLineSz, gVal.picOSize - outLineSz, true);
         picSmall = Bitmap.createScaledBitmap(pic,
