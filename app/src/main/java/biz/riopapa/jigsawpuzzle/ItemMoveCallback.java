@@ -8,8 +8,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemPos;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemX;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemY;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moveFrom;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moveTo;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
@@ -27,7 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
+import biz.riopapa.jigsawpuzzle.adaptors.PiecesAdapter;
 import biz.riopapa.jigsawpuzzle.func.PieceBind;
 import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.func.VibratePhone;
@@ -101,9 +99,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
             recyclerSelected(viewHolder);
 
         } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
-//                JigsawAdapter.MyViewHolder myViewHolder=
-//                        (JigsawAdapter.MyViewHolder) viewHolder;
+            if (viewHolder instanceof PiecesAdapter.MyViewHolder) {
+//                PiecesAdapter.MyViewHolder myViewHolder=
+//                        (PiecesAdapter.MyViewHolder) viewHolder;
 //                mAdapter.onRowSelected(myViewHolder);
             }
             nowDragging = false;
@@ -137,10 +135,10 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                           @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
-        //        if (viewHolder instanceof JigsawAdapter.MyViewHolder) {
+        //        if (viewHolder instanceof PiecesAdapter.MyViewHolder) {
 //            Log.w("clearView","x moving is "+moving+" RowClear");
-//            JigsawAdapter.MyViewHolder myViewHolder=
-//                    (JigsawAdapter.MyViewHolder) viewHolder;
+//            PiecesAdapter.MyViewHolder myViewHolder=
+//                    (PiecesAdapter.MyViewHolder) viewHolder;
 //            mAdapter.onRowClear(myViewHolder);
 //        }
 
@@ -211,8 +209,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public interface ItemTouchHelperContract {
 
         void onRowMoved(int fromPosition, int toPosition);
-        void onRowSelected(JigsawAdapter.MyViewHolder myViewHolder);
-        void onRowClear(JigsawAdapter.MyViewHolder myViewHolder);
+        void onRowSelected(PiecesAdapter.MyViewHolder myViewHolder);
+        void onRowClear(PiecesAdapter.MyViewHolder myViewHolder);
 
     }
 

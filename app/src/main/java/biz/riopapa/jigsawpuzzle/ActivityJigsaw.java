@@ -33,7 +33,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import biz.riopapa.jigsawpuzzle.adaptors.JigsawAdapter;
+import biz.riopapa.jigsawpuzzle.adaptors.PiecesAdapter;
 import biz.riopapa.jigsawpuzzle.databinding.ActivityJigsawBinding;
 import biz.riopapa.jigsawpuzzle.func.DefineControlButton;
 import biz.riopapa.jigsawpuzzle.func.GValGetPut;
@@ -59,7 +59,7 @@ public class ActivityJigsaw extends Activity {
     public static ForeView foreView;
 
     BackView backView;
-    public static JigsawAdapter activeAdapter;
+    public static PiecesAdapter activeAdapter;
     public static ArrayList<Integer> activeJigs;
 
     public static Bitmap currImageMap;
@@ -99,7 +99,6 @@ public class ActivityJigsaw extends Activity {
         pieceImage = new PieceImage(this, gVal.imgOutSize, gVal.imgInSize);
 
         picMasks = new Masks(this, pieceImage).make(mContext, gVal.imgOutSize);
-//        outMaskMaps = new Masks(this, pieceImage).makeOut(mContext, gVal.imgOutSize);
         fireWorks = new FireWork().make(gVal.picOSize + gVal.picGap + gVal.picGap);
         congrats = new Congrat().make(screenX * 12 / 20);
         jigFinishes = new JigDone().make(screenX * 12 / 20);
@@ -160,15 +159,6 @@ public class ActivityJigsaw extends Activity {
             save_params();
         });
 
-//        binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
-//        binding.sound.setOnClickListener(v -> {
-//            share_sound = !share_sound;
-//            binding.sound.setImageResource((share_sound) ? R.drawable.z_sound_on : R.drawable.z_sound_off);
-//            save_params();
-//        });
-
-//        binding.debugRight.setOnClickListener(v -> new DumpData());
-
         int[] backColors = {ContextCompat.getColor(mContext, R.color.backColor0),
                 ContextCompat.getColor(mContext, R.color.backColor1),
                 ContextCompat.getColor(mContext, R.color.backColor2)};
@@ -182,7 +172,7 @@ public class ActivityJigsaw extends Activity {
         jigRecyclerView = findViewById(R.id.piece_recycler);
         int layoutOrientation = RecyclerView.HORIZONTAL;
         jigRecyclerView.getLayoutParams().height = gVal.recSize + gVal.picGap;
-        activeAdapter = new JigsawAdapter();
+        activeAdapter = new PiecesAdapter();
         jigRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager mLinearLayoutManager
@@ -359,6 +349,7 @@ public class ActivityJigsaw extends Activity {
         Log.w("jigsaw","jigsaw onBackPressed");
         new SharedParam().put(this);
         new GValGetPut().put(currGameLevel, gVal, this);
+        save_History();
         releaseAll();
         gameMode = ActivityMain.GMode.TO_MAIN;
         super.onBackPressed();

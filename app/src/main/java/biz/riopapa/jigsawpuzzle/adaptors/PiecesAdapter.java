@@ -4,7 +4,6 @@ import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.activeJigs;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.itemCR;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigOLine;
 import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.jigPic;
-import static biz.riopapa.jigsawpuzzle.ActivityJigsaw.moving;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.fPhoneInchX;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 import static biz.riopapa.jigsawpuzzle.ActivityMain.mContext;
@@ -19,8 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import biz.riopapa.jigsawpuzzle.ItemMoveCallback;
 import biz.riopapa.jigsawpuzzle.R;
@@ -28,7 +25,7 @@ import biz.riopapa.jigsawpuzzle.func.PieceAlign;
 import biz.riopapa.jigsawpuzzle.func.PieceLock;
 import biz.riopapa.jigsawpuzzle.images.PieceImage;
 
-public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+public class PiecesAdapter extends RecyclerView.Adapter<PiecesAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
 
     PieceAlign pieceAlign;
@@ -48,7 +45,7 @@ public class JigsawAdapter extends RecyclerView.Adapter<JigsawAdapter.MyViewHold
         }
     }
 
-    public JigsawAdapter() {}
+    public PiecesAdapter() {}
 
     @NonNull
     @Override

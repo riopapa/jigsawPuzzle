@@ -229,16 +229,23 @@ public class ImageSelAdapter extends RecyclerView.Adapter<ImageSelAdapter.ViewHo
 
         paint.setColor(0xFF000000);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
+        paint.setStrokeWidth(3);
         canvas.drawArc(rect, -90, 360f , true, paint);
         canvas.drawArc(rect, -90, pct*360f/100f , true, paint);
 
-        paint.setColor((boxColors[i] ^ 0xFFFFFF) | 0xFF000000);
+        paint.setColor(0xff000000);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setAlpha(255);
-        paint.setTextSize((width+height)/20f);
+        paint.setTextSize((width+height)/18f);
         String s = pct + "%";
-        canvas.drawText(s, offX+width/4f, offY+height/4f+(width+height)/40f, paint);
+        float x = offX+width/4f;
+        float y = offY + height / 4f + (width + height) / 40f;
+        canvas.drawText(s, x, y, paint);
+//        paint.setColor((boxColors[i] ^ 0xFFFFFF) | 0xFF000000);
+        paint.setColor(0xffFFFFFF);
+//        paint.setStrokeWidth(3);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawText(s, x, y, paint);
     }
 }
