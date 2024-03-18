@@ -169,7 +169,7 @@ public class ActivitySelLevel extends AppCompatActivity {
             dialogView.findViewById(R.id.go_back).setOnClickListener(this::go_back);
             findViewById(R.id.loading_circle).setVisibility(View.GONE);
             TextView tv = dialogView.findViewById(R.id.gameInfo);
-            tv.setText("GAME : "+currGameLevel);
+            tv.setText("GAME : "+currGame);
         });
     }
 

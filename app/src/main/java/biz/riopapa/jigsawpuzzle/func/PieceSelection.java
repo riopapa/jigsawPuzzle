@@ -26,7 +26,6 @@ public class PieceSelection {
                 continue;
             itemR = r; itemC = c;
             topIdx = i;
-            Log.w("piece","Selected "+c+"x"+r+" idx="+i);
             return;
         }
         topIdx = -1;

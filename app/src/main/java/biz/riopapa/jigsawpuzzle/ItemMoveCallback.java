@@ -151,7 +151,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         itemR = itemCR - itemC * 100;
         itemY = screenBottom;
         itemX = viewHolder.itemView.getLeft();
-        Log.w("selected "+ itemPos, itemPos +" CR"+ itemCR + " pieceSz="+activeJigs.size());
         nowDragging = true;
         if (share_vibrate)
             new VibratePhone(mContext);
@@ -179,9 +178,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
         activeAdapter.notifyItemRemoved(itemPos);
         activeJigs.remove(itemPos);
-//        activeAdapter.notifyItemRangeChanged(activePos, activeJigs.size());
-        Log.w("r2m remove "+ itemCR,"removed from recycler drag="+ itemX +"x"+ itemY
-                + " pieSZ="+activeJigs.size());
     }
 
     static long helperDrawTime = 0;

@@ -25,8 +25,8 @@ public class CalcImageColor {
         r = 255 - 255 * r / mx;
         g = 255 - 255 * g / mx;
         b = 255 - 255 * b / mx;
-        colorOutline = Color.argb (255, r, g, b);
-        colorLocked = 0xFF000000 | ~colorLocked;
+        colorLocked = Color.argb (255, r, g, b);
+        colorOutline = 0xFF000000 | ~colorLocked;
 
     }
 }
