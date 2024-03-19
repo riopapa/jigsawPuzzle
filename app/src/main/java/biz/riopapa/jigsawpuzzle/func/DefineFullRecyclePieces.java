@@ -2,7 +2,10 @@ package biz.riopapa.jigsawpuzzle.func;
 
 import static biz.riopapa.jigsawpuzzle.ActivityMain.gVal;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -11,51 +14,34 @@ public class DefineFullRecyclePieces {
         /*
             create recycler bin values to contain all pieces with random appearances
          */
-    public DefineFullRecyclePieces() {
-
-        Random rnd = new Random(System.currentTimeMillis() & 0xfffff);
-        int mxSize = gVal.colNbr * gVal.rowNbr;
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        int []temp = new int[mxSize];
-        int wkIdx = rnd.nextInt(mxSize/2);
-        int r, c;
-        for (int i = 0; i < mxSize ; i++) {
-            int tmp = wkIdx + rnd.nextInt(mxSize/3);
-            if (tmp >= mxSize) {
-                tmp -= mxSize;
+        public DefineFullRecyclePieces() {
+            final int col = gVal.colNbr;
+            final int row = gVal.rowNbr;
+            final int colByRow = col * row;
+            int [] rNc = new int[colByRow];
+            int r,c, tmp;
+            for (int cr = 0; cr < colByRow; cr++) {
+                r = cr / col;
+                c = cr - r * col;
+                rNc[cr] = 10000 + c*100 + r;
             }
-            if (temp[tmp] != 0) {
-                while (temp[tmp] == 1) {
-                    tmp++;
-                    if (tmp >= mxSize)
-                        tmp = 0;
+
+            for (int j = 0; j < colByRow; j++) {
+                Random rnd = new Random(System.currentTimeMillis() & 0xfffff);
+                for (int i = 0; i < colByRow; i++) {
+                    int sw = rnd.nextInt(colByRow);
+                    if (i != sw) {
+                        tmp = rNc[i];
+                        rNc[i] = rNc[sw];
+                        rNc[sw] = tmp;
+                    }
                 }
             }
-            if (gVal.colNbr > gVal.rowNbr) {
-                r = tmp / gVal.colNbr;
-                c = tmp - r * gVal.colNbr;
-            } else {
-                c = tmp / gVal.rowNbr;
-                r = tmp - c * gVal.rowNbr;
-            }
-            arrayList.add(10000 + c*100 + r);
-            temp[tmp] = 1;
-            wkIdx = tmp;
-        }
-        // shuffle more
-        c = rnd.nextInt(mxSize/3);
-        r = rnd.nextInt(mxSize/2);
-        for (int i = 0; i <mxSize; i++) {
-            c += rnd.nextInt(mxSize/2);
-            if (c > mxSize-1)
-                c = c % mxSize;
-            r += rnd.nextInt(mxSize/2);
-            if (r > mxSize-1)
-                r = r % mxSize;
-            Collections.swap(arrayList, r, c);
-        }
-        gVal.allPossibleJigs = arrayList;
-    }
+            gVal.allPossibleJigs = new ArrayList<>();
+            for (int i = 0; i < colByRow; i++)
+                gVal.allPossibleJigs.add(rNc[i]);
 
+            Log.w("chk",gVal.allPossibleJigs.toString());
+        }
 
 }

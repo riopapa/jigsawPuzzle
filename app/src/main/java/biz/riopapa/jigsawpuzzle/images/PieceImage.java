@@ -46,7 +46,6 @@ public class PieceImage {
         darkSz = gVal.picOSize / 70;
         if (darkSz < 2)
             darkSz = 2;
-        Log.w("PieceImage","outLineSz="+outLineSz+", darkSz="+darkSz);
         pNORM = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         pIN = new Paint(Paint.ANTI_ALIAS_FLAG);

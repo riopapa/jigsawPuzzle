@@ -9,10 +9,12 @@
         android:strokeWidth="0.23"
         android:fillColor="#ACDF13"
         android:pathData="
-            M5,19h14v-14h-14
-		    c0,5 -4,8 2,5
-		    c1.5,-2.5 2.5,4 -0,4.5
-		    c-3,-3 -1.5,1 -1.5,1
-            z"/>
+            M19,19 v-14h-14 v14
+            s6,1 6,0
+            s-5,-4 1,-4
+            l.7,.5 .3 .5
+            s0,2.5 1.5,3.5
+            s2,-0 3,0
+            z" />
 
 </vector>
