@@ -104,7 +104,7 @@ public class ActivityMain extends Activity implements DownloadCompleteListener {
 
         mContext = getApplicationContext();
         mActivity = this;
-        mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         jpgFolder = "jpgs";
         new SharedParam().getBase(mContext);
         new SharedParam().get(mContext);

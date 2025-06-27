@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'biz.riopapa.jigsawpuzzle'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "biz.riopapa.jigsawpuzzle"
-        minSdk 32
-        targetSdk 32
+        minSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
